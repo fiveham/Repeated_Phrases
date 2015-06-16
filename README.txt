@@ -1,0 +1,3 @@
+This project allows a user to easily turn HTML-format copies of ebooks of the novels and novellas of A Song of Ice and Fire (George R. R. Martin) into individual chapter files featuring clickable links connecting instances of the same phrase.
+
+Aside from the boring, annoying classics like "would that I could" or "enough as makes no matter", there are some repeated phrases that are suggestive, such as an Other's ice-sword and a Valyrian steel sword both being "sharper than any razor", and Moqorro seeing a vision of "a sea of blood", which the Dothraki Sea is described as looking like in Spring.
