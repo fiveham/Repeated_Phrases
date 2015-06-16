@@ -1,0 +1,234 @@
+package repeatedphrases;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+
+/**
+ * <p>Finds phrases that are repeated in the corpus and 
+ * prints them to files accompanied by a list of the 
+ * <code>Location</code>s in the corpus at which those 
+ * phrases occur.</p>
+ */
+public class FindRepeatedPhrases {
+	
+	/**
+	 * <p>The <code>Folder</code> from which this class 
+	 * reads files to modify.</p>
+	 */
+	public static final Folder READ_FROM = Folder.CORPUS;
+	
+	/**
+	 * <p>The <code>Folder</code> to which this class 
+	 * writes files it creates.</p>
+	 */
+	public static final Folder WRITE_TO = Folder.REPEATS;
+	
+	/**
+	 * <p>Number of locations in the corpus at which a 
+	 * unique phrase occurs, by definition.</p>
+	 */
+	public static final int UNIQUE_PHRASE_LOCATION_COUNT = 1;
+	
+	/**
+	 * <p>Minimum size of repeated phrases to be found.</p>
+	 */
+	public static final int MIN_PHRASE_SIZE = 1;
+	
+	/**
+	 * <p>Maximum size of repeated phrases to be found. 
+	 * The value {@value #MAX_PHRASE_SIZE} was determined empirically, and 
+	 * pertains to an overlap of text between 
+	 * AFFC Samwell I and ADWD Jon II.</p>
+	 */
+	public static final int MAX_PHRASE_SIZE = 218;
+	
+	/**
+	 * <p>Gets a list of the files to be analysed via 
+	 * <code>READ_FROM.folder().listFiles(IO.IS_TXT)</code>,  
+	 * loops from <code>MIN_PHRASE_SIZE</code> to <code>MAX_PHRASE_SIZE</code>, 
+	 * finding all the phrases of each size repeated in the corpus, and 
+	 * prints them to files named for the phrase size according 
+	 * to <code>WRITE_TO.filename(size)</code>.</p>
+	 * <p>"Phrase size" is the number of words in a given phrase.</p>
+	 * @param args	Command-line arguments (unused)
+	 */
+	public static void main(String[] args) {
+
+		//String[] readUs = READ_FROM.folder().list ( IO.IS_TXT );
+		File[] readUs = READ_FROM.folder().listFiles( IO.IS_TXT );
+		final List<Chapter> chapters = getChapters( readUs );
+		PhraseBox repeatedPhrasesFromPrevLoop = new PhraseBox();
+		repeatedPhrasesFromPrevLoop.add(ZERO_WORD_PHRASE, null);
+		
+		//find phrases of ever greater size and record them in files
+		for(int phraseSize = MIN_PHRASE_SIZE; 
+				phraseSize <= MAX_PHRASE_SIZE; 
+				phraseSize++ ){
+			
+			System.out.println("Begin process for phrase size "+phraseSize);
+			
+			//Create an index of phrases from the corpus and their locations
+			PhraseBox words = scanCorpus(phraseSize, chapters, repeatedPhrasesFromPrevLoop);
+			
+			//remove non-repeated phrases
+			words.removeUniques();
+			
+			//print repeated phrases and all their locations in the corpus to a file
+			words.printPhrasesWithLocations(IO.newOutputStreamWriter( WRITE_TO.filename(phraseSize) ));
+			
+			//Store the current list of repeated phrases for the next loop
+			repeatedPhrasesFromPrevLoop = words;
+			//System.out.printf("Stored %d phrases for the next loop.\n", words.size());
+		}
+	}
+	
+	/**
+	 * <p>Returns a list of <code>Chapter</code>s pairing the full 
+	 * names of the files specified by <code>filesToRead</code> with 
+	 * the words-only content of those files as produced by 
+	 * {@link #fileAsString() fileAsString()}.</p>
+	 * @param filesToRead an array listing the plain filenames of the 
+	 * chapters to be processed and turned into <code>Chapter</code>s.
+	 * @return a list of <code>Chapter</code>s pairing the full names 
+	 * of the files specified by <code>filesToRead</code> with 
+	 * the words-only content of those files as produced by 
+	 * {@link #fileAsString() fileAsString()}
+	 */
+	public static ArrayList<Chapter> getChapters(File[] filesToRead){
+		ArrayList<Chapter> retList = new ArrayList<>( filesToRead.length );
+		
+		for(File chapterFile : filesToRead){
+			String fullName = READ_FROM.folderName() + IO.DIR_SEP + chapterFile.getName();
+			retList.add( new Chapter(fullName, fileAsString(chapterFile) ) );
+		}
+		
+		//validateChapters(retList);
+		
+		return retList;
+	}
+	
+	/*private static void validateChapters(List<Chapter> chapters){
+		for(Chapter c : chapters){
+			String chapter = c.getBody();
+			if(chapter.startsWith(PhraseProducer.WORD_SEPARATOR)){
+				throw new IllegalStateException("A chapter (\""+c.getName()+"\", \""+IO.shortForm(chapter)+"\") starts with a space.");
+			} else if(chapter.endsWith(PhraseProducer.WORD_SEPARATOR)){
+				throw new IllegalStateException("A chapter (\""+c.getName()+"\", \""+IO.shortForm(chapter)+"\") ends with a space.");
+			}
+		}
+	}/**/
+	
+	/**
+	 * <p>Regex delimiter for Scanner for isolating words from plaintext corpus 
+	 * files, permitting only alphanumerics, hyphen, apostrophe 
+	 * (<code>\u2023</code>), e-acute, and e-circumflex as the 
+	 * characters of words.</p>
+	 * <p>Numerics are allowed as word characters because there are 
+	 * a few dates given in ASOIAF as simple numbers, such as "111 AC".</p>
+	 * <p>e-acute and e-circumflex are allowed because starting in 
+	 * ASOS, "melee" is spelled using those characters and it appears 
+	 * many times.</p>
+	 */
+	public static final String NON_WORD_CHARACTERS = "[^a-zA-Z0-9-'éê]+";
+	
+	/**
+	 * <p>Returns a <code>String</code> containing all the words 
+	 * (as defined by <code>NON_WORD_CHARACTERS</code>) in 
+	 * the file specified by <code>name</code>, where a single 
+	 * space (" ") is present between any two sequential words.</p>
+	 * @param name the name of the file to be read
+	 * @return a <code>String</code> containing all the words 
+	 * (as defined by <code>NON_WORD_CHARACTERS</code>) in 
+	 * the file specified by <code>name</code>, where a single 
+	 * space (" ") is present between any two sequential words.
+	 */
+	public static String fileAsString(File f){
+		StringBuilder sb = new StringBuilder();
+		
+		Scanner s = null;
+		try{
+			s = new Scanner( f, IO.ENCODING);
+		} catch(FileNotFoundException e){
+			IO.errorExit(f.getName() + " for reading.");
+		}
+		s.useDelimiter(NON_WORD_CHARACTERS);
+		
+		if(s.hasNext()){
+			sb.append(s.next());
+		}
+		while(s.hasNext()){
+			sb.append(PhraseProducer.WORD_SEPARATOR).append(s.next());
+		}
+		s.close();
+		
+		return sb.toString();
+	}
+	
+	/**
+	 * <p>Scans the files of the corpus, extracting phrases of the specified size. 
+	 * Adds phrases whose predecessor was non-unique at the previous phrase 
+	 * size to the <code>PhraseBox</code> to be returned.</p>
+	 * @param phraseSize number of words in the phrases being assessed
+	 * @param chapters a list of <code>Chapter</code>s representing the 
+	 * body of text being analysed.
+	 * @param repeatPhrasesForPrevSize list of phrases of the size 
+	 * <code>phraseSize-1</code> that are repeated in the corpus.
+	 * @return a <code>PhraseBox</code> with phrases of the specified size, 
+	 * containing all such phrases that are repeated in the corpus, as well 
+	 * as some number of unique phrases.
+	 */
+	private static PhraseBox scanCorpus(int phraseSize, List<Chapter> chapters, PhraseBox repeatPhrasesForPrevSize){
+		System.out.print("Scanning corpus. ");// for "+phraseSize+"-word phrases");
+		
+		Corpus corpus = new Corpus(phraseSize, chapters);
+		PhraseBox corpusAsStructure = new PhraseBox();
+		
+		//System.out.println("Got "+repeatPhrasesForPrevSize.size()+" repeated terms of size "+(phraseSize-1));
+		
+		while(corpus.hasNext()){
+			String phrase = corpus.next();
+			String less = reducedPhrase(phrase);
+			if( repeatPhrasesForPrevSize.contains( less )){
+				corpusAsStructure.add(phrase, corpus.prevLocation());
+			}
+		}
+		
+		System.out.printf("Got %d phrases\n", 
+				corpusAsStructure.size());
+		return corpusAsStructure;
+	}
+	
+	/**
+	 * <p>Returns a <code>String</code> containing the first 
+	 * <code>n-1</code> words of the specified <code>n</code>-word 
+	 * phrase.</p>
+	 * @param s the phrase whose last token is to be removed
+	 * @return a String containing all words but the last from the 
+	 * specified phrase.
+	 */
+	public static String reducedPhrase(String s){
+		int index = s.lastIndexOf(PhraseProducer.WORD_SEPARATOR);
+		/*if(index<0){
+			//throw new IllegalArgumentException("The phrase \""+s+"\" contains no spaces.");
+			return "";
+		} else{
+			return s.substring(0, index);
+		}/**/
+		return index < 0 ? ZERO_WORD_PHRASE : s.substring(0,index);
+	}
+	
+	/**
+	 * <p>An empty string. Returned by {@link #reducedPhrase(String) reducedPhrase()} 
+	 * when it is sent a phrase with only one word. Added to the initial 
+	 * <code>PhraseBox</code> assigned to <code>repeatedPhrasesFromPrevLoop</code> 
+	 * in <code>main()</code> so that every single-word phrase's 
+	 * corresponding reduced phrase is contained by that object, 
+	 * ensuring that every phrase of size <code>1</code> passes the 
+	 * preliminary test for inclusion in the PhraseBox returned from 
+	 * {@link #scanCorpus scanCorpus()}.</p>
+	 */
+	public static final String ZERO_WORD_PHRASE = "";
+}
