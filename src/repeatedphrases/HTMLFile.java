@@ -13,9 +13,6 @@ import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 
-
-
-
 /**
  * <p>Represents an HTML file and provides some convenience methods 
  * for working with an HTML file.</p>
@@ -172,6 +169,12 @@ public class HTMLFile {
 				: 0;
 	}
 	
+	/**
+	 * <p>Constructs an HTMLFile based on the elements of <code>content</code>, 
+	 * with the filename <code>name</code>.</p>
+	 * @param name the file address/name of this HTMLFile
+	 * @param content a list whose elements will be the elements of this HTMLFile
+	 */
 	public HTMLFile(String name, List<HTMLEntity> content){
 		this.content = new ArrayList2<>(content);
 		
@@ -190,10 +193,18 @@ public class HTMLFile {
 				: 0;
 	}
 	
+	/**
+	 * <p>Returns {@link #chapterName chapterName}.</p>
+	 * @return {@link #chapterName chapterName}
+	 */
 	public String chapterName(){
 		return chapterName;
 	}
 	
+	/**
+	 * <p>Returns {@link #filename filename}.</p>
+	 * @return {@link #filename filename}
+	 */
 	public String getName(){
 		return filename;
 	}
@@ -511,18 +522,7 @@ public class HTMLFile {
 	 */
 	public void printAsText(String name){
 		OutputStreamWriter out = IO.newOutputStreamWriter(name);
-		//int afterHeader = getWord(0);
 		int afterHeader = adjacentElement(-1, Tag.IS_TABLE_CLOSE, Direction.NEXT);
-		
-		//element before i is a word-end and there exists a word-beginning after i
-		//The first match is the element immediately after the last word of the 
-		//chapter's body, which is followed only by the chapter's title in the 
-		//footer-table (considering only literal characters that are visible)
-		//Predicate<Integer> isAfterSecondToLastWord = 
-		//		(i) -> isWordEnd(i-1) 
-		//				&& -1 != adjacentElement( (j) -> isWordStart(j), Direction.NEXT, i);
-		
-		//int beforeFooter = adjacentElement(isAfterSecondToLastWord, Direction.PREV, content.size());
 		int beforeFooter = adjacentElement(content.size(), Tag.IS_TABLE_OPEN, Direction.PREV);
 		
 		try{
@@ -650,7 +650,7 @@ public class HTMLFile {
 				throw new IllegalStateException(msg);
 			}
 		}
-	};/**/
+	};
 	
 	/**
 	 * <p>Returns the position in the underlying list of the last character of 
@@ -889,13 +889,6 @@ public class HTMLFile {
  		}
  	}
  	
- 	/*public void replaceAll(String seek, String insert){
- 		int index;
- 		while( 0 <= (index = indexOfText(seek)) ){
- 			List<HTMLEntity> begin = content.subList(0, index)
- 		}
- 	}/**/
- 	
  	/**
  	 * <p>Returns the position in the underlying list of the closing 
  	 * HTML tag corresponding to an opening HTML tag located at 
@@ -1001,8 +994,6 @@ public class HTMLFile {
     			tagCode.append(c);
     		}
         }
-		
-		//System.out.println(result.size());
 		
 		return result;
 	}
@@ -1155,16 +1146,6 @@ public class HTMLFile {
 			}
 		}
 	}
-	
-	//private boolean onlyTitleChars(int lo, int hi){
-	//	for(int i=lo; i<hi; i++){
-	//		HTMLEntity h = content.get(i);
-	//		if( IS_CH.test(h) && isTitle(((Ch)h).c) ){
-	//			return false;
-	//		}
-	//	}
-	//	return true;
-	//}
 	
 	/**
 	 * <p>Returns true if the specified char is legal for 

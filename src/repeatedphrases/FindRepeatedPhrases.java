@@ -56,8 +56,7 @@ public class FindRepeatedPhrases {
 	 * @param args	Command-line arguments (unused)
 	 */
 	public static void main(String[] args) {
-
-		//String[] readUs = READ_FROM.folder().list ( IO.IS_TXT );
+		
 		File[] readUs = READ_FROM.folder().listFiles( IO.IS_TXT );
 		final List<Chapter> chapters = getChapters( readUs );
 		PhraseBox repeatedPhrasesFromPrevLoop = new PhraseBox();
@@ -81,7 +80,6 @@ public class FindRepeatedPhrases {
 			
 			//Store the current list of repeated phrases for the next loop
 			repeatedPhrasesFromPrevLoop = words;
-			//System.out.printf("Stored %d phrases for the next loop.\n", words.size());
 		}
 	}
 	
@@ -105,21 +103,8 @@ public class FindRepeatedPhrases {
 			retList.add( new Chapter(fullName, fileAsString(chapterFile) ) );
 		}
 		
-		//validateChapters(retList);
-		
 		return retList;
 	}
-	
-	/*private static void validateChapters(List<Chapter> chapters){
-		for(Chapter c : chapters){
-			String chapter = c.getBody();
-			if(chapter.startsWith(PhraseProducer.WORD_SEPARATOR)){
-				throw new IllegalStateException("A chapter (\""+c.getName()+"\", \""+IO.shortForm(chapter)+"\") starts with a space.");
-			} else if(chapter.endsWith(PhraseProducer.WORD_SEPARATOR)){
-				throw new IllegalStateException("A chapter (\""+c.getName()+"\", \""+IO.shortForm(chapter)+"\") ends with a space.");
-			}
-		}
-	}/**/
 	
 	/**
 	 * <p>Regex delimiter for Scanner for isolating words from plaintext corpus 
@@ -211,12 +196,6 @@ public class FindRepeatedPhrases {
 	 */
 	public static String reducedPhrase(String s){
 		int index = s.lastIndexOf(PhraseProducer.WORD_SEPARATOR);
-		/*if(index<0){
-			//throw new IllegalArgumentException("The phrase \""+s+"\" contains no spaces.");
-			return "";
-		} else{
-			return s.substring(0, index);
-		}/**/
 		return index < 0 ? ZERO_WORD_PHRASE : s.substring(0,index);
 	}
 	

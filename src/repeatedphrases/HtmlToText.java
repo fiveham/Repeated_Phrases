@@ -29,9 +29,7 @@ public class HtmlToText {
 	 * @param args command-line arguments (unused)
 	 */
 	public static void main(String[] args) {
-		//String[] readUs = READ_FROM.folder().list ( IO.IS_HTML );
 		File[] readUs = READ_FROM.folder().listFiles( IO.IS_HTML );
-		//for(String filename : readUs){
 		for(File f : readUs){
 			try{
 				HTMLFile file = new HTMLFile(f);
@@ -41,38 +39,4 @@ public class HtmlToText {
 			}
 		}
 	}
-	
-	/*private static String renameAsTxt(String fullFilename){
-		int lastSlash = fullFilename.lastIndexOf(IO.DIR_SEP);
-		String name = fullFilename.substring(lastSlash+1);
-		
-		int firstDot = name.indexOf('.');
-		String base = firstDot < 0 
-				? name 
-				: name.substring(0, firstDot);
-		
-		return WRITE_TO.folderName() + IO.DIR_SEP + base + IO.TXT_EXT;
-	}/**/
-	
-	/*public static String renameAsTxt(String filename){
-		int index = filename.lastIndexOf('.');
-		String base = index < 0 
-				? filename 
-				: filename.substring(0,index);
-		return base+".txt";
-	}/**/
-	
-	/*private static List<String> validateArgs(String[] args){
-		List<String> result = new ArrayList<>();
-		for(int pointer=0; pointer < args.length; pointer++){
-			switch(args[pointer++]){
-			case "-read" : result.addAll(IO.fileContentsAsList(new File(args[pointer]), IO.NEXT, IO.SCANNER_HAS_NEXT));
-					break;
-			case "-file" : result.add(args[pointer]);
-					break;
-			default : throw new IllegalArgumentException("Bad command-line arg \""+args[pointer]+"\" at position "+pointer+"with filenamecount "+result.size());
-			}
-		}
-		return result;
-	}/**/
 }

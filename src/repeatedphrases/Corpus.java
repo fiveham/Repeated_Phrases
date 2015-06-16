@@ -151,49 +151,4 @@ public class Corpus {
 	 * {@link #prevLocation() prevLocation()}.</p>
 	 */
 	private Location previousLocation = null;
-	
-	/* *
-	 * Closes the current buffer if and only if there are no 
-	 * more files available in the corpus.
-	 * /
-	public void close(){
-		if(!isFileAvailable()){
-			currentBuffer.close();
-		}
-	}/**/
-	
-	/* *
-	 * Returns true if there is at least one more file available 
-	 * that hasn't been in focus already.
-	 * @return		Returns true if there is at least one more 
-	 * file available that hasn't been in focus already.
-	 * /
-	private boolean isFileAvailable(){
-		return chapterPointer+1 < filenames.size();
-	}/**/
-	
-	/* *
-	 * Returns the name of the file from which this object will try to 
-	 * read a token the next time next() is called.
-	 * @return		Returns the name of the file from which this object will try to 
-	 * read a token the next time next() is called.
-	 * /
-	public String fileInFocus(){
-		return filenames.get(chapterPointer);
-	}/**/
-	
-	/* *
-	 * Makes sure that currentBuffer is a PhraseProducer that 
-	 * has a next element available, unless no more of the files of this 
-	 * Corpus have any more phrases to give.
-	 * /
-	private void dynamicBehavior(){
-		while( !currentBuffer.hasNext() && isFileAvailable() ){
-			//close the now-dead PhraseProducer
-			currentBuffer.close();
-			//set the currentBuffer to the next available buffer
-			//currentBuffer = new PhraseProducer(size, filenames.get(++chapterPointer));
-			updateBuffer();
-		}
-	}/**/
 }

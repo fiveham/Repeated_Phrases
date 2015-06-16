@@ -92,8 +92,6 @@ public class NewlineP{
 	 * class should write or read content
 	 */
 	private static String getInOutName(String filename, Folder folder){
-		//int slashIndex = filename.lastIndexOf(IO.DIR_SEP);
-		//String nativeName = filename.substring(slashIndex+1);
 		return folder.folderName() + IO.DIR_SEP + IO.stripFolder(filename);
 	}
 	

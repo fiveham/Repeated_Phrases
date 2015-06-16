@@ -181,24 +181,8 @@ public class LinkChapters {
 	 * <code>READ_DECORATION</code>.
 	 */
 	private static List<FileDataPair> getFileDataPairs(String[] htmlFiles, String[] anchFiles){
-		//if(htmlFiles.size() != anchFiles.size()){
-		//	throw new IllegalStateException("File-count mismatch. I have "+htmlFiles.size()+" html files and "+anchFiles.size()+" anchordata files.");
-		//}
-		//htmlFiles.sort(null);
-		//anchFiles.sort(null);
 		
 		List<FileDataPair> result = new ArrayList<>();
-		
-		/*for(int i=0; i<htmlFiles.size(); i++){
-			String htmlFile = htmlFiles.get(i);
-			String anchFile = anchFiles.get(i);
-			
-			if( !matchNames(htmlFile, anchFile) ){
-				throw new IllegalStateException("Filename mismatch at index ("+i+"): htmlFile ("+htmlFile+") doesn't match with anchFile ("+anchFile+")");
-			}
-			
-			result.add( new FileDataPair(htmlFile, anchFile) );
-		}/**/
 		
 		Iterator<String> htmlIter = Arrays.asList(htmlFiles).iterator();
 		Iterator<String> anchIter = Arrays.asList(anchFiles).iterator();
@@ -234,7 +218,6 @@ public class LinkChapters {
 	 * prior to its file extension, false otherwise.
 	 */
 	private static boolean matchNames(String htmlFile, String anchFile){
-		//return AnchorInfo.nameBase(htmlFile).equals(AnchorInfo.nameBase(anchFile));
 		return IO.stripFolderExtension(htmlFile).equals(IO.stripFolderExtension(anchFile));
 	}
 	

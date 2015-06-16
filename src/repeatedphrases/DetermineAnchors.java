@@ -70,17 +70,6 @@ public class DetermineAnchors {
 		
 		System.out.println("Created filebox and phrasebox.");
 		
-		/*PhraseBox phrasebox = null;
-		FileBox filebox = null;
-		try{
-			File f = new File(args[0]);
-			phrasebox = new PhraseBox( f );
-			filebox = new FileBox( f );
-		} catch(FileNotFoundException e){
-			System.out.println("File "+args[0]+" not found.");
-			System.exit(1);
-		}/**/
-		
 		//create a file for each chapter and fill it with phrases 
 		//that need to be tagged in that chapter, the locations in 
 		//that chapter at which those phrase-instances appear, and 

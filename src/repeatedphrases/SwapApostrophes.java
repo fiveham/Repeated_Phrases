@@ -441,27 +441,12 @@ public class SwapApostrophes{
 		 */
 		private static boolean match(Character fromInstanceCode, Character fromLine){
 			switch(fromInstanceCode){
-			//case WORD_CHAR     : return isWordChar(fromLine);
 			case WORD_CHAR     : return PhraseProducer.isPhraseChar(fromLine);
-			//case NON_WORD_CHAR : return !isWordChar(fromLine);
 			case NON_WORD_CHAR : return !PhraseProducer.isPhraseChar(fromLine);
 			case ALPHA_CHAR    : return isAlphabetical(fromLine);
 			default            : return fromLine!=null && fromInstanceCode.equals(Character.toLowerCase(fromLine)); 
 			}
 		}
-		
-		/* *
-		 * <p>Returns true if <code>c</code> is a legal word character, false otherwise. 
-		 * A legal word character is an alphabetic character, an apostrophe, a hyphen, 
-		 * or a digit.</p>
-		 * @param c a character to be tested for legality as a word character
-		 * @return true if <code>c</code> is a legal word character, false otherwise
-		 * /
-    	private static boolean isWordChar(Character c){
-    		return c==null
-    				? false
-					: ( isAlphabetical(c) || c==APOSTROPHE || c=='-' || ('0'<=c && c<='9'));
-    	}/**/
     	
     	/**
     	 * <p>Returns true if <code>c</code> is an alphabetical character, 
@@ -471,10 +456,11 @@ public class SwapApostrophes{
     	 * false otherwise
     	 */
     	private static boolean isAlphabetical(Character c){
-    		//return c==null
-    		//		? false
-    		//		: ('a'<=c && c<='z') || ('A'<=c && c<='Z');
-    		return c != null && !(c==APOSTROPHE || c=='-' || ('0'<=c && c<='9')) && PhraseProducer.isPhraseChar(c);
+    		return c != null 
+    				&& !( c==APOSTROPHE 
+    						|| c=='-' 
+    						|| ('0'<=c && c<='9')) 
+    				&& PhraseProducer.isPhraseChar(c);
     	}
 	}
 	

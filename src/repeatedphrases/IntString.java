@@ -17,7 +17,6 @@ public class IntString implements Comparable<IntString>{
 	 */
 	public final int index;
 	
-	//Constructors
 	/**
 	 * <p>Constructs an <code>IntString</code> with the specified 
 	 * word-index and phrase.</p>
@@ -53,50 +52,11 @@ public class IntString implements Comparable<IntString>{
 	 * @return an int whose sign indicates the natural 
 	 * ordering between this IntString and the specified one.
 	 */
-	@Override	//implements Comparable<Location>
+	@Override
 	public int compareTo(IntString otherIntString){
 		if(index != otherIntString.index){
 			return index - otherIntString.index;
 		}
 		return phrase.compareTo(otherIntString.phrase);
 	}
-	
-	//Getters
-	/* *
-	 * Returns the index portion of this Location
-	 * @return	Returns the index portion of this Location
-	 * /
-	public Integer getIndex(){
-		return index;
-	}
-	
-	/ * *
-	 * Returns the filename portion of this Location
-	 * @return	Returns the filename portion of this Location
-	 * /
-	public String getPhrase(){
-		return phrase;
-	}/**/
-	
-	
-	//Information
-	/* *
-	 * Assesses whether the specified object is equal to 
-	 * this Location.
-	 * @param o		Object to be tested for equality against 
-	 * this Location.
-	 * @return	True if o is a Location and has components 
-	 * that are equal to the corresponding components of 
-	 * this Location, false otherwise.
-	 * /
-	@Override	//overrides Object.equals
-	public boolean equals(Object o){
-		if(o instanceof IntString ){
-			IntString is = (IntString) o;
-			return index==is.index && is.phrase.equals(phrase);
-		}
-		else{
-			return false;
-		}
-	}/**/
 }

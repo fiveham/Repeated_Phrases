@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * <p>An enhancement of </code>java.util.ArrayList</code>, adding 
- * <code>String</code>-style <code>indexOf(Object,int)</code> and 
- * <code>lastIndexOf(Object,int)</code> methods for use in 
- * <code>HTMLFile</code>.</p>
+ * <p>An enhancement of {@link java.util.ArrayList ArrayList}, adding 
+ * <code>String</code>-style {@link java.lang.String#indexOf(Object,int) indexOf()} and 
+ * {@link java.lang.String#lastIndexOf(Object,int) lastIndexOf()} methods for use in 
+ * {@link HTMLFile HTMLFile}.</p>
  * @param <T> the type of the elements of this list
  */
 public class ArrayList2<T> extends ArrayList<T> {
@@ -15,8 +15,8 @@ public class ArrayList2<T> extends ArrayList<T> {
 	/**
 	 * <p>automatically generated</p>
 	 */
-	private static final long serialVersionUID = 8470306758092018034L;
-	
+	private static final long serialVersionUID = -2567485613070128549L;
+
 	/**
 	 * <p>Constructs an ArrayList2 with an initial capacity of 10 
 	 * and no elements.</p>

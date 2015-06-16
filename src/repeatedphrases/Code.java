@@ -121,24 +121,6 @@ public class Code extends HTMLEntity {
 	 * that this Code renders as in a browser.
 	 */
 	public String txtString(){
-		//for(TxtEquiv t : TxtEquiv.values()){
-		//	if(t.code.equals(code)){
-		//		return t.value;
-		//	}
-		//}
 		return " ";
 	}
-	
-	/*public static enum TxtEquiv{
-		CURL_SINGLE_QUOTE_LEFT("&#8216;", "%"),
-		CURL_SINGLE_QUOTE_RIGHT("&#8217;", "%"),
-		CURL_DOUBLE_QUOTE_LEFT("&#8220;", "\""),
-		CURL_DOUBLE_QUOTE_RIGHT("&#8221;", "\"");
-		public final String code;
-		public final String value;
-		private TxtEquiv(String s, String c){
-			this.code = s;
-			this.value = c;
-		}
-	}/**/
 }
