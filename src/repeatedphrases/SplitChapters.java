@@ -28,7 +28,7 @@ public class SplitChapters {
 	 * from the ASOIAF novels.</p>
 	 * @see Folder#HTML_CHAPTERS_UNCHECKED
 	 */
-	public static final Folder WRITE_TO = Folder.HTML_CHAPTERS_UNCHECKED;
+	public static final Folder WRITE_TO = Folder.HTML_CHAPTERS;
 	
 	/**
 	 * <p>Detects all html novel files in <code>READ_FROM</code>, reads them, and 
@@ -123,6 +123,7 @@ public class SplitChapters {
 			HTMLFile pq = new HTMLFile( new File(READ_FROM.folderName() + IO.DIR_SEP + novella));
 			
 			int footnoteIndex = pq.adjacentElement( (i) -> pq.hasLiteralAt("Footnote",i), Direction.PREV, pq.elementCount());
+			
 			int bodyEndIndex = pq.adjacentElement( footnoteIndex, Tag.IS_P_OPEN, Direction.PREV);
 			List<HTMLEntity> bodySection = pq.section(0,bodyEndIndex);
 			
@@ -134,28 +135,49 @@ public class SplitChapters {
 			
 			Predicate<HTMLEntity> isSuperscript1 = (h) -> HTMLFile.IS_CH.test(h) && ((Ch)h).c == '1';
 			
+			String[] hrefs = {"PQ_1_FOOTNOTE.html#FOOTNOTE", "PQ_0_THE_PRINCESS_AND_THE_QUEEN.html#FOOTNOTE"};
+			HTMLFile[] files = {body, footnote};
+			for(int i=0; i<hrefs.length; i++){
+				HTMLFile file = files[i];
+				
+				//replace superscript 1 with asterisk
+				int noteIndex = file.adjacentElement(-1, Tag.IS_SUP, Direction.NEXT);
+				noteIndex = file.adjacentElement(noteIndex, isSuperscript1, Direction.NEXT);
+				file.set(noteIndex, new Ch('*'));
+				
+				//replace internal link with external link
+				int noteAnchorIndex = file.adjacentElement(noteIndex, Tag.IS_A_OPEN, Direction.PREV);
+				file.set(noteAnchorIndex, new Tag( "a id=\"FOOTNOTE\" href=\"" + hrefs[i] + "\"" ) );
+				
+				//save the file
+				OutputStreamWriter out = IO.newOutputStreamWriter(WRITE_TO.folderName() + IO.DIR_SEP + file.getName());
+				writeBuffer(file.section(0), out, file.chapterName());
+			}
+			
+			
 			//replace superscript 1 with asterisk
-			//in body
-			int bodyNote = body.adjacentElement(-1, Tag.IS_SUP, Direction.NEXT);
-			bodyNote = body.adjacentElement(bodyNote, isSuperscript1, Direction.NEXT);
-			body.set(bodyNote, new Ch('*'));
-			//in footnote
-			int footnoteNote = footnote.adjacentElement(-1, Tag.IS_SUP, Direction.NEXT);
-			footnoteNote = footnote.adjacentElement(footnoteNote, isSuperscript1, Direction.NEXT);
-			footnote.set(footnoteNote, new Ch('*'));
+			//int bodyNote     =     body.adjacentElement(-1, Tag.IS_SUP, Direction.NEXT);
+			//int footnoteNote = footnote.adjacentElement(-1, Tag.IS_SUP, Direction.NEXT);
+			
+			//bodyNote     =     body.adjacentElement(bodyNote,     isSuperscript1, Direction.NEXT);
+			//footnoteNote = footnote.adjacentElement(footnoteNote, isSuperscript1, Direction.NEXT);
+			
+			//    body.set(bodyNote,     new Ch('*'));
+			//footnote.set(footnoteNote, new Ch('*'));
 			
 			//alter the footnote-anchors
-			int bodyNoteAnchor = body.adjacentElement(bodyNote, Tag.IS_A_OPEN, Direction.PREV);
-			body.set(bodyNoteAnchor, new Tag( "a id=\"FOOTNOTE\" href=\"PQ_1_FOOTNOTE.html#FOOTNOTE\"" ) );
-			int footnoteNoteAnchor = footnote.adjacentElement(footnoteNote, Tag.IS_A_OPEN, Direction.PREV);
-			footnote.set(footnoteNoteAnchor, new Tag( "a id=\"FOOTNOTE\" href=\"PQ_0_THE_PRINCESS_AND_THE_QUEEN.html#FOOTNOTE\"" ) );
+			//int bodyNoteAnchor     =     body.adjacentElement(bodyNote,     Tag.IS_A_OPEN, Direction.PREV);
+			//int footnoteNoteAnchor = footnote.adjacentElement(footnoteNote, Tag.IS_A_OPEN, Direction.PREV);
+			
+			//    body.set(bodyNoteAnchor,     new Tag( "a id=\"FOOTNOTE\" href=\"PQ_1_FOOTNOTE.html#FOOTNOTE\"" ) );
+			//footnote.set(footnoteNoteAnchor, new Tag( "a id=\"FOOTNOTE\" href=\"PQ_0_THE_PRINCESS_AND_THE_QUEEN.html#FOOTNOTE\"" ) );
 			
 			//write the files
-			OutputStreamWriter bodyOut = IO.newOutputStreamWriter(WRITE_TO.folderName() + IO.DIR_SEP + body.getName());
-			writeBuffer(body.section(0),bodyOut, body.chapterName());
+			//OutputStreamWriter bodyOut = IO.newOutputStreamWriter(WRITE_TO.folderName() + IO.DIR_SEP + body.getName());
+			//writeBuffer(body.section(0),bodyOut, body.chapterName());
 			
-			OutputStreamWriter footnoteOut = IO.newOutputStreamWriter(WRITE_TO.folderName() + IO.DIR_SEP + footnote.getName());
-			writeBuffer(footnote.section(0),footnoteOut, footnote.chapterName());
+			//OutputStreamWriter footnoteOut = IO.newOutputStreamWriter(WRITE_TO.folderName() + IO.DIR_SEP + footnote.getName());
+			//writeBuffer(footnote.section(0),footnoteOut, footnote.chapterName());
 			
 		} catch(FileNotFoundException e){
 			System.out.println("FileNotFoundException occured for file "+novella+": "+e.getMessage());

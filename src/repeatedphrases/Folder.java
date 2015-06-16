@@ -18,15 +18,15 @@ public enum Folder {
 	HTML_BOOKS_UNSTRUCTURED		  ("02_html_books_unstructured",		  null),
 	HTML_BOOKS_CHAPTER_CORE		  ("03_html_books_chapter_core",		  null),
 	HTML_BOOKS_CORRECT_APOSTROPHES("04_html_books_correct_apostrophes",	  null),
-	HTML_CHAPTERS_UNCHECKED		  ("05_html_chapters_unchecked",		  null),
-	HTML_CHAPTERS				  ("06_html_chapters",					  null),
-	CORPUS						  ("07_corpus",							  null),
-	REPEATS						  ("08_repeats",						  "repeats" ),
-	INDEPENDENT_INSTANCES		  ("09_independent_instances",			  "independent_instances" ),
-	DUPLICATE_INDEPENDENTS		  ("10_duplicate_independents",			  "duplicate_independents" ),
-	ANCHORS						  ("11_anchors",						  null),
-	LINKED_CHAPTERS				  ("12_linked_chapters",				  null),
-	READABLE					  ("13_readable",						  null);
+	//HTML_CHAPTERS_UNCHECKED		  ("05_html_chapters_unchecked",		  null),
+	HTML_CHAPTERS				  ("05_html_chapters",					  null),
+	CORPUS						  ("06_corpus",							  null),
+	REPEATS						  ("07_repeats",						  "repeats" ),
+	INDEPENDENT_INSTANCES		  ("08_independent_instances",			  "independent_instances" ),
+	DUPLICATE_INDEPENDENTS		  ("09_duplicate_independents",			  "duplicate_independents" ),
+	ANCHORS						  ("10_anchors",						  null),
+	LINKED_CHAPTERS				  ("11_linked_chapters",				  null),
+	READABLE					  ("12_readable",						  null);
 	
 	/**
 	 * <p>The actual directory</p>
