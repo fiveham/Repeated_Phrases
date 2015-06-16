@@ -1,0 +1,119 @@
+@page {
+    margin-bottom: 5pt;
+    margin-top: 5pt
+    }
+
+@font-face {
+    font-family: "Charis";
+    font-style: normal;
+    font-weight: normal;
+    font-color: blue;
+    }
+
+/*GENERAL CONCERNS*/
+body {
+    background-color: black;
+    color: #77A0A0;
+    }
+a:link, a:visited {
+    color: #90A0A0;
+    }
+.italic {
+    font-style: italic;
+    }
+
+/*CHAPTER MATTER*/
+.chapter {
+    text-align: center;
+    }
+.chapter_body {
+    width: 30em;
+    margin-right: auto;
+    margin-left: auto;
+    }
+/*paragraphs in chapter body*/
+.text {
+    display: block;
+    margin-bottom: 0;
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-top: 0;
+    text-indent: 2em;
+    font-size: 1em;
+    text-align: justify;
+    }
+
+/*CHAPTER-NAVIGATION TABLE*/
+table.head {
+    font-weight: bold;
+    text-align: center;
+    margin-left:auto; 
+    margin-right:auto;
+    margin-top: 3em;
+    margin-bottom:1em;
+    }
+table.foot {
+    font-weight: bold;
+    text-align: center;
+    margin-left:auto; 
+    margin-right:auto;
+    margin-top: 2em;
+    margin-bottom: 4em;
+    }
+
+/*CHAPTER-NAVIGATION LINKS*/
+td.prev_chapter, td.next_chapter {
+    padding-left: 0;
+    padding-right: 0;
+    }
+p.prev_chapter, p.next_chapter {
+    text-decoration: none;
+    }
+.change_chapter {
+    text-decoration: none;
+    }
+
+/*CHAPTER TITLE*/
+td.chapter_title {
+    padding-left: 1em;
+    padding-right: 1em;
+    }
+p.chapter_title {
+    font-weight: bold;
+    font-size: 1.2em;
+    line-height: 1.2em;
+    }
+
+/*SONGS AND LETTERS*/
+.song, .letter{
+    background-color: orange;
+    display: block;
+    font-size: 1em;
+    font-style: italic;
+    margin-bottom: 0.3em;
+    margin-left: 5em;
+    margin-right: 5em;
+    margin-top: 0.3em;
+    text-align: left;
+    text-indent: 0;
+    }
+.song_line {
+    display: block;
+    }
+/*Italicized content in songs 
+  or letters is unitalicized*/
+.letter .italic, .song .italic {
+    font-style: normal;
+    }
+
+/*FOOTNOTES*/
+.PQ_footnote {
+    font-size: 0.75em;
+    line-height: normal;
+    vertical-align: super
+    }
+
+/*a map's title in an Arya chapter*/
+.map_title {
+    font-size: 0.75em
+    }
