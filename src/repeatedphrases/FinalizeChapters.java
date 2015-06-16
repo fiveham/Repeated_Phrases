@@ -23,11 +23,9 @@ public class FinalizeChapters {
 	 * @param args command-line arguments
 	 */
 	public static void main(String[] args) {
-		int limit = validateArgs(args);
-		String trail = args[0];
+		validateArgs(args);
 		
-		String[] noargs = new String[0];
-		String[] trailArgs = new String[]{ trail };
+		String[] noargs = {};
 		
 		System.out.printf("Converting html files in %s to text.%n", HtmlToText.READ_FROM.folderName());
 		HtmlToText.main(noargs);
@@ -41,14 +39,16 @@ public class FinalizeChapters {
 		System.out.println("Finding and ignoring phrase-instances that are not repeated among the phrases that passed the previous test.");
 		RemoveUniqueIndependents.main(noargs);
 		
-		System.out.println("Turning repeated-independent-repeats data into anchor-data");
-		DetermineAnchors.main( trailArgs );
+		LinksAndTrail.main( args );
 		
-		System.out.println("Adding anchors to html chapters");
-		LinkChapters.main( limit==NO_LIMIT ? noargs : new String[]{ Integer.toString(limit) } );
-		
-		System.out.println("Adding previous-chapter and next-chapter links to html chapters.");
-		SetTrail.main( trailArgs );
+		//System.out.println("Turning repeated-independent-repeats data into anchor-data");
+		//DetermineAnchors.main( trailArgs );
+		//
+		//System.out.println("Adding anchors to html chapters");
+		//LinkChapters.main( limit==NO_LIMIT ? noargs : new String[]{ Integer.toString(limit) } );
+		//
+		//System.out.println("Adding previous-chapter and next-chapter links to html chapters.");
+		//SetTrail.main( trailArgs );
 	}
 	
 	/**
@@ -61,7 +61,7 @@ public class FinalizeChapters {
 	 * @return the int value of the second command-line argument, if 
 	 * it is present and parses as an int, {@value #NO_LIMIT} otherwise.
 	 */
-	private static int validateArgs(String[] args){
+	static int validateArgs(String[] args){
 		if( args.length < 1 ){
 			System.out.println("Need a trail file.");
 			System.out.println("Usage: java FinalizeChapters trail-file-name [phrase-size-min-for-linking]");
