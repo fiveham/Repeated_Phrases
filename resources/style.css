@@ -30,6 +30,7 @@ a:link, a:visited {
     width: 30em;
     margin-right: auto;
     margin-left: auto;
+    text-align: justify;
     }
 /*paragraphs in chapter body*/
 .text {
