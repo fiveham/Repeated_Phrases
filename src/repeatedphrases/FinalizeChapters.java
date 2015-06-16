@@ -23,9 +23,26 @@ public class FinalizeChapters {
 	 * @param args command-line arguments
 	 */
 	public static void main(String[] args) {
-		validateArgs(args);
 		
+		validateArgs(args);
 		String[] noargs = {};
+
+		EnsureFolders.ensureFolders();
+		
+		System.out.println("Adding newlines before paragraphs to enhance HTML files' human-readability.");
+		NewlineP.main(noargs);
+		
+		System.out.println("Removing inconsistent, unnecessary structure.");
+		ClearExcessStructure.main(noargs);
+		
+		System.out.println("Removing non-chapter material.");
+		ClearFrontAndBackMatter.main(noargs);
+		
+		System.out.println("Placing apostrophes (') in place of certain right single quotes.");
+		SwapApostrophes.main(noargs);
+		
+		System.out.println("Splitting books into individual chapter files.");
+		SplitChapters.main(noargs);
 		
 		System.out.printf("Converting html files in %s to text.%n", HtmlToText.READ_FROM.folderName());
 		HtmlToText.main(noargs);
@@ -40,26 +57,17 @@ public class FinalizeChapters {
 		RemoveUniqueIndependents.main(noargs);
 		
 		LinksAndTrail.main( args );
-		
-		//System.out.println("Turning repeated-independent-repeats data into anchor-data");
-		//DetermineAnchors.main( trailArgs );
-		//
-		//System.out.println("Adding anchors to html chapters");
-		//LinkChapters.main( limit==NO_LIMIT ? noargs : new String[]{ Integer.toString(limit) } );
-		//
-		//System.out.println("Adding previous-chapter and next-chapter links to html chapters.");
-		//SetTrail.main( trailArgs );
 	}
 	
 	/**
 	 * <p>Checks that the command-line arguments passed to main() include 
 	 * an existing file to be passed to SetTrail, and returns the int 
 	 * value of the second command-line argument, if it is present and 
-	 * if it parses as an int, for use as the phrase-size threshold 
-	 * passed to LinkChapters.main().</p>
+	 * parses as an int, for use as the phrase-size threshold passed to 
+	 * {@link LinkChapters#main(String[]) LinkChapters}.</p>
 	 * @param args command-line arguments passed from main()
 	 * @return the int value of the second command-line argument, if 
-	 * it is present and parses as an int, {@value #NO_LIMIT} otherwise.
+	 * it is present and parses as an int, {@value #IO.PHRASE_SIZE_FOR_ANCHOR} otherwise.
 	 */
 	static int validateArgs(String[] args){
 		if( args.length < 1 ){
@@ -76,20 +84,13 @@ public class FinalizeChapters {
 		}
 		
 		if( args.length < 2 ){
-			return NO_LIMIT;
+			return IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR;
 		}
 		
 		try{
 			return Integer.parseInt(args[1]);
 		} catch(NumberFormatException e){
-			return NO_LIMIT;
+			return IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR;
 		}
 	}
-	
-	/**
-	 * <p>The value returned by {@link #validateArgs(String[]) validateArgs()} 
-	 * when the phrase-size-limit argument is absent from the 
-	 * command-line args or doesn't parse as an int.</p>
-	 */
-	public static final int NO_LIMIT = -1;
 }
