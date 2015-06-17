@@ -1,6 +1,7 @@
 package repeatedphrases;
 
 import java.io.File;
+import java.util.function.Consumer;
 
 /**
  * <p>Ensures that the folders needed for this project are present 
@@ -13,7 +14,7 @@ public class EnsureFolders {
 	 * @param args command-line arguments (unused)
 	 */
 	public static void main(String[] args) {
-		ensureFolders();
+		ensureFolders(IO.DEFAULT_MSG);
 	}
 	
 	/**
@@ -23,11 +24,11 @@ public class EnsureFolders {
 	 * error message to the console if either of those is true and 
 	 * {@link System#exit(int) exits}.</p>
 	 */
-	static void ensureFolders(){
+	public static void ensureFolders(Consumer<String> msg){
 		for(Folder f : Folder.values()){
 			File name = f.folder();
 			if( !name.exists() ){
-				System.out.println("Creating "+name.getName());
+				msg.accept("Creating "+name.getName());
 				name.mkdir();
 			}
 		}
@@ -39,5 +40,4 @@ public class EnsureFolders {
 	 * (0 through 2 in filenames), PQ, and RP.</p>
 	 */
 	public static final int HTML_BOOK_COUNT = 10;
-
 }

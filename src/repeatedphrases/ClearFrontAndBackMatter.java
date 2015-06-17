@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 /**
  * <p>This class reads html files of the ASOIAF novels and 
@@ -28,6 +29,10 @@ public class ClearFrontAndBackMatter {
 	 */
 	public static final Folder WRITE_TO = Folder.HTML_BOOKS_CHAPTER_CORE;
 	
+        public static void main(String[] args){
+            clearFrontBack(IO.DEFAULT_MSG);
+        }
+        
 	/**
 	 * <p>Detects all the html files for the ASOIAF novels in 
 	 * <code>READ_FROM</code>, reads them, detects the paragraph 
@@ -38,72 +43,70 @@ public class ClearFrontAndBackMatter {
 	 * that.<p/>
 	 * @param args command-line arguments
 	 */
-	public static void main(String[] args) {
-		
-		handleNovels();
-		
-		handleNovellas();
-		
-		System.out.println("Finished.");
-	}
-	
-	private static void handleNovellas(){
-		File[] novellaFiles = READ_FROM.folder().listFiles( IO.IS_NOVELLA );
-		
-		for(File f : novellaFiles){
+	public static void clearFrontBack(Consumer<String> msg) {
 
-			System.out.println("Removing front and back matter from the novella "+f.getName());
-			
-			try{
-				HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
-				
-				int pWhereFirstWords = firstWordsP(file, f);
-				file.removeAll(0,pWhereFirstWords);
-				
-				int pWhereLastWords = lastWordsP(file, f);
-				file.removeAll( pWhereLastWords + 1 );
-				
-				OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName()+IO.DIR_SEP+f.getName() );
-				file.print(out);
-				out.close();
-				
-			} catch(FileNotFoundException e){
-				System.out.println("FileNotFoundException occured for file "+f.getName()+": "+e.getMessage());
-			} catch(UnsupportedEncodingException e){
-				System.out.println("UnsupportedEncodingException occured for file "+f.getName()+": "+e.getMessage());
-			} catch(IOException e){
-				System.out.println("IOException occured for file "+f.getName()+": "+e.getMessage());
-			}
-		}
+            handleNovels(msg);
+
+            handleNovellas(msg);
 	}
 	
-	private static void handleNovels(){
-		File[] novelFiles = READ_FROM.folder().listFiles( IO.IS_NOVEL );
-		for(File f : novelFiles){
-			
-			System.out.println("Removing front and back matter from the novel "+f.getName());
-			
-			try{
-				HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
-				
-				int pWherePrologueTitle = prologueTitleP(file);
-				file.removeAll(0,pWherePrologueTitle);
-				
-				int pWhereBackMatterStart = backMatterStart(file);
-				file.removeAll(pWhereBackMatterStart);
-				
-				OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName()+IO.DIR_SEP+f.getName() );
-				file.print(out);
-				out.close();
-				
-			} catch(FileNotFoundException e){
-				System.out.println("FileNotFoundException occured for file "+f.getName()+": "+e.getMessage());
-			} catch(UnsupportedEncodingException e){
-				System.out.println("UnsupportedEncodingException occured for file "+f.getName()+": "+e.getMessage());
-			} catch(IOException e){
-				System.out.println("IOException occured for file "+f.getName()+": "+e.getMessage());
-			}
-		}
+	private static void handleNovellas(Consumer<String> msg){
+            File[] novellaFiles = READ_FROM.folder().listFiles( IO.IS_NOVELLA );
+
+            for(File f : novellaFiles){
+
+                msg.accept("Removing front/back matter: "+f.getName());
+
+                try{
+                    HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
+
+                    int pWhereFirstWords = firstWordsP(file, f);
+                    file.removeAll(0,pWhereFirstWords);
+
+                    int pWhereLastWords = lastWordsP(file, f);
+                    file.removeAll( pWhereLastWords + 1 );
+
+                    OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName()+IO.DIR_SEP+f.getName() );
+                    file.print(out);
+                    out.close();
+
+                } catch(FileNotFoundException e){
+                    msg.accept("FileNotFoundException occured for file "+f.getName()+": "+e.getMessage());
+                } catch(UnsupportedEncodingException e){
+                    msg.accept("UnsupportedEncodingException occured for file "+f.getName()+": "+e.getMessage());
+                } catch(IOException e){
+                    msg.accept("IOException occured for file "+f.getName()+": "+e.getMessage());
+                }
+            }
+	}
+	
+	private static void handleNovels(Consumer<String> msg){
+            File[] novelFiles = READ_FROM.folder().listFiles( IO.IS_NOVEL );
+            for(File f : novelFiles){
+
+                msg.accept("Removing front/back matter: "+f.getName());
+
+                try{
+                    HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
+
+                    int pWherePrologueTitle = prologueTitleP(file);
+                    file.removeAll(0,pWherePrologueTitle);
+
+                    int pWhereBackMatterStart = backMatterStart(file);
+                    file.removeAll(pWhereBackMatterStart);
+
+                    OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName()+IO.DIR_SEP+f.getName() );
+                    file.print(out);
+                    out.close();
+
+                } catch(FileNotFoundException e){
+                    msg.accept("FileNotFoundException for file "+f.getName());//+": "+e.getMessage());
+                } catch(UnsupportedEncodingException e){
+                    msg.accept("UnsupportedEncodingException  for file "+f.getName());//+": "+e.getMessage());
+                } catch(IOException e){
+                    msg.accept("IOException for file "+f.getName());//+": "+e.getMessage());
+                }
+            }
 	}
 	
 	/**
@@ -121,15 +124,15 @@ public class ClearFrontAndBackMatter {
 	 * there isn't a second such paragraph.
 	 */
 	private static int prologueTitleP(HTMLFile file){
-		Predicate<Integer> predicate = (i) -> file.hasLiteralAt("PROLOGUE", i);
-		
-		int literalIndex1 = file.adjacentElement(predicate, Direction.NEXT, -1);
-		int literalIndex2 = file.adjacentElement(predicate, Direction.NEXT, literalIndex1);
-		
-		int seekStart = Math.max(literalIndex1, literalIndex2);
-		int pLocation = file.adjacentElement(seekStart, Tag.IS_P_OPEN, Direction.PREV);
-		
-		return pLocation-1;
+            Predicate<Integer> predicate = (i) -> file.hasLiteralAt("PROLOGUE", i);
+
+            int literalIndex1 = file.adjacentElement(predicate, Direction.NEXT, -1);
+            int literalIndex2 = file.adjacentElement(predicate, Direction.NEXT, literalIndex1);
+
+            int seekStart = Math.max(literalIndex1, literalIndex2);
+            int pLocation = file.adjacentElement(seekStart, Tag.IS_P_OPEN, Direction.PREV);
+
+            return pLocation-1;
 	}
 	
 	/**
@@ -145,15 +148,15 @@ public class ClearFrontAndBackMatter {
 	 * <code>file</code> represents.
 	 */
 	private static int backMatterStart(HTMLFile file){
-		String bookName = file.getExtensionlessName().substring(0,4);
-		String backMatterStart = backMatterStart(bookName);
-		
-		Predicate<Integer> predicate = (i) -> file.hasLiteralAt(backMatterStart, i);
-		
-		int textIndex = file.adjacentElement(predicate, Direction.PREV, file.elementCount());
-		int pIndex = file.adjacentElement(textIndex, Tag.IS_P_OPEN, Direction.PREV);
-		
-		return pIndex;
+            String bookName = file.getExtensionlessName().substring(0,4);
+            String backMatterStart = backMatterStart(bookName);
+
+            Predicate<Integer> predicate = (i) -> file.hasLiteralAt(backMatterStart, i);
+
+            int textIndex = file.adjacentElement(predicate, Direction.PREV, file.elementCount());
+            int pIndex = file.adjacentElement(textIndex, Tag.IS_P_OPEN, Direction.PREV);
+
+            return pIndex;
 	}
 	
 	/**
@@ -165,33 +168,33 @@ public class ClearFrontAndBackMatter {
 	 * section of the ASOIAF novel named <code>bookName</code>.
 	 */
 	private static String backMatterStart(String bookName){
-		switch(bookName){
-		case "AFFC" : return "MEANWHILE";
-		case "ADWD" : return "WESTEROS";
-		default     : return "APPENDIX";
-		}
+            switch(bookName){
+            case "AFFC" : return "MEANWHILE";
+            case "ADWD" : return "WESTEROS";
+            default     : return "APPENDIX";
+            }
 	}
 	
 	private static String firstWords(String novellaName){
-		switch(novellaName){
-		case "DE_0.html" : return "The spring rains";
-		case "DE_1.html" : return "In an iron";
-		case "DE_2.html" : return "A light summer";
-		case "PQ.html"   : return "The Dance of";
-		case "RP.html"   : return "He was the grandson";
-		default : throw new IllegalArgumentException(novellaName+" is not a recognized name of an ASOIAF novella html file.");
-		}
+            switch(novellaName){
+            case "DE_0.html" : return "The spring rains";
+            case "DE_1.html" : return "In an iron";
+            case "DE_2.html" : return "A light summer";
+            case "PQ.html"   : return "The Dance of";
+            case "RP.html"   : return "He was the grandson";
+            default : throw new IllegalArgumentException(novellaName+" is not a recognized name of an ASOIAF novella html file.");
+            }
 	}
 	
 	private static String lastWords(String novellaName){
-		switch(novellaName){
-		case "DE_0.html" : return "shows,” he said.";
-		case "DE_1.html" : return "hear it’s tall.”";
-		case "DE_2.html" : return "of comic dwarfs?";
-		case "PQ.html"   : return "Ser Gwayne Hightower.";
-		case "RP.html"   : return "danced and died.";
-		default : throw new IllegalArgumentException(novellaName+" is not a recognized name of an ASOIAF novella html file.");
-		}
+            switch(novellaName){
+            case "DE_0.html" : return "shows,” he said.";
+            case "DE_1.html" : return "hear it’s tall.”";
+            case "DE_2.html" : return "of comic dwarfs?";
+            case "PQ.html"   : return "Ser Gwayne Hightower.";
+            case "RP.html"   : return "danced and died.";
+            default : throw new IllegalArgumentException(novellaName+" is not a recognized name of an ASOIAF novella html file.");
+            }
 	}
 	
 	/**
@@ -204,12 +207,12 @@ public class ClearFrontAndBackMatter {
 	 * @return
 	 */
 	private static int lastWordsP(HTMLFile file, File novella){
-		String lastWords = lastWords(novella.getName());
-		Predicate<Integer> predicate = (i) -> file.hasLiteralAt(lastWords, i);
-		
-		int literalIndex = file.adjacentElement(predicate, Direction.PREV, file.elementCount());
-		
-		return file.adjacentElement(literalIndex, Tag.IS_P_CLOSE, Direction.NEXT);
+            String lastWords = lastWords(novella.getName());
+            Predicate<Integer> predicate = (i) -> file.hasLiteralAt(lastWords, i);
+
+            int literalIndex = file.adjacentElement(predicate, Direction.PREV, file.elementCount());
+
+            return file.adjacentElement(literalIndex, Tag.IS_P_CLOSE, Direction.NEXT);
 	}
 	
 	/**
@@ -222,11 +225,11 @@ public class ClearFrontAndBackMatter {
 	 * @return
 	 */
 	private static int firstWordsP(HTMLFile file, File novella){
-		String firstWords = firstWords(novella.getName());
-		Predicate<Integer> predicate = (i) -> file.hasLiteralAt(firstWords, i);
-		
-		int literalIndex = file.adjacentElement(predicate, Direction.NEXT, -1);
-		
-		return file.adjacentElement(literalIndex, Tag.IS_P_OPEN, Direction.PREV);
+            String firstWords = firstWords(novella.getName());
+            Predicate<Integer> predicate = (i) -> file.hasLiteralAt(firstWords, i);
+
+            int literalIndex = file.adjacentElement(predicate, Direction.NEXT, -1);
+
+            return file.adjacentElement(literalIndex, Tag.IS_P_OPEN, Direction.PREV);
 	}
 }

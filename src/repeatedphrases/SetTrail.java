@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 /**
  * <p>Opens the file specified as a command-line argument 
@@ -33,296 +34,304 @@ import java.util.function.Predicate;
  * existing chapter.</p>
  */
 public class SetTrail {
-	
-	/**
-	 * <p>The folder from which this class reads HTML chapters to 
-	 * which to add links for previous and next chapters.</p>
-	 * @see Folder#LINKED_CHAPTERS
-	 */
-	public static final Folder READ_FROM = Folder.LINKED_CHAPTERS;
-	
-	/**
-	 * <p>The folder where this class writes the html chapter files 
-	 * to which it has added links for previous and next chapters.</p>
-	 * @see Folder#READABLE
-	 */
-	public static final Folder WRITE_TO = Folder.READABLE;
-	
-	/**
-	 * <p>The string that names the "id" attribute of an html tag.</p>
-	 */
-	public static final String ID_ATTRIB = "id";
-	
-	/**
-	 * <p>The value of the id attribute of the anchors in the 
-	 * head and foot tables for html chapters which link to 
-	 * the previous chapter.</p>
-	 */
-	public static final String PREV_CHAPTER = "prev_chapter";
-	
-	/**
-	 * <p>The value of the id attribute for the anchors in the 
-	 * head and foot tables for html chapters which link to 
-	 * the next chapter.</p>
-	 */
-	public static final String NEXT_CHAPTER = "next_chapter";
-	
-	/**
-	 * <p>The text of the html "href" attribute followed by an 
-	 * equals sign and a quote.</p>
-	 */
-	public static final String HREF_START = "href=\"";
-	
-	/**
-	 * <p>Reads the html chapter files from <code>READ_FROM</code> and writes 
-	 * modified versions of them with links to previous and next chapters 
-	 * added according to the data in the trail file named by the first 
-	 * command-line argument to the folder <code>WRITE_TO</code>.</p>
-	 * @param args command-line arguments
-	 */
-	public static void main(String[] args) {
-		if(args.length < 1){
-			System.out.println("No arguments received. Usage: java SetTrail trail-info-file");
-			System.exit(1);
-		}
-		String trailSource = args[0];
-		System.out.println("Getting trail data from " + trailSource );
-		List<TrailElement> elements = getTrailElements( trailSource );
-		
-		for(TrailElement node : elements){
-			System.out.println("Working with data for file "+node.focus());
-			
-			HTMLFile file = null;
-			try{
-				file = new HTMLFile(new File( READ_FROM.folderName() + IO.DIR_SEP + node.focus()));
-			} catch( FileNotFoundException e){
-				IO.errorExit(READ_FROM.folderName() + IO.DIR_SEP + node.focus() + " for reading");
-			}
-			
-			setAdjacentChapterLinks(file, PREV_CHAPTER, ID_ATTRIB, node.prev());
-			setAdjacentChapterLinks(file, NEXT_CHAPTER, ID_ATTRIB, node.next());
-			
-			System.out.println("Saving file.");
-			file.print( WRITE_TO.folderName() + IO.DIR_SEP + node.focus());
-		}
-	}
-	
-	/**
-	 * <p>Finds all anchor tags with the specified value of the 
-	 * specified attribute in the specified html file and changes 
-	 * the values of the href attributes of those anchors to 
-	 * <code>address</code>.</p>
-	 * @param file the html file whose anchor tags with the specified 
-	 * attribute and value are being modified
-	 * @param idValue the value to be used in determining which 
-	 * anchors to modify
-	 * @param idAttrib the attribute to use in determining which 
-	 * anchors to modify
-	 * @param address the relative address of an html chapter 
-	 * file to which to link as an adjacent chapter
-	 */
-	private static void setAdjacentChapterLinks(HTMLFile file, String idValue, String idAttrib, String address){
-		Predicate<HTMLEntity> isAnchorWithMatchID = (h) -> HTMLFile.IS_TAG.test(h) 
-				&& ((Tag)h).isType( Tag.A ) 
-				&& idValue.equals(((Tag)h).valueOfAttribute(idAttrib));
-		int pointer = -1;
-		while( -1 != (pointer=file.adjacentElement(pointer, isAnchorWithMatchID, Direction.NEXT))){
-			
-			String tag = file.get(pointer).toString();
-			tag = tag.substring(1,tag.length()-1);
-			
-			//file.set(pointer, new Tag(front + address + back));
-			file.set(pointer, new Tag( anchor(tag, address)));
-		}
-	}
-	
-	/**
-	 * <p>The closing quote for an html tag attribute's value.</p>
-	 */
-	public static final String QUOTE = "\"";
-	
-	/**
-	 * <p>The title attribute of an html tag and the quote that 
-	 * begins the attribute's value.</p>
-	 */
-	public static final String TITLE_START = "title=\"";
-	
-	/**
-	 * <p>Returns a String based on <code>tag</code>, with the value 
-	 * of the pre-existing href attribute replaced by the parameter 
-	 * <code>address</code> and with the value of the pre-existing 
-	 * title attribute replaced by a chapter title extracted from 
-	 * <code>address</code> by calling {@link #title(String) title(address)}.</p>
-	 * 
-	 * <p>For example, 
-	 * <code>anchor("<a href=\"no.html\" title=\"no\">", "book_0_yes_yes.html")</code> 
-	 * would return "<a href=\"book_0_yes_yes.html\" title=\"yes yes\">".</p>
-	 * @param tag
-	 * @param address
-	 * @return
-	 */
-	private static String anchor(String tag, String address){
-		return replaceValueOfAttribute( replaceValueOfAttribute(tag, HREF_START, address), TITLE_START, title(address));
-	}
-	
-	/**
-	 * <p>Returns the value for the title attribute of an anchor tag 
-	 * based on the specified address to which the anchor links.</p>
-	 * 
-	 * <p>Returns <code>address</code> with its book name, chapter index, 
-	 * and file extension stripped away and underscores replaced 
-	 * with spaces.</p>
-	 * @param address the address of an html file for a chapter being 
-	 * linked.
-	 * @return <code>address</code> with its book name, chapter index, 
-	 * and file extension stripped away.
-	 */
-	private static String title(String address){
-		if(address.isEmpty()){
-			return address;
-		}
-		String name = IO.stripFolderExtension(address);
-		String withoutBook = name.substring(name.indexOf('_')+1);
-		String withoutIndx = withoutBook.substring(withoutBook.indexOf('_')+1);
-		//String withoutExtn = withoutIndx.substring(0, withoutIndx.lastIndexOf('.'));
-		return withoutIndx.replace('_',' ');
-	}
-	
-	/**
-	 * <p>Replaces the pre-existing value of the attribute specified by 
-	 * <code>attributeStart</code> in the specified <code>body</code> 
-	 * of an html tag with <code>installValue</code>.</p>
-	 * 
-	 * @param body the text of an html tag of which a modified version 
-	 * is returned
-	 * 
-	 * @param attributeStart identifies the attribute whose value is 
-	 * to be modified. Must  be the name of an attribute 
-	 * followed by an equals sign followed by a double quote, such as 
-	 * {@link #TITLE_START TITLE_START} or {@link #HREF_START HREF_START}.
-	 * 
-	 * @param installValue the value of the attribute named by 
-	 * <code>attributeStart</code> to install in place of the 
-	 * pre-existing value
-	 * 
-	 * @return  the pre-existing value of the attribute specified by 
-	 * <code>attributeStart</code> in the specified <code>body</code> 
-	 * of an html tag with <code>installValue</code>
-	 */
-	private static String replaceValueOfAttribute(String body, String attributeStart, String installValue){
-		int start = body.indexOf(attributeStart)+attributeStart.length();
-		int end = body.indexOf(QUOTE, start);
-		String front = body.substring(0,start);
-		String back = body.substring(end);
-		return front + installValue + back;
-	}
-	
-	/**
-	 * <p>Number of columns to anticipate in input file: {@value}</p>
-	 * 
-	 * <p>The fourth column is unused at this time, 
-	 * but expecting it allows the third column to 
-	 * be cleanly isolated if a fourth column exists.</p>
-	 */
-	public static final int COLUMN_COUNT = 4;
-	
-	/**
-	 * <p>Returns a list of <code>TrailElement</code>s describing each 
-	 * chapter's predecessor and successor.</p>
-	 * @param name the name of the trail-file from which 
-	 * trail data is extracted
-	 * @return a list of <code>TrailElement</code>s describing each 
-	 * chapter's predecessor and successor
-	 */
-	public static List<TrailElement> getTrailElements(String name){
-		List<String> lines = IO.fileContentsAsList(new File(name), IO.NEXT_LINE, IO.SCANNER_HAS_NONEMPTY_NEXT_LINE);
-		List<TrailElement> result = new ArrayList<>();
-		for(String line : lines){
-			String[] s = line.split("\t", COLUMN_COUNT);
-			result.add( new TrailElement( s[0], s[1], s[2] ) );
-		}
-		return result;
-	}
-	
-	/**
-	 * <p>Represents an element of a chapter trail, a sequence 
-	 * of backward and forward links between chapters.</p>
-	 */
-	public static class TrailElement implements Comparable<TrailElement>{
-		
-		/**
-		 * <p>The chapter to be linked as the preceding chapter in the trail.</p>
-		 */
-		private final String prev;
-		
-		/**
-		 * <p>The chapter for which links to the specified preceding and 
-		 * succeeding chapters are to be installed.</p>
-		 */
-		private final String focus;
-		
-		/**
-		 * <p>The chapter to be linked as the succeeding chapter in the trail.</p>
-		 */
-		private final String next;
-		
-		/**
-		 * <p>Constructs a TrailElement indicating that the chapter 
-		 * named by <code>focus</code> has the chapter named by 
-		 * <code>prev</code as its predecessor and the chapter 
-		 * named by <code>next</code> as its successor.</p>
-		 * @param prev the chapter before <code>focus</code> in sequence
-		 * @param focus the chapter in which links to <code>prev</code> 
-		 * and <code>next</code> are to be installed
-		 * @param next the chapter after <code>focus</code> in sequence
-		 */
-		public TrailElement(String prev, String focus, String next){
-			this.prev = prev;
-			this.focus = focus;
-			this.next = next;
-		}
-		
-		/**
-		 * <p>Compares two TrailElements, first by their 
-		 * <code>focus</code>, then by their <code>prev</code>, 
-		 * and last by their <code>next</code>.</p>
-		 * @return an int whose sign reflects the natural ordering 
-		 * between this TrailElement and <code>t</code>
-		 */
-		@Override
-		public int compareTo(TrailElement t){
-			int comp = focus.compareTo(t.focus);
-			if(comp!=0){
-				return comp;
-			} else if(0 != (comp = prev.compareTo(t.prev))){
-				return comp;
-			} else{
-				return next.compareTo(t.next);
-			}
-		}
-		
-		/**
-		 * <p>Returns {@link #prev prev}.</p>
-		 * @return {@link #prev prev}
-		 */
-		public String prev(){
-			return prev;
-		}
-		
-		/**
-		 * <p>Returns {@link #focus focus}.</p>
-		 * @return {@link #focus focus}
-		 */
-		public String focus(){
-			return focus;
-		}
-		
-		/**
-		 * <p>Returns {@link #next next}.</p>
-		 * @return {@link #next next}
-		 */
-		public String next(){
-			return next;
-		}
-	}
+
+    /**
+     * <p>The folder from which this class reads HTML chapters to 
+     * which to add links for previous and next chapters.</p>
+     * @see Folder#LINKED_CHAPTERS
+     */
+    public static final Folder READ_FROM = Folder.LINKED_CHAPTERS;
+
+    /**
+     * <p>The folder where this class writes the html chapter files 
+     * to which it has added links for previous and next chapters.</p>
+     * @see Folder#READABLE
+     */
+    public static final Folder WRITE_TO = Folder.READABLE;
+
+    /**
+     * <p>The string that names the "id" attribute of an html tag.</p>
+     */
+    public static final String ID_ATTRIB = "id";
+
+    /**
+     * <p>The value of the id attribute of the anchors in the 
+     * head and foot tables for html chapters which link to 
+     * the previous chapter.</p>
+     */
+    public static final String PREV_CHAPTER = "prev_chapter";
+
+    /**
+     * <p>The value of the id attribute for the anchors in the 
+     * head and foot tables for html chapters which link to 
+     * the next chapter.</p>
+     */
+    public static final String NEXT_CHAPTER = "next_chapter";
+
+    /**
+     * <p>The text of the html "href" attribute followed by an 
+     * equals sign and a quote.</p>
+     */
+    public static final String HREF_START = "href=\"";
+
+    /**
+     * <p>Calls setTrail().</p>
+     * @param args 
+     */
+    public static void main(String[] args){
+        setTrail(args, IO.DEFAULT_MSG);
+    }
+
+    /**
+     * <p>Reads the html chapter files from <code>READ_FROM</code> and writes 
+     * modified versions of them with links to previous and next chapters 
+     * added according to the data in the trail file named by the first 
+     * command-line argument to the folder <code>WRITE_TO</code>.</p>
+     * @param args command-line arguments
+     * @param msg
+     */
+    public static void setTrail(String[] args, Consumer<String> msg) {
+        if(args.length < 1){
+            msg.accept("No args received. Usage: java SetTrail trail-info-file");
+            System.exit(1);
+        }
+        String trailSource = args[0];
+        msg.accept("Getting trail data from " + trailSource );
+        List<TrailElement> elements = getTrailElements( trailSource );
+
+        for(TrailElement node : elements){
+            msg.accept("Trail-linking "+node.focus());
+
+            HTMLFile file = null;
+            try{
+                file = new HTMLFile(new File( READ_FROM.folderName() + IO.DIR_SEP + node.focus()));
+            } catch( FileNotFoundException e){
+                IO.errorExit(READ_FROM.folderName() + IO.DIR_SEP + node.focus() + " for reading");
+            }
+
+            setAdjacentChapterLinks(file, PREV_CHAPTER, ID_ATTRIB, node.prev());
+            setAdjacentChapterLinks(file, NEXT_CHAPTER, ID_ATTRIB, node.next());
+            
+            file.print( WRITE_TO.folderName() + IO.DIR_SEP + node.focus());
+        }
+    }
+
+    /**
+     * <p>Finds all anchor tags with the specified value of the 
+     * specified attribute in the specified html file and changes 
+     * the values of the href attributes of those anchors to 
+     * <code>address</code>.</p>
+     * @param file the html file whose anchor tags with the specified 
+     * attribute and value are being modified
+     * @param idValue the value to be used in determining which 
+     * anchors to modify
+     * @param idAttrib the attribute to use in determining which 
+     * anchors to modify
+     * @param address the relative address of an html chapter 
+     * file to which to link as an adjacent chapter
+     */
+    private static void setAdjacentChapterLinks(HTMLFile file, String idValue, String idAttrib, String address){
+        Predicate<HTMLEntity> isAnchorWithMatchID = (h) -> HTMLFile.IS_TAG.test(h) 
+                && ((Tag)h).isType( Tag.A ) 
+                && idValue.equals(((Tag)h).valueOfAttribute(idAttrib));
+        int pointer = -1;
+        while( -1 != (pointer=file.adjacentElement(pointer, isAnchorWithMatchID, Direction.NEXT))){
+
+            String tag = file.get(pointer).toString();
+            tag = tag.substring(1,tag.length()-1);
+
+            //file.set(pointer, new Tag(front + address + back));
+            file.set(pointer, new Tag( anchor(tag, address)));
+        }
+    }
+
+    /**
+     * <p>The closing quote for an html tag attribute's value.</p>
+     */
+    public static final String QUOTE = "\"";
+
+    /**
+     * <p>The title attribute of an html tag and the quote that 
+     * begins the attribute's value.</p>
+     */
+    public static final String TITLE_START = "title=\"";
+
+    /**
+     * <p>Returns a String based on <code>tag</code>, with the value 
+     * of the pre-existing href attribute replaced by the parameter 
+     * <code>address</code> and with the value of the pre-existing 
+     * title attribute replaced by a chapter title extracted from 
+     * <code>address</code> by calling {@link #title(String) title(address)}.</p>
+     * 
+     * <p>For example, 
+     * <code>anchor("<a href=\"no.html\" title=\"no\">", "book_0_yes_yes.html")</code> 
+     * would return "<a href=\"book_0_yes_yes.html\" title=\"yes yes\">".</p>
+     * @param tag
+     * @param address
+     * @return
+     */
+    private static String anchor(String tag, String address){
+        return replaceValueOfAttribute( replaceValueOfAttribute(tag, HREF_START, address), TITLE_START, title(address));
+    }
+
+    /**
+     * <p>Returns the value for the title attribute of an anchor tag 
+     * based on the specified address to which the anchor links.</p>
+     * 
+     * <p>Returns <code>address</code> with its book name, chapter index, 
+     * and file extension stripped away and underscores replaced 
+     * with spaces.</p>
+     * @param address the address of an html file for a chapter being 
+     * linked.
+     * @return <code>address</code> with its book name, chapter index, 
+     * and file extension stripped away.
+     */
+    private static String title(String address){
+        if(address.isEmpty()){
+            return address;
+        }
+        String name = IO.stripFolderExtension(address);
+        String withoutBook = name.substring(name.indexOf('_')+1);
+        String withoutIndx = withoutBook.substring(withoutBook.indexOf('_')+1);
+        //String withoutExtn = withoutIndx.substring(0, withoutIndx.lastIndexOf('.'));
+        return withoutIndx.replace('_',' ');
+    }
+
+    /**
+     * <p>Replaces the pre-existing value of the attribute specified by 
+     * <code>attributeStart</code> in the specified <code>body</code> 
+     * of an html tag with <code>installValue</code>.</p>
+     * 
+     * @param body the text of an html tag of which a modified version 
+     * is returned
+     * 
+     * @param attributeStart identifies the attribute whose value is 
+     * to be modified. Must  be the name of an attribute 
+     * followed by an equals sign followed by a double quote, such as 
+     * {@link #TITLE_START TITLE_START} or {@link #HREF_START HREF_START}.
+     * 
+     * @param installValue the value of the attribute named by 
+     * <code>attributeStart</code> to install in place of the 
+     * pre-existing value
+     * 
+     * @return  the pre-existing value of the attribute specified by 
+     * <code>attributeStart</code> in the specified <code>body</code> 
+     * of an html tag with <code>installValue</code>
+     */
+    private static String replaceValueOfAttribute(String body, String attributeStart, String installValue){
+        int start = body.indexOf(attributeStart)+attributeStart.length();
+        int end = body.indexOf(QUOTE, start);
+        String front = body.substring(0,start);
+        String back = body.substring(end);
+        return front + installValue + back;
+    }
+
+    /**
+     * <p>Number of columns to anticipate in input file: {@value}</p>
+     * 
+     * <p>The fourth column is unused at this time, 
+     * but expecting it allows the third column to 
+     * be cleanly isolated if a fourth column exists.</p>
+     */
+    public static final int COLUMN_COUNT = 4;
+
+    /**
+     * <p>Returns a list of <code>TrailElement</code>s describing each 
+     * chapter's predecessor and successor.</p>
+     * @param name the name of the trail-file from which 
+     * trail data is extracted
+     * @return a list of <code>TrailElement</code>s describing each 
+     * chapter's predecessor and successor
+     */
+    public static List<TrailElement> getTrailElements(String name){
+        List<String> lines = IO.fileContentsAsList(new File(name), IO.NEXT_LINE, IO.SCANNER_HAS_NONEMPTY_NEXT_LINE);
+        List<TrailElement> result = new ArrayList<>();
+        for(String line : lines){
+            String[] s = line.split("\t", COLUMN_COUNT);
+            result.add( new TrailElement( s[0], s[1], s[2] ) );
+        }
+        return result;
+    }
+
+    /**
+     * <p>Represents an element of a chapter trail, a sequence 
+     * of backward and forward links between chapters.</p>
+     */
+    public static class TrailElement implements Comparable<TrailElement>{
+
+        /**
+         * <p>The chapter to be linked as the preceding chapter in the trail.</p>
+         */
+        private final String prev;
+
+        /**
+         * <p>The chapter for which links to the specified preceding and 
+         * succeeding chapters are to be installed.</p>
+         */
+        private final String focus;
+
+        /**
+         * <p>The chapter to be linked as the succeeding chapter in the trail.</p>
+         */
+        private final String next;
+
+        /**
+         * <p>Constructs a TrailElement indicating that the chapter 
+         * named by <code>focus</code> has the chapter named by 
+         * <code>prev</code as its predecessor and the chapter 
+         * named by <code>next</code> as its successor.</p>
+         * @param prev the chapter before <code>focus</code> in sequence
+         * @param focus the chapter in which links to <code>prev</code> 
+         * and <code>next</code> are to be installed
+         * @param next the chapter after <code>focus</code> in sequence
+         */
+        public TrailElement(String prev, String focus, String next){
+            this.prev = prev;
+            this.focus = focus;
+            this.next = next;
+        }
+
+        /**
+         * <p>Compares two TrailElements, first by their 
+         * <code>focus</code>, then by their <code>prev</code>, 
+         * and last by their <code>next</code>.</p>
+         * @return an int whose sign reflects the natural ordering 
+         * between this TrailElement and <code>t</code>
+         */
+        @Override
+        public int compareTo(TrailElement t){
+            int comp = focus.compareTo(t.focus);
+            if(comp!=0){
+                return comp;
+            } else if(0 != (comp = prev.compareTo(t.prev))){
+                return comp;
+            } else{
+                return next.compareTo(t.next);
+            }
+        }
+
+        /**
+         * <p>Returns {@link #prev prev}.</p>
+         * @return {@link #prev prev}
+         */
+        public String prev(){
+            return prev;
+        }
+
+        /**
+         * <p>Returns {@link #focus focus}.</p>
+         * @return {@link #focus focus}
+         */
+        public String focus(){
+            return focus;
+        }
+
+        /**
+         * <p>Returns {@link #next next}.</p>
+         * @return {@link #next next}
+         */
+        public String next(){
+            return next;
+        }
+    }
 }

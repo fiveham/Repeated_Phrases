@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * <p>Wraps a HashMap linking String phrases with data structures 
@@ -156,7 +157,7 @@ public class PhraseBox{
 	 * <p>Removes from this PhraseBox all the phrase-instance data 
 	 * for phrases that have only one associated Location.</p>
 	 */
-	public void removeUniques(){
+	public void removeUniques(Consumer<String> msg){
 		final int initSize = size();
 		
 		List<String> keys = new ArrayList<>(hashmap.keySet());
@@ -166,7 +167,7 @@ public class PhraseBox{
 			}
 		}
 		
-		System.out.printf("Removed %d non-repeated terms\n", initSize-size());
+		msg.accept("Removed "+ (initSize - size()) +" non-repeated terms");
 	}
 	
 	/**

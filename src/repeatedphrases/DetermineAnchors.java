@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.function.Consumer;
 
 /**
  * <p>This class reads every phrase-instance from ASOIAF 
@@ -38,6 +39,10 @@ public class DetermineAnchors {
 	 */
 	public static final Folder WRITE_TO = Folder.ANCHORS;
 	
+    public static void main(String[] args){
+        determineAnchors(args, IO.DEFAULT_MSG);
+    }
+        
 	/**
 	 * <p>Detects all the .txt files in <code>READ_FROM</code>, reads them 
 	 * all, and organizes the extracted data by chapter name and by phrase. 
@@ -50,25 +55,27 @@ public class DetermineAnchors {
 	 * the Location of the instance of the phrase to which the link leads.</p>
 	 * @param args command-line arguments. args[0], if present, names a file 
 	 * to be used in sequencing the 
+	 * @param msg a messenger that {@link System#out prints} to the console 
+	 * when this class is run from the command-line or 
+	 * {@link javax.swing.JLabel#setText(String) sets the text of a label} in 
+	 * the GUI if this class is run from the GUI.
 	 */
-	public static void main(String[] args) {
+	public static void determineAnchors(String[] args, Consumer<String> msg) {
 		Comparator<Location> phraseSorter = getPhraseSorter( args.length > 0 ? args[0] : "");
 		
-		System.out.println("Rendering phrase data as filebox and phrasebox.");
+		msg.accept("Rendering phrase data as filebox and phrasebox.");
 		
-		String allAnchorablePhraseInstances = getDupPhraseData();
-		System.out.println("Got anchorable phrase data.");
+		String allAnchorablePhraseInstances = getDupPhraseData(msg);
+		msg.accept("Got anchorable phrase data.");
 		
-		System.out.println("Generating phrase-first data structure.");
+		msg.accept("Generating phrase-first data structure.");
 		PhraseBox phrasebox = new PhraseBox( new Scanner( allAnchorablePhraseInstances ) );
 		for(String phrase : phrasebox.phrases()){
 			phrasebox.get(phrase).sort(phraseSorter);
 		}
 		
-		System.out.println("Generating chaptername-first data structure.");
+		msg.accept("Generating chaptername-first data structure.");
 		FileBox filebox = new FileBox( new Scanner( allAnchorablePhraseInstances ) );
-		
-		System.out.println("Created filebox and phrasebox.");
 		
 		//create a file for each chapter and fill it with phrases 
 		//that need to be tagged in that chapter, the locations in 
@@ -76,7 +83,7 @@ public class DetermineAnchors {
 		//references to the phrase-instances to which those phrase-
 		//instances need to link.
 		for(String chapter : filebox.filenames()){
-			System.out.println("Creating anchor data for "+chapter);
+			msg.accept("Creating anchor data for "+chapter);
 			
 			String name = IO.anchorOutName(chapter);
 			
@@ -178,13 +185,13 @@ public class DetermineAnchors {
 	 * files containing non-unique independent repeated 
 	 * phrase information from <code>READ_FROM</code>.
 	 */
-	private static String getDupPhraseData(){
+	private static String getDupPhraseData(Consumer<String> msg){
 		StringBuilder sb = new StringBuilder();
 		
 		for(int size=FindRepeatedPhrases.MIN_PHRASE_SIZE; size<FindRepeatedPhrases.MAX_PHRASE_SIZE; size++){
 			
 			String name = READ_FROM.filename(size);
-			System.out.println("Reading anchorable phrase data from "+name);
+			msg.accept("Reading anchorable phrase data from "+name);
 			try{
 				List<String> lines = IO.fileContentsAsList( 
 						new Scanner(new File( name )), 

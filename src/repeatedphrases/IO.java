@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 /**
  * <p>Provides convenience methods for reading and writing files. 
@@ -139,6 +140,11 @@ public class IO {
 	 */
 	public static final FilenameFilter IS_TXT = (dir,name) -> name.endsWith(TXT_EXT);
 	
+        /**
+         * <p>The default way to display a message: printing to the console.</p>
+         */
+        public static final Consumer<String> DEFAULT_MSG = (s) -> System.out.println(s);
+        
 	/**
 	 * <p>Returns true if <code>c</code> occurs in chapters' titles, 
 	 * false otherwise.</p>

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.function.Consumer;
 
 /**
  * <p>Finds phrases that are repeated in the corpus and 
@@ -44,6 +45,10 @@ public class FindRepeatedPhrases {
 	 * AFFC Samwell I and ADWD Jon II.</p>
 	 */
 	public static final int MAX_PHRASE_SIZE = 218;
+        
+        public static void main(String[] args){
+            findRepPhrases(IO.DEFAULT_MSG);
+        }
 	
 	/**
 	 * <p>Gets a list of the files to be analysed via 
@@ -55,7 +60,7 @@ public class FindRepeatedPhrases {
 	 * <p>"Phrase size" is the number of words in a given phrase.</p>
 	 * @param args	Command-line arguments (unused)
 	 */
-	public static void main(String[] args) {
+	public static void findRepPhrases(Consumer<String> msg) {
 		
 		File[] readUs = READ_FROM.folder().listFiles( IO.IS_TXT );
 		final List<Chapter> chapters = getChapters( readUs );
@@ -67,13 +72,13 @@ public class FindRepeatedPhrases {
 				phraseSize <= MAX_PHRASE_SIZE; 
 				phraseSize++ ){
 			
-			System.out.println("Begin process for phrase size "+phraseSize);
+			msg.accept("Begin process for phrase size "+phraseSize);
 			
 			//Create an index of phrases from the corpus and their locations
-			PhraseBox words = scanCorpus(phraseSize, chapters, repeatedPhrasesFromPrevLoop);
+			PhraseBox words = scanCorpus(phraseSize, chapters, repeatedPhrasesFromPrevLoop, msg);
 			
 			//remove non-repeated phrases
-			words.removeUniques();
+			words.removeUniques(msg);
 			
 			//print repeated phrases and all their locations in the corpus to a file
 			words.printPhrasesWithLocations(IO.newOutputStreamWriter( WRITE_TO.filename(phraseSize) ));
@@ -165,8 +170,8 @@ public class FindRepeatedPhrases {
 	 * containing all such phrases that are repeated in the corpus, as well 
 	 * as some number of unique phrases.
 	 */
-	private static PhraseBox scanCorpus(int phraseSize, List<Chapter> chapters, PhraseBox repeatPhrasesForPrevSize){
-		System.out.print("Scanning corpus. ");// for "+phraseSize+"-word phrases");
+	private static PhraseBox scanCorpus(int phraseSize, List<Chapter> chapters, PhraseBox repeatPhrasesForPrevSize, Consumer<String> msg){
+		msg.accept("Scanning corpus. ");// for "+phraseSize+"-word phrases");
 		
 		Corpus corpus = new Corpus(phraseSize, chapters);
 		PhraseBox corpusAsStructure = new PhraseBox();
@@ -181,8 +186,7 @@ public class FindRepeatedPhrases {
 			}
 		}
 		
-		System.out.printf("Got %d phrases\n", 
-				corpusAsStructure.size());
+		msg.accept("Got "+corpusAsStructure.size()+" phrases");
 		return corpusAsStructure;
 	}
 	
