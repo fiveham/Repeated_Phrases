@@ -33,8 +33,7 @@ public class IsolateChaptersAndLink {
      * @param msg 
      */
     public static void isolateChaptersAndLink(String[] args, Consumer<String> msg) {
-
-        validateArgs(args, msg);
+    	validateArgs(args, msg);
 
         EnsureFolders.ensureFolders(msg);
 
@@ -80,16 +79,18 @@ public class IsolateChaptersAndLink {
      */
     static int validateArgs(String[] args, Consumer<String> msg){
         if( args.length < 1 ){
-            msg.accept("Need a trail file.");
+            //msg.accept("Need a trail file.");
             //System.out.println("Usage: java IsolateChaptersAndLink trail-file-name [phrase-size-min-for-linking]");
-            System.exit(0);
+            //System.exit(0);
+        	throw new IllegalArgumentException("I need a trail file.");
         }
 
         String trail = args[0];
 
         if( !(new File(trail)).exists() ){
-            msg.accept("Cannot find file "+trail);
-            System.exit(0);
+            //msg.accept("Cannot find file "+trail);
+            //System.exit(0);
+            throw new IllegalArgumentException("I can't find that trail-file: \""+trail+"\"");
         }
 
         if( args.length < 2 ){

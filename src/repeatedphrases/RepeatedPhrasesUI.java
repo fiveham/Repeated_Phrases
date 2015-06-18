@@ -252,18 +252,13 @@ public class RepeatedPhrasesUI extends JFrame {
             opState = createFoldersButton;
             statusLabel.setText("Creating needed folders");
             
-            SwingWorker<Void,Void> createFoldersTask = new SwingWorker<Void,Void>(){
-                @Override
-                public Void doInBackground(){
-                    EnsureFolders.ensureFolders( statusLabelMsg );
-                    return null;
-                }
-                @Override
-                public void done(){
+            ButtonOperation createFoldersTask = new ButtonOperation(new Runnable(){
+            	@Override
+            	public void run(){
+            		EnsureFolders.ensureFolders( statusLabelMsg );
                     statusLabel.setText("Done: Put html books in "+Folder.HTML_BOOKS.folderName());
-                    opState = null;
-                }
-            };
+            	}
+            });
             
             createFoldersTask.execute();
         }
@@ -279,18 +274,13 @@ public class RepeatedPhrasesUI extends JFrame {
             String[] trailAndLimit = trailAndLimit();
             statusLabel.setText("Doing all the work ("+ trailAndLimit[0] +", "+ trailAndLimit[1] +")");
             
-            SwingWorker<Void,Void> chapterizeLinkTask = new SwingWorker<Void,Void>(){
-                @Override
-                public Void doInBackground(){
-                    IsolateChaptersAndLink.isolateChaptersAndLink( trailAndLimit, statusLabelMsg );
-                    return null;
-                }
-                @Override
-                public void done(){
+            ButtonOperation chapterizeLinkTask = new ButtonOperation(new Runnable(){
+            	@Override
+            	public void run(){
+            		IsolateChaptersAndLink.isolateChaptersAndLink( trailAndLimit, statusLabelMsg );
                     statusLabel.setText("Done: Chapters ready: "+Folder.READABLE.folderName());
-                    opState = null;
-                }
-            };
+            	}
+            });
             
             chapterizeLinkTask.execute();
             
@@ -307,18 +297,13 @@ public class RepeatedPhrasesUI extends JFrame {
             String[] trailAndLimit = trailAndLimit();
             statusLabel.setText("Changing chapter order ("+ trailAndLimit[0] +", "+ trailAndLimit[1] +")");
             
-            SwingWorker<Void,Void> changeOrderTask = new SwingWorker<Void,Void>(){
-                @Override
-                public Void doInBackground(){
-                    LinksAndTrail.linksAndTrail( trailAndLimit, statusLabelMsg );
-                    return null;
-                }
-                @Override
-                public void done(){
+            ButtonOperation changeOrderTask = new ButtonOperation(new Runnable(){
+            	@Override
+            	public void run(){
+            		LinksAndTrail.linksAndTrail( trailAndLimit, statusLabelMsg );
                     statusLabel.setText("Done: Chapter order changed");
-                    opState = null;
-                }
-            };
+            	}
+            });
             
             changeOrderTask.execute();
         }
@@ -334,22 +319,17 @@ public class RepeatedPhrasesUI extends JFrame {
             String trail = trailFileField.getText();
             statusLabel.setText("Changing trail sequence ("+ trail +")");
             
-            SwingWorker<Void,Void> changeTrailTask = new SwingWorker<Void,Void>(){
-                @Override
-                public Void doInBackground(){
-                    SetTrail.setTrail(new String[]{trail}, statusLabelMsg);
-                    return null;
-                }
-                @Override
-                public void done(){
-                    statusLabel.setText("Done: Trail changed to "+trail);
-                    opState = null;
-                }
-            };
+            ButtonOperation changeTrailTask = new ButtonOperation( new Runnable(){
+            	@Override
+            	public void run(){
+            		SetTrail.setTrail(new String[]{trail}, statusLabelMsg);
+            		statusLabel.setText("Done: Trail changed to "+trail);
+            	}
+            } );
             
             changeTrailTask.execute();
         }
-    }//GEN-LAST:event_changeTrailButtonActionPerformed
+    }
 
     /**
      * <p>Sets look and feel for the GUI, and creates/queues 
@@ -389,8 +369,7 @@ public class RepeatedPhrasesUI extends JFrame {
             }
         });
     }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    
     private JButton changeOrderButton;
     private JButton changeTrailButton;
     private JButton chapterizeLinkButton;
@@ -405,7 +384,6 @@ public class RepeatedPhrasesUI extends JFrame {
     private JLabel statusTitleLabel;
     private JTextField trailFileField;
     private JLabel trailFileLabel;
-    // End of variables declaration//GEN-END:variables
     
     /**
      * <p>Displays a message on the GUI identifying an action that 
@@ -436,4 +414,31 @@ public class RepeatedPhrasesUI extends JFrame {
      * processes initiated by those method calls finish.</p>
      */
     private JButton opState = null;
+    
+    private class ButtonOperation extends SwingWorker<Void,Void>{
+    	
+    	private Runnable action;
+    	
+    	private ButtonOperation(Runnable action){
+    		this.action = action;
+    	}
+    	
+    	@Override
+    	public Void doInBackground(){
+    		
+    		try{
+    			action.run();
+    		} catch(IllegalArgumentException e){
+    			statusLabelMsg.accept(e.getMessage());
+    		}
+    		
+    		return null;
+    	}
+    	
+    	@Override
+    	public final void done(){
+    		opState = null;
+    	}
+    	
+    }
 }
