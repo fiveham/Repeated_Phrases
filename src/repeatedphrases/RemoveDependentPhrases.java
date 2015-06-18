@@ -84,8 +84,7 @@ public class RemoveDependentPhrases {
                 smallerPhrases = new Database(new File( READ_FROM.filename(lowSize) ));
 
                 smallerPhrases.phrasesIndependentOf(largerPhrases)
-                        .printPhrasesWithLocations(
-                                IO.newOutputStreamWriter( WRITE_TO.filename(lowSize) ));
+                        .printPhrasesWithLocations(WRITE_TO.filename(lowSize));
             } catch(FileNotFoundException e){
                 IO.errorExit( READ_FROM.filename(lowSize) + " or " + READ_FROM.filename(lowSize+1) );
             }

@@ -81,7 +81,7 @@ public class IsolateChaptersAndLink {
         if( args.length < 1 ){
             //msg.accept("Need a trail file.");
             //System.out.println("Usage: java IsolateChaptersAndLink trail-file-name [phrase-size-min-for-linking]");
-            //System.exit(0);
+            //System.exit (0);
         	throw new IllegalArgumentException("I need a trail file.");
         }
 
@@ -89,8 +89,8 @@ public class IsolateChaptersAndLink {
 
         if( !(new File(trail)).exists() ){
             //msg.accept("Cannot find file "+trail);
-            //System.exit(0);
-            throw new IllegalArgumentException("I can't find that trail-file: \""+trail+"\"");
+            //System.exit (0);
+            throw new IllegalArgumentException("I can't find that trail-file: \""+trail+"\".");
         }
 
         if( args.length < 2 ){

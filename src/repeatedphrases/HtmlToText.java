@@ -41,7 +41,7 @@ public class HtmlToText {
                 HTMLFile file = new HTMLFile(f);
                 file.printAsText( WRITE_TO.folderName() + IO.DIR_SEP + IO.stripExtension(f.getName()) + IO.TXT_EXT );
             } catch(FileNotFoundException e){
-                IO.errorExit(f.getName() + " for reading.");
+                IO.errorExit(f.getName() + " for reading");
             }
         }
     }

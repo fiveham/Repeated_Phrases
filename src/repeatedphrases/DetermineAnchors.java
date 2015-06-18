@@ -87,8 +87,8 @@ public class DetermineAnchors {
 			
 			String name = IO.anchorOutName(chapter);
 			
-			try{
-				OutputStreamWriter out = IO.newOutputStreamWriter( name );
+			try(OutputStreamWriter out = IO.newOutputStreamWriter( name );){
+				
 				List<IntString> phrases = filebox.get(chapter);
 				phrases.sort(null);
 				
@@ -191,10 +191,10 @@ public class DetermineAnchors {
 		for(int size=FindRepeatedPhrases.MIN_PHRASE_SIZE; size<FindRepeatedPhrases.MAX_PHRASE_SIZE; size++){
 			
 			String name = READ_FROM.filename(size);
-			msg.accept("Reading anchorable phrase data from "+name);
+			msg.accept("Reading anchorable phrase data from "+IO.stripFolder(name));
 			try{
 				List<String> lines = IO.fileContentsAsList( 
-						new Scanner(new File( name )), 
+						new Scanner(new File( name ), IO.ENCODING), 
 						IO.NEXT_LINE, IO.SCANNER_HAS_NEXT_LINE );
 				for(String line : lines){
 					line = removeFolders(line);

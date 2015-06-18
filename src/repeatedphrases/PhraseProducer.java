@@ -158,9 +158,12 @@ public class PhraseProducer implements Iterator<String>{
 				|| c=='\'' 
 				|| c=='-' 
 				|| ('0'<=c && c<='9') 
-				|| c=='é' 
-				|| c=='ê');
+				|| c==E_ACUTE 
+				|| c==E_CIRCUMFLEX);
 	}
+	
+	public static final char E_ACUTE = '\u00E9';
+	public static final char E_CIRCUMFLEX = '\u00EA';
 
 	@Override
 	/**

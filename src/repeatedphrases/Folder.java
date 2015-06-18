@@ -18,7 +18,6 @@ public enum Folder {
 	HTML_BOOKS_UNSTRUCTURED		  ("02_html_books_unstructured",		  null),
 	HTML_BOOKS_CHAPTER_CORE		  ("03_html_books_chapter_core",		  null),
 	HTML_BOOKS_CORRECT_APOSTROPHES("04_html_books_correct_apostrophes",	  null),
-	//HTML_CHAPTERS_UNCHECKED		  ("05_html_chapters_unchecked",		  null),
 	HTML_CHAPTERS				  ("05_html_chapters",					  null),
 	CORPUS						  ("06_corpus",							  null),
 	REPEATS						  ("07_repeats",						  "repeats" ),

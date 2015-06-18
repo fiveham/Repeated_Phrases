@@ -81,7 +81,7 @@ public class FindRepeatedPhrases {
 			words.removeUniques(msg);
 			
 			//print repeated phrases and all their locations in the corpus to a file
-			words.printPhrasesWithLocations(IO.newOutputStreamWriter( WRITE_TO.filename(phraseSize) ));
+			words.printPhrasesWithLocations( WRITE_TO.filename(phraseSize) );
 			
 			//Store the current list of repeated phrases for the next loop
 			repeatedPhrasesFromPrevLoop = words;
@@ -171,12 +171,10 @@ public class FindRepeatedPhrases {
 	 * as some number of unique phrases.
 	 */
 	private static PhraseBox scanCorpus(int phraseSize, List<Chapter> chapters, PhraseBox repeatPhrasesForPrevSize, Consumer<String> msg){
-		msg.accept("Scanning corpus. ");// for "+phraseSize+"-word phrases");
+		msg.accept("Finding "+phraseSize+"-word phrases");// for "+phraseSize+"-word phrases");
 		
 		Corpus corpus = new Corpus(phraseSize, chapters);
 		PhraseBox corpusAsStructure = new PhraseBox();
-		
-		//System.out.println("Got "+repeatPhrasesForPrevSize.size()+" repeated terms of size "+(phraseSize-1));
 		
 		while(corpus.hasNext()){
 			String phrase = corpus.next();
@@ -191,7 +189,7 @@ public class FindRepeatedPhrases {
 	}
 	
 	/**
-	 * <p>Returns a <code>String</code> containing the first 
+	 * <p>Returns a string containing the first 
 	 * <code>n-1</code> words of the specified <code>n</code>-word 
 	 * phrase.</p>
 	 * @param s the phrase whose last token is to be removed

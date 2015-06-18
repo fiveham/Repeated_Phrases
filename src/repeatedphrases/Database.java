@@ -36,7 +36,7 @@ public class Database {
 		
 		//List<Record> allRecords = new ArrayList<>();
 		
-		/*try(Scanner scan = new Scanner( f )){
+		/*try(Scanner scan = new Scanner( f, IO.ENCODING )){
 			while(scan.hasNextLine() && scan.hasNext()){
 				
 				//Separate the phrase from the locations

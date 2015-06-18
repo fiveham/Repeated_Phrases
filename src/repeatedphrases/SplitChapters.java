@@ -96,21 +96,20 @@ public class SplitChapters {
         String[] easyNovellas = { "DE_0.html", "DE_1.html", "DE_2.html", "RP.html" };
 
         for(String novella : easyNovellas){
-            try{
-                OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName() + IO.DIR_SEP + novellaOut(novella) );
-
+            try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName() + IO.DIR_SEP + novellaOut(novella) );){
+                
                 HTMLFile file = new HTMLFile(new File(READ_FROM.folderName() + IO.DIR_SEP + novella));
                 List<HTMLEntity> pseudoBuffer = file.section(0);
-
+                
                 String title = novellaTitle(novella);
                 writeBuffer(pseudoBuffer,out,title, msg);
-
+                
             } catch(FileNotFoundException e){
-                msg.accept("FileNotFoundException occured for file "+novella);//+": "+e.getMessage());
+                msg.accept(novella + " not found.");
             } catch(UnsupportedEncodingException e){
-                msg.accept("UnsupportedEncodingException occured for file "+novella);//+": "+e.getMessage());
+                msg.accept("UnsupportedEncodingException occured for file "+novella);
             } catch(IOException e){
-                msg.accept("IOException occured for file "+novella);//+": "+e.getMessage());
+                msg.accept("IOException occured for file "+novella);
             }
         }
     }
@@ -152,34 +151,8 @@ public class SplitChapters {
                 OutputStreamWriter out = IO.newOutputStreamWriter(WRITE_TO.folderName() + IO.DIR_SEP + file.getName());
                 writeBuffer(file.section(0), out, file.chapterName(), msg);
             }
-
-
-            //replace superscript 1 with asterisk
-            //int bodyNote     =     body.adjacentElement(-1, Tag.IS_SUP, Direction.NEXT);
-            //int footnoteNote = footnote.adjacentElement(-1, Tag.IS_SUP, Direction.NEXT);
-
-            //bodyNote     =     body.adjacentElement(bodyNote,     isSuperscript1, Direction.NEXT);
-            //footnoteNote = footnote.adjacentElement(footnoteNote, isSuperscript1, Direction.NEXT);
-
-            //    body.set(bodyNote,     new Ch('*'));
-            //footnote.set(footnoteNote, new Ch('*'));
-
-            //alter the footnote-anchors
-            //int bodyNoteAnchor     =     body.adjacentElement(bodyNote,     Tag.IS_A_OPEN, Direction.PREV);
-            //int footnoteNoteAnchor = footnote.adjacentElement(footnoteNote, Tag.IS_A_OPEN, Direction.PREV);
-
-            //    body.set(bodyNoteAnchor,     new Tag( "a id=\"FOOTNOTE\" href=\"PQ_1_FOOTNOTE.html#FOOTNOTE\"" ) );
-            //footnote.set(footnoteNoteAnchor, new Tag( "a id=\"FOOTNOTE\" href=\"PQ_0_THE_PRINCESS_AND_THE_QUEEN.html#FOOTNOTE\"" ) );
-
-            //write the files
-            //OutputStreamWriter bodyOut = IO.newOutputStreamWriter(WRITE_TO.folderName() + IO.DIR_SEP + body.getName());
-            //writeBuffer(body.section(0),bodyOut, body.chapterName());
-
-            //OutputStreamWriter footnoteOut = IO.newOutputStreamWriter(WRITE_TO.folderName() + IO.DIR_SEP + footnote.getName());
-            //writeBuffer(footnote.section(0),footnoteOut, footnote.chapterName());
-
         } catch(FileNotFoundException e){
-            msg.accept("FileNotFoundException occured for file "+novella);//+": "+e.getMessage());
+            msg.accept(novella + "not found by SplitChapters");//+": "+e.getMessage());
         } catch(UnsupportedEncodingException e){
             msg.accept("UnsupportedEncodingException occured for file "+novella);//+": "+e.getMessage());
         } catch(IOException e){
@@ -249,7 +222,7 @@ public class SplitChapters {
      * @param buffer a list of HTMLEntitys to be written as html text to a 
      * file via <code>out</code>
      * @param out writes to the file to which the content of <code>buffer</code> 
-     * should be written
+     * should be written; is {@link OutputStreamWriter#close() closed}
      * @param chapterName the name of the chapter being written, to be added to the 
      * header/footer tables
      * @throws IOException if an I/O error occurs writing to the file through 

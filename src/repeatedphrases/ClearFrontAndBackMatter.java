@@ -57,7 +57,7 @@ public class ClearFrontAndBackMatter {
 
                 msg.accept("Removing front/back matter: "+f.getName());
 
-                try{
+                try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName()+IO.DIR_SEP+f.getName() );){
                     HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
 
                     int pWhereFirstWords = firstWordsP(file, f);
@@ -65,8 +65,7 @@ public class ClearFrontAndBackMatter {
 
                     int pWhereLastWords = lastWordsP(file, f);
                     file.removeAll( pWhereLastWords + 1 );
-
-                    OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName()+IO.DIR_SEP+f.getName() );
+                    
                     file.print(out);
                     out.close();
 
@@ -86,7 +85,7 @@ public class ClearFrontAndBackMatter {
 
                 msg.accept("Removing front/back matter: "+f.getName());
 
-                try{
+                try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName()+IO.DIR_SEP+f.getName() );){
                     HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
 
                     int pWherePrologueTitle = prologueTitleP(file);
@@ -94,8 +93,7 @@ public class ClearFrontAndBackMatter {
 
                     int pWhereBackMatterStart = backMatterStart(file);
                     file.removeAll(pWhereBackMatterStart);
-
-                    OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName()+IO.DIR_SEP+f.getName() );
+                    
                     file.print(out);
                     out.close();
 
@@ -188,14 +186,17 @@ public class ClearFrontAndBackMatter {
 	
 	private static String lastWords(String novellaName){
             switch(novellaName){
-            case "DE_0.html" : return "shows,” he said.";
-            case "DE_1.html" : return "hear it’s tall.”";
+            case "DE_0.html" : return "shows,"+RIGHT_DOUBLE_QUOTE+" he said.";
+            case "DE_1.html" : return "hear it"+RIGHT_SINGLE_QUOTE+"s tall."+RIGHT_DOUBLE_QUOTE;
             case "DE_2.html" : return "of comic dwarfs?";
             case "PQ.html"   : return "Ser Gwayne Hightower.";
             case "RP.html"   : return "danced and died.";
             default : throw new IllegalArgumentException(novellaName+" is not a recognized name of an ASOIAF novella html file.");
             }
 	}
+	
+	public static final char RIGHT_DOUBLE_QUOTE = '\u201D';
+	public static final char RIGHT_SINGLE_QUOTE = '\u2019';
 	
 	/**
 	 * <p>Returns the index in <code>file</code> of the closing "p" tag 

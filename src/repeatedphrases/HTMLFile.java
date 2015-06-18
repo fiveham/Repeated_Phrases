@@ -484,11 +484,7 @@ public class HTMLFile {
 	 * @param name the name of the file this HTMLFile is being saved as.
 	 */
 	public void print(String name){
-		try{
-			OutputStreamWriter out = IO.newOutputStreamWriter(name);
-			//for(HTMLEntity item : content){
-			//	out.write(item.toString());
-			//}
+		try(OutputStreamWriter out = IO.newOutputStreamWriter(name);){
 			print(out);
 			out.close();
 		} catch( IOException e){
@@ -521,11 +517,10 @@ public class HTMLFile {
 	 * text equivalent of this HTMLFile
 	 */
 	public void printAsText(String name){
-		OutputStreamWriter out = IO.newOutputStreamWriter(name);
 		int afterHeader = adjacentElement(-1, Tag.IS_TABLE_CLOSE, Direction.NEXT);
 		int beforeFooter = adjacentElement(content.size(), Tag.IS_TABLE_OPEN, Direction.PREV);
 		
-		try{
+		try(OutputStreamWriter out = IO.newOutputStreamWriter(name);){
 			for(int i=afterHeader; i<=beforeFooter; i++){
 				out.write(content.get(i).txtString());
 			}

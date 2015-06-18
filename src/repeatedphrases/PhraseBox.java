@@ -38,7 +38,7 @@ public class PhraseBox{
 	 * does not exist or cannot be read
 	 */
 	public PhraseBox(File f) throws FileNotFoundException{
-		this(new Scanner(f));
+		this(new Scanner(f, IO.ENCODING));
 	}
 	
 	/**
@@ -177,8 +177,8 @@ public class PhraseBox{
 	 * @param phraseInstanceFile an OutputStreamWriter by way of which 
 	 * the phrase-instance data in this PhraseBox is written to a file
 	 */
-	public void printPhrasesWithLocations(OutputStreamWriter phraseInstanceFile){
-		try{
+	public void printPhrasesWithLocations(String phraseInstFileName){
+		try(OutputStreamWriter phraseInstanceFile = IO.newOutputStreamWriter(phraseInstFileName);){
 			for(String phrase : hashmap.keySet()){
 				phraseInstanceFile.write( phrase );
 				List<Location> list = hashmap.get(phrase);

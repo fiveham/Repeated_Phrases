@@ -55,23 +55,14 @@ public class SwapApostrophes{
      * @param args command-line arguments (unused)
      */
     public static void swapApostrophes(Consumer<String> msg){
-        //String[] readUs = READ_FROM.folder().list ( IO.IS_HTML );
-
         File[] readUs = READ_FROM.folder().listFiles( IO.IS_HTML );
 
-        //for(String filename : readUs){
         for(File srcFile : readUs){
-
             msg.accept("Normalizing apostrophes: "+srcFile.getName());
 
-            try{
-                //Scanner lineGetter = lineReader(READ_FROM.folderName()+IO.DIR_SEP+filename);
-                //Scanner lineGetter = new Scanner( new File(READ_FROM.folderName()+IO.DIR_SEP+filename), IO.ENCODING);
-                OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName() + IO.DIR_SEP + srcFile.getName() );
-
+            try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName() + IO.DIR_SEP + srcFile.getName() );){
                 List<String> lines = IO.fileContentsAsList(srcFile, IO.NEXT_LINE, IO.SCANNER_HAS_NEXT_LINE);
 
-                //while(lineGetter.hasNextLine()){
                 for( String l : lines ){
                     StringBuilder line = new StringBuilder( l );
                     List<Integer> singleQuoteIndices = singleQuoteIndices(line);
@@ -83,26 +74,11 @@ public class SwapApostrophes{
                     }
                     out.write(line.toString() + IO.NEW_LINE);
                 }
-
-                //lineGetter.close();
+                
                 out.close();
             } catch(IOException e){}
         }
     }
-
-    /*private static Scanner lineReader(String filename) throws FileNotFoundException{
-            return new Scanner(getContent(new File(filename)));
-    }
-
-    public static String getContent(File f) throws FileNotFoundException{
-        Scanner s = new Scanner(f, IO.ENCODING);
-        StringBuilder result = new StringBuilder();
-        while(s.hasNextLine()){
-            result.append(s.nextLine()).append( IO.NEW_LINE );
-        }
-        s.close();
-        return result.toString();
-    }/**/
 
     /**
      * <p>Returns true if the text at and around <code>index</code> in 
@@ -310,10 +286,7 @@ public class SwapApostrophes{
          * false otherwise
          */
         public boolean match(StringBuilder line, int index){
-
-            //System.out.println(line.substring(0,index));
-            //System.out.println(line.substring(index));
-
+        	
             if( !isPossibleApostrophe(line.charAt(index)) ){
                 return false;
             }

@@ -15,14 +15,14 @@ import java.util.function.Consumer;
  * of those files.</p>
  */
 public class NewlineP{
-
+	
     /**
      * <p>The folder from which this class reads the html 
      * ASOIAF book files.</p>
      * @see Folder#HTML_BOOKS
      */
     public static final Folder READ_FROM = Folder.HTML_BOOKS;
-
+    
     /**
      * <p>The folder to which this class writes copies of 
      * the html ASOIAF book files with 
@@ -31,12 +31,12 @@ public class NewlineP{
      * @see Folder#HTML_BOOKS
      */
     public static final Folder WRITE_TO = Folder.HTML_BOOKS_NEWLINE;
-
+    
     /**
      * <p>The first characters of an opening paragraph tag.</p>
      */
     public static final String BEGIN_P = "<p ";
-
+    
     /**
      * 
      * @param args command-line arguments
@@ -64,13 +64,13 @@ public class NewlineP{
             String inName = getInOutName(filename, READ_FROM);
             String outName = getInOutName(filename, WRITE_TO);
 
-            try{
-                Scanner scan = new Scanner(new File(inName), IO.ENCODING);
+            try(Scanner scan = new Scanner(new File(inName), IO.ENCODING);
+            		OutputStreamWriter out = IO.newOutputStreamWriter( outName );){
+                
                 scan.useDelimiter(BEGIN_P);
                 String content = getContent(scan);
                 scan.close();
 
-                OutputStreamWriter out = IO.newOutputStreamWriter( outName );
                 out.write(content);
                 out.close();
             } catch(FileNotFoundException e){

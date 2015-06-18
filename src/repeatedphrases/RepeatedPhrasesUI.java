@@ -1,25 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package repeatedphrases;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.EventQueue;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.io.File;
 import java.util.function.Consumer;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.GroupLayout;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingWorker;
@@ -27,8 +21,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
-import repeatedphrases.Folder;
 import repeatedphrases.EnsureFolders;
+import repeatedphrases.Folder;
 import repeatedphrases.IsolateChaptersAndLink;
 import repeatedphrases.LinksAndTrail;
 import repeatedphrases.SetTrail;
@@ -57,6 +51,7 @@ public class RepeatedPhrasesUI extends JFrame {
      */
     public RepeatedPhrasesUI() {
         initComponents();
+        this.setTitle("Repeated Phrase Analyser");
     }
 
     /**
@@ -232,11 +227,11 @@ public class RepeatedPhrasesUI extends JFrame {
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
-    private void exitButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+    private void exitButtonActionPerformed(ActionEvent evt) {
     	System.exit(0);
-    }//GEN-LAST:event_exitButtonActionPerformed
+    }
     
     /**
      * <p>When the "Create Folders" button is pressed. Checks that no other 
@@ -247,7 +242,7 @@ public class RepeatedPhrasesUI extends JFrame {
      * operation in progress, allowing other buttons to work again.</p>
      * @param evt 
      */
-    private void createFoldersButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_createFoldersButtonActionPerformed
+    private void createFoldersButtonActionPerformed(ActionEvent evt) {
         if( opState == null ){
             opState = createFoldersButton;
             statusLabel.setText("Creating needed folders");
@@ -262,13 +257,13 @@ public class RepeatedPhrasesUI extends JFrame {
             
             createFoldersTask.execute();
         }
-    }//GEN-LAST:event_createFoldersButtonActionPerformed
+    }
 
     /**
      * <p>The second button, "Chapterize Books; Add Links"</p>
      * @param evt 
      */
-    private void chapterizeLinkButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_chapterizeLinkButtonActionPerformed
+    private void chapterizeLinkButtonActionPerformed(ActionEvent evt) {
         if( opState == null ){
             opState = chapterizeLinkButton;
             String[] trailAndLimit = trailAndLimit();
@@ -285,13 +280,13 @@ public class RepeatedPhrasesUI extends JFrame {
             chapterizeLinkTask.execute();
             
         }
-    }//GEN-LAST:event_chapterizeLinkButtonActionPerformed
+    }
 
     /**
      * <p>The third button, "Change Chaper Order"</p>
      * @param evt 
      */
-    private void changeOrderButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_changeOrderButtonActionPerformed
+    private void changeOrderButtonActionPerformed(ActionEvent evt) {
         if( opState == null ){
             opState = changeOrderButton;
             String[] trailAndLimit = trailAndLimit();
@@ -307,7 +302,7 @@ public class RepeatedPhrasesUI extends JFrame {
             
             changeOrderTask.execute();
         }
-    }//GEN-LAST:event_changeOrderButtonActionPerformed
+    }
 
     /**
      * <p>The fourth button, "Change Trail (Keep Link Order)"</p>
@@ -415,6 +410,10 @@ public class RepeatedPhrasesUI extends JFrame {
      */
     private JButton opState = null;
     
+    /**
+     * <p>A SwingWorker for the operations performed when one of the 
+     * buttons (other than exit) of this window is pressed.</p>
+     */
     private class ButtonOperation extends SwingWorker<Void,Void>{
     	
     	private Runnable action;
@@ -424,18 +423,29 @@ public class RepeatedPhrasesUI extends JFrame {
     	}
     	
     	@Override
+    	/**
+    	 * <p>Calls <code>action</code>'s <code>run()</code> method inside 
+    	 * a try-block, with two subsequent catch blocks for OutOfMemoryError 
+    	 * and RuntimeException, sending a message to the GUI in either case, 
+    	 * with the latter including the exception's message.</p>
+    	 */
     	public Void doInBackground(){
-    		
     		try{
     			action.run();
-    		} catch(IllegalArgumentException e){
-    			statusLabelMsg.accept(e.getMessage());
+    		} catch(OutOfMemoryError e){
+    			statusLabelMsg.accept("ERR: out of memory");
+    		} catch(RuntimeException e){
+    			statusLabelMsg.accept("EXCEPTION: "+e.getMessage());
     		}
-    		
     		return null;
     	}
     	
     	@Override
+    	/**
+    	 * <p>Resets the {@link RepeatedPhrasesUI#opState operation-state} to 
+    	 * <code>null</code>, allowing a button's operation to begin when a 
+    	 * button is next pressed.</p>
+    	 */
     	public final void done(){
     		opState = null;
     	}

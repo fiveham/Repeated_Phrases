@@ -233,7 +233,7 @@ public class IO {
 		List<String> retList = null;
 		try{
 			retList = fileContentsAsList(
-					new Scanner(source),
+					new Scanner(source, ENCODING),
 					scannerOperation, 
 					continueTest);
 		} catch( FileNotFoundException e){
@@ -345,8 +345,10 @@ public class IO {
 	 * @param filename The name of the file that couldn't be opened.
 	 */
 	public static void errorExit(String filename){	//package-private for use by RemoveDependentPhrases
-		System.out.println("Couldn't open file "+filename);
-		System.exit(1);
+		//System.out.println("Couldn't open file "+filename);
+		//System.exit (1);
+		
+		throw new RuntimeException("I can't open this file: " + filename);
 	}
 	
 	/**

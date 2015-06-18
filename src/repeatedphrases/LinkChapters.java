@@ -70,13 +70,13 @@ public class LinkChapters {
         msg.accept("Got "+fileDataPairs.size()+" FileDataPairs");
 
         for(FileDataPair pair : fileDataPairs){
-            try{
+            //try{
                 msg.accept("Adding links to "+pair.toString());
                 combineFiles( pair.htmlFile, pair.anchFile, threshold );
-            } catch(IllegalStateException e){
-                msg.accept("An Exception occured: "+e.getMessage());
-                msg.accept("Moving to next chapter.");
-            }
+            //} catch(IllegalStateException e){
+            //    msg.accept("An Exception occured: "+e.getMessage());
+            //    msg.accept("Moving to next chapter.");
+            //}
         }
     }
 

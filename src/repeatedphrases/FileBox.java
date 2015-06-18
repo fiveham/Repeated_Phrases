@@ -37,7 +37,7 @@ public class FileBox{
 	 * not exist or cannot be read
 	 */
 	public FileBox(File f) throws FileNotFoundException{
-		this(new Scanner(f));
+		this(new Scanner(f, IO.ENCODING));
 	}
 	
 	/**

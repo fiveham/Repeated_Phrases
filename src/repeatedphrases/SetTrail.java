@@ -92,8 +92,9 @@ public class SetTrail {
      */
     public static void setTrail(String[] args, Consumer<String> msg) {
         if(args.length < 1){
-            msg.accept("No args received. Usage: java SetTrail trail-info-file");
-            System.exit(1);
+            //msg.accept("No args received. Usage: java SetTrail trail-info-file");
+            //System.exit (1);
+            throw new IllegalArgumentException("SetTrail: I need a trial file.");
         }
         String trailSource = args[0];
         msg.accept("Getting trail data from " + trailSource );
