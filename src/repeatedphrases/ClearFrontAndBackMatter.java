@@ -57,7 +57,7 @@ public class ClearFrontAndBackMatter {
 
                 msg.accept("Removing front/back matter: "+f.getName());
 
-                try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName()+IO.DIR_SEP+f.getName() );){
+                try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName()+File.separator+f.getName() );){
                     HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
 
                     int pWhereFirstWords = firstWordsP(file, f);
@@ -85,7 +85,7 @@ public class ClearFrontAndBackMatter {
 
                 msg.accept("Removing front/back matter: "+f.getName());
 
-                try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName()+IO.DIR_SEP+f.getName() );){
+                try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName()+File.separator+f.getName() );){
                     HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
 
                     int pWherePrologueTitle = prologueTitleP(file);

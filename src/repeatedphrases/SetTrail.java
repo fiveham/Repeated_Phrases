@@ -105,15 +105,15 @@ public class SetTrail {
 
             HTMLFile file = null;
             try{
-                file = new HTMLFile(new File( READ_FROM.folderName() + IO.DIR_SEP + node.focus()));
+                file = new HTMLFile(new File( READ_FROM.folderName() + File.separator + node.focus()));
             } catch( FileNotFoundException e){
-                IO.errorExit(READ_FROM.folderName() + IO.DIR_SEP + node.focus() + " for reading");
+                IO.errorExit(READ_FROM.folderName() + File.separator + node.focus() + " for reading");
             }
 
             setAdjacentChapterLinks(file, PREV_CHAPTER, ID_ATTRIB, node.prev());
             setAdjacentChapterLinks(file, NEXT_CHAPTER, ID_ATTRIB, node.next());
             
-            file.print( WRITE_TO.folderName() + IO.DIR_SEP + node.focus());
+            file.print( WRITE_TO.folderName() + File.separator + node.focus());
         }
     }
 

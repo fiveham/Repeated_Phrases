@@ -37,9 +37,9 @@ public class HtmlToText {
         File[] readUs = READ_FROM.folder().listFiles( IO.IS_HTML );
         for(File f : readUs){
             try{
-                msg.accept("Saving "+f.getName()+" as txt");
+                msg.accept("Saving as text "+f.getName());
                 HTMLFile file = new HTMLFile(f);
-                file.printAsText( WRITE_TO.folderName() + IO.DIR_SEP + IO.stripExtension(f.getName()) + IO.TXT_EXT );
+                file.printAsText( WRITE_TO.folderName() + File.separator + IO.stripExtension(f.getName()) + IO.TXT_EXT );
             } catch(FileNotFoundException e){
                 IO.errorExit(f.getName() + " for reading");
             }

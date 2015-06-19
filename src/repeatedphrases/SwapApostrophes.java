@@ -60,7 +60,7 @@ public class SwapApostrophes{
         for(File srcFile : readUs){
             msg.accept("Normalizing apostrophes: "+srcFile.getName());
 
-            try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName() + IO.DIR_SEP + srcFile.getName() );){
+            try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName() + File.separator + srcFile.getName() );){
                 List<String> lines = IO.fileContentsAsList(srcFile, IO.NEXT_LINE, IO.SCANNER_HAS_NEXT_LINE);
 
                 for( String l : lines ){

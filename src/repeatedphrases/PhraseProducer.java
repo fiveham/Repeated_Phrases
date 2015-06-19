@@ -15,7 +15,7 @@ public class PhraseProducer implements Iterator<String>{
 	 * multi-word phrases. 
 	 * Is used as a regex sent to 
 	 * {@link java.lang.String#split(String) String.split()} 
-	 * in some parts of the project.</p>
+	 * in some parts of the application.</p>
 	 */
 	public static final String WORD_SEPARATOR = " ";
 	

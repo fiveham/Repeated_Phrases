@@ -17,7 +17,16 @@ import java.util.function.Consumer;
  * file and the result is saved to {@link #WRITE_TO WRITE_TO}.</p>
  */
 public class LinkChapters {
-
+	//FIXME account for large phrase limits preventing anchordata files
+	//if the user picks a large enough phrase size minimum, some chapters will not yield 
+	//any repeated phrases and won't get a .anchordata.txt file, which will eventually 
+	//cause a mismatch between the html chapters and the anchordata files, causing 
+	//an exception to be thrown.
+	//Either force an anchordata file to be created for each extant chapter, or 
+	//account for absent anchordata files by only creating FileDataPairs with 
+	//matches and creating phoney FDPs where a matching anchordata file doesn't 
+	//exist.
+	
     /**
      * <p>The directory in which this operation saves its 
      * output files.</p>
@@ -199,8 +208,8 @@ public class LinkChapters {
                 throw new IllegalStateException("Filename mismatch between " + htmlFile + " and " + anchFile);
             }
             result.add( new FileDataPair( 
-                    READ_SUBSTANCE.folderName()  + IO.DIR_SEP + htmlFile, 
-                    READ_DECORATION.folderName() + IO.DIR_SEP + anchFile));
+                    READ_SUBSTANCE.folderName()  + File.separator + htmlFile, 
+                    READ_DECORATION.folderName() + File.separator + anchFile));
         }
 
         if( htmlIter.hasNext() || anchIter.hasNext() ){

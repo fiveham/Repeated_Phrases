@@ -15,7 +15,7 @@ import java.util.function.Consumer;
  * of those files.</p>
  */
 public class NewlineP{
-	
+	//TODO add newlines after ending p tags iff the next visible element isn't an opening p tag
     /**
      * <p>The folder from which this class reads the html 
      * ASOIAF book files.</p>
@@ -101,7 +101,7 @@ public class NewlineP{
      * class should write or read content
      */
     private static String getInOutName(String filename, Folder folder){
-        return folder.folderName() + IO.DIR_SEP + IO.stripFolder(filename);
+        return folder.folderName() + File.separator + IO.stripFolder(filename);
     }
 
     /**

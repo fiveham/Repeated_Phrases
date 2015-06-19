@@ -28,11 +28,11 @@ public class IO {
 	 */
 	public static final String FILENAME_ELEMENT_DELIM = ".";
 	
-	/**
+	/* *
 	 * <p>The term used to separate a enclosing directories 
 	 * from a file's name: {@value}</p>
-	 */
-	public static final String DIR_SEP = "/";
+	 * /
+	public static final String DIR_SEP = "/";/**/
 	
 	/**
 	 * <p>System-dependent newline returned by 
@@ -277,7 +277,7 @@ public class IO {
 	 * any directory references or file extensions
 	 */
 	public static String stripFolderExtension(String fileAddress){
-		int slash = fileAddress.lastIndexOf(DIR_SEP);
+		int slash = fileAddress.lastIndexOf(File.separator);
 		String nameInFolder = fileAddress.substring(slash+1);
 		
 		int dot = nameInFolder.indexOf(FILENAME_ELEMENT_DELIM);
@@ -306,7 +306,7 @@ public class IO {
 	 * any directory references
 	 */
 	public static String stripFolder(String fileAddress){
-		int slash = fileAddress.lastIndexOf(DIR_SEP);
+		int slash = fileAddress.lastIndexOf(File.separator);
 		return fileAddress.substring(slash+1);
 	}
 	
@@ -348,7 +348,7 @@ public class IO {
 		//System.out.println("Couldn't open file "+filename);
 		//System.exit (1);
 		
-		throw new RuntimeException("I can't open this file: " + filename);
+		throw new RuntimeException("I can't open the file " + filename);
 	}
 	
 	/**
@@ -365,7 +365,7 @@ public class IO {
 	 * @see repeatedphrases.Folder#ANCHORS
 	 */
 	public static String anchorOutName(String chapter){
-		return Folder.ANCHORS.folderName() + DIR_SEP 
+		return Folder.ANCHORS.folderName() + File.separator 
 				+ stripFolderExtension(chapter) 
 				+ ANCHOR_EXT;
 	}
@@ -387,12 +387,12 @@ public class IO {
 	 * @see repeatedphrases.Folder.LINKED_CHAPTERS
 	 */
 	public static String linkedChapterName(String originalName){
-		int index = originalName.lastIndexOf(DIR_SEP);
+		int index = originalName.lastIndexOf(File.separator);
 		originalName = originalName.substring( index+1 );
 		index = originalName.indexOf('.');
 		if(index>=0){
 			originalName = originalName.substring( 0, index );
 		}
-		return Folder.LINKED_CHAPTERS.folderName() + DIR_SEP + originalName + ".html";
+		return Folder.LINKED_CHAPTERS.folderName() + File.separator + originalName + ".html";
 	}
 }

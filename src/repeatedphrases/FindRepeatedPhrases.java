@@ -100,11 +100,11 @@ public class FindRepeatedPhrases {
 	 * the words-only content of those files as produced by 
 	 * {@link #fileAsString() fileAsString()}
 	 */
-	public static ArrayList<Chapter> getChapters(File[] filesToRead){
-		ArrayList<Chapter> retList = new ArrayList<>( filesToRead.length );
+	public static List<Chapter> getChapters(File[] filesToRead){
+		List<Chapter> retList = new ArrayList<>( filesToRead.length );
 		
 		for(File chapterFile : filesToRead){
-			String fullName = READ_FROM.folderName() + IO.DIR_SEP + chapterFile.getName();
+			String fullName = READ_FROM.folderName() + File.separator + chapterFile.getName();
 			retList.add( new Chapter(fullName, fileAsString(chapterFile) ) );
 		}
 		
@@ -169,7 +169,7 @@ public class FindRepeatedPhrases {
 	 * @return a <code>PhraseBox</code> with phrases of the specified size, 
 	 * containing all such phrases that are repeated in the corpus, as well 
 	 * as some number of unique phrases.
-	 */
+	 */ //TODO When done processing a size, remove references to files that didn't have phrases: to speed up the next loops
 	private static PhraseBox scanCorpus(int phraseSize, List<Chapter> chapters, PhraseBox repeatPhrasesForPrevSize, Consumer<String> msg){
 		msg.accept("Finding "+phraseSize+"-word phrases");// for "+phraseSize+"-word phrases");
 		

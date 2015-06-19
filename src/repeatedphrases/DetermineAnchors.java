@@ -224,7 +224,7 @@ public class DetermineAnchors {
 	 * have been removed
 	 */
 	private static String removeFolders(String multiLocatedPhraseLine){
-		return multiLocatedPhraseLine.replace( Folder.CORPUS.folderName() + IO.DIR_SEP, "" );
+		return multiLocatedPhraseLine.replace( Folder.CORPUS.folderName() + File.separator, "" );
 	}
 	
 	/**

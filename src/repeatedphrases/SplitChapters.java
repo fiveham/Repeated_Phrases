@@ -69,7 +69,7 @@ public class SplitChapters {
                         chapterName = extractChapterTitle(paragraph);
                         buffer = new ArrayList<>();
                         out = IO.newOutputStreamWriter( WRITE_TO.folderName() 
-                                + IO.DIR_SEP 
+                                + File.separator 
                                 + chapterFileName(f.getName(), writeCount, chapterName) );
                         writeCount++;
                     } else{
@@ -96,9 +96,9 @@ public class SplitChapters {
         String[] easyNovellas = { "DE_0.html", "DE_1.html", "DE_2.html", "RP.html" };
 
         for(String novella : easyNovellas){
-            try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName() + IO.DIR_SEP + novellaOut(novella) );){
+            try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName() + File.separator + novellaOut(novella) );){
                 
-                HTMLFile file = new HTMLFile(new File(READ_FROM.folderName() + IO.DIR_SEP + novella));
+                HTMLFile file = new HTMLFile(new File(READ_FROM.folderName() + File.separator + novella));
                 List<HTMLEntity> pseudoBuffer = file.section(0);
                 
                 String title = novellaTitle(novella);
@@ -118,7 +118,7 @@ public class SplitChapters {
         String novella = "PQ.html";
 
         try{
-            HTMLFile pq = new HTMLFile( new File(READ_FROM.folderName() + IO.DIR_SEP + novella));
+            HTMLFile pq = new HTMLFile( new File(READ_FROM.folderName() + File.separator + novella));
 
             int footnoteIndex = pq.adjacentElement( (i) -> pq.hasLiteralAt("Footnote",i), Direction.PREV, pq.elementCount());
 
@@ -148,7 +148,7 @@ public class SplitChapters {
                 file.set(noteAnchorIndex, new Tag( "a id=\"FOOTNOTE\" href=\"" + hrefs[i] + "\"" ) );
 
                 //save the file
-                OutputStreamWriter out = IO.newOutputStreamWriter(WRITE_TO.folderName() + IO.DIR_SEP + file.getName());
+                OutputStreamWriter out = IO.newOutputStreamWriter(WRITE_TO.folderName() + File.separator + file.getName());
                 writeBuffer(file.section(0), out, file.chapterName(), msg);
             }
         } catch(FileNotFoundException e){

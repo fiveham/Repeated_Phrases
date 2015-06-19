@@ -61,7 +61,7 @@ public enum Folder {
 	 * <code>size</code> words in this directory.
 	 */
 	public String filename(int size){
-		return folderName + IO.DIR_SEP + namebase + '_' + size + IO.TXT_EXT;
+		return folderName + File.separator + namebase + '_' + size + IO.TXT_EXT;
 	}
 	
 	/**
