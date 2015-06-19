@@ -66,18 +66,11 @@ public class Corpus {
 	 */
 	private void updateBuffer(){
 		
-		//System.out.println("updateBuffer(). Chaptercount = "+chapters.size());
-		
 		//while currentBuffer doesn't have a next element 
 		//(or is null) update the buffer to a new buffer 
 		//of the next file 
 		while( !(currentBuffer != null && currentBuffer.hasNext())){
-			//if(currentBuffer!=null){
-			//	currentBuffer.close();
-			//}
 			
-			//System.out.println("Begin while loop.");
-		
 			try{
 				currentBuffer = new PhraseProducer(size, chapters.get(++chapterPointer));
 			} catch(IllegalArgumentException e){	//specified chapter didn't have enough tokens in it

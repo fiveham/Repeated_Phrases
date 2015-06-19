@@ -169,7 +169,7 @@ public class FindRepeatedPhrases {
 	 * @return a <code>PhraseBox</code> with phrases of the specified size, 
 	 * containing all such phrases that are repeated in the corpus, as well 
 	 * as some number of unique phrases.
-	 */ //TODO When done processing a size, remove references to files that didn't have phrases: to speed up the next loops
+	 */
 	private static PhraseBox scanCorpus(int phraseSize, List<Chapter> chapters, PhraseBox repeatPhrasesForPrevSize, Consumer<String> msg){
 		msg.accept("Finding "+phraseSize+"-word phrases");// for "+phraseSize+"-word phrases");
 		

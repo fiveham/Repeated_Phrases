@@ -137,7 +137,6 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 	 * on a phrase at the specified Location.
 	 */
 	public static String locationID(Location loc){
-		//return IO.stripFolderExtension(loc.getFilename()) + Location.ELEMENT_DELIM + loc.getIndex();
 		return Integer.toString(loc.getIndex());
 	}
 	

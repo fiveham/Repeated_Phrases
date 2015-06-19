@@ -85,7 +85,7 @@ public class HTMLFile {
 	/**
 	 * <p>The underlying list.</p>
 	 */
-	private ArrayList2<HTMLEntity> content;
+	private ArrayList<HTMLEntity> content;
 	
 	/**
 	 * <p>The literal filename of the file to which the content of this 
@@ -176,7 +176,7 @@ public class HTMLFile {
 	 * @param content a list whose elements will be the elements of this HTMLFile
 	 */
 	public HTMLFile(String name, List<HTMLEntity> content){
-		this.content = new ArrayList2<>(content);
+		this.content = new ArrayList<>(content);
 		
 		filename = name;
 		
@@ -852,7 +852,7 @@ public class HTMLFile {
 		List<HTMLEntity> front = content.subList(0,start);
 		List<HTMLEntity> back = content.subList(end, content.size());
 		front.addAll(back);
-		content = new ArrayList2<>(front);
+		content = new ArrayList<>(front);
 		modCount++;
 	}
 	
@@ -865,7 +865,7 @@ public class HTMLFile {
 	 * the underlying list to be removed
 	 */
 	public void removeAll(int start){
-		content = new ArrayList2<>( content.subList(0,start) );
+		content = new ArrayList<>( content.subList(0,start) );
 		modCount++;
 	}
 	
@@ -956,8 +956,8 @@ public class HTMLFile {
 	 * @return a {@literal List<HTMLEntity>} representing the contents of the 
 	 * body scanned by <code>s</code>
 	 */
-	private static ArrayList2<HTMLEntity> getHTMLFileContent(Scanner s){
-		ArrayList2<HTMLEntity> result = new ArrayList2<>();
+	private static ArrayList<HTMLEntity> getHTMLFileContent(Scanner s){
+		ArrayList<HTMLEntity> result = new ArrayList<>();
 		
 		StringBuilder fileBody = readFile(s);
 		
