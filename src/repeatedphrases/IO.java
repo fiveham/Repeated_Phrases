@@ -277,11 +277,12 @@ public class IO {
 	 * any directory references or file extensions
 	 */
 	public static String stripFolderExtension(String fileAddress){
-		int slash = fileAddress.lastIndexOf(File.separator);
+		/*int slash = fileAddress.lastIndexOf(File.separator);
 		String nameInFolder = fileAddress.substring(slash+1);
 		
 		int dot = nameInFolder.indexOf(FILENAME_ELEMENT_DELIM);
-		return dot >= 0 ? nameInFolder.substring(0,dot) : nameInFolder;
+		return dot >= 0 ? nameInFolder.substring(0,dot) : nameInFolder;*/
+		return stripExtension( stripFolder(fileAddress) );
 	}
 	
 	/**

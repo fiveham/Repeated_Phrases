@@ -6,7 +6,7 @@ public class Launch {
 	
 	public static void main(String[] args) {
 		try{
-			String jarName = "repeatedphrases.jar";
+			String jarName = getJarName();
 			
             Process p = Runtime.getRuntime().exec("java -classpath "+jarName+" -Xmx512m repeatedphrases.RepeatedPhrasesUI");
             
@@ -24,10 +24,18 @@ public class Launch {
         }
 	}
 	
+	private static String getJarName(){
+		return "repeatedphrases.jar";
+	}
+	
 	/**
-	 * <p></p>
-	 * @author JavaWorld
-	 * http://www.javaworld.com/article/2071275/core-java/when-runtime-exec---won-t.html?page=2
+	 * <p>Continually consumes the out or err of a process 
+	 * via an InputStreamReader of its 
+	 * {@link Process#getInputStream() input stream} or 
+	 * {@link Process#getErrorStream() error stream} respectively.</p>
+	 * <p>Based on the StreamGobbler from "When Runtime.exec() won't" 
+	 * by Michael C. Daconta, at 
+	 * http://www.javaworld.com/article/2071275/core-java/when-runtime-exec---won-t.html?page=2</p>
 	 */
 	private static class StreamGobbler extends Thread{
 	    private InputStream src;

@@ -104,8 +104,9 @@ public class FindRepeatedPhrases {
 		List<Chapter> retList = new ArrayList<>( filesToRead.length );
 		
 		for(File chapterFile : filesToRead){
-			String fullName = READ_FROM.folderName() + File.separator + chapterFile.getName();
-			retList.add( new Chapter(fullName, fileAsString(chapterFile) ) );
+			//String fullName = READ_FROM.folderName() + File.separator + chapterFile.getName();
+			//retList.add( new Chapter(fullName, fileAsString(chapterFile) ) );
+			retList.add( new Chapter(chapterFile.getName(), fileAsString(chapterFile) ) );
 		}
 		
 		return retList;

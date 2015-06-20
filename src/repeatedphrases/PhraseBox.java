@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 /**
- * <p>Wraps a HashMap linking String phrases with data structures 
+ * <p>Wraps a HashMap linking string phrases with data structures 
  * that store multiple Locations.</p>
  */
 public class PhraseBox{
@@ -184,14 +184,14 @@ public class PhraseBox{
 				List<Location> list = hashmap.get(phrase);
 				list.sort(null);
 				for( int i=0; i<list.size(); i++ ){
-					phraseInstanceFile.write( IO.LOCATION_DELIM + list.get(i).toString() );
+					phraseInstanceFile.write( IO.LOCATION_DELIM + list.get(i).shortString() );
 				}
 				phraseInstanceFile.write(IO.NEW_LINE);
 			}
 			
 			phraseInstanceFile.close();
 		} catch(IOException e){
-			IO.errorExit( "[filename unknown] for writing" );
+			IO.errorExit( phraseInstFileName+" for writing" );
 		}
 	}
 }

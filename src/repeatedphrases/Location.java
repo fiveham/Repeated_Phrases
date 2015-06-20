@@ -117,6 +117,15 @@ public class Location implements Comparable<Location>{
 	}
 	
 	/**
+	 * <p>Returns a string representation of this Location 
+	 * lacking any folders or file-extensions mentioned in 
+	 * <code>filename</code>.</p>
+	 */
+	public String shortString(){
+		return IO.stripFolderExtension(filename) + ELEMENT_DELIM + index;
+	}
+	
+	/**
 	 * <p>Subtracts <code>thatLocation.index</code> 
 	 * from <code>index</code> and returns the result. 
 	 * Throws an exception if these are Locations 
