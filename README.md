@@ -3,7 +3,7 @@
 
 Some phrases are repeated in A Song of Ice and Fire.  Some [are suggestive as hell.](http://redd.it/30y8ez)  Most [are not.](http://imgur.com/75joFxC)  A few [are in the middle.](http://imgur.com/z789AIe)  Really the only way to know which is the case is [to view them in context](http://imgur.com/YbHU0zS), and that's exactly what I'm giving you to the power to do.
 
-This tool lets you start with ebooks of ASOIAF and end up with individual chapter files that provide clickable links from one instance of a repeated phrase to the next so you can easily determine something's significance based on its use in its original context and its use in another context. [Here's a demonstration](http://imgur.com/bqX7mpJ) pertaining to the repeated phrase mentioned in the first link in the first paragraph. Making the paragraphs independent is facilitates creative reread orders, such as the famous [Boiled Leather](http://boiledleather.com/post/24543217702/a-proposed-a-feast-for-crows-a-dance-with-dragons) order.
+This tool lets you start with ebooks of ASOIAF and end up with individual chapter files that provide clickable links from one instance of a repeated phrase to the next so you can easily determine something's significance based on its use in its original context and its use in another context. [Here's a demonstration](http://imgur.com/bqX7mpJ) pertaining to the repeated phrase mentioned in the first link in the first paragraph. Making the chapters independent makes it easier to read in a creative order, such as the famed [Boiled Leather](http://boiledleather.com/post/24543217702/a-proposed-a-feast-for-crows-a-dance-with-dragons) order.
 
 Report bugs, horrible crashes, etc. at reddit-link-goes-here.
 
@@ -21,9 +21,9 @@ Report bugs, horrible crashes, etc. at reddit-link-goes-here.
 ---
 ##Instructions
 
-* Download and install Calibre (if you don't already have it).  
+* Download and install [Calibre](http://calibre-ebook.com/) (if you don't already have it).  
 * Download ebooks for the ASOIAF novels and novellas (if you don't already have them).  
-* Add the ebooks to your Calibre library (if you don't already have them).  
+* Add the ebooks to your Calibre library (if they're not already in there).  
 * Convert them to HTMLZ.  
 * Go to the folders where those HTMLZ files are located (In Calibre, right click the book and choose "Open containing folder".) and unzip them (to their own new folders, preferably)
 * Choose/Create a work folder somewhere. It's called **work_folder** in these instructions, but you can name it whatever you want.
@@ -48,7 +48,7 @@ This makes the folders that this application needs in order to work. Once these 
 1. PQ.html
 1. RP.html
 
-**Note**: If you don't have all of these books, it doesn't matter, the application will run just fine.
+**Note**: If you don't have all of these books, it doesn't matter, the application will run just fine and produce results that pertain only to the books you do have.
 
 * Specify a trail-file (I recommend moving at least one from the unzipped project into **work_folder**), optionally specify a minimum word-count for phrases to get linked (defaults to 3), and click "Chapterize books; Add links".
 
@@ -56,7 +56,7 @@ This will take most of an hour to run.
 
 If you don't specify a minimum linked phrase size, it'll default to 3, which is a decent balance, I think, eliminating a lot of completely pointless links that make the final product difficult to read. You can even set it to something over 218 to eliminate all repeated-phrase links and leave yourself with nothing but pure chapters (not recommended).
 
-Once it finishes, the GUI's Status will start with "Done:". This standard holds for the other buttons, too.
+Once it finishes, the GUI's Status will start with "Done:".
 
 * Copy **style.css** from this project into **12_readable** and open the html chapters in a browser.
 
@@ -72,7 +72,7 @@ This should finish in less than ten minutes. It doesn't matter if you choose a d
 ---
 ##Trail-file format
 
-A trail file is made of three tab-delimited columns: Previous Chapter; Current Chapter; Next Chapter  
+A trail file, used to specify the order of chapters and to identify which chapters are linked as previous and next chapters from each chapter, is made of three tab-delimited columns: Previous Chapter; Current Chapter; Next Chapter  
 The entries are specified as .html filenames for the chapters affected.
 
 I chose this redundant format to make it possible to control whether you want the first/last chapter to link to the last/first, or whatever, rather than forcing everything to link or to not link. I've included a trail file (**individual_books.txt**) that takes advantage of this (if you can call it that) to make each book's final and first chapters not link to a next or previous (respectively) chapter. This format also allows for chapters to be connected in multiple loops, which **char_blocks.txt** uses, for example.
@@ -120,4 +120,4 @@ The fourth button ("Change Trail")'s class is responsible for performing step 11
 >&ldquo;Theon,&rdquo; he repeated. &ldquo;My name is Theon. You have to know your name.&rdquo;  
 &mdash;ADWD, Chapter 62, The Sacrifice
 
-The way I made this application work, it needs to know the name of its own .jar.  Normally, you don't need that--you just double-click and the main class in the jar kicks in and goes.  But here, the main class has to dive back into its own jar and activate a different class using some command-line arguments to give that other class's process access to enough RAM to get over the memory-hump in the middle of the "Chapterize [...]" process.
+The way I made this application work, it needs to know the name of its own .jar.  Normally, you don't need that--you just double-click and the main class in the jar kicks in and goes.  But here, the main class has to dive back into its own jar and [activate a different class using some command-line arguments](http://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html#exec(java.lang.String[]\)) to give that other class's process access to enough RAM to get over the memory-hump in the middle of the "Chapterize [...]" process.
