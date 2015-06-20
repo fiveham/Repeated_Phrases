@@ -117,7 +117,7 @@ The fourth button ("Change Trail")'s class is responsible for performing step 11
 
 * Don't rename **repeatedphrases.jar**.  
 
->“Theon,” he repeated. “My name is Theon. You have to know your name.”  
---ADWD, Chapter 62, The Sacrifice
+>&ldquo;Theon,&rdquo; he repeated. &ldquo;My name is Theon. You have to know your name.&rdquo;  
+&mdash;ADWD, Chapter 62, The Sacrifice
 
 The way I made this application work, it needs to know the name of its own .jar.  Normally, you don't need that--you just double-click and the main class in the jar kicks in and goes.  But here, the main class has to dive back into its own jar and activate a different class using some command-line arguments to give that other class's process access to enough RAM to get over the memory-hump in the middle of the "Chapterize [...]" process.
