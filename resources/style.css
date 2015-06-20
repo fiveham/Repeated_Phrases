@@ -15,6 +15,10 @@ body {
     background-color: black;
     color: #77A0A0;
     }
+a {
+    text-decoration: none;
+    border-bottom: none;
+    }
 a:link, a:visited {
     color: #90A0A0;
     }
@@ -117,4 +121,16 @@ p.chapter_title {
 /*a map's title in an Arya chapter*/
 .map_title {
     font-size: 0.75em
+    }
+
+/*Ensure consistent first-letter style*/
+big {
+    font-size: 1em;
+    }
+strong {
+    font-weight: normal;
+    }
+div.chapter_body::first-letter {
+    font-size: 1.5em;
+    font-weight: bold;
     }
