@@ -78,6 +78,8 @@ public class PhraseProducer implements Iterator<String>{
 	 * @param size the number of words in the phrases produced.
 	 * @param chapter the Chapter whose {@link Chapter#getBody() body} 
 	 * backs all the phrases this PhraseProducer produces
+	 * @throws IllegalArgumentException if <code>chapter</code>'s body 
+	 * has no words or fewer than <code>size</code> words
 	 */
 	public PhraseProducer(int size, Chapter chapter) {
 		if(size < MIN_SIZE){
@@ -89,22 +91,15 @@ public class PhraseProducer implements Iterator<String>{
 		this.filename = chapter.getName();
 		this.content = chapter.getBody();
 		
-		try{
-			phraseStart = initPhraseStart();
-		} catch(IllegalStateException e){
-			throw new IllegalArgumentException("File "+filename+" doesn't contain a word");
-		}
-		
-		try{
-			phraseEnd = initPhraseEnd();
-		} catch(IllegalStateException e){
-			throw new IllegalArgumentException("File "+filename+" contains "+Integer.parseInt(e.getMessage())+" words, but needs "+size+".");
-		}
+		phraseStart = initPhraseStart();
+		phraseEnd = initPhraseEnd();
 	}
 	
 	/**
 	 * <p>Initializes the value of {@link #phraseEnd phraseEnd}.</p>
 	 * @return the correct initial value of {@link #phraseEnd phraseEnd}
+	 * @throws IllegalArgumentException if {@link #filename filename} 
+	 * contains fewer than {@link #size size} words
 	 */
 	private int initPhraseEnd(){
 		int wordEndCount = 0;
@@ -113,13 +108,15 @@ public class PhraseProducer implements Iterator<String>{
 				return i;
 			}
 		}
-		throw new IllegalStateException(""+wordEndCount);
+		throw new IllegalArgumentException("File "+filename+" contains "+wordEndCount+" words, but needs "+size+".");
 	}
 	
 	/**
 	 * <p>Initializes {@link #phraseStart phraseStart}.</p>
 	 * @return the correct initial value of 
 	 * {@link #phraseStart phraseStart}
+	 * @throws IllegalArgumentException if {@link #filename filename} 
+	 * doesn't contain any words
 	 */
 	private int initPhraseStart(){
 		for(int i=0; i<content.length(); i++){
@@ -127,7 +124,7 @@ public class PhraseProducer implements Iterator<String>{
 				return i;
 			}
 		}
-		throw new IllegalStateException();
+		throw new IllegalArgumentException("File "+filename+" doesn't contain a word");
 	}
 	
 	/**

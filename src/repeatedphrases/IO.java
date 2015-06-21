@@ -28,12 +28,6 @@ public class IO {
 	 */
 	public static final String FILENAME_ELEMENT_DELIM = ".";
 	
-	/* *
-	 * <p>The term used to separate a enclosing directories 
-	 * from a file's name: {@value}</p>
-	 * /
-	public static final String DIR_SEP = "/";/**/
-	
 	/**
 	 * <p>System-dependent newline returned by 
 	 * {@literal System.getProperty("line.separator")}</p>
@@ -97,12 +91,6 @@ public class IO {
 	}
 	
 	/**
-	 * <p>The number of characters in the {@link #NOVELS initialisms} 
-	 * of the names of the ASOIAF novels.</p>
-	 */
-	public static final int NOVEL_INITIALISM_LENGTH = 4;
-	
-	/**
 	 * <p>Evaluates to true if a file's name ends with the HTML 
 	 * extension ({@value IO#HTML_EXT}).</p>
 	 */
@@ -125,13 +113,25 @@ public class IO {
 			(dir,name) -> IS_HTML.accept(dir,name) && !IS_NOVEL.accept(dir,name);
 	
 	/**
+	 * <p>An underscore, used to separate the bookname, chapter-number, 
+	 * and chapter name in chapter files' names.</p>
+	 */
+	public static final char FILENAME_COMPONENT_SEPARATOR_CHAR = '_';
+	
+	/**
+	 * <p>An underscore, used to separate the bookname, chapter-number, 
+	 * and chapter name in chapter files' names.</p>
+	 */
+	public static final String FILENAME_COMPONENT_SEPARATOR = "_";
+	
+	/**
 	 * <p>Evaluates to true if a file {@link #IS_HTML is html}, 
 	 * starts with a novels {@link #NOVELS initialism}, and 
 	 * is not an {@link #IS_NOVEL entire novel}.</p>
 	 */
 	public static final FilenameFilter IS_NOVEL_CHAPTER = 
 			(dir,name) -> IS_HTML.accept(dir,name) 
-			&& NOVELS.contains( name.substring(0, NOVEL_INITIALISM_LENGTH) )
+			&& NOVELS.contains( name.substring(0, ( name.indexOf(FILENAME_COMPONENT_SEPARATOR_CHAR)>=0 ? name.indexOf(FILENAME_COMPONENT_SEPARATOR_CHAR) : 0 ) ) )
 			&& !IS_NOVEL.accept(dir,name);
 	
 	/**
@@ -140,23 +140,11 @@ public class IO {
 	 */
 	public static final FilenameFilter IS_TXT = (dir,name) -> name.endsWith(TXT_EXT);
 	
-        /**
-         * <p>The default way to display a message: printing to the console.</p>
-         */
-        public static final Consumer<String> DEFAULT_MSG = (s) -> System.out.println(s);
-        
-	/**
-	 * <p>Returns true if <code>c</code> occurs in chapters' titles, 
-	 * false otherwise.</p>
-	 * @param c a char to be tested for status as a character that 
-	 * occurs in chapters' titles
-	 * @return true if <code>c</code> is an uppercase letter, space, 
-	 * or apostrophe
-	 */
-	public static boolean isLegalChapterTitleCharacter(char c){
-		return ('A'<=c && c<='Z') || c==' ' || c=='\'';
-	}
-	
+    /**
+     * <p>The default way to display a message: printing to the console.</p>
+     */
+    public static final Consumer<String> DEFAULT_MSG = (s) -> System.out.println(s);
+    
 	/**
 	 * <p>Returns a new OutputStreamWriter writing to the file named <code>filename</code> 
 	 * using {@link #ENCODING UTF-8 encoding}. If the result cannot be created, then 
@@ -174,7 +162,7 @@ public class IO {
 			retVal = new OutputStreamWriter( new FileOutputStream( filename ), ENCODING );
 		} catch(FileNotFoundException | UnsupportedEncodingException e){
 			closeAll(closeUs);
-			errorExit(filename+" for writing");
+			throw new RuntimeException(ERROR_EXIT_MSG + filename + " for writing.");
 		}
 		return retVal;
 	}
@@ -237,12 +225,11 @@ public class IO {
 					scannerOperation, 
 					continueTest);
 		} catch( FileNotFoundException e){
-			errorExit(source.getName() + " for reading");
+			throw new RuntimeException(ERROR_EXIT_MSG + source.getName());
 		}
 		return retList;
 	}
 	
-
 	/**
 	 * <p>Returns a List of Strings produced by <code>src</code> when 
 	 * it's sent to <code>scannerOperation.apply(src)</code>.</p>
@@ -277,11 +264,6 @@ public class IO {
 	 * any directory references or file extensions
 	 */
 	public static String stripFolderExtension(String fileAddress){
-		/*int slash = fileAddress.lastIndexOf(File.separator);
-		String nameInFolder = fileAddress.substring(slash+1);
-		
-		int dot = nameInFolder.indexOf(FILENAME_ELEMENT_DELIM);
-		return dot >= 0 ? nameInFolder.substring(0,dot) : nameInFolder;*/
 		return stripExtension( stripFolder(fileAddress) );
 	}
 	
@@ -325,75 +307,5 @@ public class IO {
 		}
 	}
 	
-	/**
-	 * <p>Returns a shortened form of the specified String.</p>
-	 * @param phrase the phrase of which a shortened form will be returned
-	 * @return the first 25 characters of phrase + " ... " + the last 25 
-	 * characters if the phrase has 60 or more characters, else returns 
-	 * the entire phrase.
-	 */
-	public static String shortForm(String phrase){
-		if(phrase.length() < 60){
-			return phrase;
-		}
-		return phrase.substring(0, 25) + " ... " + phrase.substring(phrase.length()-26);
-	}
-	
-	/**
-	 * <p>Prints a standard error message specifying that the 
-	 * specified file couldn't be opened and then 
-	 * {@linkplain java.lang.System#exit(int) exits}.</p>
-	 * @param filename The name of the file that couldn't be opened.
-	 */
-	public static void errorExit(String filename){	//package-private for use by RemoveDependentPhrases
-		//System.out.println("Couldn't open file "+filename);
-		//System.exit (1);
-		
-		throw new RuntimeException("I can't open the file " + filename);
-	}
-	
-	/**
-	 * <p>Returns the name of the file to which data for AnchorInfo 
-	 * objects should be written to add anchor tags to the html 
-	 * source file pertaining to the chapter to which the 
-	 * specified filename pertains.</p>
-	 * @param chapter a filename of the chapter that the 
-	 * returned String is the name of the anchordata file for
-	 * @return the name of the file to which data for AnchorInfo 
-	 * objects should be written to add anchor tags to the html 
-	 * source file pertaining to the chapter to which the 
-	 * specified filename pertains.
-	 * @see repeatedphrases.Folder#ANCHORS
-	 */
-	public static String anchorOutName(String chapter){
-		return Folder.ANCHORS.folderName() + File.separator 
-				+ stripFolderExtension(chapter) 
-				+ ANCHOR_EXT;
-	}
-	
-	/**
-	 * <p>The file extension for anchor-data files: {@value}</p>
-	 */
-	public static final String ANCHOR_EXT = ".anchordata" + TXT_EXT;
-	
-	/**
-	 * <p>Returns the filename/address of the specified html 
-	 * chapter file after the file has had links to repeated
-	 * phrases later in the corpus added.</p>
-	 * @param originalName the original name of the chapter 
-	 * whose linked html file is named by the returned value
-	 * @return the filename/address of the specified html 
-	 * chapter file after the file has had links to repeated
-	 * phrases later in the corpus added
-	 * @see repeatedphrases.Folder.LINKED_CHAPTERS
-	 */
-	public static String linkedChapterName(String originalName){
-		int index = originalName.lastIndexOf(File.separator);
-		originalName = originalName.substring( index+1 );
-		index = originalName.indexOf('.');
-		if(index>=0){
-			originalName = originalName.substring( 0, index );
-		}
-		return Folder.LINKED_CHAPTERS.folderName() + File.separator + originalName + ".html";
-	}
+	public static final String ERROR_EXIT_MSG = "I can't open the file ";
 }

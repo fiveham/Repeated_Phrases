@@ -69,16 +69,18 @@ public class Corpus {
 		//while currentBuffer doesn't have a next element 
 		//(or is null) update the buffer to a new buffer 
 		//of the next file 
-		while( !(currentBuffer != null && currentBuffer.hasNext())){
+		while( !(currentBuffer != null && currentBuffer.hasNext()) 
+				&& chapterPointer < chapters.size()-1){
 			
 			try{
 				currentBuffer = new PhraseProducer(size, chapters.get(++chapterPointer));
-			} catch(IllegalArgumentException e){	//specified chapter didn't have enough tokens in it
+			} catch(IllegalArgumentException e){
+				//specified chapter didn't have enough tokens in it
 				//cycle around to the next chapter
-			} catch(IndexOutOfBoundsException e){	//iterated over the entire filenames list without finding an acceptable buffer
-				//The previous, and last, buffer has already been closed.
+			}/* catch(IndexOutOfBoundsException e){
+				//The final buffer is already exhausted
 				return;
-			}
+			}*/
 		}
 	}
 	

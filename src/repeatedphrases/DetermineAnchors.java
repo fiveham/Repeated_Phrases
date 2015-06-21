@@ -85,7 +85,7 @@ public class DetermineAnchors {
 		for(String chapter : filebox.filenames()){
 			msg.accept("Creating anchor data for "+chapter);
 			
-			String name = IO.anchorOutName(chapter);
+			String name = anchorOutName(chapter);
 			
 			try(OutputStreamWriter out = IO.newOutputStreamWriter( name );){
 				
@@ -104,7 +104,7 @@ public class DetermineAnchors {
 				
 				out.close();
 			} catch( IOException e){
-				IO.errorExit(name + " for writing");
+				throw new RuntimeException(IO.ERROR_EXIT_MSG + name + " for writing.");
 			}
 		}
 	}
@@ -201,7 +201,7 @@ public class DetermineAnchors {
 					sb.append(line).append("\n");
 				}
 			} catch(FileNotFoundException e){
-				IO.errorExit( name + "for reading" );
+				throw new RuntimeException(IO.ERROR_EXIT_MSG + name + " for reading.");
 			}
 		}
 		
@@ -256,11 +256,11 @@ public class DetermineAnchors {
 		
 		
 		
-		String[] split1 = IO.stripExtension(f1).split("_", HTMLFile.FILENAME_ELEMENT_COUNT);
+		String[] split1 = IO.stripExtension(f1).split(IO.FILENAME_COMPONENT_SEPARATOR, HTMLFile.FILENAME_ELEMENT_COUNT);
 		String book1 = split1[0];
 		String chapterNumber1 = split1[1];
 		
-		String[] split2 = IO.stripExtension(f2).split("_", HTMLFile.FILENAME_ELEMENT_COUNT);
+		String[] split2 = IO.stripExtension(f2).split(IO.FILENAME_COMPONENT_SEPARATOR, HTMLFile.FILENAME_ELEMENT_COUNT);
 		String book2 = split2[0];
 		String chapterNumber2 = split2[1];
 		
@@ -319,4 +319,27 @@ public class DetermineAnchors {
 		}
 	}
 	
+	/**
+	 * <p>Returns the name of the file to which data for AnchorInfo 
+	 * objects should be written to add anchor tags to the html 
+	 * source file pertaining to the chapter to which the 
+	 * specified filename pertains.</p>
+	 * @param chapter a filename of the chapter that the 
+	 * returned String is the name of the anchordata file for
+	 * @return the name of the file to which data for AnchorInfo 
+	 * objects should be written to add anchor tags to the html 
+	 * source file pertaining to the chapter to which the 
+	 * specified filename pertains.
+	 * @see repeatedphrases.Folder#ANCHORS
+	 */
+	public static String anchorOutName(String chapter){
+		return Folder.ANCHORS.folderName() + File.separator 
+				+ IO.stripFolderExtension(chapter) 
+				+ ANCHOR_EXT;
+	}
+	
+	/**
+	 * <p>The file extension for anchor-data files: {@value}</p>
+	 */
+	public static final String ANCHOR_EXT = ".anchordata" + IO.TXT_EXT;
 }

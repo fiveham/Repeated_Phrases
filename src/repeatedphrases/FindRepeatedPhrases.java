@@ -143,7 +143,7 @@ public class FindRepeatedPhrases {
 		try{
 			s = new Scanner( f, IO.ENCODING);
 		} catch(FileNotFoundException e){
-			IO.errorExit(f.getName() + " for reading.");
+			throw new RuntimeException(IO.ERROR_EXIT_MSG + f.getName() + " for reading.");
 		}
 		s.useDelimiter(NON_WORD_CHARACTERS);
 		

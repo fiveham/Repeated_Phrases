@@ -107,7 +107,7 @@ public class SetTrail {
             try{
                 file = new HTMLFile(new File( READ_FROM.folderName() + File.separator + node.focus()));
             } catch( FileNotFoundException e){
-                IO.errorExit(READ_FROM.folderName() + File.separator + node.focus() + " for reading");
+            	throw new RuntimeException(IO.ERROR_EXIT_MSG + READ_FROM.folderName() + File.separator + node.focus() + " for reading");
             }
 
             setAdjacentChapterLinks(file, PREV_CHAPTER, ID_ATTRIB, node.prev());
@@ -192,10 +192,9 @@ public class SetTrail {
             return address;
         }
         String name = IO.stripFolderExtension(address);
-        String withoutBook = name.substring(name.indexOf('_')+1);
-        String withoutIndx = withoutBook.substring(withoutBook.indexOf('_')+1);
-        //String withoutExtn = withoutIndx.substring(0, withoutIndx.lastIndexOf('.'));
-        return withoutIndx.replace('_',' ');
+        String withoutBook = name.substring(name.indexOf(IO.FILENAME_COMPONENT_SEPARATOR_CHAR)+1);
+        String withoutIndx = withoutBook.substring(withoutBook.indexOf(IO.FILENAME_COMPONENT_SEPARATOR_CHAR)+1);
+        return withoutIndx.replace(IO.FILENAME_COMPONENT_SEPARATOR_CHAR,' ');
     }
 
     /**

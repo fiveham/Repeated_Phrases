@@ -172,7 +172,9 @@ public class SplitChapters {
         if( "RP.html".equals(novellaName) ){
             result.append("_0");
         }
-        result.append('_').append(novellaTitle(novellaName).replace(' ','_')).append(IO.HTML_EXT);
+        result.append(IO.FILENAME_COMPONENT_SEPARATOR_CHAR)
+        		.append(novellaTitle(novellaName).replace(' ',IO.FILENAME_COMPONENT_SEPARATOR_CHAR))
+        		.append(IO.HTML_EXT);
 
         return result.toString();
     }
@@ -203,7 +205,7 @@ public class SplitChapters {
             if( HTMLFile.IS_CODE.test(h)){
                 return false;
             } else if( HTMLFile.IS_CH.test(h) ){
-                if(IO.isLegalChapterTitleCharacter( ((Ch)h).c ) ){
+                if( isLegalChapterTitleCharacter( ((Ch)h).c ) ){
                     titleCharCount++;
                 } else{
                     return false;
@@ -213,6 +215,18 @@ public class SplitChapters {
 
         return titleCharCount > 0;
     }
+    
+	/**
+	 * <p>Returns true if <code>c</code> occurs in chapters' titles, 
+	 * false otherwise.</p>
+	 * @param c a char to be tested for status as a character that 
+	 * occurs in chapters' titles
+	 * @return true if <code>c</code> is an uppercase letter, space, 
+	 * or apostrophe
+	 */
+	public static boolean isLegalChapterTitleCharacter(char c){
+		return ('A'<=c && c<='Z') || c==' ' || c=='\'';
+	}
 
     /**
      * <p>Writes the contents of <code>buffer</code> to a file via <code>out</code>, 
@@ -251,7 +265,7 @@ public class SplitChapters {
      */
     private static String chapterFileName(String bookFile, int chapterIndex, String chapterName){
         String bookName = IO.stripFolderExtension(bookFile);
-        return bookName + '_' + chapterIndex + '_' + chapterName.replace(' ','_') + IO.HTML_EXT;
+        return bookName + IO.FILENAME_COMPONENT_SEPARATOR_CHAR + chapterIndex + IO.FILENAME_COMPONENT_SEPARATOR_CHAR + chapterName.replace(' ',IO.FILENAME_COMPONENT_SEPARATOR_CHAR) + IO.HTML_EXT;
     }
 
     /**

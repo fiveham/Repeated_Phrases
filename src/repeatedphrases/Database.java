@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 
 /**
  * <p>Stores phrase-instance data chapter-first.</p>
- * 
  * <p>Wraps a {@link repeatedphrases.FileBox FileBox}.</p>
  */
 public class Database {
@@ -33,32 +32,6 @@ public class Database {
 	 */
 	public Database(File f) throws FileNotFoundException{
 		textCorpus = new FileBox(f);
-		
-		//List<Record> allRecords = new ArrayList<>();
-		
-		/*try(Scanner scan = new Scanner( f, IO.ENCODING )){
-			while(scan.hasNextLine() && scan.hasNext()){
-				
-				//Separate the phrase from the locations
-				String[] phraseAndLocations = scan.nextLine().split(IO.LOCATION_DELIM);
-				String phrase = phraseAndLocations[0];
-				
-				//For each Location represented on the line, 
-				//create a Record and an entry in the abused PhraseBox
-				for(int i=1; i<phraseAndLocations.length; i++){
-					String[] fileAndIndex = phraseAndLocations[i].split(Location.ELEMENT_DELIM);
-					int index = Integer.parseInt(fileAndIndex[1]);
-					String filename = fileAndIndex[0];
-					allRecords.add( new Database.Record(phrase, filename, index) );
-					textCorpus.add(filename, new Location(index, phrase) );
-				}
-			}
-			scan.close();
-		} catch(ArrayIndexOutOfBoundsException e){
-			throw new IllegalArgumentException("The specified file ("+f.getName()+") is not structured like a record of phrases and locations.");
-		}/**/
-		
-		//data = new SortedList<>(allRecords);
 	}
 	
 	/**
@@ -77,6 +50,20 @@ public class Database {
 			result.put(is.index, is.phrase);
 		}
 		return result;
+	}
+	
+	/**
+	 * <p>Returns a shortened form of the specified String.</p>
+	 * @param phrase the phrase of which a shortened form will be returned
+	 * @return the first 25 characters of phrase + " ... " + the last 25 
+	 * characters if the phrase has 60 or more characters, else returns 
+	 * the entire phrase.
+	 */
+	public static String shortForm(String phrase){
+		if(phrase.length() < 60){
+			return phrase;
+		}
+		return phrase.substring(0, 25) + " ... " + phrase.substring(phrase.length()-26);
 	}
 	
 	/**
@@ -99,9 +86,7 @@ public class Database {
 		for( String filename : textCorpus.filenames() ){
 			if( otherDatabase.textCorpus.contains(filename) ){
 				
-				//System.out.println("About to expand a list of IntStrings");
 				//get a random-access representation of the current corpus file
-				//List<String> fileForLargePhrases = expand( otherDatabase.textCorpus.get(filename) );
 				HashMap<Integer, String> fileForLargePhrases = mapFromIntString(otherDatabase.textCorpus.get(filename));
 				
 				//iterate over the phrase-instances for the current filename in this Database.
@@ -165,12 +150,12 @@ public class Database {
 						//the way its location demands, which is impossible.
 						
 						throw new IllegalStateException(
-								"The smaller phrase \""+IO.shortForm(smallerPhraseInFile.phrase)+
+								"The smaller phrase \""+shortForm(smallerPhraseInFile.phrase)+
 								"\" is contained at the proper location in zero or one of the two larger phrases that could contain it: " +  
 								"Phrase at some index in file "+filename+": \""+
-								IO.shortForm(largerPhraseWithIndexOneLess)+"\" --- " + 
+								shortForm(largerPhraseWithIndexOneLess)+"\" --- " + 
 								"Phrase at some index in file "+filename+": \""+
-								IO.shortForm(largerPhraseWithSameIndex)+"\".");
+								shortForm(largerPhraseWithSameIndex)+"\".");
 					} //Otherwise, the Boolean assignments did equal (null, true), (true, true), or (true, null), 
 					//which indicate that the small phrase is dependent on a larger phrase 
 					//with no error.

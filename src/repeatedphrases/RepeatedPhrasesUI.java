@@ -228,7 +228,11 @@ public class RepeatedPhrasesUI extends JFrame {
 
         pack();
     }
-
+    
+    /**
+     * <p>Ends the program when the "Exit" button is pressed.</p>
+     * @param evt
+     */
     private void exitButtonActionPerformed(ActionEvent evt) {
     	System.exit(0);
     }
@@ -243,20 +247,13 @@ public class RepeatedPhrasesUI extends JFrame {
      * @param evt 
      */
     private void createFoldersButtonActionPerformed(ActionEvent evt) {
-        if( opState == null ){
-            opState = createFoldersButton;
-            statusLabel.setText("Creating needed folders");
-            
-            ButtonOperation createFoldersTask = new ButtonOperation(new Runnable(){
-            	@Override
-            	public void run(){
-            		EnsureFolders.ensureFolders( statusLabelMsg );
-                    statusLabel.setText("Done: Put html books in "+Folder.HTML_BOOKS.folderName());
-            	}
-            });
-            
-            createFoldersTask.execute();
-        }
+        buttonPress(createFoldersButton, "Creating needed folders", "Done: Put html books in "+Folder.HTML_BOOKS.folderName(), 
+        		new Runnable(){
+        	@Override
+        	public void run(){
+        		EnsureFolders.ensureFolders( statusLabelMsg );
+        	}
+        });
     }
 
     /**
@@ -264,21 +261,14 @@ public class RepeatedPhrasesUI extends JFrame {
      * @param evt 
      */
     private void chapterizeLinkButtonActionPerformed(ActionEvent evt) {
-        if( opState == null ){
-            opState = chapterizeLinkButton;
-            String[] trailAndLimit = trailAndLimit();
-            statusLabel.setText("Doing all the work ("+ trailAndLimit[0] +", "+ trailAndLimit[1] +")");
-            
-            ButtonOperation chapterizeLinkTask = new ButtonOperation(new Runnable(){
-            	@Override
-            	public void run(){
-            		IsolateChaptersAndLink.isolateChaptersAndLink( trailAndLimit, statusLabelMsg );
-                    statusLabel.setText("Done: Chapters ready: "+Folder.READABLE.folderName());
-            	}
-            });
-            
-            chapterizeLinkTask.execute();
-        }
+        String[] trailAndLimit = trailAndLimit();
+        buttonPress(chapterizeLinkButton, "Doing all the work ("+ trailAndLimit[0] +", "+ trailAndLimit[1] +")", 
+        		"Done: Chapters ready: "+Folder.READABLE.folderName(), new Runnable(){
+        	@Override
+        	public void run(){
+        		IsolateChaptersAndLink.isolateChaptersAndLink( trailAndLimit, statusLabelMsg );
+        	}
+        });
     }
 
     /**
@@ -286,21 +276,14 @@ public class RepeatedPhrasesUI extends JFrame {
      * @param evt 
      */
     private void changeOrderButtonActionPerformed(ActionEvent evt) {
-        if( opState == null ){
-            opState = changeOrderButton;
-            String[] trailAndLimit = trailAndLimit();
-            statusLabel.setText("Changing chapter order ("+ trailAndLimit[0] +", "+ trailAndLimit[1] +")");
-            
-            ButtonOperation changeOrderTask = new ButtonOperation(new Runnable(){
-            	@Override
-            	public void run(){
-            		LinksAndTrail.linksAndTrail( trailAndLimit, statusLabelMsg );
-                    statusLabel.setText("Done: Chapter order changed");
-            	}
-            });
-            
-            changeOrderTask.execute();
-        }
+        String[] trailAndLimit = trailAndLimit();
+        buttonPress(changeOrderButton, "Changing chapter order ("+ trailAndLimit[0] +", "+ trailAndLimit[1] +")", 
+        		"Done: Chapter order changed", new Runnable(){
+        	@Override
+        	public void run(){
+        		LinksAndTrail.linksAndTrail( trailAndLimit, statusLabelMsg );
+        	}
+        });
     }
 
     /**
@@ -308,28 +291,48 @@ public class RepeatedPhrasesUI extends JFrame {
      * @param evt 
      */
     private void changeTrailButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_changeTrailButtonActionPerformed
-        if( opState == null ){
-            opState = changeTrailButton;
-            String trail = trailFileField.getText();
-            statusLabel.setText("Changing trail sequence ("+ trail +")");
-            
-            ButtonOperation changeTrailTask = new ButtonOperation( new Runnable(){
-            	@Override
-            	public void run(){
-            		SetTrail.setTrail(new String[]{trail}, statusLabelMsg);
-            		statusLabel.setText("Done: Trail changed to "+trail);
-            	}
-            } );
-            
-            changeTrailTask.execute();
-        }
+        String trail = trailFileField.getText();
+        buttonPress(changeTrailButton, "Changing trail sequence ("+ trail +")", "Done: Trail changed to "+trail, new Runnable(){
+        	@Override
+        	public void run(){
+        		SetTrail.setTrail(new String[]{trail}, statusLabelMsg);
+        	}
+        });
+    }
+    
+    /**
+     * <p>Provides the basic structure of all button-press event responses: if 
+     * {@link opState} is null (no operation is being performed), then opState 
+     * is changed to specify the operation being initiated, a staring message 
+     * is set as the GUI's status, then a ButtonOperation is created and executed 
+     * which performs the action contained in <code>action</code> and then 
+     * sets the GUI's status to an ending message.</p>
+     * @param newOpState the button that was pressed
+     * @param startMsg message displayed on the GUI as soon as this process begins
+     * @param endMsg message displayed on the GUI once this process finishes
+     * @param action the actions taken as a result of pressing the button 
+     * <code>newOpState</code>
+     */
+    private void buttonPress(JButton newOpState, String startMsg, String endMsg, Runnable action){
+    	if(opState == null){
+    		opState = newOpState;
+    		statusLabel.setText(startMsg);
+    		
+    		new ButtonOperation( new Runnable(){
+    			@Override
+    			public void run(){
+    				action.run();
+    				statusLabel.setText(endMsg);
+    			}
+    		}).execute();
+    	}
     }
 
     /**
      * <p>Sets look and feel for the GUI, and creates/queues 
-     * a Runnable that instantiates and 
-     * {@link java.awt.Window#setVisible() sets visible} the 
-     * GUI window.</p>
+     * a Runnable that instantiates the GUI window and makes 
+     * its window 
+     * {@linkplain java.awt.Window#setVisible() visible}.</p>
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -409,13 +412,13 @@ public class RepeatedPhrasesUI extends JFrame {
      * <p>Identifies the application's operating state and prevents 
      * multiple processes from running at once. This is set to refer 
      * to the most recently pressed button by the methods called 
-     * by the buttons' event-listeners and reset to null once the 
-     * processes initiated by those method calls finish.</p>
+     * by the buttons' event-listeners and is reset to null once the 
+     * processes initiated by those method-calls finish.</p>
      */
     private JButton opState = null;
     
     /**
-     * <p>A SwingWorker for the operations performed when one of the 
+     * <p>A {@link SwingWorker} for the operations performed when one of the 
      * buttons (other than exit) of this window is pressed.</p>
      */
     private class ButtonOperation extends SwingWorker<Void,Void>{
@@ -455,13 +458,12 @@ public class RepeatedPhrasesUI extends JFrame {
     	
     	@Override
     	/**
-    	 * <p>Resets the {@link RepeatedPhrasesUI#opState operation-state} to 
+    	 * <p>Resets the {@linkplain RepeatedPhrasesUI#opState operation-state} to 
     	 * <code>null</code>, allowing a button's operation to begin when a 
     	 * button is next pressed.</p>
     	 */
     	public final void done(){
     		opState = null;
     	}
-    	
     }
 }

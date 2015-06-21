@@ -191,7 +191,7 @@ public class PhraseBox{
 			
 			phraseInstanceFile.close();
 		} catch(IOException e){
-			IO.errorExit( phraseInstFileName+" for writing" );
+			throw new RuntimeException(IO.ERROR_EXIT_MSG + phraseInstFileName+" for writing" );
 		}
 	}
 }

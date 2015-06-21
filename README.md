@@ -1,7 +1,7 @@
 #RepeatedPhrases  
 ##A tool for boiled leather and insights
 
-Some phrases are repeated in A Song of Ice and Fire.  Some [are suggestive as hell.](http://redd.it/30y8ez)  Most [are not.](http://imgur.com/75joFxC)  A few [are in the middle.](http://imgur.com/z789AIe)  Really the only way to [know which is the case](http://imgur.com/YbHU0zS) is to view them in context, and that's exactly what I'm giving you to the power to do.
+Some phrases are repeated in A Song of Ice and Fire.  Some [hint at the future.](http://redd.it/30y8ez)  Most [are meaningless.](http://imgur.com/75joFxC)  A few [are in the middle.](http://imgur.com/z789AIe)  Really the only way to [know which is the case](http://imgur.com/YbHU0zS) is to view them in context, and that's exactly what I'm giving you to the power to do.
 
 This tool lets you start with ebooks of ASOIAF and end up with individual chapter files that provide clickable links from one instance of a repeated phrase to the next so you can easily determine something's significance based on its use in its original context and its use in another context. [Here's a demonstration](http://imgur.com/bqX7mpJ) pertaining to the repeated phrase mentioned in the first link in the first paragraph. Making the chapters independent makes it easier to read in a creative order, such as the famed [Boiled Leather](http://boiledleather.com/post/24543217702/a-proposed-a-feast-for-crows-a-dance-with-dragons) order.
 
@@ -15,7 +15,7 @@ Report bugs, horrible crashes, etc. at reddit-link-goes-here.
 | ASOIAF ebooks |  | Ignore "The World of Ice and Fire" |
 | [Calibre](http://calibre-ebook.com/) | Convert the ebooks (mobi, epub, or other format) to HTML | Other conversion software is fine. It's free. |
 | [7-Zip](http://www.7-zip.org/download.html) | Unzip this repository after downloading; unzip the HTMLZ files produced by Calibre when converting to HTML | It's free. |
-| [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) | Run the code | It's free. Java compiles to bytecode instead of pure machine code. I used lambda expressions, which Java 7 doesn't support |
+| [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) | Run the program | It's free. Java compiles to bytecode instead of pure machine code. I used lambda expressions, which Java 7 doesn't support |
 | 400MB (~ish) RAM available | An increased amount of memory is needed during repeated-phrase analysis |  |
 
 ---
@@ -26,16 +26,15 @@ Report bugs, horrible crashes, etc. at reddit-link-goes-here.
 * Add the ebooks to your Calibre library (if they're not already in there).  
 * Convert them to HTMLZ.  
 * Go to the folders where those HTMLZ files are located (In Calibre, right click the book and choose "Open containing folder".) and unzip them (to their own new folders, preferably)
-* Choose/Create a work folder somewhere. It's called **work_folder** in these instructions, but you can name it whatever you want.
-* [Download the project as a ZIP](https://github.com/fiveham/Repeated_Phrases/archive/master.zip), unzip it, and copy/move **repeatedphrases.jar** to **work_folder**
-* **NOTE** do not rename **repeatedphrases.jar**. Normally that isn't an issue, but it is in this case because this application needs to know the name of the jar it's launched out of to launch correctly (or at all).
-* Double-click the **repeatedphrases.jar** file in **work_folder** to run the application.  
+* [Download the project as a ZIP](https://github.com/fiveham/Repeated_Phrases/archive/master.zip) and unzip it.
+* Choose/Create a work folder somewhere. It's called **work_folder** in these instructions, but you can name it whatever you want. If you prefer, you can simply use **Repeated_Phrases-master**, the folder created by unzipping the project.
+* Double-click **repeatedphrases.jar** in **work_folder** to run the application.  
 
 After a few seconds, a small, poorly-designed window will pop up, named ["Repeated Phrase Analyser".](http://imgur.com/9HgQFen) The second line from the top of the window names the folder from/in which the application is operating. If this isn't your chosen **work_folder**, then something's wrong (with my code).
 
 * Click "Create Folders".
 
-This makes the folders that this application needs in order to work. Once these folders have been created, copy each ebook's unzipped **index.html** file (still in various folders in the Calibre library) into **00_html_books** and rename them so they indicate what book they belong to. The exact names they need to have for the application to work are:
+This makes the folders that this application needs in order to work. Once these folders have been created, copy each ebook's unzipped **index.html** file from the books' various folders in the Calibre library into **00_html_books** and rename them so they indicate what book they belong to. The exact names they need to have for the application to work are:
 
 1. AGOT.html
 1. ACOK.html
@@ -50,11 +49,11 @@ This makes the folders that this application needs in order to work. Once these 
 
 **Note**: If you don't have all of these books, it doesn't matter, the application will run just fine and produce results that pertain only to the books you do have.
 
-* Specify a trail-file (I recommend moving at least one from the unzipped project into **work_folder**), optionally specify a minimum word-count for phrases to get linked (defaults to 3), and click "Chapterize books; Add links".
+* Specify a trail-file (several are included with the project, in **resources/trails**), optionally specify a minimum word-count for phrases to get linked in the final product, and click "Chapterize books; Add links".
 
 This will take most of an hour to run.
 
-If you don't specify a minimum linked phrase size, it'll default to 3, which is a decent balance, I think, eliminating a lot of completely pointless links that make the final product difficult to read. You can even set it to something over 218 to eliminate all repeated-phrase links and leave yourself with nothing but pure chapters (not recommended).
+If you don't specify a minimum linked phrase size, it'll default to 3, which is a decent balance, I think, exclusively eliminating pointless links. You can even set it to something over 218 to eliminate all repeated-phrase links and leave yourself with nothing but pure chapters (not recommended).
 
 Once it finishes, the GUI's Status will start with "Done:".
 

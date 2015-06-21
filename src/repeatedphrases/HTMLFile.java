@@ -159,9 +159,9 @@ public class HTMLFile {
 		int p = filename.indexOf( IO.FILENAME_ELEMENT_DELIM );
 		extensionlessName = p>=0 ? filename.substring(0,p) : filename;
 		
-		String[] split = extensionlessName.split("_", FILENAME_ELEMENT_COUNT);
+		String[] split = extensionlessName.split(IO.FILENAME_COMPONENT_SEPARATOR, FILENAME_ELEMENT_COUNT);
 		chapterName = FILENAME_CHAPTERNAME_INDEX < split.length 
-				? split[FILENAME_CHAPTERNAME_INDEX].replace('_',' ') 
+				? split[FILENAME_CHAPTERNAME_INDEX].replace(IO.FILENAME_COMPONENT_SEPARATOR_CHAR,' ') 
 				: null;
 		
 		baseWordIndex = chapterName!=null 
@@ -183,9 +183,9 @@ public class HTMLFile {
 		int p = filename.indexOf( IO.FILENAME_ELEMENT_DELIM );
 		extensionlessName = p>=0 ? filename.substring(0,p) : filename;
 		
-		String[] split = extensionlessName.split("_", FILENAME_ELEMENT_COUNT);
+		String[] split = extensionlessName.split(IO.FILENAME_COMPONENT_SEPARATOR, FILENAME_ELEMENT_COUNT);
 		chapterName = FILENAME_CHAPTERNAME_INDEX < split.length 
-				? split[FILENAME_CHAPTERNAME_INDEX].replace('_',' ') 
+				? split[FILENAME_CHAPTERNAME_INDEX].replace(IO.FILENAME_COMPONENT_SEPARATOR_CHAR,' ') 
 				: null;
 		
 		baseWordIndex = chapterName!=null 
@@ -488,7 +488,7 @@ public class HTMLFile {
 			print(out);
 			out.close();
 		} catch( IOException e){
-			IO.errorExit(name + " for writing.");
+			throw new RuntimeException(IO.ERROR_EXIT_MSG + name + " for writing.");
 		}
 	}
 	
@@ -526,7 +526,7 @@ public class HTMLFile {
 			}
 			out.close();
 		} catch(IOException e){
-			IO.errorExit(name + " for writing.");
+			throw new RuntimeException(IO.ERROR_EXIT_MSG + name + " for writing.");
 		}
 	}
 	

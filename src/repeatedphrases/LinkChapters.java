@@ -65,7 +65,7 @@ public class LinkChapters {
         List<FileDataPair> fileDataPairs = 
                 getFileDataPairs( 
                         READ_SUBSTANCE.folder().list(IO.IS_HTML), 
-                        READ_DECORATION.folder().list( (dir,name) -> name.endsWith( IO.ANCHOR_EXT ) ) );
+                        READ_DECORATION.folder().list( (dir,name) -> name.endsWith( DetermineAnchors.ANCHOR_EXT ) ) );
 
         msg.accept("Got "+fileDataPairs.size()+" FileDataPairs");
 
@@ -113,7 +113,7 @@ public class LinkChapters {
         try{
             htmlFile = new HTMLFile(new File(htmlFileName));
         } catch(FileNotFoundException e){
-            IO.errorExit(htmlFileName + " for reading.");
+            throw new RuntimeException(IO.ERROR_EXIT_MSG + htmlFileName + " for reading.");
         }
 
         List<AnchorInfo> anchorInfo = anchorInfo(new File(anchorFile));
@@ -125,7 +125,7 @@ public class LinkChapters {
             }
         }
 
-        htmlFile.print(IO.linkedChapterName(htmlFileName));
+        htmlFile.print(linkedChapterName(htmlFileName));
     }
 
     /**
@@ -143,7 +143,7 @@ public class LinkChapters {
         try{
             s = new Scanner(f, IO.ENCODING);
         } catch(FileNotFoundException e){
-            IO.errorExit(f.getName() + " for reading.");
+            throw new RuntimeException(IO.ERROR_EXIT_MSG + f.getName() + " for reading.");
         }
 
         String chapter = f.getName();
@@ -220,6 +220,27 @@ public class LinkChapters {
     private static boolean matchNames(String htmlFile, String anchFile){
         return IO.stripFolderExtension(htmlFile).equals(IO.stripFolderExtension(anchFile));
     }
+	
+	/**
+	 * <p>Returns the filename/address of the specified html 
+	 * chapter file after the file has had links to repeated
+	 * phrases later in the corpus added.</p>
+	 * @param originalName the original name of the chapter 
+	 * whose linked html file is named by the returned value
+	 * @return the filename/address of the specified html 
+	 * chapter file after the file has had links to repeated
+	 * phrases later in the corpus added
+	 * @see repeatedphrases.Folder.LINKED_CHAPTERS
+	 */
+	public static String linkedChapterName(String originalName){
+		int index = originalName.lastIndexOf(File.separator);
+		originalName = originalName.substring( index+1 );
+		index = originalName.indexOf('.');
+		if(index>=0){
+			originalName = originalName.substring( 0, index );
+		}
+		return Folder.LINKED_CHAPTERS.folderName() + File.separator + originalName + ".html";
+	}
 
     /**
      * <p>A pair of strings naming an html file to which 

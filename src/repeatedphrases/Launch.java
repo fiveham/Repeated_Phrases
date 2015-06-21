@@ -1,6 +1,10 @@
 package repeatedphrases;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.IOException;
 
 public class Launch {
 	
@@ -24,8 +28,16 @@ public class Launch {
         }
 	}
 	
+	/**
+	 * <p>Tries to determine the name of the jar file from which this class 
+	 * was launched. If there's only one jar in the working directory, that 
+	 * is assumed to be the correct jar; otherwise, "repeatedphrases.jar" is 
+	 * returned.</p>
+	 * @return the name of the jar file from which this class was launched
+	 */
 	private static String getJarName(){
-		return "repeatedphrases.jar";
+		String[] files = new File(".").list( (dir,name) -> name.endsWith(".jar") );
+		return (files.length == 1) ? files[0] : "repeatedphrases.jar";
 	}
 	
 	/**

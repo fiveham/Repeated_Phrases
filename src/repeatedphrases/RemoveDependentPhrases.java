@@ -86,7 +86,7 @@ public class RemoveDependentPhrases {
                 smallerPhrases.phrasesIndependentOf(largerPhrases)
                         .printPhrasesWithLocations(WRITE_TO.filename(lowSize));
             } catch(FileNotFoundException e){
-                IO.errorExit( READ_FROM.filename(lowSize) + " or " + READ_FROM.filename(lowSize+1) );
+            	throw new RuntimeException(IO.ERROR_EXIT_MSG + READ_FROM.filename(lowSize) + " or " + READ_FROM.filename(lowSize+1) );
             }
         }
     }
