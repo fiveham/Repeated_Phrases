@@ -3,11 +3,11 @@
 
 Some phrases are repeated in A Song of Ice and Fire.  Some [hint at the future.](http://redd.it/30y8ez)  Most [are meaningless.](http://imgur.com/75joFxC)  A few [are in the middle.](http://imgur.com/z789AIe)  Really the only way to [know which is the case](http://imgur.com/YbHU0zS) is to view them in context, and that's exactly what I'm giving you to the power to do.
 
-This tool lets you start with ebooks of ASOIAF and end up with individual chapter files that provide clickable links from one instance of a repeated phrase to the next so you can easily determine something's significance based on its use in its original context and its use in another context. [Here's a demonstration](http://imgur.com/bqX7mpJ) pertaining to the repeated phrase mentioned in the first link in the first paragraph. Making the chapters independent makes it easier to read in a creative order, such as the famed [Boiled Leather](http://boiledleather.com/post/24543217702/a-proposed-a-feast-for-crows-a-dance-with-dragons) order.
+This tool lets you start with ebooks of ASOIAF and end up with individual chapter files that provide clickable links from one instance of a repeated phrase to the next so you can easily determine something's significance based on its use in its original context and its use in another context. [Here's a demonstration](http://imgur.com/bqX7mpJ) pertaining to the repeated phrase mentioned in the first link in the first paragraph. Making the chapters independent makes it easier to read in a creative order, such as the famed [Boiled Leather](http://boiledleather.com/post/24543217702/a-proposed-a-feast-for-crows-a-dance-with-dragons) order or even more creative sequences such as following Bronn or House Bolton.
 
 ASOIAF is absolutely a story of connections; there are so many. This tool helps automate the process of noticing which things are connected (by sharing some text) leaving you with only the simple task of reading the phrase in context to tell whether it means anything and maybe learn something.
 
-Report bugs, horrible crashes, etc. at reddit-link-goes-here.
+Report bugs, horrible crashes, etc. at http://www.reddit.com/r/asoiaf/comments/3am5zr/spoilers_all_a_tool_for_a_more_interesting_reread/
 
 ---
 ##Requirements
@@ -66,7 +66,7 @@ If the style (such as the text colors) is not to your liking, you can open **sty
 ---
 ##Switching to/from Boiled Leather, Ball of Beasts, etc.
 
-If and when you choose to read with a different chapter order or with a different limit for the linked phase size, run the application, specify a trail-file that has the chapter-order you want, and click "Change Chapter Order" or "Change Trail (Keep Link Order)" if you don't care about the chapter sequence assumed by the in-text links.
+If and when you choose to read with a different chapter order or with a different limit for the linked phrase size, run the application, specify a trail-file that has the chapter-order you want, and click "Change Chapter Order"&mdash;or "Change Trail (Keep Link Order)" if you don't care about the chapter sequence assumed by the in-text links.
 
 This should finish in less than ten minutes. It doesn't matter if you choose a different minimum phrase size than was used for the second-button operation, because that value isn't used until the part of that process that activates this very process. Data for all phrase sizes will have been generated and this process tries to add links for all of them to the chapter files, but only those that meet the minimum word-count get used.
 
@@ -97,7 +97,7 @@ After the folders 00_ through 12_ are created, this application's main operation
 
 5. 05-06: The HTML chapters are converted to plain text files&mdash;no markup at all&mdash;ready to be processed.
 
-6. 06-07: The plain text chapters are read into memory and scanned over and over to exhaustively find all phrases of each size (up to a per-phrase word-count of 217, the largest number of words at which a phrase occurs more than once in the corpus). The phrases that occur more than once are recorded in files.
+6. 06-07: The plain text chapters are read into memory and scanned over and over to exhaustively find all phrases of each size (up to a per-phrase word-count of 217, the largest number of words for which a phrase occurs more than once in the corpus). The phrases that occur more than once are recorded in files.
 
 7. 07-08: The repeated phrases found in the previous step are compared to each other to eliminate those phrase-instances that are subsumed by an instance of a larger phrase, such as all the fragments of the 217-word overlap between AFFC Samwell I and ADWD Jon II that are just parts of that overlap. Those obviously aren't as meaningful as the bigger repeated phrase.
 
@@ -105,7 +105,7 @@ After the folders 00_ through 12_ are created, this application's main operation
 
 9. 09-10: The phrase-instances that passed the previous test are reinterpreted as information for the positions and attributes/values of HTML anchor tags that link each phrase-instance to the next instance of the same phrase (wrapping around to the earliest instance from the last one).
 
-10. 10-11: That anchor-data is used to add links to the HTML chapter files produced in step 4.
+10. 10-11: That anchor-data is used to add links to the HTML chapter files produced in step 5.
 
 11. 11-12: The link-bearing HTML chapter files get the prev-chapter and next-chapter links in their head/foot tables set, finally allowing you to just *turn the page* from one chapter to the next.
 
@@ -116,12 +116,14 @@ The fourth button ("Change Trail")'s class is responsible for performing step 11
 ---
 ##Some "don't"s
 
-* Don't rename **repeatedphrases.jar**.  
+* Don't rename **repeatedphrases.jar**.
 
 >&ldquo;Theon,&rdquo; he repeated. &ldquo;My name is Theon. You have to know your name.&rdquo;  
 &mdash;ADWD, Chapter 62, The Sacrifice
 
 The way I made this application work, it needs to know the name of its own .jar.  Normally, you don't need that&mdash;you just double-click and the main class in the jar kicks in and goes.  But here, the main class has to dive back into its own jar and [activate a different class using some command-line arguments](http://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html#exec(java.lang.String[])) to give that other class's process access to enough RAM to get over the memory-hump in the middle of the "Chapterize [...]" process.
+
+**Edit**: Now you can rename the jar as long as its the only jar in **work_folder**; otherwise, it still needs to be named **repeatedphrases.jar**.
 
 ---
 ##License
