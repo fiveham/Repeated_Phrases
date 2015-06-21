@@ -5,6 +5,8 @@ Some phrases are repeated in A Song of Ice and Fire.  Some [hint at the future.]
 
 This tool lets you start with ebooks of ASOIAF and end up with individual chapter files that provide clickable links from one instance of a repeated phrase to the next so you can easily determine something's significance based on its use in its original context and its use in another context. [Here's a demonstration](http://imgur.com/bqX7mpJ) pertaining to the repeated phrase mentioned in the first link in the first paragraph. Making the chapters independent makes it easier to read in a creative order, such as the famed [Boiled Leather](http://boiledleather.com/post/24543217702/a-proposed-a-feast-for-crows-a-dance-with-dragons) order.
 
+ASOIAF is absolutely a story of connections; there are so many. This tool helps automate the process of noticing which things are connected (by sharing some text) leaving you with only the simple task of reading the phrase in context to tell whether it means anything and maybe learn something.
+
 Report bugs, horrible crashes, etc. at reddit-link-goes-here.
 
 ---
