@@ -6,9 +6,12 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.border.LineBorder;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,12 +23,12 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
-import javax.swing.border.LineBorder;
 import repeatedphrases.EnsureFolders;
 import repeatedphrases.Folder;
 import repeatedphrases.IsolateChaptersAndLink;
 import repeatedphrases.LinksAndTrail;
 import repeatedphrases.SetTrail;
+
 
 /**
  * <p>The GUI for this application. Creates a small 
@@ -452,6 +455,11 @@ public class RepeatedPhrasesUI extends JFrame {
     			statusLabelMsg.accept("ERR: out of memory");
     		} catch(RuntimeException e){
     			statusLabelMsg.accept("EXCEPTION: "+e.getMessage());
+    			try{
+    				PrintStream ps = new PrintStream(new File("oops_i_crashed.txt"));
+    				e.printStackTrace(ps);
+    				ps.close();
+    			} catch(FileNotFoundException ex){}
     		}
     		return null;
     	}
