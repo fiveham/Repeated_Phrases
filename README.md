@@ -1,7 +1,7 @@
 #RepeatedPhrases  
 ##A tool for boiled leather and insights
 
-Some phrases are repeated in A Song of Ice and Fire.  Some [are suggestive as hell.](http://redd.it/30y8ez)  Most [are not.](http://imgur.com/75joFxC)  A few [are in the middle.](http://imgur.com/z789AIe)  Really the only way to know which is the case is [to view them in context](http://imgur.com/YbHU0zS), and that's exactly what I'm giving you to the power to do.
+Some phrases are repeated in A Song of Ice and Fire.  Some [are suggestive as hell.](http://redd.it/30y8ez)  Most [are not.](http://imgur.com/75joFxC)  A few [are in the middle.](http://imgur.com/z789AIe)  Really the only way to [know which is the case](http://imgur.com/YbHU0zS) is to view them in context, and that's exactly what I'm giving you to the power to do.
 
 This tool lets you start with ebooks of ASOIAF and end up with individual chapter files that provide clickable links from one instance of a repeated phrase to the next so you can easily determine something's significance based on its use in its original context and its use in another context. [Here's a demonstration](http://imgur.com/bqX7mpJ) pertaining to the repeated phrase mentioned in the first link in the first paragraph. Making the chapters independent makes it easier to read in a creative order, such as the famed [Boiled Leather](http://boiledleather.com/post/24543217702/a-proposed-a-feast-for-crows-a-dance-with-dragons) order.
 
@@ -94,7 +94,7 @@ After the folders 00_ through 12_ are created, this application's main operation
 
 4. 04-05: The books are split into individual chapters.
 
-5. 05-06: The HTML chapters are converted to plain text files--no markup at all--ready to be processed.
+5. 05-06: The HTML chapters are converted to plain text files&mdash;no markup at all&mdash;ready to be processed.
 
 6. 06-07: The plain text chapters are read into memory and scanned over and over to exhaustively find all phrases of each size (up to a per-phrase word-count of 217, the largest number of words at which a phrase occurs more than once in the corpus). The phrases that occur more than once are recorded in files.
 
@@ -120,7 +120,7 @@ The fourth button ("Change Trail")'s class is responsible for performing step 11
 >&ldquo;Theon,&rdquo; he repeated. &ldquo;My name is Theon. You have to know your name.&rdquo;  
 &mdash;ADWD, Chapter 62, The Sacrifice
 
-The way I made this application work, it needs to know the name of its own .jar.  Normally, you don't need that--you just double-click and the main class in the jar kicks in and goes.  But here, the main class has to dive back into its own jar and [activate a different class using some command-line arguments](http://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html#exec(java.lang.String[])) to give that other class's process access to enough RAM to get over the memory-hump in the middle of the "Chapterize [...]" process.
+The way I made this application work, it needs to know the name of its own .jar.  Normally, you don't need that&mdash;you just double-click and the main class in the jar kicks in and goes.  But here, the main class has to dive back into its own jar and [activate a different class using some command-line arguments](http://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html#exec(java.lang.String[])) to give that other class's process access to enough RAM to get over the memory-hump in the middle of the "Chapterize [...]" process.
 
 ---
 ##License
