@@ -63,7 +63,7 @@ Once it finishes, the GUI's Status will start with "Done:".
 If the style (such as the text colors) is not to your liking, you can open **style.css** in a text editor and change it.  For example, changing the **color: #??????;** values in the CSS file (in the section titled /\*GENERAL CONCERNS\*/) to some other colors, such as **color: blue;** or **color: white;**.  Don't forget the **semicolon** (;).
 
 ---
-##Switching to/from Boiled Leather, Ball of Beasts, Etc.
+##Switching to/from Boiled Leather, Ball of Beasts, etc.
 
 If and when you choose to read with a different chapter order or with a different limit for the linked phase size, run the application, specify a trail-file that has the chapter-order you want, and click "Change Chapter Order" or "Change Trail (Keep Link Order)" if you don't care about the chapter sequence assumed by the in-text links.
 
@@ -120,4 +120,11 @@ The fourth button ("Change Trail")'s class is responsible for performing step 11
 >&ldquo;Theon,&rdquo; he repeated. &ldquo;My name is Theon. You have to know your name.&rdquo;  
 &mdash;ADWD, Chapter 62, The Sacrifice
 
-The way I made this application work, it needs to know the name of its own .jar.  Normally, you don't need that--you just double-click and the main class in the jar kicks in and goes.  But here, the main class has to dive back into its own jar and [activate a different class using some command-line arguments](http://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html#exec(java.lang.String[]\)) to give that other class's process access to enough RAM to get over the memory-hump in the middle of the "Chapterize [...]" process.
+The way I made this application work, it needs to know the name of its own .jar.  Normally, you don't need that--you just double-click and the main class in the jar kicks in and goes.  But here, the main class has to dive back into its own jar and [activate a different class using some command-line arguments](http://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html#exec(java.lang.String[])) to give that other class's process access to enough RAM to get over the memory-hump in the middle of the "Chapterize [...]" process.
+
+---
+##License
+
+Copyright (c) 2015
+
+This project is licensed under the terms of the [MIT license.](http://choosealicense.com/licenses/mit/)
