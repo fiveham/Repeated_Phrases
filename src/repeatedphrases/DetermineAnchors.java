@@ -140,41 +140,32 @@ public class DetermineAnchors {
 	 * be read.
 	 */
 	public static Comparator<Location> getPhraseSorter(String trailFile){
-		Comparator<Location> phraseSorter = PHRASE_SORTER;
-		
 		File f = new File(trailFile);
-		if(f.exists() && f.canRead()){
-			
-			List<SetTrail.TrailElement> elems = SetTrail.getTrailElements(trailFile);
-			
-			HashMap<String,Integer> chaptersAndIndices = new HashMap<>();
-			
-			for(int i=0; i<elems.size(); i++){
-				chaptersAndIndices.put( IO.stripFolderExtension(elems.get(i).focus()), i );
-			}
-			
-			phraseSorter = new Comparator<Location>(){
-				
-				private HashMap<String,Integer> chapterIndices = chaptersAndIndices;
-				
-				@Override
-				public int compare(Location loc1, Location loc2){
-					String chapter1 = IO.stripFolderExtension(loc1.getFilename());
-					String chapter2 = IO.stripFolderExtension(loc2.getFilename());
+		return f.exists() && f.canRead() 
+				? new Comparator<Location>(){
+					private HashMap<String,Integer> chapterIndices;
+					{
+						List<SetTrail.TrailElement> elems = SetTrail.getTrailElements(trailFile);
+						chapterIndices = new HashMap<>();
+						for(int i=0; i<elems.size(); i++){
+							chapterIndices.put( IO.stripFolderExtension(elems.get(i).focus()), i );
+						}
+					}
 					
-					//System.out.println("NULL?: "+(chapterIndices==null?"YES":"NO") );
-					
-					int indexInChapter1 = chapterIndices.get(chapter1);
-					int indexInChapter2 = chapterIndices.get(chapter2);
-					
-					return indexInChapter1 != indexInChapter2 
-							? indexInChapter1 - indexInChapter2 
-							: loc1.getIndex() - loc2.getIndex();
-				}
-			};
-		}
-		
-		return phraseSorter;
+					@Override
+					public int compare(Location loc1, Location loc2){
+						String chapter1 = IO.stripFolderExtension(loc1.getFilename());
+						String chapter2 = IO.stripFolderExtension(loc2.getFilename());
+						
+						int indexInChapter1 = chapterIndices.get(chapter1);
+						int indexInChapter2 = chapterIndices.get(chapter2);
+						
+						return indexInChapter1 != indexInChapter2 
+								? indexInChapter1 - indexInChapter2 
+								: loc1.getIndex() - loc2.getIndex();
+					}
+				} 
+				: PHRASE_SORTER;
 	}
 	
 	/**
