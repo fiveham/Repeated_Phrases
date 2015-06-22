@@ -183,8 +183,8 @@ public class LinkChapters {
     private static List<FileDataPair> getFileDataPairs(String[] htmlFiles, String[] anchFiles){
         List<FileDataPair> result = new ArrayList<>();
         
-        List<String> hList = Arrays.asList(htmlFiles);
-        List<String> aList = Arrays.asList(anchFiles);
+        List<String> hList = new ArrayList<>(Arrays.asList(htmlFiles));
+        List<String> aList = new ArrayList<>(Arrays.asList(anchFiles));
         
         for(String h : hList){
         	for(String a : aList){
