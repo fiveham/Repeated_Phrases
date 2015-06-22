@@ -169,12 +169,12 @@ public class DetermineAnchors {
 	}
 	
 	/**
-	 * <p>Returns a String containing all the lines of all the 
+	 * <p>Returns a string containing all the lines of all the 
 	 * files containing non-unique independent repeated 
-	 * phrase information from <code>READ_FROM</code>.</p>
-	 * @return  a String containing all the lines of all the 
+	 * phrase information from {@value Folder#READ_FROM.foldername}.</p>
+	 * @return a string containing all the lines of all the 
 	 * files containing non-unique independent repeated 
-	 * phrase information from <code>READ_FROM</code>.
+	 * phrase information from {@value Folder#READ_FROM.foldername}
 	 */
 	private static String getDupPhraseData(Consumer<String> msg){
 		StringBuilder sb = new StringBuilder();
@@ -188,7 +188,7 @@ public class DetermineAnchors {
 						new Scanner(new File( name ), IO.ENCODING), 
 						IO.NEXT_LINE, IO.SCANNER_HAS_NEXT_LINE );
 				for(String line : lines){
-					line = removeFolders(line);
+					//line = removeFolders(line);
 					sb.append(line).append("\n");
 				}
 			} catch(FileNotFoundException e){
@@ -199,7 +199,7 @@ public class DetermineAnchors {
 		return sb.delete(sb.length()-1, sb.length()).toString();
 	}
 	
-	/**
+	/* *
 	 * <p>Returns a version of the specified line from which 
 	 * all instances of the name of <code>Folder.CORPUS</code> 
 	 * have been removed. The chapter-filenames included in the 
@@ -213,10 +213,10 @@ public class DetermineAnchors {
 	 * @return  a version of the specified line from which 
 	 * all instances of the name of <code>Folder.CORPUS</code> 
 	 * have been removed
-	 */
+	 * /
 	private static String removeFolders(String multiLocatedPhraseLine){
 		return multiLocatedPhraseLine.replace( Folder.CORPUS.folderName() + File.separator, "" );
-	}
+	}/**/
 	
 	/**
 	 * <p>Sequences <code>Location</code>s according to the name of the 
@@ -244,8 +244,6 @@ public class DetermineAnchors {
 	 * have the same book.
 	 */
 	private static int compareFilenames(String f1, String f2){
-		
-		
 		
 		String[] split1 = IO.stripExtension(f1).split(IO.FILENAME_COMPONENT_SEPARATOR, HTMLFile.FILENAME_ELEMENT_COUNT);
 		String book1 = split1[0];

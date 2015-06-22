@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Iterator;
+//import java.util.Iterator;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
@@ -168,40 +168,36 @@ public class LinkChapters {
 
     /**
      * <p>Returns a list of <code>FileDataPair</code>s pairing the html 
-     * files from the folder <code>READ_SUBSTANCE</code> 
+     * files from the folder {@value Folder#READ_SUBSTANCE} 
      * with the anchor-definition files from the folder 
-     * <code>READ_DECORATION</code>.</p>
+     * {@value Folder#READ_DECORATION}.</p>
      * @param htmlFiles an array of the names of the html chapters in 
-     * <code>READ_SUBSTANCE</code> (06_html_chapters)
+     * {@value Folder#READ_SUBSTANCE} 
      * @param anchFiles an array of the names of the anchor-definition 
      * files in <code>READ_DECORATION</code> (11_anchors)
      * @return a list of <code>FileDataPair</code>s pairing the html 
      * files from the folder <code>READ_SUBSTANCE</code> 
      * with the anchor-definition files from the folder 
-     * <code>READ_DECORATION</code>.
+     * {@value Folder#READ_DECORATION}.
      */
     private static List<FileDataPair> getFileDataPairs(String[] htmlFiles, String[] anchFiles){
-
         List<FileDataPair> result = new ArrayList<>();
-
-        Iterator<String> htmlIter = Arrays.asList(htmlFiles).iterator();
-        Iterator<String> anchIter = Arrays.asList(anchFiles).iterator();
-
-        while(htmlIter.hasNext() && anchIter.hasNext()){
-            String htmlFile = htmlIter.next();
-            String anchFile = anchIter.next();
-            if(!matchNames(htmlFile, anchFile)){
-                throw new IllegalStateException("Filename mismatch between " + htmlFile + " and " + anchFile);
-            }
-            result.add( new FileDataPair( 
-                    READ_SUBSTANCE.folderName()  + File.separator + htmlFile, 
-                    READ_DECORATION.folderName() + File.separator + anchFile));
+        
+        List<String> hList = Arrays.asList(htmlFiles);
+        List<String> aList = Arrays.asList(anchFiles);
+        
+        for(String h : hList){
+        	for(String a : aList){
+        		if( matchNames(h,a) ){
+        			result.add( new FileDataPair( 
+        					READ_SUBSTANCE.folderName()  + File.separator + h, 
+        					READ_DECORATION.folderName() + File.separator + a));
+        			aList.remove(a);
+        			break; //go to next value of h and dodge a ConcurrentModificationException
+        		}
+        	}
         }
-
-        if( htmlIter.hasNext() || anchIter.hasNext() ){
-            throw new IllegalStateException("File-count mismatch.");
-        }
-
+        
         return result;
     }
 

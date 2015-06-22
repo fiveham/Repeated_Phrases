@@ -75,7 +75,7 @@ public class SetTrail {
     public static final String HREF_START = "href=\"";
 
     /**
-     * <p>Calls setTrail().</p>
+     * <p>Calls {@link #setTrail(String[],Consumer<String>) setTrail()}.</p>
      * @param args 
      */
     public static void main(String[] args){
@@ -141,7 +141,6 @@ public class SetTrail {
             String tag = file.get(pointer).toString();
             tag = tag.substring(1,tag.length()-1);
 
-            //file.set(pointer, new Tag(front + address + back));
             file.set(pointer, new Tag( anchor(tag, address)));
         }
     }
@@ -238,13 +237,13 @@ public class SetTrail {
     /**
      * <p>Returns a list of <code>TrailElement</code>s describing each 
      * chapter's predecessor and successor.</p>
-     * @param name the name of the trail-file from which 
+     * @param trailFilename the name of the trail-file from which 
      * trail data is extracted
      * @return a list of <code>TrailElement</code>s describing each 
      * chapter's predecessor and successor
      */
-    public static List<TrailElement> getTrailElements(String name){
-        List<String> lines = IO.fileContentsAsList(new File(name), IO.NEXT_LINE, IO.SCANNER_HAS_NONEMPTY_NEXT_LINE);
+    public static List<TrailElement> getTrailElements(String trailFilename){
+        List<String> lines = IO.fileContentsAsList(new File(trailFilename), IO.NEXT_LINE, IO.SCANNER_HAS_NONEMPTY_NEXT_LINE);
         List<TrailElement> result = new ArrayList<>();
         for(String line : lines){
             String[] s = line.split("\t", COLUMN_COUNT);
