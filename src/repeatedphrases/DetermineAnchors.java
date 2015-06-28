@@ -199,25 +199,6 @@ public class DetermineAnchors {
 		return sb.delete(sb.length()-1, sb.length()).toString();
 	}
 	
-	/* *
-	 * <p>Returns a version of the specified line from which 
-	 * all instances of the name of <code>Folder.CORPUS</code> 
-	 * have been removed. The chapter-filenames included in the 
-	 * phrase-instance data files written to <code>Folder.REPEATS</code>, 
-	 * <code>Folder.INDEPENDENT_INSTANCES</code>, and 
-	 * <code>Folder.DUPLICATE_INDEPENDENTS</code> are the addresses 
-	 * of the text files in <code>Folder.CORPUS</code>.</p>
-	 * @param multiLocatedPhraseLine a line from a text file from 
-	 * <code>Folder.DUPLICATE_INDEPENDENTS</code> specifying a 
-	 * phrase from the corpus and an arbitrary number of {@link repeatedphrases.Location#toString() Locations} 
-	 * @return  a version of the specified line from which 
-	 * all instances of the name of <code>Folder.CORPUS</code> 
-	 * have been removed
-	 * /
-	private static String removeFolders(String multiLocatedPhraseLine){
-		return multiLocatedPhraseLine.replace( Folder.CORPUS.folderName() + File.separator, "" );
-	}/**/
-	
 	/**
 	 * <p>Sequences <code>Location</code>s according to the name of the 
 	 * book their filename starts with, in the order given by 

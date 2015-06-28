@@ -16,21 +16,21 @@ import java.util.function.Consumer;
  * files for its individual chapters.</p>
  */
 public class SplitChapters {
-
+	
     /**
      * <p>The folder from which this class reads html files of the ASOIAF novels 
      * which have been prepared to be split into individual chapters.</p>
      * @see Folder#HTML_BOOKS_CORRECT_APOSTROPHES
      */
     public static final Folder READ_FROM = Folder.HTML_BOOKS_CORRECT_APOSTROPHES;
-
+    
     /**
      * <p>The folder to which this class writes individual chapter html files 
      * from the ASOIAF novels.</p>
      * @see Folder#HTML_CHAPTERS_UNCHECKED
      */
     public static final Folder WRITE_TO = Folder.HTML_CHAPTERS;
-
+    
     /**
      * <p>Detects all html novel files in <code>READ_FROM</code>, reads them, and 
      * saves individual files for each chapter to <code>WRITE_TO</code>.</p>
@@ -92,10 +92,19 @@ public class SplitChapters {
         }
     }
 
+    private static List<String> allEasyNovellaNames = new ArrayList<>(4);
+    static{
+		allEasyNovellaNames.add("DE_0.html");
+		allEasyNovellaNames.add("DE_1.html");
+		allEasyNovellaNames.add("DE_2.html");
+		allEasyNovellaNames.add("RP.html");
+    }
+    
     private static void handleNovellas(Consumer<String> msg){
-        String[] easyNovellas = { "DE_0.html", "DE_1.html", "DE_2.html", "RP.html" };
-
-        for(String novella : easyNovellas){
+        
+        String[] extantEasyNovellas = READ_FROM.folder().list( (dir,name) -> allEasyNovellaNames.contains(name) );
+        
+        for(String novella : extantEasyNovellas){
             try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName() + File.separator + novellaOut(novella) );){
                 
                 HTMLFile file = new HTMLFile(new File(READ_FROM.folderName() + File.separator + novella));
@@ -152,11 +161,11 @@ public class SplitChapters {
                 writeBuffer(file.section(0), out, file.chapterName(), msg);
             }
         } catch(FileNotFoundException e){
-            msg.accept(novella + "not found by SplitChapters");//+": "+e.getMessage());
+            msg.accept(novella + " not found by SplitChapters");
         } catch(UnsupportedEncodingException e){
-            msg.accept("UnsupportedEncodingException occured for file "+novella);//+": "+e.getMessage());
+            msg.accept("UnsupportedEncodingException occured for file "+novella);
         } catch(IOException e){
-            msg.accept("IOException occured for file "+novella);//+": "+e.getMessage());
+            msg.accept("IOException occured for file "+novella);
         }
     }
 
