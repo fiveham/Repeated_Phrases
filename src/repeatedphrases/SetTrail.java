@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * <p>Opens the file specified as a command-line argument 
@@ -98,21 +100,51 @@ public class SetTrail {
         msg.accept("Getting trail data from " + trailSource );
         List<TrailElement> elements = getTrailElements( trailSource );
 
-        for(TrailElement node : elements){
+        for(int i=0; i<elements.size(); i++){
+        	TrailElement node = elements.get(i);
             msg.accept("Trail-linking "+node.focus());
-
-            HTMLFile file = null;
-            try{
-                file = new HTMLFile(new File( READ_FROM.folderName() + File.separator + node.focus()));
-            } catch( FileNotFoundException e){
-            	throw new RuntimeException(IO.ERROR_EXIT_MSG + READ_FROM.folderName() + File.separator + node.focus() + " for reading");
-            }
-
-            setAdjacentChapterLinks(file, PREV_CHAPTER, ID_ATTRIB, node.prev());
-            setAdjacentChapterLinks(file, NEXT_CHAPTER, ID_ATTRIB, node.next());
             
-            file.print( WRITE_TO.folderName() + File.separator + node.focus());
+            File fileToModify = new File( READ_FROM.folderName() + File.separator + node.focus());
+            
+            if(fileToModify.exists()){
+                HTMLFile file = null;
+                try{
+                    file = new HTMLFile(fileToModify);
+                } catch( FileNotFoundException e){
+                	throw new RuntimeException(IO.ERROR_EXIT_MSG + READ_FROM.folderName() + File.separator + node.focus() + " for reading");
+                }
+
+                setAdjacentChapterLinks(file, PREV_CHAPTER, ID_ATTRIB, availableConnected(elements, i, TrailElement.PREV));
+                setAdjacentChapterLinks(file, NEXT_CHAPTER, ID_ATTRIB, availableConnected(elements, i, TrailElement.NEXT));
+                
+                file.print( WRITE_TO.folderName() + File.separator + node.focus());
+            }
         }
+    }
+    
+    private static String availableConnected(List<TrailElement> elements, int index, Function<TrailElement,String> connection){
+    	TrailElement node = elements.get(index);
+    	
+    	List<String> visited = new ArrayList<>();
+    	
+    	String name = null;
+    	while( !new File(READ_FROM.folderName() + File.separator + (name=connection.apply(node)) ).exists() && !visited.contains(name) ){
+    		visited.add(name);
+    		
+    		node = getTrailElementWithFocus(elements, name);
+    		
+    	}
+    	
+    	return visited.contains(name) ? "" : connection.apply(node);
+    }
+    
+    private static TrailElement getTrailElementWithFocus(List<TrailElement> elements, String focus){
+    	for(int i=0; i<elements.size(); i++){
+    		if( elements.get(i).focus().equals(focus) ){
+    			return elements.get(i);
+    		}
+    	}
+    	throw new NoSuchElementException("No entry for file \""+focus+"\" in the trail file.");
     }
 
     /**
@@ -255,6 +287,10 @@ public class SetTrail {
      * of backward and forward links between chapters.</p>
      */
     public static class TrailElement implements Comparable<TrailElement>{
+    	
+    	public static final Function<TrailElement,String> PREV = (te) -> te.prev();
+    	
+    	public static final Function<TrailElement,String> NEXT = (te) -> te.next();
 
         /**
          * <p>The chapter to be linked as the preceding chapter in the trail.</p>
