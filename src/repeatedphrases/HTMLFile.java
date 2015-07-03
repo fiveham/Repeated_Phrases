@@ -1074,6 +1074,8 @@ public class HTMLFile {
 		return result;
 	}
 	
+	public static final Predicate<HTMLEntity> IS_PARAGRAPHISH_OPEN = (h) -> Tag.IS_P_OPEN.test(h) || Tag.IS_HEADER_OPEN.test(h) ;
+	
 	/**
 	 * <p>A utility class that crawls the list of HTMLEntity that underlies 
 	 * this HTMLFile and locates entire paragraph blocks.</p>
@@ -1108,7 +1110,7 @@ public class HTMLFile {
 		 */
 		public boolean hasNext(){
 			concurrentModificationCheck();
-			return -1 != adjacentElement(position, Tag.IS_P_OPEN, Direction.NEXT);
+			return -1 != adjacentElement(position, IS_PARAGRAPHISH_OPEN, Direction.NEXT);
 		}
 		
 		@Override
@@ -1122,9 +1124,11 @@ public class HTMLFile {
 		 */
 		public int[] next(){
 			concurrentModificationCheck();
-			position = adjacentElement(position, Tag.IS_P_OPEN, Direction.NEXT);
-			int end = adjacentElement(position, Tag.IS_P_CLOSE, Direction.NEXT);
-			return new int[]{position, end+1};
+			int start = adjacentElement(position, IS_PARAGRAPHISH_OPEN, Direction.NEXT);
+			int end = closingMatch(start);
+			int[] result = {start, end+1};
+			position = end;
+			return result;
 		}
 		
 		/**

@@ -1,6 +1,8 @@
 package repeatedphrases;
 
 import java.util.function.Predicate;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * <p>Represents an HTML tag.</p>
@@ -163,6 +165,21 @@ public class Tag extends HTMLEntity {
 	 * and has type "sup".</p>
 	 */
 	public static final Predicate<HTMLEntity> IS_SUP = (h) -> HTMLFile.IS_TAG.test(h) && SUP.equals(((Tag)h).getType());
+	
+	public static final List<String> HEADERS;
+	static{
+		HEADERS = new ArrayList<String>();
+		HEADERS.add("h1");
+		HEADERS.add("h2");
+		HEADERS.add("h3");
+		HEADERS.add("h4");
+		HEADERS.add("h5");
+		HEADERS.add("h6");
+	}
+	
+	public static final Predicate<HTMLEntity> IS_HEADER = (h) -> HTMLFile.IS_TAG.test(h) && HEADERS.contains(((Tag)h).getType());
+	
+	public static final Predicate<HTMLEntity> IS_HEADER_OPEN = (h) -> IS_HEADER.test(h) && ((Tag)h).isOpening();
 	
 	/**
 	 * <p>The literal text of this tag inside its opening 
