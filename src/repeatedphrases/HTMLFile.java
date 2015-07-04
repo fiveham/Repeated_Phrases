@@ -924,12 +924,8 @@ public class HTMLFile {
 	public int closingMatch(int startPoint){
 		HTMLEntity a = content.get(startPoint);
 		if( !Tag.IS_OPEN.test(a) ){
-			//boolean isTag = IS_TAG.test(a);
-			//boolean isOpen = Tag.IS_OPEN.test(a);
 			throw new IllegalArgumentException("The element at index "+startPoint+
 					" (\""+a.toString()+"\") is not an opening tag.");
-			//throw new IllegalArgumentException("The element at index "+startPoint+
-			//		" (\""+a.toString()+"\") is not an opening tag: isTag: "+isTag+"; isOpen: "+isOpen);
 		}
 		Tag t = (Tag) a;
 		
