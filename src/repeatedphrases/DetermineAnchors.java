@@ -188,7 +188,6 @@ public class DetermineAnchors {
 						new Scanner(new File( name ), IO.ENCODING), 
 						IO.NEXT_LINE, IO.SCANNER_HAS_NEXT_LINE );
 				for(String line : lines){
-					//line = removeFolders(line);
 					sb.append(line).append("\n");
 				}
 			} catch(FileNotFoundException e){

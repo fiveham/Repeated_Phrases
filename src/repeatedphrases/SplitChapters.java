@@ -60,9 +60,9 @@ public class SplitChapters {
 
                 while(piter.hasNext()){
                     int[] paragraphBounds = piter.next();
-
+                    
                     List<HTMLEntity> paragraph = file.section(paragraphBounds);
-
+                    
                     if( isTitleParagraph(paragraph) ){
                         writeBuffer(buffer, out, chapterName, msg);
 

@@ -427,6 +427,24 @@ public class HTMLFile {
 	}
 	
 	/**
+	 * <p>Returns true if this file contains the specified <code>literal</code> 
+	 * text starting at any position after <code>start</code> and ending at 
+	 * any position before <code>end</code>, false otherwise.</p>
+	 * @param literal 
+	 * @param start exclusive lower bound
+	 * @param end exclusive upper bound
+	 * @return
+	 */
+	public boolean hasLiteralBetween(String literal, int start, int end){
+		for(int i=start+1; i<end-literal.length(); i++){
+			if(hasLiteralAt(literal, i)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * <p>Returns true if the <code>c</code> matches <code>h</code>, false otherwise. 
 	 * Generally, this means that <code>c</code> is the literal character wrapped 
 	 * by </code>h</code> because </code>h</code> is a {@link Ch Ch}. A <code>Tag</code> 
