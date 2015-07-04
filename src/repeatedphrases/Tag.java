@@ -49,7 +49,7 @@ public class Tag extends HTMLEntity {
 	 */
 	public static final Predicate<HTMLEntity> IS_OPEN = 
 			(h) -> HTMLFile.IS_TAG.test(h) && ((Tag)h).isOpening();
-			
+		
 	/**
 	 * Evaluates to true if the HTMLEntity tested is a closing Tag.
 	 */
@@ -179,7 +179,9 @@ public class Tag extends HTMLEntity {
 	
 	public static final Predicate<HTMLEntity> IS_HEADER = (h) -> HTMLFile.IS_TAG.test(h) && HEADERS.contains(((Tag)h).getType());
 	
-	public static final Predicate<HTMLEntity> IS_HEADER_OPEN = (h) -> IS_HEADER.test(h) && ((Tag)h).isOpening();
+	//public static final Predicate<HTMLEntity> IS_HEADER_OPEN = (h) -> IS_HEADER.test(h) && ((Tag)h).isOpening();
+	public static final Predicate<HTMLEntity> IS_HEADER_OPEN = (h) -> IS_HEADER.test(h) && IS_OPEN.test(h);
+
 	
 	/**
 	 * <p>The literal text of this tag inside its opening 
