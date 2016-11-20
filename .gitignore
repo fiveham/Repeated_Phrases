@@ -23,6 +23,7 @@ $RECYCLE.BIN/
 bin/
 src/archive/
 doc/
+.settings/
 
 # =========================
 # Operating System Files
