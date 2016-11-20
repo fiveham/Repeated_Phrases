@@ -68,7 +68,7 @@ public class FindRepeatedPhrases {
 	 */
 	public static void findRepPhrases(Consumer<String> msg) {
 		
-		File[] readUs = READ_FROM.folder().listFiles( IO.IS_TXT );
+		File[] readUs = READ_FROM.folder().listFiles(IO::isTxt);
 		final List<Chapter> chapters = getChapters( readUs );
 		PhraseBox repeatedPhrasesFromPrevLoop = new PhraseBox();
 		repeatedPhrasesFromPrevLoop.add(ZERO_WORD_PHRASE, null);

@@ -53,7 +53,7 @@ public class SplitChapters {
     }
 
     private static void handleNovels(Consumer<String> msg){
-        File[] readUs = READ_FROM.folder().listFiles( IO.IS_NOVEL );
+        File[] readUs = READ_FROM.folder().listFiles(IO::isNovel);
 
         for(File f : readUs){
             try{

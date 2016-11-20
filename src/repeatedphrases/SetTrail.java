@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -279,7 +280,10 @@ public class SetTrail {
      * chapter's predecessor and successor
      */
     public static List<TrailElement> getTrailElements(String trailFilename){
-        List<String> lines = IO.fileContentsAsList(new File(trailFilename), IO.NEXT_LINE, IO.SCANNER_HAS_NONEMPTY_NEXT_LINE);
+        List<String> lines = IO.fileContentsAsList(
+        		new File(trailFilename), 
+        		Scanner::nextLine, 
+        		IO.SCANNER_HAS_NONEMPTY_NEXT_LINE);
         List<TrailElement> result = new ArrayList<>();
         for(String line : lines){
             String[] s = line.split("\t", COLUMN_COUNT);

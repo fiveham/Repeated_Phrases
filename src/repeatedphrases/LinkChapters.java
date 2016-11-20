@@ -70,7 +70,7 @@ public class LinkChapters {
 
         List<FileDataPair> fileDataPairs = 
                 getFileDataPairs( 
-                        READ_SUBSTANCE.folder().list(IO.IS_HTML), 
+                        READ_SUBSTANCE.folder().list(IO::isHtml), 
                         READ_DECORATION.folder().list( (dir,name) -> name.endsWith( DetermineAnchors.ANCHOR_EXT ) ) );
 
         msg.accept("Got "+fileDataPairs.size()+" FileDataPairs");

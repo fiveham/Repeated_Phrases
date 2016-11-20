@@ -2,7 +2,6 @@ package common;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,6 +24,8 @@ import java.util.function.Consumer;
  * standards.</p>
  */
 public class IO {
+	
+	public static final String ERROR_EXIT_MSG = "I can't open the file ";
 	
 	/**
 	 * <p>The term used to separate a file's name from 
@@ -86,29 +87,11 @@ public class IO {
 	 * novels and which are from novellas.</p>
 	 */
 	public static final List<String> NOVELS = Arrays.asList(
-		"AGOT", "ACOK", "ASOS", "AFFC", "ADWD");
-	
-	/**
-	 * <p>Evaluates to true if a file's name ends with the HTML 
-	 * extension ({@value IO#HTML_EXT}).</p>
-	 */
-	public static final FilenameFilter IS_HTML = (dir,name) -> name.endsWith(HTML_EXT);
-	
-	/**
-	 * <p>Evaluates to true if a file {@link #IS_HTML is html} and 
-	 * has {@link #NOVELS an initialism of a novel} as the 
-	 * part of its name prior to its file extension.</p>
-	 */
-	public static final FilenameFilter IS_NOVEL = 
-			(dir,name) -> IS_HTML.accept(dir,name) 
-			&& NOVELS.contains( stripExtension(name) );
-	
-	/**
-	 * <p>Evaluates to true if a file {@link #IS_HTML is html} and 
-	 * is not {@link #IS_NOVEL a novel}.</p>
-	 */
-	public static final FilenameFilter IS_NOVELLA = 
-			(dir,name) -> IS_HTML.accept(dir,name) && !IS_NOVEL.accept(dir,name);
+		"AGOT", 
+		"ACOK", 
+		"ASOS", 
+		"AFFC", 
+		"ADWD");
 	
 	/**
 	 * <p>An underscore, used to separate the bookname, chapter-number, 
@@ -122,26 +105,50 @@ public class IO {
 	 */
 	public static final String FILENAME_COMPONENT_SEPARATOR = "_";
 	
+    /**
+     * <p>The default way to display a message: printing to the console.</p>
+     */
+    public static final Consumer<String> DEFAULT_MSG = System.out::println;
+	
 	/**
-	 * <p>Evaluates to true if a file {@link #IS_HTML is html}, 
-	 * starts with a novels {@link #NOVELS initialism}, and 
-	 * is not an {@link #IS_NOVEL entire novel}.</p>
+	 * <p>Evaluates to true if a Scanner 
+	 * {@link java.util.Scanner#hasNextLine() has another line} and 
+	 * {@link java.util.Scanner#hasNext() has a next element} available.</p>
 	 */
-	public static final FilenameFilter IS_NOVEL_CHAPTER = 
-			(dir,name) -> IS_HTML.accept(dir,name) 
-			&& NOVELS.contains( name.substring(0, ( name.indexOf(FILENAME_COMPONENT_SEPARATOR_CHAR)>=0 ? name.indexOf(FILENAME_COMPONENT_SEPARATOR_CHAR) : 0 ) ) )
-			&& !IS_NOVEL.accept(dir,name);
+	public static final Predicate<Scanner> SCANNER_HAS_NONEMPTY_NEXT_LINE = (s) -> s.hasNextLine() && s.hasNext();
+	
+	/**
+	 * <p>Evaluates to true if a file's name ends with the HTML 
+	 * extension ({@value IO#HTML_EXT}).</p>
+	 */
+	public static boolean isHtml(File dir, String name){
+		return name.endsWith(HTML_EXT);
+	}
+	
+	/**
+	 * <p>Evaluates to true if a file {@link #IS_HTML is html} and 
+	 * has {@link #NOVELS an initialism of a novel} as the 
+	 * part of its name prior to its file extension.</p>
+	 */
+	public static boolean isNovel(File dir, String name){
+		return isHtml(dir,name) && NOVELS.contains(stripExtension(name));
+	}
+	
+	/**
+	 * <p>Evaluates to true if a file {@link #IS_HTML is html} and 
+	 * is not {@link #IS_NOVEL a novel}.</p>
+	 */
+	public static boolean isNovella(File dir, String name){
+		return isHtml(dir,name) && !isNovel(dir,name);
+	}
 	
 	/**
 	 * <p>Evaluates to true if a file's name ends with the 
 	 * {@link #TXT_EXT txt extension}.</p>
 	 */
-	public static final FilenameFilter IS_TXT = (dir,name) -> name.endsWith(TXT_EXT);
-	
-    /**
-     * <p>The default way to display a message: printing to the console.</p>
-     */
-    public static final Consumer<String> DEFAULT_MSG = (s) -> System.out.println(s);
+	public static boolean isTxt(File dir, String name){
+		return name.endsWith(TXT_EXT);
+	}
     
 	/**
 	 * <p>Returns a new OutputStreamWriter writing to the file named <code>filename</code> 
@@ -164,39 +171,6 @@ public class IO {
 		}
 		return retVal;
 	}
-	
-	/**
-	 * <p>Produces the {@link java.util.Scanner#nextLine() next line} of 
-	 * a Scanner.</p>
-	 */
-	public static final Function<Scanner,String> NEXT_LINE = (s) -> s.nextLine();
-	
-	/**
-	 * <p>Produces the {@link java.util.Scanner#next() next element} of 
-	 * a Scanner.</p>
-	 */
-	public static final Function<Scanner,String> NEXT = (s) -> s.next();
-	
-	/**
-	 * <p>Evaluates to true if a Scanner 
-	 * {@link java.util.Scanner#hasNext() has a next element} 
-	 * available.</p>
-	 */
-	public static final Predicate<Scanner> SCANNER_HAS_NEXT = (s) -> s.hasNext();
-	
-	/**
-	 * <p>Evaluates to true if a Scanner 
-	 * {@link java.util.Scanner#hasNextLine() has another line} 
-	 * available.</p>
-	 */
-	public static final Predicate<Scanner> SCANNER_HAS_NEXT_LINE = (s) -> s.hasNextLine();
-	
-	/**
-	 * <p>Evaluates to true if a Scanner 
-	 * {@link java.util.Scanner#hasNextLine() has another line} and 
-	 * {@link java.util.Scanner#hasNext() has a next element} available.</p>
-	 */
-	public static final Predicate<Scanner> SCANNER_HAS_NONEMPTY_NEXT_LINE = (s) -> s.hasNextLine() && s.hasNext();
 	
 	/**
 	 * <p>Reads into a List each element from <code>source</code> of 
@@ -274,8 +248,10 @@ public class IO {
 	 * any file extension
 	 */
 	public static String stripExtension(String nameInFolder){
-		int dot = nameInFolder.indexOf(FILENAME_ELEMENT_DELIM);
-		return dot >= 0 ? nameInFolder.substring(0,dot) : nameInFolder;
+		int dot = nameInFolder.lastIndexOf(FILENAME_ELEMENT_DELIM);
+		return dot >= 0 
+				? nameInFolder.substring(0,dot) 
+				: nameInFolder;
 	}
 	
 	/**
@@ -304,6 +280,4 @@ public class IO {
 			}
 		}
 	}
-	
-	public static final String ERROR_EXIT_MSG = "I can't open the file ";
 }

@@ -60,7 +60,7 @@ public class NewlineP{
      */
     public static void newlineP(Consumer<String> msg){
 
-        String[] readUs = READ_FROM.folder().list(IO.IS_HTML);
+        String[] readUs = READ_FROM.folder().list(IO::isHtml);
 
         for(String filename : readUs){
 

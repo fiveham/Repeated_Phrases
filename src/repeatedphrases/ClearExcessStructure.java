@@ -56,7 +56,7 @@ public class ClearExcessStructure{
 	 * @param args command-line arguments
 	 */
 	public static void clearXSStruct(Consumer<String> msg){
-            File[] readUs = READ_FROM.folder().listFiles( IO.IS_HTML );
+            File[] readUs = READ_FROM.folder().listFiles(IO::isHtml);
             for(File f : readUs){
 
                 msg.accept("Removing structure from "+f.getName());

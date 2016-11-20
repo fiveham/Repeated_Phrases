@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.function.Consumer;
 
 import common.Folder;
@@ -61,13 +62,16 @@ public class SwapApostrophes{
      * @param args command-line arguments (unused)
      */
     public static void swapApostrophes(Consumer<String> msg){
-        File[] readUs = READ_FROM.folder().listFiles( IO.IS_HTML );
+        File[] readUs = READ_FROM.folder().listFiles(IO::isHtml);
 
         for(File srcFile : readUs){
             msg.accept("Normalizing apostrophes: "+srcFile.getName());
 
             try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName() + File.separator + srcFile.getName() );){
-                List<String> lines = IO.fileContentsAsList(srcFile, IO.NEXT_LINE, IO.SCANNER_HAS_NEXT_LINE);
+                List<String> lines = IO.fileContentsAsList(
+                		srcFile, 
+                		Scanner::nextLine, 
+                		Scanner::hasNextLine);
 
                 for( String l : lines ){
                     StringBuilder line = new StringBuilder( l );

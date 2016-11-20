@@ -60,7 +60,7 @@ public class ClearFrontAndBackMatter {
 	}
 	
 	private static void handleNovellas(Consumer<String> msg){
-            File[] novellaFiles = READ_FROM.folder().listFiles( IO.IS_NOVELLA );
+            File[] novellaFiles = READ_FROM.folder().listFiles(IO::isNovella);
 
             for(File f : novellaFiles){
 
@@ -89,7 +89,7 @@ public class ClearFrontAndBackMatter {
 	}
 	
 	private static void handleNovels(Consumer<String> msg){
-        File[] novelFiles = READ_FROM.folder().listFiles( IO.IS_NOVEL );
+        File[] novelFiles = READ_FROM.folder().listFiles(IO::isNovel);
         for(File f : novelFiles){
 
             msg.accept("Removing front/back matter: "+f.getName());

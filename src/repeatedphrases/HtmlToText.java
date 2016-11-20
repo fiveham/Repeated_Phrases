@@ -38,7 +38,7 @@ public class HtmlToText {
      * @param args command-line arguments (unused)
      */
     public static void htmlToText(Consumer<String> msg) {
-        File[] readUs = READ_FROM.folder().listFiles( IO.IS_HTML );
+        File[] readUs = READ_FROM.folder().listFiles(IO::isHtml);
         for(File f : readUs){
             try{
                 msg.accept("Saving as text "+f.getName());

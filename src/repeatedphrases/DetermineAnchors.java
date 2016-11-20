@@ -191,7 +191,8 @@ public class DetermineAnchors {
 			try{
 				List<String> lines = IO.fileContentsAsList( 
 						new Scanner(new File( name ), IO.ENCODING), 
-						IO.NEXT_LINE, IO.SCANNER_HAS_NEXT_LINE );
+						Scanner::nextLine, 
+						Scanner::hasNextLine);
 				for(String line : lines){
 					sb.append(line).append("\n");
 				}
