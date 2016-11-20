@@ -1,13 +1,11 @@
-package repeatedphrases;
-
-import text.Location;
+package text;
 
 /**
  * <p>Represents a phrase located within a known file. 
  * Pairs a phrase with its word-index in the chapter 
  * from which it comes.</p>
  */
-public class IntString implements Comparable<IntString>{
+public class Phrase implements Comparable<Phrase>{
 	
 	/**
 	 * <p>A phrase from the body of text being analysed.</p>
@@ -26,7 +24,7 @@ public class IntString implements Comparable<IntString>{
 	 * chapter
 	 * @param phrase a phrase from the body of text being analysed
 	 */
-	public IntString(int index, String phrase) {
+	public Phrase(int index, String phrase) {
 		this.index = index;
 		this.phrase = phrase;
 	}
@@ -63,9 +61,9 @@ public class IntString implements Comparable<IntString>{
 	 * ordering between this IntString and the specified one.
 	 */
 	@Override
-	public int compareTo(IntString otherIntString){
+	public int compareTo(Phrase otherIntString){
 		if(index != otherIntString.index){
-			return index - otherIntString.index;
+			return Integer.compare(index, otherIntString.index);
 		}
 		return phrase.compareTo(otherIntString.phrase);
 	}

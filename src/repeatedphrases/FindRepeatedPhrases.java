@@ -11,6 +11,7 @@ import common.Folder;
 import common.IO;
 import text.Chapter;
 import text.Corpus;
+import text.PhraseBox;
 import text.PhraseProducer;
 
 /**

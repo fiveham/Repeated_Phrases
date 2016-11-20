@@ -1,6 +1,7 @@
 package repeatedphrases;
 
 import html.CharLiteral;
+import html.Direction;
 import html.HTMLEntity;
 import html.HTMLFile;
 import html.Tag;

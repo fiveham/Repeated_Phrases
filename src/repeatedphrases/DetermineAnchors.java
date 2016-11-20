@@ -14,7 +14,10 @@ import java.util.function.Consumer;
 import common.Folder;
 import common.IO;
 import html.HTMLFile;
+import text.FileBox;
 import text.Location;
+import text.Phrase;
+import text.PhraseBox;
 
 /**
  * <p>This class reads every phrase-instance from ASOIAF 
@@ -94,10 +97,10 @@ public class DetermineAnchors {
 			
 			try(OutputStreamWriter out = IO.newOutputStreamWriter( name );){
 				
-				List<IntString> phrases = filebox.get(chapter);
+				List<Phrase> phrases = filebox.get(chapter);
 				phrases.sort(null);
 				
-				for(IntString positionedPhrase : phrases){
+				for(Phrase positionedPhrase : phrases){
 					String phrase = positionedPhrase.phrase;
 					
 					List<Location> locs = phrasebox.get(phrase);

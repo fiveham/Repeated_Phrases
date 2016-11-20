@@ -14,7 +14,6 @@ import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 
 import common.IO;
-import repeatedphrases.Direction;
 import text.Location;
 import text.PhraseProducer;
 

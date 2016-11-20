@@ -1,17 +1,14 @@
-package repeatedphrases;
+package text;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import text.Location;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
  * <p>Stores phrase-instance data chapter-first.</p>
- * <p>Wraps a {@link repeatedphrases.FileBox FileBox}.</p>
+ * <p>Wraps a {@link text.FileBox FileBox}.</p>
  */
 public class Database {
 	
@@ -48,9 +45,9 @@ public class Database {
 	 * <code>IntString</code>s from <code>list</code> to the 
 	 * Strings paired with them.
 	 */
-	private Map<Integer, String> mapFromIntString(List<IntString> list){
+	private Map<Integer, String> mapFromIntString(List<Phrase> list){
 		return list.stream()
-				.collect(Collectors.toMap(IntString::index, IntString::phrase));
+				.collect(Collectors.toMap(Phrase::index, Phrase::phrase));
 	}
 	
 	/**
@@ -91,7 +88,7 @@ public class Database {
 				Map<Integer, String> fileForLargePhrases = mapFromIntString(otherDatabase.textCorpus.get(filename));
 				
 				//iterate over the phrase-instances for the current filename in this Database.
-				for(IntString smallerPhraseInFile : textCorpus.get(filename)){
+				for(Phrase smallerPhraseInFile : textCorpus.get(filename)){
 					
 					//Phrases from the other Database that could possibly contain 
 					//the phrase component of the current phrase-index pair.
@@ -167,7 +164,7 @@ public class Database {
 				//all entries in this Database from that corpus file 
 				//are independent of otherDatabase.
 				//Add all phrase-instances for this filename to the output
-				for(IntString locatedPhrase : textCorpus.get(filename) ){
+				for(Phrase locatedPhrase : textCorpus.get(filename) ){
 					result.add(locatedPhrase.phrase, new Location(locatedPhrase.index, filename) );
 				}
 			}

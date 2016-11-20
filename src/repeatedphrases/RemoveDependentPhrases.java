@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import common.Folder;
 import common.IO;
+import text.Database;
 
 /**
  * <p>This class searches the population of known phrases that occur more than once in 

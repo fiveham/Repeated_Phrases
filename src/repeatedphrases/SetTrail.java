@@ -1,5 +1,6 @@
 package repeatedphrases;
 
+import html.Direction;
 import html.HTMLEntity;
 import html.HTMLFile;
 import html.Tag;

@@ -1,4 +1,4 @@
-package repeatedphrases;
+package text;
 
 import java.io.FileNotFoundException;
 import java.io.File;
@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import common.IO;
-import text.Location;
+import repeatedphrases.FindRepeatedPhrases;
 
 /**
  * <p>Wraps a HashMap linking string phrases with data structures 

@@ -1,4 +1,4 @@
-package repeatedphrases;
+package text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,7 +9,6 @@ import java.util.Scanner;
 import java.util.Set;
 
 import common.IO;
-import text.Location;
 
 /**
  * <p>Wraps a HashMap linking String filenames with data 
@@ -23,7 +22,7 @@ public class FileBox{
 	/**
 	 * <p>The wrapped HashMap.</p>
 	 */
-	private final HashMap<String, List<IntString>> hashmap;
+	private final HashMap<String, List<Phrase>> hashmap;
 	
 	/**
 	 * <p>Constructs a FileBox with no contents.</p>
@@ -65,12 +64,12 @@ public class FileBox{
 					String[] fileAndIndex = phraseAndLocations[i].split(Location.ELEMENT_DELIM);
 					String filename = fileAndIndex[0];
 					
-					IntString is = new IntString(Integer.parseInt(fileAndIndex[1]), phrase);
+					Phrase is = new Phrase(Integer.parseInt(fileAndIndex[1]), phrase);
 					
 					if( hashmap.containsKey(filename) ){
 						hashmap.get(filename).add( is );
 					} else{
-						List<IntString> l = new ArrayList<>();
+						List<Phrase> l = new ArrayList<>();
 						l.add( is );
 						hashmap.put(filename, l);
 					}
@@ -126,7 +125,7 @@ public class FileBox{
 	 * @return the {@literal List<IntString>} mapped in the 
 	 * underlying HashMap for the key <code>o</code>
 	 */
-	public List<IntString> get(Object o){
+	public List<Phrase> get(Object o){
 		return hashmap.get(o);
 	}/**/
 	
