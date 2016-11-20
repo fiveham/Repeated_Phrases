@@ -85,7 +85,7 @@ public class RepeatedPhrasesUI extends JFrame {
 
         pwdTitleLabel.setText("Operating location (working directory):");
 
-        pwdLabel.setText( new File(".").getAbsolutePath() );
+        pwdLabel.setText(new File(".").getAbsolutePath());
 
         trailFileLabel.setText("Trail file");
         trailFileLabel.setToolTipText("Address/name of a trail file relative to the current working directory");
