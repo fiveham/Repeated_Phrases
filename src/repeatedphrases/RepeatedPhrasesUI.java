@@ -24,7 +24,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import operate.RepeatedPhrasesApp;
-import operate.LinksAndTrail;
 import operate.SetTrail;
 
 /**
@@ -254,7 +253,7 @@ public class RepeatedPhrasesUI extends JFrame {
         buttonPress(changeOrderButton, 
         		"Changing chapter order ("+ trailAndLimit[0] +", "+ trailAndLimit[1] +")", 
         		"Done: Chapter order changed", 
-        		() -> LinksAndTrail.linksAndTrail(trailAndLimit, statusLabelMsg));
+        		() -> RepeatedPhrasesApp.linksAndTrail(trailAndLimit, statusLabelMsg));
     }
     
     /**

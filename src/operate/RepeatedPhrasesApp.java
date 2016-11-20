@@ -67,7 +67,7 @@ public class RepeatedPhrasesApp {
         msg.accept("Ignoring unique independent instances");
         RemoveUniqueIndependents.rmUniqIndeps(msg);
 
-        LinksAndTrail.linksAndTrail( args, msg );
+        linksAndTrail( args, msg );
     }
     
     /**
@@ -100,5 +100,20 @@ public class RepeatedPhrasesApp {
         } catch(NumberFormatException e){
             return IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR;
         }
+    }
+
+    public static void linksAndTrail(String[] args, Consumer<String> msg) {
+
+        int limit = RepeatedPhrasesApp.validateArgs(args, msg);
+        String[] trailArgs = new String[]{ args[0] };
+
+        msg.accept("Determining links to add to phrases");
+        DetermineAnchors.determineAnchors( trailArgs, msg );
+
+        msg.accept("Adding links to html chapters");
+        LinkChapters.linkChapters( new String[]{ Integer.toString(limit) }, msg );
+
+        msg.accept("Adding prev- and next-chapter links");
+        SetTrail.setTrail( trailArgs, msg );
     }
 }
