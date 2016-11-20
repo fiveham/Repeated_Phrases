@@ -1,4 +1,4 @@
-package repeatedphrases;
+package html;
 
 /**
  * <p>Represents a literal character from an HTML file.</p>

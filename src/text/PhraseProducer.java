@@ -1,4 +1,4 @@
-package repeatedphrases;
+package text;
 
 import java.util.Iterator;
 

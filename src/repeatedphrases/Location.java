@@ -1,5 +1,7 @@
 package repeatedphrases;
 
+import common.IO;
+
 /**
  * <p>Represents a location in a multi-file body of text 
  * at which a phrase begins. The index is the number of words 

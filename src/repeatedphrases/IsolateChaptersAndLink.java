@@ -3,6 +3,8 @@ package repeatedphrases;
 import java.io.File;
 import java.util.function.Consumer;
 
+import common.IO;
+
 /**
  * <p>Unites the operations of HtmlToText, 
  * FindRepeatedPhrases, RemoveDependentPhrases,

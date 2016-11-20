@@ -1,4 +1,4 @@
-package repeatedphrases;
+package html;
 
 import java.util.function.Predicate;
 

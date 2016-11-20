@@ -1,4 +1,4 @@
-package repeatedphrases;
+package html;
 
 /**
  * <p>A text element of an HTML file.<p>

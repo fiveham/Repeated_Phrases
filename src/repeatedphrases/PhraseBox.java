@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import common.IO;
+
 /**
  * <p>Wraps a HashMap linking string phrases with data structures 
  * that store multiple Locations.</p>

@@ -7,6 +7,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.function.Consumer;
 
+import common.Folder;
+import common.IO;
+import text.Chapter;
+import text.Corpus;
+import text.PhraseProducer;
+
 /**
  * <p>Finds phrases that are repeated in the corpus and 
  * prints them to files accompanied by a list of the 

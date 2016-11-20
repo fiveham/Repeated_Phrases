@@ -7,6 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import common.Folder;
+import common.IO;
+import html.CharCode;
+import html.HTMLFile;
+import text.PhraseProducer;
+
 /**
  * Scans each specified file looking for single-quote characters, 
  * and replaces them with proper apostrophes ("\'") if the 

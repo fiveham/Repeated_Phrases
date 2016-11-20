@@ -12,6 +12,9 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.border.LineBorder;
+
+import common.Folder;
+
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -24,7 +27,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import repeatedphrases.EnsureFolders;
-import repeatedphrases.Folder;
 import repeatedphrases.IsolateChaptersAndLink;
 import repeatedphrases.LinksAndTrail;
 import repeatedphrases.SetTrail;

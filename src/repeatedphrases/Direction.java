@@ -1,7 +1,7 @@
 package repeatedphrases;
 
 import java.util.Collection;
-import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.IntUnaryOperator;
 
 /**
@@ -31,9 +31,9 @@ public enum Direction{
 	
 	private final IntUnaryOperator op;
 	
-	private final BiFunction<Integer, Collection<?>, Boolean> crawlTest;
+	private final BiPredicate<Integer, Collection<?>> crawlTest;
 	
-	private Direction(IntUnaryOperator op, BiFunction<Integer, Collection<?>, Boolean> crawlTest){
+	private Direction(IntUnaryOperator op, BiPredicate<Integer, Collection<?>> crawlTest){
 		this.op = op;
 		this.crawlTest = crawlTest;
 	}
@@ -78,6 +78,6 @@ public enum Direction{
 	 * of <code>c</code>, false otherwise.
 	 */
 	public boolean crawlTest(int i, Collection<?> c){
-		return crawlTest.apply(i,c);
+		return crawlTest.test(i,c);
 	}
 }

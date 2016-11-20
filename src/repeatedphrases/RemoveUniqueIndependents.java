@@ -6,6 +6,9 @@ import java.io.OutputStreamWriter;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
+import common.Folder;
+import common.IO;
+
 /**
  * <p>Reads the phrase-instance files from <code>READ_FROM</code> 
  * line by line and writes their contents, to corresponding 

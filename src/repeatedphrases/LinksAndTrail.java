@@ -2,6 +2,8 @@ package repeatedphrases;
 
 import java.util.function.Consumer;
 
+import common.IO;
+
 public class LinksAndTrail {
 
     public static void main(String[] args){

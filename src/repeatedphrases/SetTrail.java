@@ -1,13 +1,19 @@
 package repeatedphrases;
 
+import html.HTMLEntity;
+import html.HTMLFile;
+import html.Tag;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.function.Predicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
+
+import common.Folder;
+import common.IO;
 
 /**
  * <p>Opens the file specified as a command-line argument 

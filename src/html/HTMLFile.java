@@ -1,4 +1,4 @@
-package repeatedphrases;
+package html;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,6 +12,11 @@ import java.util.Iterator;
 import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
+
+import common.IO;
+import repeatedphrases.Direction;
+import repeatedphrases.Location;
+import text.PhraseProducer;
 
 /**
  * <p>Represents an HTML file and provides some convenience methods 
@@ -32,7 +37,7 @@ public class HTMLFile {
 	 * name of the chapter's book at index 0 in the 
 	 * resulting array.</p>
 	 */
-	public static final int FILENAME_BOOKNAME_INDEX      = 0;
+	public static final int FILENAME_BOOKNAME_INDEX = 0;
 	
 	/**
 	 * <p>The index of the chapter's index in its source book in the 
@@ -64,7 +69,7 @@ public class HTMLFile {
 	 * is limited in how many times it tries to split the 
 	 * string, requiring {@link #FILENAME_ELEMENT_COUNT a limit}.</p>
 	 */
-	public static final int FILENAME_CHAPTERNAME_INDEX   = 2;
+	public static final int FILENAME_CHAPTERNAME_INDEX = 2;
 	
 	/**
 	 * <p>The number of meaningful components in a chapter's 

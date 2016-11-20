@@ -29,6 +29,14 @@ public class IntString implements Comparable<IntString>{
 		this.phrase = phrase;
 	}
 	
+	public int index(){
+		return index;
+	}
+	
+	public String phrase(){
+		return phrase;
+	}
+	
 	@Override
 	/**
 	 * <p>Returns a string representation of this IntString, 

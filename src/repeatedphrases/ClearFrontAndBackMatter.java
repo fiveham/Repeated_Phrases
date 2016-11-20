@@ -1,5 +1,7 @@
 package repeatedphrases;
 
+import html.HTMLFile;
+import html.Tag;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,6 +9,10 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 import java.util.function.Predicate;
+
+import common.Folder;
+import common.IO;
+
 import java.util.function.Consumer;
 import java.util.HashMap;
 
@@ -146,7 +152,7 @@ public class ClearFrontAndBackMatter {
 		FIRST_WORDS.put("AGOT.html", "We should start");
 		FIRST_WORDS.put("ACOK.html", "The comet"+RIGHT_SINGLE_QUOTE+"s tail");
 		FIRST_WORDS.put("ASOS.html", "The day was");
-		FIRST_WORDS.put("AFFC.html", "Dragons,” said Mollander");
+		FIRST_WORDS.put("AFFC.html", "Dragons,â€� said Mollander");
 		FIRST_WORDS.put("ADWD.html", "The night was");
 	}
 	

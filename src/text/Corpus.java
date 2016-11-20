@@ -1,8 +1,10 @@
-package repeatedphrases;
+package text;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import repeatedphrases.Location;
 
 
 /**
@@ -29,8 +31,8 @@ public class Corpus {
 	private int chapterPointer;
 	
 	/**
-	 * <p>A {@link repeatedphrases.PhraseProducer PhraseProducer} that 
-	 * extract phrases from the {@link repeatedphrases.Chapter#body body}
+	 * <p>A {@link text.PhraseProducer PhraseProducer} that 
+	 * extract phrases from the {@link text.Chapter#body body}
 	 * of the {@link #chapterPointer current} Chapter.</p>
 	 */
 	private PhraseProducer currentBuffer = null;
@@ -60,7 +62,7 @@ public class Corpus {
 	
 	/**
 	 * <p>Makes sure that {@link #currentBuffer the current buffer} 
-	 * has a {@link repeatedphrases.PhraseProducer#next() next} element 
+	 * has a {@link text.PhraseProducer#next() next} element 
 	 * available, unless there are no more {@link #chapters chapters} 
 	 * available.<p>
 	 */

@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.function.Consumer;
 
+import common.Folder;
+import common.IO;
+import html.HTMLFile;
+
 /**
  * <p>Converts the HTML chapters in <code>READ_FROM</code> to 
  * .txt files containing only the contents of the chapters' 

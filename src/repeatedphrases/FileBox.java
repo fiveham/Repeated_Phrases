@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
+import common.IO;
+
 /**
  * <p>Wraps a HashMap linking String filenames with data 
  * structures that store pairs of String and int. 

@@ -1,4 +1,4 @@
-package repeatedphrases;
+package text;
 
 /**
  * <p>Represents a chapter of a book in the body of text 

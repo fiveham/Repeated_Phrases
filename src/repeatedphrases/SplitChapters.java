@@ -1,5 +1,9 @@
 package repeatedphrases;
 
+import html.CharLiteral;
+import html.HTMLEntity;
+import html.HTMLFile;
+import html.Tag;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -8,8 +12,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.function.Predicate;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+
+import common.Folder;
+import common.IO;
 
 /**
  * <p>Splits an ASOIAF main series novel HTML file into 

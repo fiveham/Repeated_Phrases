@@ -1,4 +1,7 @@
-package repeatedphrases;
+package html;
+
+import common.IO;
+import repeatedphrases.Location;
 
 /**
  * <p>Data defining an anchor tag to be installed in an html 

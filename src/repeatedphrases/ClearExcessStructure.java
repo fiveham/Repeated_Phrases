@@ -10,6 +10,15 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
+import common.Folder;
+import common.IO;
+import html.CharCode;
+import html.CharLiteral;
+import html.HTMLEntity;
+import html.HTMLFile;
+import html.Tag;
+import text.PhraseProducer;
+
 /**
  * <p>Removes certain sequences from the HTML 
  * files specified as command-line arguments.</p>

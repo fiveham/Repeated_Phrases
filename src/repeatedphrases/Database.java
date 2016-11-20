@@ -1,7 +1,8 @@
 package repeatedphrases;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -44,12 +45,9 @@ public class Database {
 	 * <code>IntString</code>s from <code>list</code> to the 
 	 * Strings paired with them.
 	 */
-	private HashMap<Integer, String> mapFromIntString(List<IntString> list){
-		HashMap<Integer,String> result = new HashMap<>();
-		for(IntString is : list){
-			result.put(is.index, is.phrase);
-		}
-		return result;
+	private Map<Integer, String> mapFromIntString(List<IntString> list){
+		return list.stream()
+				.collect(Collectors.toMap(IntString::index, IntString::phrase));
 	}
 	
 	/**
@@ -87,7 +85,7 @@ public class Database {
 			if( otherDatabase.textCorpus.contains(filename) ){
 				
 				//get a random-access representation of the current corpus file
-				HashMap<Integer, String> fileForLargePhrases = mapFromIntString(otherDatabase.textCorpus.get(filename));
+				Map<Integer, String> fileForLargePhrases = mapFromIntString(otherDatabase.textCorpus.get(filename));
 				
 				//iterate over the phrase-instances for the current filename in this Database.
 				for(IntString smallerPhraseInFile : textCorpus.get(filename)){

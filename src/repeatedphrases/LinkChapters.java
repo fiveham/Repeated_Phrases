@@ -9,6 +9,11 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
+import common.Folder;
+import common.IO;
+import html.AnchorInfo;
+import html.HTMLFile;
+
 /**
  * <p>For each html chapter file in 
  * {@link #READ_SUBSTANCE READ_SUBSTANCE}, anchor data 

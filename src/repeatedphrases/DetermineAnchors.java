@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.function.Consumer;
 
+import common.Folder;
+import common.IO;
+import html.HTMLFile;
+
 /**
  * <p>This class reads every phrase-instance from ASOIAF 
  * represented in the files in 
@@ -299,7 +303,7 @@ public class DetermineAnchors {
 	 * objects should be written to add anchor tags to the html 
 	 * source file pertaining to the chapter to which the 
 	 * specified filename pertains.
-	 * @see repeatedphrases.Folder#ANCHORS
+	 * @see common.Folder#ANCHORS
 	 */
 	public static String anchorOutName(String chapter){
 		return Folder.ANCHORS.folderName() + File.separator 

@@ -8,6 +8,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
+import common.Folder;
+import common.IO;
+
 /**
  * <p>Adds system-dependent newlines/linebreaks before 
  * opening html paragraph tags in html book files from 

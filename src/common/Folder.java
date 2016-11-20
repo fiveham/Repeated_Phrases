@@ -1,4 +1,4 @@
-package repeatedphrases;
+package common;
 
 import java.io.File;
 

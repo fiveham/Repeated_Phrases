@@ -3,6 +3,9 @@ package repeatedphrases;
 import java.io.File;
 import java.util.function.Consumer;
 
+import common.Folder;
+import common.IO;
+
 /**
  * <p>Ensures that the folders needed for this project are present 
  * in the current working directory.</p>

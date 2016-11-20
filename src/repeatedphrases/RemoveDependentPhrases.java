@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.function.Consumer;
 
+import common.Folder;
+import common.IO;
+
 /**
  * <p>This class searches the population of known phrases that occur more than once in 
  * the text of A Song of Ice and Fire and removes from an in-memory copy of that population 

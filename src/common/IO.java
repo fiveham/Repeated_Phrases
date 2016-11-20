@@ -1,4 +1,4 @@
-package repeatedphrases;
+package common;
 
 import java.io.Closeable;
 import java.io.File;
@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import repeatedphrases.Location;
+
 import java.util.function.Consumer;
 
 /**
@@ -240,14 +243,14 @@ public class IO {
 	 * when it performs the operation specified by <code>scannerOperation</code>
 	 */
 	public static List<String> fileContentsAsList(Scanner src, Function<Scanner,String> scannerOperation, Predicate<Scanner> continueTest){
-		List<String> retVal = new ArrayList<>();
+		List<String> result = new ArrayList<>();
 		
 		while( continueTest.test(src) ){
-			retVal.add(scannerOperation.apply(src));
+			result.add(scannerOperation.apply(src));
 		}
 		src.close();
 		
-		return retVal;
+		return result;
 	}
 	
 	/**
