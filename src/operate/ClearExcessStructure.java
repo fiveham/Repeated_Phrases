@@ -1,4 +1,4 @@
-package repeatedphrases;
+package operate;
 
 import common.Folder;
 import common.IO;

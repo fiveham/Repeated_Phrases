@@ -1,5 +1,8 @@
-package repeatedphrases;
+package operate;
 
+import common.Folder;
+import common.IO;
+import html.HTMLFile;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -11,9 +14,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.function.Consumer;
 
-import common.Folder;
-import common.IO;
-import html.HTMLFile;
 import text.FileBox;
 import text.Location;
 import text.Phrase;
@@ -47,10 +47,10 @@ public class DetermineAnchors {
 	 */
 	public static final Folder WRITE_TO = Folder.ANCHORS;
 	
-    public static void main(String[] args){
-        determineAnchors(args, IO.DEFAULT_MSG);
-    }
-        
+	public static void main(String[] args){
+		determineAnchors(args, IO.DEFAULT_MSG);
+	}
+	
 	/**
 	 * <p>Detects all the .txt files in <code>READ_FROM</code>, reads them 
 	 * all, and organizes the extracted data by chapter name and by phrase. 

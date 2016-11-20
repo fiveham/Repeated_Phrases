@@ -1,4 +1,4 @@
-package repeatedphrases;
+package operate;
 
 import java.io.File;
 import java.util.function.Consumer;
@@ -81,17 +81,12 @@ public class IsolateChaptersAndLink {
      */
     static int validateArgs(String[] args, Consumer<String> msg){
         if( args.length < 1 ){
-            //msg.accept("Need a trail file.");
-            //System.out.println("Usage: java IsolateChaptersAndLink trail-file-name [phrase-size-min-for-linking]");
-            //System.exit (0);
         	throw new IllegalArgumentException("I need a trail file.");
         }
 
         String trail = args[0];
 
         if( !(new File(trail)).exists() ){
-            //msg.accept("Cannot find file "+trail);
-            //System.exit (0);
             throw new IllegalArgumentException("I can't find that trail-file: \""+trail+"\".");
         }
 

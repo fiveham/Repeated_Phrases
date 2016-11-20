@@ -14,6 +14,10 @@ import java.util.logging.Logger;
 import javax.swing.border.LineBorder;
 
 import common.Folder;
+import operate.EnsureFolders;
+import operate.IsolateChaptersAndLink;
+import operate.LinksAndTrail;
+import operate.SetTrail;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -26,10 +30,6 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
-import repeatedphrases.EnsureFolders;
-import repeatedphrases.IsolateChaptersAndLink;
-import repeatedphrases.LinksAndTrail;
-import repeatedphrases.SetTrail;
 
 
 /**

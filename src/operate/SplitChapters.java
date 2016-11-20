@@ -1,4 +1,4 @@
-package repeatedphrases;
+package operate;
 
 import html.CharCode;
 import html.CharLiteral;

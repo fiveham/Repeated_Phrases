@@ -1,4 +1,4 @@
-package repeatedphrases;
+package operate;
 
 import java.util.ArrayList;
 import java.util.List;

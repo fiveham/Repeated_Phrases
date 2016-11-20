@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import common.IO;
-import repeatedphrases.FindRepeatedPhrases;
+import operate.FindRepeatedPhrases;
 
 /**
  * <p>Wraps a HashMap linking string phrases with data structures 

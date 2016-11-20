@@ -150,7 +150,7 @@ public class HTMLFile {
 	 * @param name the filename that this HTMLFile uses to determine 
 	 * information about itself assuming that the filename is structured 
 	 * the way that the chapter files are split by 
-	 * {@link repeatedphrases.SplitChapters SplitChapters}
+	 * {@link operate.SplitChapters SplitChapters}
 	 * @param scan the Scanner used to obtain literal text to 
 	 * parse into HTMLEntitys
 	 */

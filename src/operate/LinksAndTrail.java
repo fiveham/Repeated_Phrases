@@ -1,4 +1,4 @@
-package repeatedphrases;
+package operate;
 
 import java.util.function.Consumer;
 
