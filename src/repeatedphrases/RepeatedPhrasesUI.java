@@ -288,7 +288,7 @@ public class RepeatedPhrasesUI extends JFrame {
         	}
         });
     }
-
+    
     /**
      * <p>The fourth button, "Change Trail (Keep Link Order)"</p>
      * @param evt 
@@ -321,13 +321,12 @@ public class RepeatedPhrasesUI extends JFrame {
     		opState = newOpState;
     		statusLabel.setText(startMsg);
     		
-    		new ButtonOperation( new Runnable(){
-    			@Override
-    			public void run(){
-    				action.run();
-    				statusLabel.setText(endMsg);
-    			}
-    		}).execute();
+    		new ButtonOperation(
+    				() -> {
+	    				action.run();
+	    				statusLabel.setText(endMsg);
+	    			})
+    				.execute();
     	}
     }
 
@@ -363,11 +362,7 @@ public class RepeatedPhrasesUI extends JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new RepeatedPhrasesUI().setVisible(true);
-            }
-        });
+        EventQueue.invokeLater(() -> new RepeatedPhrasesUI().setVisible(true));
     }
 
     private JButton createFoldersButton;
@@ -441,13 +436,13 @@ public class RepeatedPhrasesUI extends JFrame {
     		this.action = action;
     	}
     	
-    	@Override
     	/**
-    	 * <p>Calls <code>action</code>'s <code>run()</code> method inside 
+    	 * <p>Calls {@link #action action}'s {@code run} method inside 
     	 * a try-block, with two subsequent catch blocks for OutOfMemoryError 
     	 * and RuntimeException, sending a message to the GUI in either case, 
     	 * with the latter including the exception's message.</p>
     	 */
+    	@Override
     	public Void doInBackground(){
     		try{
     			action.run();
@@ -464,12 +459,12 @@ public class RepeatedPhrasesUI extends JFrame {
     		return null;
     	}
     	
-    	@Override
     	/**
     	 * <p>Resets the {@linkplain RepeatedPhrasesUI#opState operation-state} to 
     	 * <code>null</code>, allowing a button's operation to begin when a 
     	 * button is next pressed.</p>
     	 */
+    	@Override
     	public final void done(){
     		opState = null;
     	}
