@@ -19,7 +19,7 @@ public class CharCode extends HTMLEntity {
 	 * <code>Code</code> and represents a non-breaking space 
 	 * as determined by <code>NBSP</code>.</p>
 	 */
-	public static final Predicate<HTMLEntity> IS_NBSP = (h) -> HTMLFile.IS_CODE.test(h) && NBSP.equals(((CharCode)h).code);
+	public static final Predicate<HTMLEntity> IS_NBSP = (h) -> CharCode.class.isInstance(h) && NBSP.equals(((CharCode)h).code);
 	
 	/**
 	 * <p>The text of this HTML character code between the 

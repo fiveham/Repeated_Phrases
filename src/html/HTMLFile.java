@@ -352,7 +352,7 @@ public class HTMLFile {
 		
 		for(int i=bounds[0]; i<bounds[1]; i++){
 			HTMLEntity item = content.get(i);
-			if( IS_CH.test(item) ){
+			if( CharLiteral.class.isInstance(item) ){
 				result.append( ((CharLiteral)item).c );
 			}
 		}
@@ -395,8 +395,8 @@ public class HTMLFile {
 		
 		result.add(lo);
 		for(int i=lo+1; i<hi; i++){
-			if( is(i, IS_CHARACTER, Direction.PREV, IS_TAG) //htmlFile.get(i) is a character preceded by a tag.
-					|| is(i, IS_TAG, Direction.PREV, IS_CHARACTER) ){ //htmlFile.get(i) is a Tag preceded by a character.
+			if( is(i, IS_CHARACTER, Direction.PREV, Tag.class::isInstance) //htmlFile.get(i) is a character preceded by a tag.
+					|| is(i, Tag.class::isInstance, Direction.PREV, IS_CHARACTER) ){ //htmlFile.get(i) is a Tag preceded by a character.
 				result.add(i);
 			}
 		}
@@ -458,10 +458,10 @@ public class HTMLFile {
 	 * @param h an HTMLEntity to be compared against <code>c</code>.
 	 * @return true if the <code>c</code> matches <code>h</code>, false otherwise
 	 */
-	private boolean match(char c, HTMLEntity h){
-		if( IS_CH.test(h) ){
+	private boolean match(char c, HTMLEntity h){ //TODO move into HTMLEntity classes
+		if( CharLiteral.class.isInstance(h) ){
 			return ((CharLiteral)h).c == c;
-		} else if(IS_CODE.test(h)){
+		} else if(CharCode.class.isInstance(h)){
 			return ((CharCode)h).isEquivalent(c);
 		} else{
 			return false;
@@ -522,10 +522,7 @@ public class HTMLFile {
 	 */
 	public void print(OutputStreamWriter out) throws IOException{
 		for(HTMLEntity item : content){
-			//String s = item.toString();
-			//out.write(s);
-			
-			out.write( item.toString() );
+			out.write(item.toString());
 		}
 	}
 	
@@ -568,7 +565,7 @@ public class HTMLFile {
 	 * <p>Does the work for {@link #getWord(int) getWord()} and stores 
 	 * its most recent input and output to more quickly return a result.</p>
 	 */
-	private final IntUnaryOperator getWordCache = new IntUnaryOperator(){
+	private final IntUnaryOperator getWordCache = new IntUnaryOperator(){ //TODO split into a new class
 		
 		/**
 		 * <p>When this record of how many times this HTMLFile has been modified 
@@ -756,40 +753,22 @@ public class HTMLFile {
 	 * is a word character, false otherwise
 	 */
 	private static boolean isWord(HTMLEntity elem){
-		return IS_CH.test(elem) && PhraseProducer.isPhraseChar( ((CharLiteral)elem).c );
+		return CharLiteral.class.isInstance(elem) && PhraseProducer.isPhraseChar( ((CharLiteral)elem).c );
 	}
-	
-	/**
-	 * <p>Evaluates to true if the specified HTMLEntity <code>h</code> 
-	 * is a {@link CharLiteral Ch}.</p>
-	 */
-	public static final Predicate<HTMLEntity> IS_CH = (h) -> h instanceof CharLiteral;
-	
-	/**
-	 * <p>Evaluates to true if the specified HTMLEntity <code>h</code> 
-	 * is a {@link Tag Tag}.</p>
-	 */
-	public static final Predicate<HTMLEntity> IS_TAG = (h) -> h instanceof Tag;
-	
-	/**
-	 * <p>Evaluates to true if the specified HTMLEntity <code>h</code> 
-	 * is a {@link CharCode Code}.</p>
-	 */
-	public static final Predicate<HTMLEntity> IS_CODE = (h) -> h instanceof CharCode;
 	
 	/**
 	 * <p>Evaluates to true if the specified HTMLEntity <code>h</code> 
 	 * is a character-type HTMLEntity: a {@link CharLiteral Ch} or a 
 	 * {@link CharCode Code}.</p>
 	 */
-	public static final Predicate<HTMLEntity> IS_CHARACTER = (h) -> IS_CH.test(h) || IS_CODE.test(h);
+	public static final Predicate<HTMLEntity> IS_CHARACTER = (h) -> CharLiteral.class.isInstance(h) || CharCode.class.isInstance(h);
 	
 	/**
 	 * <p>Evaluates to true if the specified HTMLEntity <code>h</code> 
 	 * {@link #IS_CHARACTER is character-type} and 
 	 * is not a {@link #isWord(HTMLEntity) legal word character}.</p>
 	 */
-	public static final Predicate<HTMLEntity> IS_CHARACTER_NOT_WORD = (h) -> IS_CHARACTER.test(h) && !isWord(h);
+	public static final Predicate<HTMLEntity> IS_CHARACTER_NOT_WORD = IS_CHARACTER.and((h) -> !isWord(h));
 
 	/**
 	 * <p>Returns the position in the underlying list of the element 
@@ -935,7 +914,7 @@ public class HTMLFile {
 		
 		final String type = t.getType();
 		final Predicate<HTMLEntity> isTagOfType = 
-				(h) -> IS_TAG.test(h) && ((Tag)h).getType().equals(type);
+				(h) -> Tag.class.isInstance(h) && ((Tag)h).getType().equals(type);
 		int tagIndex = startPoint;
 		
 		for(int depth=1; depth > 0 && 0<= tagIndex && tagIndex < content.size()-1;){

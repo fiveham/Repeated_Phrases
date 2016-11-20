@@ -1,5 +1,6 @@
 package repeatedphrases;
 
+import html.CharCode;
 import html.CharLiteral;
 import html.Direction;
 import html.HTMLEntity;
@@ -148,7 +149,7 @@ public class SplitChapters {
             HTMLFile body = new HTMLFile("PQ_0_THE_PRINCESS_AND_THE_QUEEN.html", bodySection);
             HTMLFile footnote = new HTMLFile("PQ_1_FOOTNOTE.html", footnoteSection);
 
-            Predicate<HTMLEntity> isSuperscript1 = (h) -> HTMLFile.IS_CH.test(h) && ((CharLiteral)h).c == '1';
+            Predicate<HTMLEntity> isSuperscript1 = (h) -> CharLiteral.class.isInstance(h) && ((CharLiteral)h).c == '1';
 
             String[] hrefs = {"PQ_1_FOOTNOTE.html#FOOTNOTE", "PQ_0_THE_PRINCESS_AND_THE_QUEEN.html#FOOTNOTE"};
             HTMLFile[] files = {body, footnote};
@@ -219,9 +220,9 @@ public class SplitChapters {
         int titleCharCount = 0;
 
         for(HTMLEntity h : paragraph){
-            if( HTMLFile.IS_CODE.test(h)){
+            if( CharCode.class.isInstance(h)){
                 return false;
-            } else if( HTMLFile.IS_CH.test(h) ){
+            } else if( CharLiteral.class.isInstance(h) ){
                 if( isLegalChapterTitleCharacter( ((CharLiteral)h).c ) ){
                     titleCharCount++;
                 } else{
@@ -296,8 +297,8 @@ public class SplitChapters {
     private static String extractChapterTitle(List<HTMLEntity> paragraph){
         StringBuilder result = new StringBuilder( paragraph.size() );
 
-        for( HTMLEntity h : paragraph ){
-            if( HTMLFile.IS_CH.test(h) ){
+        for(HTMLEntity h : paragraph){
+            if(CharLiteral.class.isInstance(h)){
                 result.append( ((CharLiteral)h).c );
             }
         }
@@ -394,7 +395,7 @@ public class SplitChapters {
      * title, false otherwise
      */
     public static boolean isTitleChar(HTMLEntity h){
-        return h instanceof CharLiteral && isTitle(((CharLiteral)h).c);
+        return CharLiteral.class.isInstance(h) && isTitle(((CharLiteral)h).c);
     }
 
     /**

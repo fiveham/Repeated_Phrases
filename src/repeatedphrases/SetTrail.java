@@ -170,9 +170,7 @@ public class SetTrail {
      * file to which to link as an adjacent chapter
      */
     private static void setAdjacentChapterLinks(HTMLFile file, String idValue, String idAttrib, String address){
-        Predicate<HTMLEntity> isAnchorWithMatchID = (h) -> HTMLFile.IS_TAG.test(h) 
-                && ((Tag)h).isType( Tag.A ) 
-                && idValue.equals(((Tag)h).valueOfAttribute(idAttrib));
+        Predicate<HTMLEntity> isAnchorWithMatchID = (h) -> isAnchorWithMatchID(h, idValue, idAttrib);
         int pointer = -1;
         while( -1 != (pointer=file.adjacentElement(pointer, isAnchorWithMatchID, Direction.NEXT))){
 
@@ -181,6 +179,14 @@ public class SetTrail {
 
             file.set(pointer, new Tag( anchor(tag, address)));
         }
+    }
+    
+    private static boolean isAnchorWithMatchID(HTMLEntity h, String idValue, String idAttrib){
+    	if(Tag.class.isInstance(h)){
+    		Tag t = (Tag) h;
+    		return t.isType(Tag.A) && idValue.equals(t.valueOfAttribute(idAttrib)); 
+    	}
+    	return false;
     }
 
     /**

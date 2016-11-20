@@ -48,20 +48,20 @@ public class Tag extends HTMLEntity {
 	 * Evaluates to true if the HTMLEntity tested is an opening Tag.
 	 */
 	public static final Predicate<HTMLEntity> IS_OPEN = 
-			(h) -> HTMLFile.IS_TAG.test(h) && ((Tag)h).isOpening();
+			(h) -> Tag.class.isInstance(h) && ((Tag)h).isOpening();
 		
 	/**
 	 * Evaluates to true if the HTMLEntity tested is a closing Tag.
 	 */
 	public static final Predicate<HTMLEntity> IS_CLOSE = 
-			(h) -> HTMLFile.IS_TAG.test(h) && ((Tag)h).isClosing();
+			(h) -> Tag.class.isInstance(h) && ((Tag)h).isClosing();
 	
 	/**
 	 * <p>Evaluates to true if the HTMLEntity tested is a Tag 
 	 * and has type "p".</p>
 	 */
 	public static final Predicate<HTMLEntity> IS_P = 
-			(h) -> HTMLFile.IS_TAG.test(h) 
+			(h) -> Tag.class.isInstance(h) 
 			&& P.equals(((Tag)h).getType());
 			
 	/**
@@ -85,7 +85,7 @@ public class Tag extends HTMLEntity {
 	 * and has type "div".</p>
 	 */
 	public static final Predicate<HTMLEntity> IS_DIV = 
-			(h) -> HTMLFile.IS_TAG.test(h) 
+			(h) -> Tag.class.isInstance(h) 
 			&& DIV.equals(((Tag)h).getType());
 	
 	/**
@@ -109,7 +109,7 @@ public class Tag extends HTMLEntity {
 	 * and has type "blockquote".</p>
 	 */
 	public static final Predicate<HTMLEntity> IS_BLOCKQUOTE = 
-			(h) -> HTMLFile.IS_TAG.test(h) 
+			(h) -> Tag.class.isInstance(h) 
 			&& BLOCKQUOTE.equals(((Tag)h).getType());
 	
 	/**
@@ -117,7 +117,7 @@ public class Tag extends HTMLEntity {
 	 * and has type "img".</p>
 	 */
 	public static final Predicate<HTMLEntity> IS_IMG = 
-			(h) -> HTMLFile.IS_TAG.test(h) 
+			(h) -> Tag.class.isInstance(h) 
 			&& IMG.equals(((Tag)h).getType());
 	
 	/**
@@ -125,7 +125,7 @@ public class Tag extends HTMLEntity {
 	 * and has type "table".</p>
 	 */
 	public static final Predicate<HTMLEntity> IS_TABLE = 
-			(h) -> HTMLFile.IS_TAG.test(h) 
+			(h) -> Tag.class.isInstance(h) 
 			&& TABLE.equals(((Tag)h).getType());
 	
 	/**
@@ -146,7 +146,7 @@ public class Tag extends HTMLEntity {
 	 * <p>Evaluates to true if the HTMLEntity tested is a Tag 
 	 * and has type "a".</p>
 	 */
-	public static final Predicate<HTMLEntity> IS_A = (h) -> HTMLFile.IS_TAG.test(h) && A.equals(((Tag)h).getType());
+	public static final Predicate<HTMLEntity> IS_A = (h) -> Tag.class.isInstance(h) && A.equals(((Tag)h).getType());
 	
 	/**
 	 * <p>Evaluates to true if the HTMLEntity tested is a Tag, 
@@ -164,7 +164,7 @@ public class Tag extends HTMLEntity {
 	 * <p>Evaluates to true if the HTMLEntity tested is a Tag 
 	 * and has type "sup".</p>
 	 */
-	public static final Predicate<HTMLEntity> IS_SUP = (h) -> HTMLFile.IS_TAG.test(h) && SUP.equals(((Tag)h).getType());
+	public static final Predicate<HTMLEntity> IS_SUP = (h) -> Tag.class.isInstance(h) && SUP.equals(((Tag)h).getType());
 	
 	public static final List<String> HEADERS;
 	static{
@@ -177,11 +177,9 @@ public class Tag extends HTMLEntity {
 		HEADERS.add("h6");
 	}
 	
-	public static final Predicate<HTMLEntity> IS_HEADER = (h) -> HTMLFile.IS_TAG.test(h) && HEADERS.contains(((Tag)h).getType());
+	public static final Predicate<HTMLEntity> IS_HEADER = (h) -> Tag.class.isInstance(h) && HEADERS.contains(((Tag)h).getType());
 	
-	//public static final Predicate<HTMLEntity> IS_HEADER_OPEN = (h) -> IS_HEADER.test(h) && ((Tag)h).isOpening();
 	public static final Predicate<HTMLEntity> IS_HEADER_OPEN = (h) -> IS_HEADER.test(h) && IS_OPEN.test(h);
-
 	
 	/**
 	 * <p>The literal text of this tag inside its opening 
