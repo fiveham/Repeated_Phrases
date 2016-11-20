@@ -1,9 +1,8 @@
 package operate;
 
+import common.IO;
 import java.io.File;
 import java.util.function.Consumer;
-
-import common.IO;
 
 /**
  * <p>Unites the operations of HtmlToText, 
@@ -37,7 +36,7 @@ public class IsolateChaptersAndLink {
     public static void isolateChaptersAndLink(String[] args, Consumer<String> msg) {
     	validateArgs(args, msg);
 
-        EnsureFolders.ensureFolders(msg);
+        RepeatedPhrasesApp.ensureFolders(msg);
 
         msg.accept("Newlining parargraphs");
         NewlineP.newlineP(msg);

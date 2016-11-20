@@ -23,7 +23,7 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
-import operate.EnsureFolders;
+import operate.RepeatedPhrasesApp;
 import operate.IsolateChaptersAndLink;
 import operate.LinksAndTrail;
 import operate.SetTrail;
@@ -231,7 +231,7 @@ public class RepeatedPhrasesUI extends JFrame {
         buttonPress(createFoldersButton, 
         		"Creating needed folders", 
         		"Done: Put html books in "+Folder.HTML_BOOKS.folderName(), 
-        		() -> EnsureFolders.ensureFolders(statusLabelMsg));
+        		() -> RepeatedPhrasesApp.ensureFolders(statusLabelMsg));
     }
 
     /**
