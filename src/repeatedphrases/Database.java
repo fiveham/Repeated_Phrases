@@ -3,6 +3,9 @@ package repeatedphrases;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import text.Location;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 

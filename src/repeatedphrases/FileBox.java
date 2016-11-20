@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 import common.IO;
+import text.Location;
 
 /**
  * <p>Wraps a HashMap linking String filenames with data 

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import repeatedphrases.Location;
-
 
 /**
  * <p>Iterates over a list of chapters, and extracts as many phrases 
@@ -125,7 +123,7 @@ public class Corpus {
 	 * 
 	 * <p>The information accessed is only updated before a result is 
 	 * returned from {@link #next() next()}.</p>
-	 * @return the {@link repeatedphrases.Location Location} of the 
+	 * @return the {@link text.Location Location} of the 
 	 * last phrase returned from {@link #next() next()}.
 	 */
 	public Location prevLocation(){

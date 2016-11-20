@@ -14,6 +14,7 @@ import java.util.function.Consumer;
 import common.Folder;
 import common.IO;
 import html.HTMLFile;
+import text.Location;
 
 /**
  * <p>This class reads every phrase-instance from ASOIAF 
@@ -55,7 +56,7 @@ public class DetermineAnchors {
 	 * the phrase being linked, the location in the chapter for which the 
 	 * file is named of the instance of the specified phrase on which the 
 	 * link is applied, and the 
-	 * {@link repeatedphrases.Location#toString() string representation} of 
+	 * {@link text.Location#toString() string representation} of 
 	 * the Location of the instance of the phrase to which the link leads.</p>
 	 * @param args command-line arguments. args[0], if present, names a file 
 	 * to be used in sequencing the 

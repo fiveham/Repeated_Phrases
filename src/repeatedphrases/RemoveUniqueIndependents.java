@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 import common.Folder;
 import common.IO;
+import text.Location;
 
 /**
  * <p>Reads the phrase-instance files from <code>READ_FROM</code> 

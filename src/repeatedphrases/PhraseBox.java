@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import common.IO;
+import text.Location;
 
 /**
  * <p>Wraps a HashMap linking string phrases with data structures 
@@ -22,7 +24,7 @@ public class PhraseBox{
 	/**
 	 * <p>The wrapped HashMap.</p>
 	 */
-	private final HashMap<String, List<Location>> hashmap;
+	private final Map<String, List<Location>> hashmap;
 	
 	/**
 	 * <p>Constructs a PhraseBox with no contents.</p>

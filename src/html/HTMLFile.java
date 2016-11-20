@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 
 import common.IO;
 import repeatedphrases.Direction;
-import repeatedphrases.Location;
+import text.Location;
 import text.PhraseProducer;
 
 /**

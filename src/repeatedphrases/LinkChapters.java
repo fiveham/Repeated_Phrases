@@ -13,6 +13,7 @@ import common.Folder;
 import common.IO;
 import html.AnchorInfo;
 import html.HTMLFile;
+import text.Location;
 
 /**
  * <p>For each html chapter file in 

@@ -1,4 +1,4 @@
-package repeatedphrases;
+package text;
 
 import common.IO;
 

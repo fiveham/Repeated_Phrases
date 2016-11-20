@@ -1,5 +1,7 @@
 package repeatedphrases;
 
+import text.Location;
+
 /**
  * <p>Represents a phrase located within a known file. 
  * Pairs a phrase with its word-index in the chapter 
