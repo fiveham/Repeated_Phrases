@@ -1,8 +1,7 @@
 package operate;
 
-import java.util.function.Consumer;
-
 import common.IO;
+import java.util.function.Consumer;
 
 public class LinksAndTrail {
 
@@ -12,7 +11,7 @@ public class LinksAndTrail {
 
     public static void linksAndTrail(String[] args, Consumer<String> msg) {
 
-        int limit = IsolateChaptersAndLink.validateArgs(args, msg);
+        int limit = RepeatedPhrasesApp.validateArgs(args, msg);
         String[] trailArgs = new String[]{ args[0] };
 
         msg.accept("Determining links to add to phrases");

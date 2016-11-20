@@ -24,7 +24,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import operate.RepeatedPhrasesApp;
-import operate.IsolateChaptersAndLink;
 import operate.LinksAndTrail;
 import operate.SetTrail;
 
@@ -243,7 +242,7 @@ public class RepeatedPhrasesUI extends JFrame {
         buttonPress(chapterizeLinkButton, 
         		"Doing all the work ("+ trailAndLimit[0] +", "+ trailAndLimit[1] +")", 
         		"Done: Chapters ready: "+Folder.READABLE.folderName(), 
-        		() -> IsolateChaptersAndLink.isolateChaptersAndLink(trailAndLimit, statusLabelMsg));
+        		() -> RepeatedPhrasesApp.isolateChaptersAndLink(trailAndLimit, statusLabelMsg));
     }
 
     /**
