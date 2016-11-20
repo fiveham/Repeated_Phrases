@@ -123,4 +123,9 @@ public class CharCode extends HTMLEntity {
 	public String txtString(){
 		return " ";
 	}
+	
+	@Override
+	public boolean isVisible(){
+		return !NBSP.equals(code);
+	}
 }

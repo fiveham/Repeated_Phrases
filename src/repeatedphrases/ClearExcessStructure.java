@@ -1,5 +1,10 @@
 package repeatedphrases;
 
+import common.Folder;
+import common.IO;
+import html.CharCode;
+import html.HTMLFile;
+import html.Tag;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,15 +14,6 @@ import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Consumer;
-
-import common.Folder;
-import common.IO;
-import html.CharCode;
-import html.CharLiteral;
-import html.HTMLEntity;
-import html.HTMLFile;
-import html.Tag;
-import text.PhraseProducer;
 
 /**
  * <p>Removes certain sequences from the HTML 
@@ -116,30 +112,10 @@ public class ClearExcessStructure{
 	 */
 	private static boolean isThereLiteralContent(HTMLFile file, int low, int top){
             for(int i=low+1; i<top; i++){
-                if( isVisible(file.get(i) )){
+                if(file.get(i).isVisible()){
                     return true;
                 }
             }
             return false;
-	}
-	
-	/**
-	 * <p>Returns true if the specified HTMLEntity is visible, 
-	 * false otherwise.</p>
-	 * @param h the HTMLEntity to be tested for visibility
-	 * @return true if the specified HTMLEntity is visible, 
-	 * false otherwise.
-	 */
-	private static boolean isVisible(HTMLEntity h){
-            if(h instanceof Tag){
-                return false;
-            } else{
-                if(h instanceof CharLiteral){
-                    char c = ((CharLiteral)h).c;
-                    return PhraseProducer.isPhraseChar(c);
-                } else{ //it's a CharCode
-                    return true; //IDK, but I can't think of any invisible characters that could be here after nbsp are removed.
-                }
-            }
 	}
 }

@@ -1,5 +1,7 @@
 package html;
 
+import text.PhraseProducer;
+
 /**
  * <p>Represents a literal character from an HTML file.</p>
  * <p>This class was created to allow literal characters 
@@ -62,5 +64,10 @@ public class CharLiteral extends HTMLEntity {
 	 */
 	public String txtString(){
 		return toString();
+	}
+	
+	@Override
+	public boolean isVisible(){
+		return PhraseProducer.isPhraseChar(c);
 	}
 }

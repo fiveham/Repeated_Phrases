@@ -358,4 +358,9 @@ public class Tag extends HTMLEntity {
 	public String txtString(){
 		return "";
 	}
+	
+	@Override
+	public boolean isVisible(){
+		return false;
+	}
 }
