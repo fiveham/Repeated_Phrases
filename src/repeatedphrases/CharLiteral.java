@@ -4,9 +4,9 @@ package repeatedphrases;
  * <p>Represents a literal character from an HTML file.</p>
  * <p>This class was created to allow literal characters 
  * to be represented easily in a collection of HTML 
- * {@link Tag tags} and {@link Code character codes}.</p>
+ * {@link Tag tags} and {@link CharCode character codes}.</p>
  */
-public class Ch extends HTMLEntity {
+public class CharLiteral extends HTMLEntity {
 	
 	/**
 	 * <p>The literal character this object wraps.</p>
@@ -19,7 +19,7 @@ public class Ch extends HTMLEntity {
 	 * @param c the literal character to wrap as an 
 	 * <code>HTMLEntity</code>.
 	 */
-	public Ch(char c) {
+	public CharLiteral(char c) {
 		this.c = c;
 	}
 	
@@ -52,7 +52,7 @@ public class Ch extends HTMLEntity {
 	 * and wraps the name character as this Ch, false otherwise.
 	 */
 	public boolean equals(Object o){
-		return o instanceof Ch && c == ((Ch)o).c;
+		return o instanceof CharLiteral && c == ((CharLiteral)o).c;
 	}
 	
 	@Override

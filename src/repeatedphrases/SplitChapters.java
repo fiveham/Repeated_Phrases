@@ -74,7 +74,7 @@ public class SplitChapters {
                         writeCount++;
                     } else{
                         buffer.addAll(paragraph);
-                        buffer.add(new Ch('\n'));
+                        buffer.add(new CharLiteral('\n'));
                     }
                 }
 
@@ -140,7 +140,7 @@ public class SplitChapters {
             HTMLFile body = new HTMLFile("PQ_0_THE_PRINCESS_AND_THE_QUEEN.html", bodySection);
             HTMLFile footnote = new HTMLFile("PQ_1_FOOTNOTE.html", footnoteSection);
 
-            Predicate<HTMLEntity> isSuperscript1 = (h) -> HTMLFile.IS_CH.test(h) && ((Ch)h).c == '1';
+            Predicate<HTMLEntity> isSuperscript1 = (h) -> HTMLFile.IS_CH.test(h) && ((CharLiteral)h).c == '1';
 
             String[] hrefs = {"PQ_1_FOOTNOTE.html#FOOTNOTE", "PQ_0_THE_PRINCESS_AND_THE_QUEEN.html#FOOTNOTE"};
             HTMLFile[] files = {body, footnote};
@@ -150,7 +150,7 @@ public class SplitChapters {
                 //replace superscript 1 with asterisk
                 int noteIndex = file.adjacentElement(-1, Tag.IS_SUP, Direction.NEXT);
                 noteIndex = file.adjacentElement(noteIndex, isSuperscript1, Direction.NEXT);
-                file.set(noteIndex, new Ch('*'));
+                file.set(noteIndex, new CharLiteral('*'));
 
                 //replace internal link with external link
                 int noteAnchorIndex = file.adjacentElement(noteIndex, Tag.IS_A_OPEN, Direction.PREV);
@@ -214,7 +214,7 @@ public class SplitChapters {
             if( HTMLFile.IS_CODE.test(h)){
                 return false;
             } else if( HTMLFile.IS_CH.test(h) ){
-                if( isLegalChapterTitleCharacter( ((Ch)h).c ) ){
+                if( isLegalChapterTitleCharacter( ((CharLiteral)h).c ) ){
                     titleCharCount++;
                 } else{
                     return false;
@@ -290,7 +290,7 @@ public class SplitChapters {
 
         for( HTMLEntity h : paragraph ){
             if( HTMLFile.IS_CH.test(h) ){
-                result.append( ((Ch)h).c );
+                result.append( ((CharLiteral)h).c );
             }
         }
 
@@ -386,7 +386,7 @@ public class SplitChapters {
      * title, false otherwise
      */
     public static boolean isTitleChar(HTMLEntity h){
-        return h instanceof Ch && isTitle(((Ch)h).c);
+        return h instanceof CharLiteral && isTitle(((CharLiteral)h).c);
     }
 
     /**

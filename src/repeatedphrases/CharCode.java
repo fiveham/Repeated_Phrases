@@ -6,7 +6,7 @@ import java.util.function.Predicate;
  * <p>Represents an HTML character code starting with an ampersand 
  * and ending with a semicolon.</p>
  */
-public class Code extends HTMLEntity {
+public class CharCode extends HTMLEntity {
 	
 	/**
 	 * <p>The content of a <code>Code</code> representing the 
@@ -19,7 +19,7 @@ public class Code extends HTMLEntity {
 	 * <code>Code</code> and represents a non-breaking space 
 	 * as determined by <code>NBSP</code>.</p>
 	 */
-	public static final Predicate<HTMLEntity> IS_NBSP = (h) -> HTMLFile.IS_CODE.test(h) && NBSP.equals(((Code)h).code);
+	public static final Predicate<HTMLEntity> IS_NBSP = (h) -> HTMLFile.IS_CODE.test(h) && NBSP.equals(((CharCode)h).code);
 	
 	/**
 	 * <p>The text of this HTML character code between the 
@@ -34,7 +34,7 @@ public class Code extends HTMLEntity {
 	 * @param code the text of this HTML character code between 
 	 * the beginning ampersand and the ending semicolon
 	 */
-	public Code(String code) {
+	public CharCode(String code) {
 		this.code = code;
 	}
 	
@@ -105,7 +105,7 @@ public class Code extends HTMLEntity {
 	 * <code>Code</code>.
 	 */
 	public boolean equals(Object o){
-		return o instanceof Code && code.equals( ((Code)o).code );
+		return o instanceof CharCode && code.equals( ((CharCode)o).code );
 	}
 	
 	@Override

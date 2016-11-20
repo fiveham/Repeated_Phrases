@@ -58,7 +58,7 @@ public class ClearExcessStructure{
                     file.removeAll( Tag.IS_DIV );
                     file.removeAll( Tag.IS_BLOCKQUOTE );
                     file.removeAll( Tag.IS_IMG );
-                    file.removeAll( Code.IS_NBSP );
+                    file.removeAll( CharCode.IS_NBSP );
                     removeEmptyP(file);
                     
                     file.print(out);
@@ -125,8 +125,8 @@ public class ClearExcessStructure{
             if(h instanceof Tag){
                 return false;
             } else{
-                if(h instanceof Ch){
-                    char c = ((Ch)h).c;
+                if(h instanceof CharLiteral){
+                    char c = ((CharLiteral)h).c;
                     return PhraseProducer.isPhraseChar(c);
                 } else{ //it's a Code
                     return true; //IDK, but I can't think of any invisible characters that could be here after nbsp are removed.

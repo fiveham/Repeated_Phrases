@@ -350,11 +350,11 @@ public class SwapApostrophes{
 
         /**
          * <p>Creates a representation of a literal <code>line</code> from an 
-         * HTML file such that {@link Tag Tags} and {@link Code Codes} are 
+         * HTML file such that {@link Tag Tags} and {@link CharCode Codes} are 
          * excluded.</p>
          * @param line a literal text line from an HTML file
          * @return  a representation of a literal <code>line</code> from an 
-         * HTML file such that {@link Tag Tags} and {@link Code Codes} are 
+         * HTML file such that {@link Tag Tags} and {@link CharCode Codes} are 
          * excluded
          */
         private List<IntChar> cleanLine(StringBuilder line){

@@ -325,7 +325,7 @@ public class HTMLFile {
  	 * <p>The wordIndex-th 
  	 * word is determined by counting word-start points where a 
  	 * word character's most recent visible predecessor (any 
- 	 * {@link Ch literal character} or {@link Code character code} 
+ 	 * {@link CharLiteral literal character} or {@link CharCode character code} 
  	 * is not a word-legal character. HTML tags are not considered 
  	 * when finding the beginning of a word.</p>
  	 * 
@@ -349,7 +349,7 @@ public class HTMLFile {
 		for(int i=bounds[0]; i<bounds[1]; i++){
 			HTMLEntity item = content.get(i);
 			if( IS_CH.test(item) ){
-				result.append( ((Ch)item).c );
+				result.append( ((CharLiteral)item).c );
 			}
 		}
 		
@@ -447,18 +447,18 @@ public class HTMLFile {
 	/**
 	 * <p>Returns true if the <code>c</code> matches <code>h</code>, false otherwise. 
 	 * Generally, this means that <code>c</code> is the literal character wrapped 
-	 * by </code>h</code> because </code>h</code> is a {@link Ch Ch}. A <code>Tag</code> 
+	 * by </code>h</code> because </code>h</code> is a {@link CharLiteral Ch}. A <code>Tag</code> 
 	 * never matches. A <code>Code</code> matches <code>c</code> if 
-	 * it {@link Code#isEquivalent(char) is equivalent} to that <code>char</code>.</p>
+	 * it {@link CharCode#isEquivalent(char) is equivalent} to that <code>char</code>.</p>
 	 * @param c a literal <code>char</code> to be compared against <code>h</code>
 	 * @param h an HTMLEntity to be compared against <code>c</code>.
 	 * @return true if the <code>c</code> matches <code>h</code>, false otherwise
 	 */
 	private boolean match(char c, HTMLEntity h){
 		if( IS_CH.test(h) ){
-			return ((Ch)h).c == c;
+			return ((CharLiteral)h).c == c;
 		} else if(IS_CODE.test(h)){
-			return ((Code)h).isEquivalent(c);
+			return ((CharCode)h).isEquivalent(c);
 		} else{
 			return false;
 		}
@@ -752,14 +752,14 @@ public class HTMLFile {
 	 * is a word character, false otherwise
 	 */
 	private static boolean isWord(HTMLEntity elem){
-		return IS_CH.test(elem) && PhraseProducer.isPhraseChar( ((Ch)elem).c );
+		return IS_CH.test(elem) && PhraseProducer.isPhraseChar( ((CharLiteral)elem).c );
 	}
 	
 	/**
 	 * <p>Evaluates to true if the specified HTMLEntity <code>h</code> 
-	 * is a {@link Ch Ch}.</p>
+	 * is a {@link CharLiteral Ch}.</p>
 	 */
-	public static final Predicate<HTMLEntity> IS_CH = (h) -> h instanceof Ch;
+	public static final Predicate<HTMLEntity> IS_CH = (h) -> h instanceof CharLiteral;
 	
 	/**
 	 * <p>Evaluates to true if the specified HTMLEntity <code>h</code> 
@@ -769,14 +769,14 @@ public class HTMLFile {
 	
 	/**
 	 * <p>Evaluates to true if the specified HTMLEntity <code>h</code> 
-	 * is a {@link Code Code}.</p>
+	 * is a {@link CharCode Code}.</p>
 	 */
-	public static final Predicate<HTMLEntity> IS_CODE = (h) -> h instanceof Code;
+	public static final Predicate<HTMLEntity> IS_CODE = (h) -> h instanceof CharCode;
 	
 	/**
 	 * <p>Evaluates to true if the specified HTMLEntity <code>h</code> 
-	 * is a character-type HTMLEntity: a {@link Ch Ch} or a 
-	 * {@link Code Code}.</p>
+	 * is a character-type HTMLEntity: a {@link CharLiteral Ch} or a 
+	 * {@link CharCode Code}.</p>
 	 */
 	public static final Predicate<HTMLEntity> IS_CHARACTER = (h) -> IS_CH.test(h) || IS_CODE.test(h);
 	
@@ -989,7 +989,7 @@ public class HTMLFile {
         		Character counterpart = risingCounterpart(c);
         		
         		if( counterpart==null ){ //the current character c isn't an opening angle bracket or ampersand.
-        			result.add( new Ch(c) );
+        			result.add( new CharLiteral(c) );
         		} else{
         			//c is a special character and we need to take special action.
         			//store the counterpart of c so we know what to look for later to end this special condition.
@@ -999,7 +999,7 @@ public class HTMLFile {
         		}
         	} else if( mate.equals(c) ){ //we are looking for a '>' or a ';' //we've found that mate
     			//then we can stop looking for that mate
-    			HTMLEntity newEntry = mate==Tag.END ? new Tag(tagCode.toString()) : new Code(tagCode.toString());
+    			HTMLEntity newEntry = mate==Tag.END ? new Tag(tagCode.toString()) : new CharCode(tagCode.toString());
     			result.add( newEntry);
     			mate = null;
     			tagCode = null;
@@ -1035,7 +1035,7 @@ public class HTMLFile {
 	public static Character risingCounterpart(Character c){
     	switch(c){
     		case Tag.START  : return Tag.END;
-    		case Code.START : return Code.END;
+    		case CharCode.START : return CharCode.END;
     		default         : return null;
         }
     }
@@ -1084,7 +1084,7 @@ public class HTMLFile {
 			result.append(s.nextLine());
 		}
 		while(s.hasNextLine()){
-			result.append( Ch.NEW_LINE ).append(s.nextLine());
+			result.append( CharLiteral.NEW_LINE ).append(s.nextLine());
 		}
 		
 		s.close();
