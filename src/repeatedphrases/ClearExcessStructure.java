@@ -44,10 +44,10 @@ public class ClearExcessStructure{
 	 */
 	public static final Folder WRITE_TO = Folder.HTML_BOOKS_UNSTRUCTURED;
 	
-        public static void main(String[] args){
-            clearXSStruct(IO.DEFAULT_MSG);
-        }
-        
+    public static void main(String[] args){
+        clearXSStruct(IO.DEFAULT_MSG);
+    }
+    
 	/**
 	 * <p>Detects the html files in the directory <code>READ_FROM</code>, 
 	 * reads each of them, removes divs, blockquotes, imgs, non-breaking 
@@ -137,7 +137,7 @@ public class ClearExcessStructure{
                 if(h instanceof CharLiteral){
                     char c = ((CharLiteral)h).c;
                     return PhraseProducer.isPhraseChar(c);
-                } else{ //it's a Code
+                } else{ //it's a CharCode
                     return true; //IDK, but I can't think of any invisible characters that could be here after nbsp are removed.
                 }
             }
