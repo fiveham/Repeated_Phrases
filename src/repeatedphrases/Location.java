@@ -32,7 +32,6 @@ public class Location implements Comparable<Location>{
 	 */
 	private int index;
 	
-	
 	//Constructors
 	/**
 	 * <p>Constructs a Location with the specified index and filename.</p>
@@ -43,7 +42,6 @@ public class Location implements Comparable<Location>{
 		this.index = index;
 		this.filename = file;
 	}
-	
 	
 	//Getters
 	/**
@@ -61,7 +59,6 @@ public class Location implements Comparable<Location>{
 	public String getFilename(){
 		return filename;
 	}
-	
 	
 	//Information
 	@Override
@@ -97,13 +94,10 @@ public class Location implements Comparable<Location>{
 		}
 		
 		int fileComp = filename.compareTo(loc.filename);
-		if( fileComp!=0 ){
-			return fileComp;
-		}
-		
-		return index - loc.index;
+		return fileComp != 0 
+			? fileComp 
+			: Integer.compare(index, loc.index);
 	}
-	
 	
 	//Tools
 	@Override
@@ -139,9 +133,11 @@ public class Location implements Comparable<Location>{
 	 * Locations have different filenames
 	 */
 	public int minus(Location thatLocation){
-		if( !filename.equals(thatLocation.filename) )
+		if(filename.equals(thatLocation.filename)){
+			return this.index - thatLocation.index;
+		} else{
 			throw new IllegalArgumentException("mismatching filenames: "+filename+" and "+thatLocation.filename);
-		return this.index - thatLocation.index;
+		}
 	}
 	
 	/**
