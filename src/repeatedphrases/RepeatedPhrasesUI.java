@@ -1,7 +1,7 @@
 package repeatedphrases;
 
+import common.Folder;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -12,13 +12,6 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.border.LineBorder;
-
-import common.Folder;
-import operate.EnsureFolders;
-import operate.IsolateChaptersAndLink;
-import operate.LinksAndTrail;
-import operate.SetTrail;
-
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -30,7 +23,10 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
-
+import operate.EnsureFolders;
+import operate.IsolateChaptersAndLink;
+import operate.LinksAndTrail;
+import operate.SetTrail;
 
 /**
  * <p>The GUI for this application. Creates a small 
@@ -99,42 +95,22 @@ public class RepeatedPhrasesUI extends JFrame {
 
         createFoldersButton.setText("Create Folders");
         createFoldersButton.setToolTipText("Creates the folders needed for this program to work in the current working direcory");
-        createFoldersButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                createFoldersButtonActionPerformed(evt);
-            }
-        });
+        createFoldersButton.addActionListener(this::createFoldersButtonActionPerformed);
 
         chapterizeLinkButton.setToolTipText("Splits the books into chapters, finds linkable repeated phrases, and links them");
         chapterizeLinkButton.setText("Chapterize Books; Add Links");
-        chapterizeLinkButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                chapterizeLinkButtonActionPerformed(evt);
-            }
-        });
+        chapterizeLinkButton.addActionListener(this::chapterizeLinkButtonActionPerformed);
 
         changeOrderButton.setToolTipText("Changes the order of chapters used for linking to a phrase's next instance and for linking to previous and next chapters");
         changeOrderButton.setText("Change Chapter Order");
-        changeOrderButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                changeOrderButtonActionPerformed(evt);
-            }
-        });
+        changeOrderButton.addActionListener(this::changeOrderButtonActionPerformed);
 
         changeTrailButton.setText("Change Trail (Keep Link Order)");
         changeTrailButton.setToolTipText("Changes the order of chapters represented in previous- and next-chapter links without changing next-phrase-instance order");
-        changeTrailButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                changeTrailButtonActionPerformed(evt);
-            }
-        });
+        changeTrailButton.addActionListener(this::changeTrailButtonActionPerformed);
 
         exitButton.setText("Exit");
-        exitButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                exitButtonActionPerformed(evt);
-            }
-        });
+        exitButton.addActionListener(this::exitButtonActionPerformed);
 
         statusTitleLabel.setText("Status:");
 
@@ -252,13 +228,10 @@ public class RepeatedPhrasesUI extends JFrame {
      * @param evt 
      */
     private void createFoldersButtonActionPerformed(ActionEvent evt) {
-        buttonPress(createFoldersButton, "Creating needed folders", "Done: Put html books in "+Folder.HTML_BOOKS.folderName(), 
-        		new Runnable(){
-        	@Override
-        	public void run(){
-        		EnsureFolders.ensureFolders( statusLabelMsg );
-        	}
-        });
+        buttonPress(createFoldersButton, 
+        		"Creating needed folders", 
+        		"Done: Put html books in "+Folder.HTML_BOOKS.folderName(), 
+        		() -> EnsureFolders.ensureFolders(statusLabelMsg));
     }
 
     /**
@@ -267,13 +240,10 @@ public class RepeatedPhrasesUI extends JFrame {
      */
     private void chapterizeLinkButtonActionPerformed(ActionEvent evt) {
         String[] trailAndLimit = trailAndLimit();
-        buttonPress(chapterizeLinkButton, "Doing all the work ("+ trailAndLimit[0] +", "+ trailAndLimit[1] +")", 
-        		"Done: Chapters ready: "+Folder.READABLE.folderName(), new Runnable(){
-        	@Override
-        	public void run(){
-        		IsolateChaptersAndLink.isolateChaptersAndLink( trailAndLimit, statusLabelMsg );
-        	}
-        });
+        buttonPress(chapterizeLinkButton, 
+        		"Doing all the work ("+ trailAndLimit[0] +", "+ trailAndLimit[1] +")", 
+        		"Done: Chapters ready: "+Folder.READABLE.folderName(), 
+        		() -> IsolateChaptersAndLink.isolateChaptersAndLink(trailAndLimit, statusLabelMsg));
     }
 
     /**
@@ -282,13 +252,10 @@ public class RepeatedPhrasesUI extends JFrame {
      */
     private void changeOrderButtonActionPerformed(ActionEvent evt) {
         String[] trailAndLimit = trailAndLimit();
-        buttonPress(changeOrderButton, "Changing chapter order ("+ trailAndLimit[0] +", "+ trailAndLimit[1] +")", 
-        		"Done: Chapter order changed", new Runnable(){
-        	@Override
-        	public void run(){
-        		LinksAndTrail.linksAndTrail( trailAndLimit, statusLabelMsg );
-        	}
-        });
+        buttonPress(changeOrderButton, 
+        		"Changing chapter order ("+ trailAndLimit[0] +", "+ trailAndLimit[1] +")", 
+        		"Done: Chapter order changed", 
+        		() -> LinksAndTrail.linksAndTrail(trailAndLimit, statusLabelMsg));
     }
     
     /**
@@ -297,12 +264,10 @@ public class RepeatedPhrasesUI extends JFrame {
      */
     private void changeTrailButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_changeTrailButtonActionPerformed
         String trail = trailFileField.getText();
-        buttonPress(changeTrailButton, "Changing trail sequence ("+ trail +")", "Done: Trail changed to "+trail, new Runnable(){
-        	@Override
-        	public void run(){
-        		SetTrail.setTrail(new String[]{trail}, statusLabelMsg);
-        	}
-        });
+        buttonPress(changeTrailButton, 
+        		"Changing trail sequence ("+ trail +")", 
+        		"Done: Trail changed to "+trail, 
+        		() -> SetTrail.setTrail(new String[]{trail}, statusLabelMsg));
     }
     
     /**
