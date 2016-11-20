@@ -40,10 +40,10 @@ public class ClearExcessStructure{
 	 */
 	public static final Folder WRITE_TO = Folder.HTML_BOOKS_UNSTRUCTURED;
 	
-    public static void main(String[] args){
-        clearXSStruct(IO.DEFAULT_MSG);
-    }
-    
+	public static void main(String[] args){
+		clearXSStruct(IO.DEFAULT_MSG);
+	}
+	
 	/**
 	 * <p>Detects the html files in the directory <code>READ_FROM</code>, 
 	 * reads each of them, removes divs, blockquotes, imgs, non-breaking 
@@ -52,31 +52,31 @@ public class ClearExcessStructure{
 	 * @param args command-line arguments
 	 */
 	public static void clearXSStruct(Consumer<String> msg){
-        File[] readUs = READ_FROM.folder().listFiles(IO::isHtml);
-        for(File f : readUs){
-
-            msg.accept("Removing structure from "+f.getName());
-
-            try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName() + File.separator + f.getName() );){
-                HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
-
-                file.removeAll( Tag.IS_DIV );
-                file.removeAll( Tag.IS_BLOCKQUOTE );
-                file.removeAll( Tag.IS_IMG );
-                file.removeAll( CharCode.IS_NBSP );
-                removeEmptyP(file);
-                
-                file.print(out);
-                out.close();
-
-            } catch(FileNotFoundException e){
-                msg.accept("FileNotFoundException occured for file "+f.getName());
-            } catch(UnsupportedEncodingException e){
-                msg.accept("UnsupportedEncodingException occured for file "+f.getName());
-            } catch(IOException e){
-                msg.accept("IOException occured for file "+f.getName());
-            }
-        }
+		File[] readUs = READ_FROM.folder().listFiles(IO::isHtml);
+		for(File f : readUs){
+			
+			msg.accept("Removing structure from "+f.getName());
+			
+			try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName() + File.separator + f.getName() );){
+				HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
+				
+				file.removeAll( Tag.IS_DIV );
+				file.removeAll( Tag.IS_BLOCKQUOTE );
+				file.removeAll( Tag.IS_IMG );
+				file.removeAll( CharCode.IS_NBSP );
+				removeEmptyP(file);
+				
+				file.print(out);
+				out.close();
+				
+			} catch(FileNotFoundException e){
+				msg.accept("FileNotFoundException occured for file "+f.getName());
+			} catch(UnsupportedEncodingException e){
+				msg.accept("UnsupportedEncodingException occured for file "+f.getName());
+			} catch(IOException e){
+				msg.accept("IOException occured for file "+f.getName());
+			}
+		}
 	}
 	
 	/**
@@ -84,19 +84,19 @@ public class ClearExcessStructure{
 	 * <code>HTMLFile</code>.</p>
 	 */
 	private static void removeEmptyP(HTMLFile file){
-        HTMLFile.ParagraphIterator piter = file.paragraphIterator();
-        List<int[]> paragraphs = new ArrayList<>();
-        while(piter.hasNext()){
-            paragraphs.add(piter.next());
-        }
-
-        for(int i = paragraphs.size()-1; i >= 0; i--){
-            int[] bounds = paragraphs.get(i);
-
-            if( !isThereLiteralContent( file, bounds[0], bounds[1] ) ){
-                file.removeAll(bounds[0], bounds[1]);
-            }
-        }
+		HTMLFile.ParagraphIterator piter = file.paragraphIterator();
+		List<int[]> paragraphs = new ArrayList<>();
+		while(piter.hasNext()){
+			paragraphs.add(piter.next());
+		}
+		
+		for(int i = paragraphs.size()-1; i >= 0; i--){
+			int[] bounds = paragraphs.get(i);
+			
+			if( !isThereLiteralContent( file, bounds[0], bounds[1] ) ){
+				file.removeAll(bounds[0], bounds[1]);
+			}
+		}
 	}
 	
 	/**
@@ -110,11 +110,11 @@ public class ClearExcessStructure{
 	 * false otherwise.
 	 */
 	private static boolean isThereLiteralContent(HTMLFile file, int low, int top){
-        for(int i=low+1; i<top; i++){
-            if(file.get(i).isVisible()){
-                return true;
-            }
-        }
-        return false;
+		for(int i=low+1; i<top; i++){
+			if(file.get(i).isVisible()){
+				return true;
+			}
+		}
+		return false;
 	}
 }
