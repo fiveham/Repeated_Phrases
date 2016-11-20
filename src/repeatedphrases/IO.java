@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -81,14 +82,8 @@ public class IO {
 	 * it easier to distinguish which html chapters are from 
 	 * novels and which are from novellas.</p>
 	 */
-	public static final List<String> NOVELS = new ArrayList<>();
-	static{
-		NOVELS.add("AGOT");
-		NOVELS.add("ACOK");
-		NOVELS.add("ASOS");
-		NOVELS.add("AFFC");
-		NOVELS.add("ADWD");
-	}
+	public static final List<String> NOVELS = Arrays.asList(
+		"AGOT", "ACOK", "ASOS", "AFFC", "ADWD");
 	
 	/**
 	 * <p>Evaluates to true if a file's name ends with the HTML 
