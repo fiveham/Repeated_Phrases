@@ -290,7 +290,7 @@ public class SetTrail {
         List<String> lines = IO.fileContentsAsList(
         		new File(trailFilename), 
         		Scanner::nextLine, 
-        		IO.SCANNER_HAS_NONEMPTY_NEXT_LINE);
+        		IO::scannerHasNonEmptyNextLine);
         List<TrailElement> result = new ArrayList<>();
         for(String line : lines){
             String[] s = line.split("\t", COLUMN_COUNT);

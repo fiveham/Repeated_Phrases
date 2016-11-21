@@ -110,12 +110,9 @@ public class IO {
      */
     public static final Consumer<String> DEFAULT_MSG = System.out::println;
 	
-	/**
-	 * <p>Evaluates to true if a Scanner 
-	 * {@link java.util.Scanner#hasNextLine() has another line} and 
-	 * {@link java.util.Scanner#hasNext() has a next element} available.</p>
-	 */
-	public static final Predicate<Scanner> SCANNER_HAS_NONEMPTY_NEXT_LINE = (s) -> s.hasNextLine() && s.hasNext();
+	public static boolean scannerHasNonEmptyNextLine(Scanner s){
+		return s.hasNextLine() && s.hasNext();
+	}
 	
 	/**
 	 * <p>Evaluates to true if a file's name ends with the HTML 
