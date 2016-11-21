@@ -98,33 +98,36 @@ public class PhraseProducer implements Iterator<String>{
 	/**
 	 * <p>Initializes the value of {@link #phraseEnd phraseEnd}.</p>
 	 * @return the correct initial value of {@link #phraseEnd phraseEnd}
-	 * @throws IllegalArgumentException if {@link #filename filename} 
+	 * @throws IllegalStateException if {@link #filename filename} 
 	 * contains fewer than {@link #size size} words
 	 */
 	private int initPhraseEnd(){
 		int wordEndCount = 0;
 		for(int i=phraseStart+1; i<content.length(); i++){
-			if( !hasPhraseCharAt(i) && hasPhraseCharAt(i-1) && ++wordEndCount==size){
+			wordEndCount++;
+			if( !hasPhraseCharAt(i) 
+					&& hasPhraseCharAt(i-1) 
+					&& wordEndCount==size){
 				return i;
 			}
 		}
-		throw new IllegalArgumentException("File "+filename+" contains "+wordEndCount+" words, but needs "+size+".");
+		throw new IllegalStateException("File "+filename+" contains "+wordEndCount+" words, but needs "+size+".");
 	}
 	
 	/**
 	 * <p>Initializes {@link #phraseStart phraseStart}.</p>
 	 * @return the correct initial value of 
 	 * {@link #phraseStart phraseStart}
-	 * @throws IllegalArgumentException if {@link #filename filename} 
+	 * @throws IllegalStateException if {@link #content} 
 	 * doesn't contain any words
 	 */
 	private int initPhraseStart(){
 		for(int i=0; i<content.length(); i++){
-			if( hasPhraseCharAt(i) ){
+			if(hasPhraseCharAt(i)){
 				return i;
 			}
 		}
-		throw new IllegalArgumentException("File "+filename+" doesn't contain a word");
+		throw new IllegalStateException("File "+filename+" doesn't contain a word");
 	}
 	
 	/**
@@ -149,14 +152,14 @@ public class PhraseProducer implements Iterator<String>{
 	 * alphanumeric, apostrophe, hyphen, e-acute, or e-circumflex
 	 */
 	public static boolean isPhraseChar(Character c){
-		return c!=null 
+		return c != null 
 				&& (('a'<=c && c<='z') 
-				|| ('A'<=c && c<='Z') 
-				|| c=='\'' 
-				|| c=='-' 
-				|| ('0'<=c && c<='9') 
-				|| c==E_ACUTE 
-				|| c==E_CIRCUMFLEX);
+						|| ('A'<=c && c<='Z') 
+						|| c=='\'' 
+						|| c=='-' 
+						|| ('0'<=c && c<='9') 
+						|| c==E_ACUTE 
+						|| c==E_CIRCUMFLEX);
 	}
 	
 	public static final char E_ACUTE = '\u00E9';
@@ -197,7 +200,7 @@ public class PhraseProducer implements Iterator<String>{
 	 */
 	private int nextPhraseEnd(){
 		for(int i=phraseEnd+1; i<=content.length(); i++){
-			if( hasPhraseCharAt(i-1) && !hasPhraseCharAt(i) ){
+			if(hasPhraseCharAt(i-1) && !hasPhraseCharAt(i)){
 				return i;
 			}
 		}
@@ -212,30 +215,11 @@ public class PhraseProducer implements Iterator<String>{
 	 */
 	private int nextPhraseStart(){
 		for(int i=phraseStart+1; i<content.length(); i++){
-			if( !hasPhraseCharAt(i-1) && hasPhraseCharAt(i) ){
+			if(!hasPhraseCharAt(i-1) && hasPhraseCharAt(i)){
 				return i;
 			}
 		}
 		return content.length();
-	}
-	
-	/**
-	 * <p>Returns <code>(value + 1) % modValue</code>.</p>
-	 * <p>This implementation increments <code>value</code> then 
-	 * subtracts <code>modValue</code> from it if it exceeds 
-	 * <code>modValue</code> after incrementation. This is a valid 
-	 * implementation assuming that <code>0 &lte; value &lt; modValue</code>, 
-	 * which is always the case in this project.</p>
-	 * @param value the value whose modular successor 
-	 * is to be returned
-	 * @param modValue the value to be used for modulo
-	 * @return the modular successor of <code>value</code>, 
-	 * using <code>modValue</code> for the modulo operation.
-	 */
-	public int modSuccessor(int value, int modValue){
-		return (++value >= modValue)
-				? value-modValue
-				: value;
 	}
 	
 	/**
