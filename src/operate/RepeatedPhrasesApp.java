@@ -37,37 +37,37 @@ public class RepeatedPhrasesApp {
      */
     public static void isolateChaptersAndLink(String[] args, Consumer<String> msg) {
     	validateArgs(args, msg);
-
+    	
         ensureFolders(msg);
-
+        
         msg.accept("Newlining parargraphs");
         NewlineP.newlineP(msg);
-
+        
         msg.accept("Removing inconsistent divs etc");
         ClearExcessStructure.clearXSStruct(msg);
-
+        
         msg.accept("Removing non-chapter matter");
         ClearFrontAndBackMatter.clearFrontBack(msg);
-
+        
         msg.accept("Normalizing apostrophes");
         SwapApostrophes.swapApostrophes(msg);
-
+        
         msg.accept("Splitting books into chapters");
         SplitChapters.splitChapters(msg);
-
+        
         msg.accept("Creating plaintext corpus");
         HtmlToText.htmlToText(msg);
-
+        
         msg.accept("Finding repeat phrases in corpus");
         FindRepeatedPhrases.findRepPhrases(msg);
-
+        
         msg.accept("Ignoring dependent phrase-instances");
         RemoveDependentPhrases.rmDepPhrases(msg);
-
+        
         msg.accept("Ignoring unique independent instances");
         RemoveUniqueIndependents.rmUniqIndeps(msg);
-
-        linksAndTrail( args, msg );
+        
+        linksAndTrail(args, msg);
     }
     
     /**
@@ -84,35 +84,35 @@ public class RepeatedPhrasesApp {
         if( args.length < 1 ){
         	throw new IllegalArgumentException("I need a trail file.");
         }
-
+        
         String trail = args[0];
-
+        
         if( !(new File(trail)).exists() ){
             throw new IllegalArgumentException("I can't find that trail-file: \""+trail+"\".");
         }
-
+        
         if( args.length < 2 ){
             return IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR;
         }
-
+        
         try{
             return Integer.parseInt(args[1]);
         } catch(NumberFormatException e){
             return IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR;
         }
     }
-
+    
     public static void linksAndTrail(String[] args, Consumer<String> msg) {
-
+    	
         int limit = RepeatedPhrasesApp.validateArgs(args, msg);
         String[] trailArgs = new String[]{ args[0] };
-
+        
         msg.accept("Determining links to add to phrases");
         DetermineAnchors.determineAnchors( trailArgs, msg );
-
+        
         msg.accept("Adding links to html chapters");
         LinkChapters.linkChapters( new String[]{ Integer.toString(limit) }, msg );
-
+        
         msg.accept("Adding prev- and next-chapter links");
         SetTrail.setTrail( trailArgs, msg );
     }
