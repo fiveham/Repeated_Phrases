@@ -16,21 +16,23 @@ import common.IO;
 import operate.FindRepeatedPhrases;
 
 /**
- * <p>Wraps a HashMap linking string phrases with data structures 
+ * <p>Wraps a Map linking string phrases with data structures 
  * that store multiple Locations.</p>
+ * <p>{@link #printPhrasesWithLocations()} and {@link #removeUniques()} 
+ * are the non-wrapper methods that justify this being its own class.</p>
  */
 public class PhraseBox{
 	
 	/**
 	 * <p>The wrapped HashMap.</p>
 	 */
-	private final Map<String, List<Location>> hashmap;
+	private final Map<String, List<Location>> map;
 	
 	/**
 	 * <p>Constructs a PhraseBox with no contents.</p>
 	 */
 	public PhraseBox() {
-		hashmap = new HashMap<>();
+		map = new HashMap<>();
 	}
 	
 	/**
@@ -63,9 +65,9 @@ public class PhraseBox{
 	 */
 	public PhraseBox(Scanner scan){
 		try{
-			hashmap = new HashMap<>();
+			map = new HashMap<>();
 			
-			while(scan.hasNextLine() && scan.hasNext()){
+			while(IO.scannerHasNonEmptyNextLine(scan)){
 				String[] phraseAndLocations = scan.nextLine().split(IO.LOCATION_DELIM);
 				
 				String phrase = phraseAndLocations[0];
@@ -76,7 +78,7 @@ public class PhraseBox{
 					locs.add( new Location(Integer.parseInt(fileAndIndex[1]), fileAndIndex[0]) );
 				}
 				
-				hashmap.put(phrase, locs);
+				map.put(phrase, locs);
 			}
 			
 			scan.close();
@@ -92,7 +94,7 @@ public class PhraseBox{
 	 * that have mapped Locations in this PhraseBox.
 	 */
 	public Set<String> phrases(){
-		return hashmap.keySet();
+		return map.keySet();
 	}
 	
 	/**
@@ -102,12 +104,12 @@ public class PhraseBox{
 	 * @param location a location at which <code>phrase</code> occurs
 	 */
 	public void add(String phrase, Location location){
-		if(hashmap.containsKey(phrase)){
-			hashmap.get(phrase).add(location);
+		if(map.containsKey(phrase)){
+			map.get(phrase).add(location);
 		} else{
 			List<Location> l = new ArrayList<>();
 			l.add(location);
-			hashmap.put(phrase, l);
+			map.put(phrase, l);
 		}
 	}
 	
@@ -122,7 +124,7 @@ public class PhraseBox{
 	 * in the underlying HashMap
 	 */
 	public List<Location> get(Object phrase){
-		return hashmap.get(phrase);
+		return map.get(phrase);
 	}
 	
 	/**
@@ -132,7 +134,7 @@ public class PhraseBox{
 	 * in this PhraseBox
 	 */
 	public int size(){
-		return hashmap.size();
+		return map.size();
 	}
 	
 	/**
@@ -142,7 +144,7 @@ public class PhraseBox{
 	 * phrase-instance data, false otherwise
 	 */
 	public boolean isEmpty(){
-		return hashmap.isEmpty();
+		return map.isEmpty();
 	}
 	
 	/**
@@ -154,7 +156,7 @@ public class PhraseBox{
 	 * for <code>phrase</code>, false otherwise
 	 */
 	public boolean contains(String phrase){
-		return hashmap.containsKey(phrase);
+		return map.containsKey(phrase);
 	}
 	
 	/**
@@ -164,10 +166,10 @@ public class PhraseBox{
 	public void removeUniques(Consumer<String> msg){
 		final int initSize = size();
 		
-		List<String> keys = new ArrayList<>(hashmap.keySet());
+		List<String> keys = new ArrayList<>(map.keySet());
 		for(String phrase : keys ){
-			if(hashmap.get(phrase).size() <= FindRepeatedPhrases.UNIQUE_PHRASE_LOCATION_COUNT){
-				hashmap.remove(phrase);
+			if(map.get(phrase).size() <= FindRepeatedPhrases.UNIQUE_PHRASE_LOCATION_COUNT){
+				map.remove(phrase);
 			}
 		}
 		
@@ -183,9 +185,9 @@ public class PhraseBox{
 	 */
 	public void printPhrasesWithLocations(String phraseInstFileName){
 		try(OutputStreamWriter phraseInstanceFile = IO.newOutputStreamWriter(phraseInstFileName);){
-			for(String phrase : hashmap.keySet()){
+			for(String phrase : map.keySet()){
 				phraseInstanceFile.write( phrase );
-				List<Location> list = hashmap.get(phrase);
+				List<Location> list = map.get(phrase);
 				list.sort(null);
 				for( int i=0; i<list.size(); i++ ){
 					phraseInstanceFile.write( IO.LOCATION_DELIM + list.get(i).shortString() );
