@@ -75,7 +75,7 @@ public class PhraseBox{
 				List<Location> locs = new ArrayList<>(phraseAndLocations.length-1);
 				for(int i=1; i<phraseAndLocations.length; i++){
 					String[] fileAndIndex = phraseAndLocations[i].split(Location.ELEMENT_DELIM);
-					locs.add( new Location(Integer.parseInt(fileAndIndex[1]), fileAndIndex[0]) );
+					locs.add(new Location(Integer.parseInt(fileAndIndex[1]), fileAndIndex[0]));
 				}
 				
 				map.put(phrase, locs);
@@ -184,12 +184,12 @@ public class PhraseBox{
 	 * the phrase-instance data in this PhraseBox is written to a file
 	 */
 	public void printPhrasesWithLocations(String phraseInstFileName){
-		try(OutputStreamWriter phraseInstanceFile = IO.newOutputStreamWriter(phraseInstFileName);){
+		try(OutputStreamWriter phraseInstanceFile = IO.newOutputStreamWriter(phraseInstFileName)){
 			for(String phrase : map.keySet()){
-				phraseInstanceFile.write( phrase );
+				phraseInstanceFile.write(phrase);
 				List<Location> list = map.get(phrase);
 				list.sort(null);
-				for( int i=0; i<list.size(); i++ ){
+				for(int i=0; i<list.size(); i++){
 					phraseInstanceFile.write( IO.LOCATION_DELIM + list.get(i).shortString() );
 				}
 				phraseInstanceFile.write(IO.NEW_LINE);
