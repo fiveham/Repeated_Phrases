@@ -1,6 +1,5 @@
 package text;
 
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.io.File;
@@ -36,28 +35,13 @@ public class Database {
 	}
 	
 	/**
-	 * <p>Returns a HashMap mapping the int parts of the 
-	 * <code>IntString</code>s from <code>list</code> to the 
-	 * Strings paired with them.</p>
-	 * @param list a list of int-string pairs to be converted 
-	 * into a HashMap
-	 * @return a HashMap mapping the int parts of the 
-	 * <code>IntString</code>s from <code>list</code> to the 
-	 * Strings paired with them.
-	 */
-	private Map<Integer, String> mapFromIntString(List<Phrase> list){
-		return list.stream()
-				.collect(Collectors.toMap(Phrase::index, Phrase::phrase));
-	}
-	
-	/**
 	 * <p>Returns a shortened form of the specified String.</p>
 	 * @param phrase the phrase of which a shortened form will be returned
 	 * @return the first 25 characters of phrase + " ... " + the last 25 
 	 * characters if the phrase has 60 or more characters, else returns 
 	 * the entire phrase.
 	 */
-	public static String shortForm(String phrase){
+	private static String shortForm(String phrase){
 		if(phrase.length() < 60){
 			return phrase;
 		}
@@ -85,7 +69,8 @@ public class Database {
 			if( otherDatabase.textCorpus.contains(filename) ){
 				
 				//get a random-access representation of the current corpus file
-				Map<Integer, String> fileForLargePhrases = mapFromIntString(otherDatabase.textCorpus.get(filename));
+				Map<Integer, String> fileForLargePhrases = otherDatabase.textCorpus.get(filename).stream()
+						.collect(Collectors.toMap(Phrase::index, Phrase::phrase));
 				
 				//iterate over the phrase-instances for the current filename in this Database.
 				for(Phrase smallerPhraseInFile : textCorpus.get(filename)){

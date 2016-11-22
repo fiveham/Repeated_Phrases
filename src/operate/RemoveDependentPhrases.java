@@ -85,7 +85,7 @@ public class RemoveDependentPhrases {
                 Database largerPhrases = (smallerPhrases != null)
                         ? smallerPhrases
                         : new Database(new File( READ_FROM.filename(lowSize+1) ));
-                smallerPhrases = new Database(new File( READ_FROM.filename(lowSize) ));
+                smallerPhrases = new Database(new File(READ_FROM.filename(lowSize)));
 
                 smallerPhrases.phrasesIndependentOf(largerPhrases)
                         .printPhrasesWithLocations(WRITE_TO.filename(lowSize));
