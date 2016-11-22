@@ -12,12 +12,12 @@ import text.Database;
  * <p>This class searches the population of known phrases that occur more than once in 
  * the text of A Song of Ice and Fire and removes from an in-memory copy of that population 
  * all instances of such phrases that are part of an instance of some larger phrase. 
- * These phrase-instances to be removed are "dependent"; those that remain are "independent".</p>
+ * These quotes to be removed are "dependent"; those that remain are "independent".</p>
  * 
  * <p>Instead of actually removing these dependent phrases from the source from which they were 
- * obtained, new files are created containing only the independent phrase-instances.</p>
+ * obtained, new files are created containing only the independent quotes.</p>
  * 
- * <p>The files for independent phrase-instances are organized according to the 
+ * <p>The files for independent quotes are organized according to the 
  * number of words in their phrases.</p>
  */
 public class RemoveDependentPhrases {
@@ -35,14 +35,14 @@ public class RemoveDependentPhrases {
     public static final int LOW_SIZE_EXCLUSIVE_LOWER_BOUND = 0;//INIT_LOW_SIZE-2;
 
     /**
-     * <p>The directory from which this class reads phrase-instance 
+     * <p>The directory from which this class reads quote 
      * data.</p>
      * @see Folder#REPEATS
      */
     public static final Folder READ_FROM = Folder.REPEATS;
 
     /**
-     * <p>The directory to which this class writes phrase-instance 
+     * <p>The directory to which this class writes quote 
      * data for independent phrases.</p>
      * @see Folder#INDEPENDENT_INSTANCES
      */
@@ -66,9 +66,9 @@ public class RemoveDependentPhrases {
      * from one loop to the next and reused as the data for 
      * the plus-one size in the next loop.
      * 
-     * Prints to file all those phrase-instances of the 
+     * Prints to file all those quotes of the 
      * smaller phrase size specified in the current loop 
-     * that are independent of the larger phrase-instances 
+     * that are independent of the larger quotes 
      * in the current group of larger phrases.
      * 
      * If a problem occurs while reading a file, System.exit 

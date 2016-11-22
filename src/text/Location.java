@@ -19,7 +19,7 @@ public class Location implements Comparable<Location>{
 	public static final String ELEMENT_DELIM = ";";
 	
 	/**
-	 * <p>The file in which is located the phrase-instance 
+	 * <p>The file in which is located the quote 
 	 * to which this Location pertains.</p>
 	 */
 	private String filename;

@@ -61,7 +61,7 @@ public class RepeatedPhrasesApp {
         msg.accept("Finding repeat phrases in corpus");
         FindRepeatedPhrases.findRepPhrases(msg);
         
-        msg.accept("Ignoring dependent phrase-instances");
+        msg.accept("Ignoring dependent quotes");
         RemoveDependentPhrases.rmDepPhrases(msg);
         
         msg.accept("Ignoring unique independent instances");

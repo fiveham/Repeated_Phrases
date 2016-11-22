@@ -19,7 +19,7 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 	private final String phrase;
 	
 	/**
-	 * <p>The location in the corpus of the phrase-instance on 
+	 * <p>The location in the corpus of the quote on 
 	 * which this anchor is to be installed. This is used to create 
 	 * the value of the id attribute for the anchor tag, which some 
 	 * other anchor tag uses to locate and link to this anchor.</p>
@@ -39,9 +39,9 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 	 * the specified location to which to link.</p>
 	 * @param phrase the phrase of which two instances are linked by this 
 	 * anchor
-	 * @param position the {@code Location} of the phrase-instance on 
+	 * @param position the {@code Location} of the quote on 
 	 * which this anchor is installed
-	 * @param linkTo the {@code Location} of the phrase-instance to which 
+	 * @param linkTo the {@code Location} of the quote to which 
 	 * this anchor links
 	 */
 	public AnchorInfo(String phrase, Location position, Location linkTo) {
@@ -67,11 +67,11 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 	}
 	
 	/**
-	 * <p>Returns the word-index of this AnchorInfo's phrase-instance 
+	 * <p>Returns the word-index of this AnchorInfo's quote 
 	 * in its chapter source file. This is the literal int value 
 	 * from the second tab-delimited column on the line of an 
 	 * anchordata file pertaining to this AnchorInfo.</p>
-	 * @return the word-index of this AnchorInfo's phrase-instance 
+	 * @return the word-index of this AnchorInfo's quote 
 	 * in its chapter source file. This is the literal int value 
 	 * from the second tab-delimited column on the line of an 
 	 * anchordata file pertaining to this AnchorInfo.
@@ -106,7 +106,7 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 	 * the name of the html chapter file to which this object's 
 	 * represented link leads followed by a hash ("#") and the 
 	 * value of the id of the anchor in the linked file of the 
-	 * phrase-instance being linked.</p>
+	 * quote being linked.</p>
 	 * @param loc the destination of the link whose href value 
 	 * is returned
 	 * @return the value of the href attribute for the 
@@ -115,7 +115,7 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 	 * to which this object's 
 	 * represented link leads, followed by a hash ("#") and the 
 	 * value of the id of the anchor in the linked file of the 
-	 * phrase-instance being linked.
+	 * quote being linked.
 	 */
 	public static String href(Location loc){
 		String f = loc.getFilename();

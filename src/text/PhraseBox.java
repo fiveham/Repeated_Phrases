@@ -35,9 +35,9 @@ public class PhraseBox{
 	}
 	
 	/**
-	 * <p>Constructs a PhraseBox with the phrase-instance 
+	 * <p>Constructs a PhraseBox with the quote 
 	 * data contents of {@code f}.</p>
-	 * @param f the file whose phrase-instance data is to 
+	 * @param f the file whose quote data is to 
 	 * be put into this PhraseBox
 	 * @throws FileNotFoundException if {@code f} 
 	 * does not exist or cannot be read
@@ -47,10 +47,10 @@ public class PhraseBox{
 	}
 	
 	/**
-	 * <p>Constructs a PhraseBox with the phrase-instance 
+	 * <p>Constructs a PhraseBox with the quote 
 	 * data produced by {@code scan}. {@code scan.nextLine()} 
 	 * is called repeatedly, and each resulting line is 
-	 * parsed as a line from a phrase-instance data file, such 
+	 * parsed as a line from a quote data file, such 
 	 * as those written to Folder.REPEATS, 
 	 * Folder.INDEPENDENT_INSTANCES, or 
 	 * Folder.DUPLICATE_INDEPENDENTS. The line is 
@@ -60,7 +60,7 @@ public class PhraseBox{
 	 * in the underlying HashMap to a List of all the Locations 
 	 * represented in the rest of the line.</p>
 	 * @param scan a Scanner used to obtain lines from which 
-	 * phrase-instance data is read
+	 * quote data is read
 	 */
 	public PhraseBox(Scanner scan){
 		try{
@@ -138,20 +138,20 @@ public class PhraseBox{
 	
 	/**
 	 * <p>Returns true if this PhraseBox has no 
-	 * phrase-instance data, false otherwise.</p>
+	 * quote data, false otherwise.</p>
 	 * @return true if this PhraseBox has no 
-	 * phrase-instance data, false otherwise
+	 * quote data, false otherwise
 	 */
 	public boolean isEmpty(){
 		return map.isEmpty();
 	}
 	
 	/**
-	 * <p>Returns true if this PhraseBox has phrase-instance data 
+	 * <p>Returns true if this PhraseBox has quote data 
 	 * for {@code phrase}, false otherwise.</p>
 	 * @param phrase the phrase whose inclusion in this PhraseBox 
 	 * is determined
-	 * @return  true if this PhraseBox has phrase-instance data 
+	 * @return  true if this PhraseBox has quote data 
 	 * for {@code phrase}, false otherwise
 	 */
 	public boolean contains(String phrase){
@@ -159,7 +159,7 @@ public class PhraseBox{
 	}
 	
 	/**
-	 * <p>Removes from this PhraseBox all the phrase-instance data 
+	 * <p>Removes from this PhraseBox all the quote data 
 	 * for phrases that have only one associated Location.</p>
 	 */
 	public void removeUniques(Consumer<String> msg){
@@ -169,11 +169,11 @@ public class PhraseBox{
 	}
 	
 	/**
-	 * <p>Writes the phrase-instance data from this PhraseBox 
+	 * <p>Writes the quote data from this PhraseBox 
 	 * to a file via the OutputStreamWriter 
 	 * {@code phraseInstanceFile}.</p>
 	 * @param phraseInstanceFile an OutputStreamWriter by way of which 
-	 * the phrase-instance data in this PhraseBox is written to a file
+	 * the quote data in this PhraseBox is written to a file
 	 */
 	public void printPhrasesWithLocations(String phraseInstFileName){
 		try(OutputStreamWriter phraseInstanceFile = IO.newOutputStreamWriter(phraseInstFileName)){

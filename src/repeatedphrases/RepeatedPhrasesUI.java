@@ -104,7 +104,7 @@ public class RepeatedPhrasesUI extends JFrame {
         changeOrderButton.addActionListener(this::changeOrderButtonActionPerformed);
 
         changeTrailButton.setText("Change Trail (Keep Link Order)");
-        changeTrailButton.setToolTipText("Changes the order of chapters represented in previous- and next-chapter links without changing next-phrase-instance order");
+        changeTrailButton.setToolTipText("Changes the order of chapters represented in previous- and next-chapter links without changing next-quote order");
         changeTrailButton.addActionListener(this::changeTrailButtonActionPerformed);
 
         exitButton.setText("Exit");

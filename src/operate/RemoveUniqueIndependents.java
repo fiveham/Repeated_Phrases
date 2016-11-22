@@ -11,7 +11,7 @@ import common.IO;
 import text.Location;
 
 /**
- * <p>Reads the phrase-instance files from {@code READ_FROM} 
+ * <p>Reads the quote files from {@code READ_FROM} 
  * line by line and writes their contents, to corresponding 
  * files in {@code WRITE_TO}, except for lines containing 
  * only one Location.} The number of Locations represented 
@@ -23,15 +23,15 @@ import text.Location;
 public class RemoveUniqueIndependents {
 
     /**
-     * <p>The folder from which this class reads phrase-instance data for 
-     * independent phrase-instances including those with only one independent 
+     * <p>The folder from which this class reads quote data for 
+     * independent quotes including those with only one independent 
      * instance.</p>
      * @see Folder#INDEPENDENT_INSTANCES
      */
     public static final Folder READ_FROM = Folder.INDEPENDENT_INSTANCES;
 
     /**
-     * <p>The folder where the read-in phrase-instance data with the 
+     * <p>The folder where the read-in quote data with the 
      * unique independent instances removed are saved.</p>
      */
     public static final Folder WRITE_TO = Folder.DUPLICATE_INDEPENDENTS;

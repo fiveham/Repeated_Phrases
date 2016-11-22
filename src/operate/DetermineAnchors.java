@@ -20,24 +20,24 @@ import text.Quote;
 import text.PhraseBox;
 
 /**
- * <p>This class reads every phrase-instance from ASOIAF 
+ * <p>This class reads every quote from ASOIAF 
  * represented in the files in 
  * {@link #READ_FROM the folder for non-singular independent repeated phrases}, 
- * reorganizes that phrase-instance data by chapter, and 
+ * reorganizes that quote data by chapter, and 
  * saves it to {@link #WRITE_TO the folder for that}, 
  * where each chapter represented in the read-in data 
  * has its own output file. Each chapter-file produced 
  * contains on each line a phrase that needs anchor tags 
  * applied to it in the chapter's HTML file, the 
- * FindRepeatedPhrases-style word-index of that phrase-instance 
+ * FindRepeatedPhrases-style word-index of that quote 
  * in its original file, and the Location to which this 
- * phrase-instance, once its anchor tags are applied, needs to 
+ * quote, once its anchor tags are applied, needs to 
  * link.</p>
  */
 public class DetermineAnchors {
 	
 	/**
-	 * <p>The folder from which this class reads phrase-instance data.</p>
+	 * <p>The folder from which this class reads quote data.</p>
 	 */
 	public static final Folder READ_FROM = Folder.DUPLICATE_INDEPENDENTS;
 	
@@ -87,8 +87,8 @@ public class DetermineAnchors {
 		
 		//create a file for each chapter and fill it with phrases 
 		//that need to be tagged in that chapter, the locations in 
-		//that chapter at which those phrase-instances appear, and 
-		//references to the phrase-instances to which those phrase-
+		//that chapter at which those quotes appear, and 
+		//references to the quotes to which those phrase-
 		//instances need to link.
 		for(String chapter : filebox.filenames()){
 			msg.accept("Creating anchor data for "+chapter);

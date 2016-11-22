@@ -33,9 +33,9 @@ public class FileBox{
 	}
 	
 	/**
-	 * <p>Constructs a FileBox with all the phrase-instance 
+	 * <p>Constructs a FileBox with all the quote 
 	 * data contained in the specified File {@code f}.</p>
-	 * @param f a File from which to read phrase-instance data
+	 * @param f a File from which to read quote data
 	 * @throws FileNotFoundException when {@code f} does 
 	 * not exist or cannot be read
 	 */
@@ -44,10 +44,10 @@ public class FileBox{
 	}
 	
 	/**
-	 * <p>Constructs a FileBox containing the phrase-instance 
+	 * <p>Constructs a FileBox containing the quote 
 	 * data represented in the body that {@code scan} 
 	 * reads.</p>
-	 * @param scan a Scanner that produces phrase-instance 
+	 * @param scan a Scanner that produces quote 
 	 * data as though reading files that go in {@link #Folder.REPEATS REPEATS}, 
 	 * {@link #Folder.INDEPENDENT_INSTANCES INDEPENDENT_INSTANCES}, or 
 	 * {@link #Folder.DUPLICATE_INDEPENDENTS DUPLICATE_INDEPENDENTS}.
