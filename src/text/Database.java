@@ -151,11 +151,8 @@ public class Database {
 				//all entries in this Database from that corpus file 
 				//are independent of otherDatabase.
 				//Add all quotes for this filename to the output
-				for(Quote locatedPhrase : textCorpus.get(filename)){
-					result.add(
-							locatedPhrase.text(), 
-							new Location(locatedPhrase.index(), filename));
-				}
+				textCorpus.get(filename).forEach(
+						(lp) -> result.add(lp.text(), new Location(lp.index(), filename)));
 			}
 		}
 		
@@ -215,11 +212,8 @@ public class Database {
 					}
 				}
 			} else{
-				for(Quote locatedPhrase : textCorpus.get(filename)){
-					result.add(
-							locatedPhrase.text(), 
-							new Location(locatedPhrase.index(), filename));
-				}
+				textCorpus.get(filename).forEach(
+						(lp) -> result.add(lp.text(), new Location(lp.index(), filename)));
 			}
 		}
 		
