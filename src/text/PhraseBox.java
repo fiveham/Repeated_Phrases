@@ -1,5 +1,6 @@
 package text;
 
+import common.IO;
 import java.io.FileNotFoundException;
 import java.io.File;
 import java.io.IOException;
@@ -8,12 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.function.Consumer;
-
-import common.IO;
 import operate.FindRepeatedPhrases;
 
 /**
@@ -184,14 +182,14 @@ public class PhraseBox{
 				List<Location> list = map.get(phrase);
 				list.sort(null);
 				for(int i=0; i<list.size(); i++){
-					phraseInstanceFile.write( IO.LOCATION_DELIM + list.get(i).shortString() );
+					phraseInstanceFile.write(IO.LOCATION_DELIM + list.get(i).shortString());
 				}
 				phraseInstanceFile.write(IO.NEW_LINE);
 			}
 			
 			phraseInstanceFile.close();
 		} catch(IOException e){
-			throw new RuntimeException(IO.ERROR_EXIT_MSG + phraseInstFileName+" for writing" );
+			throw new RuntimeException(IO.ERROR_EXIT_MSG + phraseInstFileName+" for writing");
 		}
 	}
 }
