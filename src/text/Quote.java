@@ -33,6 +33,10 @@ public class Quote implements Comparable<Quote>{
 		return location.getIndex();
 	}
 	
+	public Location location(){
+		return location;
+	}
+	
 	public String text(){
 		return text;
 	}

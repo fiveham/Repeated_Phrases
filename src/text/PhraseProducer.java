@@ -8,7 +8,7 @@ import java.util.Iterator;
  * produces phrases with a certain {@link #size number} 
  * of words as substrings of the Chapter's body.</p>
  */
-public class PhraseProducer implements Iterator<String>{
+public class PhraseProducer implements Iterator<Quote>{
 	
 	/**
 	 * <p>A space ({@value}) used to separate words in 
@@ -91,7 +91,7 @@ public class PhraseProducer implements Iterator<String>{
 		int wordEndCount = 0;
 		for(int i=phraseStart+1; i<chapter.getBody().length(); i++){
 			wordEndCount++;
-			if( !hasPhraseCharAt(i) 
+			if(!hasPhraseCharAt(i) 
 					&& hasPhraseCharAt(i-1) 
 					&& wordEndCount==size){
 				return i;
@@ -171,9 +171,11 @@ public class PhraseProducer implements Iterator<String>{
 	 * @return the next phrase with {@code size} words from 
 	 * }content}
 	 */
-	public String next(){
+	public Quote next(){
 		outputCount++;
-		String out = chapter.getBody().substring(phraseStart, phraseEnd);
+		Quote out = new Quote(
+				new Location(outputCount, chapter.getName()), //XXX may be off by 1
+				chapter.getBody().substring(phraseStart, phraseEnd));
 		phraseStart = nextPhraseStart();
 		phraseEnd = nextPhraseEnd();
 		return out;
@@ -217,15 +219,5 @@ public class PhraseProducer implements Iterator<String>{
 	 */
 	public int size(){
 		return size;
-	}
-	
-	/**
-	 * <p>Returns the number of times this PhraseProducer has produced a 
-	 * phrase via {@link #next() next()}.</p>
-	 * @return the number of times this PhraseProducer has produced a 
-	 * phrase via {@link #next() next()}
-	 */
-	public int outputCount(){
-		return outputCount;
 	}
 }

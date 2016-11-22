@@ -13,6 +13,7 @@ import text.Chapter;
 import text.Corpus;
 import text.PhraseBox;
 import text.PhraseProducer;
+import text.Quote;
 
 /**
  * <p>Finds phrases that are repeated in the corpus and 
@@ -185,10 +186,10 @@ public class FindRepeatedPhrases {
 		PhraseBox corpusAsStructure = new PhraseBox();
 		
 		while(corpus.hasNext()){
-			String phrase = corpus.next();
-			String less = reducedPhrase(phrase);
-			if( repeatPhrasesForPrevSize.contains( less )){
-				corpusAsStructure.add(phrase, corpus.prevLocation());
+			Quote phrase = corpus.next();
+			String less = reducedPhrase(phrase.text());
+			if(repeatPhrasesForPrevSize.contains(less)){
+				corpusAsStructure.add(phrase.text(), phrase.location());
 			}
 		}
 		

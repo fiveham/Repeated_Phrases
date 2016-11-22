@@ -10,7 +10,7 @@ import java.util.List;
  * of the specified {@link #size size} as possible from each 
  * chapter.</p>
  */
-public class Corpus implements Iterator<String>{
+public class Corpus implements Iterator<Quote>{
 	
 	/**
 	 * <p>The number of words in the phrases this object produces.</p>
@@ -108,44 +108,12 @@ public class Corpus implements Iterator<String>{
 	 * @throws IllegalStateException when there is no next 
 	 * {@code size}-word phrase
 	 */
-	public String next(){
+	public Quote next(){
 		try{
 			updateBuffer();
-			previousLocation = new Location(
-					currentBuffer.outputCount(), 
-					chapters.get(chapterPointer).getName());
 			return currentBuffer.next();
 		} catch(IndexOutOfBoundsException e){
 			throw new IllegalStateException("No next phrase available.");
 		}
 	}
-	
-	/**
-	 * <p>Returns the Location of the last phrase returned from 
-	 * {@link #next() next}.</p>
-	 * 
-	 * <p>The information accessed is only updated before a result is 
-	 * returned from {@link #next() next()}.</p>
-	 * @return the {@link text.Location Location} of the 
-	 * last phrase returned from {@link #next() next()}.
-	 */
-	public Location prevLocation(){
-		if(previousLocation != null){
-			return previousLocation;
-		} else{
-			throw new IllegalStateException("No previous Location. No phrases have been output.");
-		}
-	}
-	
-	/**
-	 * <p>Stores the Location in the corpus of the previous 
-	 * phrase output by the underlying PhraseProducer.</p>
-	 * 
-	 * <p>A value is stored here each time {@link #next() next()} 
-	 * is called, just before it returns a result.</p>
-	 * 
-	 * <p>The stored value is output by 
-	 * {@link #prevLocation() prevLocation()}.</p>
-	 */
-	private Location previousLocation = null;
 }
