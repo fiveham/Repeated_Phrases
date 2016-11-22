@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -165,14 +166,7 @@ public class PhraseBox{
 	 */
 	public void removeUniques(Consumer<String> msg){
 		final int initSize = size();
-		
-		List<String> keys = new ArrayList<>(map.keySet());
-		for(String phrase : keys ){
-			if(map.get(phrase).size() <= FindRepeatedPhrases.UNIQUE_PHRASE_LOCATION_COUNT){
-				map.remove(phrase);
-			}
-		}
-		
+		map.entrySet().removeIf(e -> map.get(e.getKey()).size() <= FindRepeatedPhrases.UNIQUE_PHRASE_LOCATION_COUNT);
 		msg.accept("Removed "+ (initSize - size()) +" non-repeated terms");
 	}
 	
