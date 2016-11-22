@@ -5,17 +5,17 @@ package text;
  * Pairs a phrase with its word-index in the chapter 
  * from which it comes.</p>
  */
-public class Phrase implements Comparable<Phrase>{
+public class Quote implements Comparable<Quote>{
 	
 	/**
 	 * <p>A phrase from the body of text being analysed.</p>
 	 */
-	public final String phrase;
+	private final String text;
 	
 	/**
 	 * <p><code>phrase</code>'s word-index in its source chapter.</p>
 	 */
-	public final int index;
+	private final Location location;
 	
 	/**
 	 * <p>Constructs an <code>IntString</code> with the specified 
@@ -24,17 +24,17 @@ public class Phrase implements Comparable<Phrase>{
 	 * chapter
 	 * @param phrase a phrase from the body of text being analysed
 	 */
-	public Phrase(int index, String phrase) {
-		this.index = index;
-		this.phrase = phrase;
+	public Quote(Location location, String phrase) {
+		this.location = location;
+		this.text = phrase;
 	}
 	
 	public int index(){
-		return index;
+		return location.getIndex();
 	}
 	
-	public String phrase(){
-		return phrase;
+	public String text(){
+		return text;
 	}
 	
 	@Override
@@ -51,20 +51,20 @@ public class Phrase implements Comparable<Phrase>{
 	 * <code>phrase</code>.
 	 */
 	public String toString(){
-		return index+Location.ELEMENT_DELIM+phrase;
+		return index()+Location.ELEMENT_DELIM+text;
 	}
 	
 	/**
-	 * <p>Compares the specified IntString to this one.</p>
-	 * @param otherIntString the IntString to be compared to this one.
+	 * <p>Compares the specified Quote to this one.</p>
+	 * @param otherQuote the Quote to be compared to this one.
 	 * @return an int whose sign indicates the natural 
-	 * ordering between this IntString and the specified one.
+	 * ordering between this Quote and the specified one.
 	 */
 	@Override
-	public int compareTo(Phrase otherIntString){
-		if(index != otherIntString.index){
-			return Integer.compare(index, otherIntString.index);
+	public int compareTo(Quote otherQuote){
+		if(index() != otherQuote.index()){
+			return Integer.compare(index(), otherQuote.index());
 		}
-		return phrase.compareTo(otherIntString.phrase);
+		return text.compareTo(otherQuote.text);
 	}
 }

@@ -70,10 +70,10 @@ public class Database {
 				
 				//get a random-access representation of the current corpus file
 				Map<Integer, String> fileForLargePhrases = otherDatabase.textCorpus.get(filename).stream()
-						.collect(Collectors.toMap(Phrase::index, Phrase::phrase));
+						.collect(Collectors.toMap(Quote::index, Quote::text));
 				
 				//iterate over the phrase-instances for the current filename in this Database.
-				for(Phrase smallerPhraseInFile : textCorpus.get(filename)){
+				for(Quote phraseHere : textCorpus.get(filename)){
 					
 					//Phrases from the other Database that could possibly contain 
 					//the phrase component of the current phrase-index pair.
@@ -86,25 +86,25 @@ public class Database {
 					
 					//the larger-sized phrase starting one word earlier in the file 
 					//than smallerPhraseInFile does
-					String largerPhraseWithIndexOneLess = smallerPhraseInFile.index == 0 
+					String largerPhraseWithIndexOneLess = phraseHere.index() == 0 
 							? null 
-							: fileForLargePhrases.get(smallerPhraseInFile.index-1);
+							: fileForLargePhrases.get(phraseHere.index()-1);
 					
 					//the larger-sized phrase starting at the same location in the file 
 					//as smallerPhraseInFile
-					String largerPhraseWithSameIndex = fileForLargePhrases.size() == smallerPhraseInFile.index 
+					String largerPhraseWithSameIndex = fileForLargePhrases.size() == phraseHere.index() 
 							? null
-							: fileForLargePhrases.get(smallerPhraseInFile.index);
+							: fileForLargePhrases.get(phraseHere.index());
 					
 					//If either of the possible subsuming phrases contains the current phrase 
 					//at the proper location in itself, then 
 					Boolean lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase = largerPhraseWithIndexOneLess == null
 							? null
-							: largerPhraseWithIndexOneLess.endsWith(smallerPhraseInFile.phrase);
+							: largerPhraseWithIndexOneLess.endsWith(phraseHere.text());
 					
 					Boolean sameIndexLargerPhraseExistsAndStartsWithSmallPhrase = largerPhraseWithSameIndex == null
 							? null
-							: largerPhraseWithSameIndex.startsWith(smallerPhraseInFile.phrase);
+							: largerPhraseWithSameIndex.startsWith(phraseHere.text());
 					
 					if( lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase == null 
 							&& sameIndexLargerPhraseExistsAndStartsWithSmallPhrase == null ){
@@ -114,7 +114,7 @@ public class Database {
 						//There's no phrase in otherDatabase that subsumes this phrase
 						//the phrase in focus from this Database is independent of otherDatabase; 
 						//so, the current small phrase should be added to the output.
-						result.add(smallerPhraseInFile.phrase, new Location(smallerPhraseInFile.index, filename));
+						result.add(phraseHere.text(), new Location(phraseHere.index(), filename));
 					} else if( !((lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase  == null 
 							||    lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase  == true) 
 							||   (sameIndexLargerPhraseExistsAndStartsWithSmallPhrase == null 
@@ -133,7 +133,7 @@ public class Database {
 						//the way its location demands, which is impossible.
 						
 						throw new IllegalStateException(
-								"The smaller phrase \""+shortForm(smallerPhraseInFile.phrase)+
+								"The smaller phrase \""+shortForm(phraseHere.text())+
 								"\" is contained at the proper location in zero or one of the two larger phrases that could contain it: " +  
 								"Phrase at some index in file "+filename+": \""+
 								shortForm(largerPhraseWithIndexOneLess)+"\" --- " + 
@@ -149,8 +149,61 @@ public class Database {
 				//all entries in this Database from that corpus file 
 				//are independent of otherDatabase.
 				//Add all phrase-instances for this filename to the output
-				for(Phrase locatedPhrase : textCorpus.get(filename) ){
-					result.add(locatedPhrase.phrase, new Location(locatedPhrase.index, filename) );
+				for(Quote locatedPhrase : textCorpus.get(filename) ){
+					result.add(locatedPhrase.text(), new Location(locatedPhrase.index(), filename) );
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	private PhraseBox actualPhrasesIndependentOf(Database largerDatabase){
+		PhraseBox result = new PhraseBox();
+		
+		for(String filename : textCorpus.filenames()){
+			if(largerDatabase.textCorpus.contains(filename)){
+				
+				Map<Integer, String> fileForLargePhrases = largerDatabase.textCorpus.get(filename).stream()
+						.collect(Collectors.toMap(Quote::index, Quote::text));
+				
+				for(Quote phraseHere : textCorpus.get(filename)){
+					
+					String largerPhraseWithIndexOneLess = phraseHere.index() == 0 
+							? null 
+							: fileForLargePhrases.get(phraseHere.index()-1);
+					
+					String largerPhraseWithSameIndex = fileForLargePhrases.size() == phraseHere.index() 
+							? null
+							: fileForLargePhrases.get(phraseHere.index());
+					
+					Boolean lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase = largerPhraseWithIndexOneLess == null
+							? null
+							: largerPhraseWithIndexOneLess.endsWith(phraseHere.text());
+					
+					Boolean sameIndexLargerPhraseExistsAndStartsWithSmallPhrase = largerPhraseWithSameIndex == null
+							? null
+							: largerPhraseWithSameIndex.startsWith(phraseHere.text());
+					
+					if( lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase == null 
+							&& sameIndexLargerPhraseExistsAndStartsWithSmallPhrase == null ){
+						result.add(phraseHere.text(), new Location(phraseHere.index(), filename));
+					} else if( !((lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase  == null 
+							||    lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase  == true) 
+							||   (sameIndexLargerPhraseExistsAndStartsWithSmallPhrase == null 
+							||    sameIndexLargerPhraseExistsAndStartsWithSmallPhrase == true)) ){
+						throw new IllegalStateException(
+								"The smaller phrase \""+shortForm(phraseHere.text())+
+								"\" is contained at the proper location in zero or one of the two larger phrases that could contain it: " +  
+								"Phrase at some index in file "+filename+": \""+
+								shortForm(largerPhraseWithIndexOneLess)+"\" --- " + 
+								"Phrase at some index in file "+filename+": \""+
+								shortForm(largerPhraseWithSameIndex)+"\".");
+					}
+				}
+			} else{
+				for(Quote locatedPhrase : textCorpus.get(filename) ){
+					result.add(locatedPhrase.text(), new Location(locatedPhrase.index(), filename) );
 				}
 			}
 		}

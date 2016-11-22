@@ -228,7 +228,7 @@ public class HTMLFile {
 	 * word in this HTMLFile, specified by <code>a</code>'s 
 	 * {@link AnchorInfo#position position} after the word at 
 	 * that position is verified as the first word of <code>a</code>'s 
-	 * {@link AnchorInfo#phrase phrase}. The link added via 
+	 * {@link AnchorInfo#text phrase}. The link added via 
 	 * these tags links to <code>a</code>'s {@link AnchorInfo#linkTo destination}.</p>
 	 * @param a an AnchorInfo specifying everything needed to 
 	 * create a link from one repeated phrase in this HTMLFile 

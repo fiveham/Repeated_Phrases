@@ -5,16 +5,17 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
 import common.IO;
 
 /**
- * <p>Wraps a HashMap linking String filenames with data 
+ * <p>Wraps a Map linking chapter filenames with data 
  * structures that store pairs of String and int. 
- * This is used to store phrase-instance data in a way 
- * that enables all the phrase-instances for a given 
+ * This is used to store quote data in a way 
+ * that enables all the quotes from a given 
  * chapter to be accessed easily.</p>
  */
 public class FileBox{
@@ -22,7 +23,7 @@ public class FileBox{
 	/**
 	 * <p>The wrapped HashMap.</p>
 	 */
-	private final HashMap<String, List<Phrase>> hashmap;
+	private final Map<String, List<Quote>> hashmap;
 	
 	/**
 	 * <p>Constructs a FileBox with no contents.</p>
@@ -55,7 +56,7 @@ public class FileBox{
 		try{
 			hashmap = new HashMap<>();
 			
-			while(scan.hasNextLine() && scan.hasNext()){
+			while(IO.scannerHasNonEmptyNextLine(scan)){
 				String[] phraseAndLocations = scan.nextLine().split(IO.LOCATION_DELIM);
 				
 				String phrase = phraseAndLocations[0];
@@ -64,13 +65,15 @@ public class FileBox{
 					String[] fileAndIndex = phraseAndLocations[i].split(Location.ELEMENT_DELIM);
 					String filename = fileAndIndex[0];
 					
-					Phrase is = new Phrase(Integer.parseInt(fileAndIndex[1]), phrase);
+					Quote quote = new Quote(
+							new Location(Integer.parseInt(fileAndIndex[1]), filename), 
+							phrase);
 					
-					if( hashmap.containsKey(filename) ){
-						hashmap.get(filename).add( is );
+					if(hashmap.containsKey(filename)){
+						hashmap.get(filename).add(quote);
 					} else{
-						List<Phrase> l = new ArrayList<>();
-						l.add( is );
+						List<Quote> l = new ArrayList<>();
+						l.add(quote);
 						hashmap.put(filename, l);
 					}
 				}
@@ -105,16 +108,6 @@ public class FileBox{
 		return hashmap.size();
 	}
 	
-	/*public void add(String phrase, Location location){
-		if(hashmap.containsKey(phrase)){
-			hashmap.get(phrase).add(location);
-		} else{
-			List<Location> l = new ArrayList<>();
-			l.add(location);
-			hashmap.put(phrase, l);
-		}
-	}/**/
-	
 	/**
 	 * <p>Returns the {@literal List<IntString>} mapped in the 
 	 * underlying HashMap for the key <code>o</code>. Returns 
@@ -125,9 +118,9 @@ public class FileBox{
 	 * @return the {@literal List<IntString>} mapped in the 
 	 * underlying HashMap for the key <code>o</code>
 	 */
-	public List<Phrase> get(Object o){
+	public List<Quote> get(Object o){
 		return hashmap.get(o);
-	}/**/
+	}
 	
 	/**
 	 * <p>Returns true if there is an entry for <code>filename</code> 

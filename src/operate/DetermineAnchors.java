@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 
 import text.FileBox;
 import text.Location;
-import text.Phrase;
+import text.Quote;
 import text.PhraseBox;
 
 /**
@@ -97,17 +97,17 @@ public class DetermineAnchors {
 			
 			try(OutputStreamWriter out = IO.newOutputStreamWriter( name );){
 				
-				List<Phrase> phrases = filebox.get(chapter);
-				phrases.sort(null);
+				List<Quote> quotes = filebox.get(chapter);
+				quotes.sort(null);
 				
-				for(Phrase positionedPhrase : phrases){
-					String phrase = positionedPhrase.phrase;
+				for(Quote positionedPhrase : quotes){
+					String phrase = positionedPhrase.text();
 					
 					List<Location> locs = phrasebox.get(phrase);
 					
-					Location linkTo = locAfter(locs, chapter, positionedPhrase.index);
+					Location linkTo = locAfter(locs, chapter, positionedPhrase.index());
 					
-					out.write( phrase + IO.LOCATION_DELIM + positionedPhrase.index + IO.LOCATION_DELIM + linkTo.toString() + IO.NEW_LINE);
+					out.write( phrase + IO.LOCATION_DELIM + positionedPhrase.index() + IO.LOCATION_DELIM + linkTo.toString() + IO.NEW_LINE);
 				}
 				
 				out.close();
