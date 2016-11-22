@@ -30,16 +30,16 @@ public class Chapter {
 	}
 	
 	/**
-	 * <p>Returns <code>filename</code>.</p>
-	 * @return <code>filename</code>
+	 * <p>Returns {@code filename}.</p>
+	 * @return {@code filename}
 	 */
 	public String getName(){
 		return filename;
 	}
 	
 	/**
-	 * <p>Returns <code>body</code>.</p>
-	 * @return <code>body</code>
+	 * <p>Returns {@code body}.</p>
+	 * @return {@code body}
 	 */
 	public String getBody(){
 		return body;

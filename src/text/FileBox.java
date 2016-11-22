@@ -34,9 +34,9 @@ public class FileBox{
 	
 	/**
 	 * <p>Constructs a FileBox with all the phrase-instance 
-	 * data contained in the specified File <code>f</code>.</p>
+	 * data contained in the specified File {@code f}.</p>
 	 * @param f a File from which to read phrase-instance data
-	 * @throws FileNotFoundException when <code>f</code> does 
+	 * @throws FileNotFoundException when {@code f} does 
 	 * not exist or cannot be read
 	 */
 	public FileBox(File f) throws FileNotFoundException{
@@ -45,7 +45,7 @@ public class FileBox{
 	
 	/**
 	 * <p>Constructs a FileBox containing the phrase-instance 
-	 * data represented in the body that <code>scan</code> 
+	 * data represented in the body that {@code scan} 
 	 * reads.</p>
 	 * @param scan a Scanner that produces phrase-instance 
 	 * data as though reading files that go in {@link #Folder.REPEATS REPEATS}, 
@@ -110,24 +110,24 @@ public class FileBox{
 	
 	/**
 	 * <p>Returns the {@literal List<IntString>} mapped in the 
-	 * underlying HashMap for the key <code>o</code>. Returns 
-	 * <code>null</code> if there is no mapping for <code>o</code> 
+	 * underlying HashMap for the key {@code o}. Returns 
+	 * {@code null} if there is no mapping for {@code o} 
 	 * in the underlying HashMap.</p>
 	 * @param o the key filename whose value {@literal List<IntString>} 
 	 * is to be returned
 	 * @return the {@literal List<IntString>} mapped in the 
-	 * underlying HashMap for the key <code>o</code>
+	 * underlying HashMap for the key {@code o}
 	 */
 	public List<Quote> get(Object o){
 		return hashmap.get(o);
 	}
 	
 	/**
-	 * <p>Returns true if there is an entry for <code>filename</code> 
+	 * <p>Returns true if there is an entry for {@code filename} 
 	 * in this FileBox, false otherwise.</p>
 	 * @param filename the filename whose status as a key in the 
 	 * underlying HashMap is returned
-	 * @return true if there is an entry for <code>filename</code> 
+	 * @return true if there is an entry for {@code filename} 
 	 * in this FileBox, false otherwise.
 	 */
 	public boolean contains(String filename){

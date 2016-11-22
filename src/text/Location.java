@@ -67,7 +67,7 @@ public class Location implements Comparable<Location>{
 	 * this Location.</p>
 	 * @param o object to be tested for equality against 
 	 * this Location.
-	 * @return true if <code>o</code> is a Location and its 
+	 * @return true if {@code o} is a Location and its 
 	 * components are equal to those of this Location, 
 	 * false otherwise.
 	 */
@@ -86,7 +86,7 @@ public class Location implements Comparable<Location>{
 	 * <p>Compares the specified Location to this one.</p>
 	 * @param loc a Location to be compared to this one.
 	 * @return an int whose sign indicates the natural 
-	 * ordering between this Location and <code>loc</code>.
+	 * ordering between this Location and {@code loc}.
 	 */
 	public int compareTo(Location loc){
 		if(equals(loc)){
@@ -115,15 +115,15 @@ public class Location implements Comparable<Location>{
 	/**
 	 * <p>Returns a string representation of this Location 
 	 * lacking any folders or file-extensions mentioned in 
-	 * <code>filename</code>.</p>
+	 * {@code filename}.</p>
 	 */
 	public String shortString(){
 		return IO.stripFolderExtension(filename) + ELEMENT_DELIM + index;
 	}
 	
 	/**
-	 * <p>Subtracts <code>thatLocation.index</code> 
-	 * from <code>index</code> and returns the result. 
+	 * <p>Subtracts {@code thatLocation.index} 
+	 * from {@code index} and returns the result. 
 	 * Throws an exception if these are Locations 
 	 * in different files.</p>
 	 * @param thatLocation a Location whose index 
@@ -141,13 +141,13 @@ public class Location implements Comparable<Location>{
 	}
 	
 	/**
-	 * <p>Adds <code>indx</code> to <code>this.index</code> and 
-	 * creates a new Location with <code>filename</code> and 
-	 * <code>this.index + indx</code> as its {@link #index index}.</p>
-	 * @param indx a value to be added to <code>index</code>
+	 * <p>Adds {@code indx} to {@code this.index} and 
+	 * creates a new Location with {@code filename} and 
+	 * {@code this.index + indx} as its {@link #index index}.</p>
+	 * @param indx a value to be added to {@code index}
 	 * @return a new Location with the same filename as this one 
 	 * and an {@link #index index} equal to the sum of 
-	 * <code>index</code> and <code>indx</code>
+	 * {@code index} and {@code indx}
 	 */
 	public Location add(int indx){
 		return new Location(index+indx, filename);

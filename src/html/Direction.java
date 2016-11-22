@@ -13,10 +13,10 @@ import java.util.function.IntUnaryOperator;
  * that the specified position is not outside the bounds 
  * of the specified collection.</p>
  * 
- * <p>For rightward motion, <code>crawlTest</code> tests 
+ * <p>For rightward motion, {@code crawlTest} tests 
  * that the specified position is less than the size of 
  * the specified collection. For leftward motion, 
- * <code>crawlTest</code> tests that the specified 
+ * {@code crawlTest} tests that the specified 
  * position is non-negative and therefore not less than 
  * the minimum position in the collection.</p>
  * 
@@ -51,12 +51,12 @@ public enum Direction{
 	/**
 	 * <p>Applies this Direction's operation to the specified 
 	 * position in a collection and returns the result.
-	 * For {@link #NEXT NEXT}, returns <code>i+1</code>.
-	 * For {@link #PREV PREV}, returns <code>i-1</code>.</p>
+	 * For {@link #NEXT NEXT}, returns {@code i+1}.
+	 * For {@link #PREV PREV}, returns {@code i-1}.</p>
 	 * @param i position in a collection, for which the 
 	 * next position is generated and returned.
 	 * @return the next position in a collection after 
-	 * the specified position <code>i</code>.
+	 * the specified position {@code i}.
 	 */
 	public int apply(int i){
 		return op.applyAsInt(i);
@@ -72,10 +72,10 @@ public enum Direction{
 	 * greater than or equal to 0, the lower bound 
 	 * of any collection, false otherwise.</p>
 	 * @param i a position in the collection.
-	 * @param c the collection against whose bounds <code>i</code> 
+	 * @param c the collection against whose bounds {@code i} 
 	 * is compared
-	 * @return true if <code>i</code> is within the bounds 
-	 * of <code>c</code>, false otherwise.
+	 * @return true if {@code i} is within the bounds 
+	 * of {@code c}, false otherwise.
 	 */
 	public boolean crawlTest(int i, Collection<?> c){
 		return crawlTest.test(i,c);

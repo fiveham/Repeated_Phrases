@@ -17,9 +17,9 @@ public class CharLiteral extends HTMLEntity {
 	
 	/**
 	 * <p>Constructs a Ch wrapping the specified literal 
-	 * character <code>c</code>.</p>
+	 * character {@code c}.</p>
 	 * @param c the literal character to wrap as an 
-	 * <code>HTMLEntity</code>.
+	 * {@code HTMLEntity}.
 	 */
 	public CharLiteral(char c) {
 		this.c = c;
@@ -30,9 +30,9 @@ public class CharLiteral extends HTMLEntity {
 	 * <p>Returns a string representation of this Ch. If 
 	 * the wrapped literal character is a newline ('\n'), 
 	 * then a system-dependent newline is returned (via 
-	 * <code>System.getProperty("line.separator")</code>), 
+	 * {@code System.getProperty("line.separator")}), 
 	 * otherwise returns a string consisting of exactly the 
-	 * wrapped literal character <code>c</code>.</p>
+	 * wrapped literal character {@code c}.</p>
 	 * @return a string representation of this Ch: the 
 	 * literal wrapped character or a system-dependent 
 	 * newline if the wrapped character is '\n'.
@@ -48,9 +48,9 @@ public class CharLiteral extends HTMLEntity {
 	
 	@Override
 	/**
-	 * <p>Returns true if <code>o</code> is a <code>Ch</code> 
+	 * <p>Returns true if {@code o} is a {@code Ch} 
 	 * and wraps the name character as this Ch, false otherwise.</p>
-	 * @return  true if <code>o</code> is a <code>Ch</code> 
+	 * @return  true if {@code o} is a {@code Ch} 
 	 * and wraps the name character as this Ch, false otherwise.
 	 */
 	public boolean equals(Object o){
@@ -60,7 +60,7 @@ public class CharLiteral extends HTMLEntity {
 	@Override
 	/**
 	 * <p>Returns a plaintext representation of this Ch: 
-	 * the result returned by <code>toString()</code>.</p>
+	 * the result returned by {@code toString()}.</p>
 	 */
 	public String txtString(){
 		return toString();

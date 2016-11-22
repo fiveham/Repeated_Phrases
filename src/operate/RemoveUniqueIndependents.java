@@ -11,12 +11,12 @@ import common.IO;
 import text.Location;
 
 /**
- * <p>Reads the phrase-instance files from <code>READ_FROM</code> 
+ * <p>Reads the phrase-instance files from {@code READ_FROM} 
  * line by line and writes their contents, to corresponding 
- * files in <code>WRITE_TO</code>, except for lines containing 
- * only one Location.</code> The number of Locations represented 
+ * files in {@code WRITE_TO}, except for lines containing 
+ * only one Location.} The number of Locations represented 
  * on a line is determined by accounting for the semicolon 
- * (<code>Location.ELEMENT_DELIM</code>) used to separate the 
+ * ({@code Location.ELEMENT_DELIM}) used to separate the 
  * two components of a Location 
  * {@link java.lang.String#toString() in string form}.</p>
  */
@@ -41,9 +41,9 @@ public class RemoveUniqueIndependents {
     }
 
     /**
-     * <p>Reads each file from <code>READ_FROM</code> and prints only the 
+     * <p>Reads each file from {@code READ_FROM} and prints only the 
      * lines of each file that have more than one Location to a corresponding 
-     * file in <code>WRITE_TO</code>.</p>
+     * file in {@code WRITE_TO}.</p>
      * @param args command-line arguments (unused)
      */
     public static void rmUniqIndeps(Consumer<String> msg) {

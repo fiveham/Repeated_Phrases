@@ -42,7 +42,7 @@ public class PhraseProducer implements Iterator<String>{
 	/**
 	 * <p>All the words from the file whose name is passed to 
 	 * the constructor are stored in this String, with one 
-	 * instance of <code>WORD_SEPARATOR</code> between each 
+	 * instance of {@code WORD_SEPARATOR} between each 
 	 * pair of adjacent words.</p>
 	 */
 	private final String content;
@@ -55,31 +55,31 @@ public class PhraseProducer implements Iterator<String>{
 	private final String filename;
 	
 	/**
-	 * <p>Index in <code>content</code> of the first character of the next 
+	 * <p>Index in {@code content} of the first character of the next 
 	 * phrase that this PhraseProducer will produce, or, if there are not 
-	 * enough words left ahead of this point in <code>content</code> for 
-	 * this PhraseProducer to produce any more phrases with <code>size</code> 
+	 * enough words left ahead of this point in {@code content} for 
+	 * this PhraseProducer to produce any more phrases with {@code size} 
 	 * words, this is the index of the first letter of the second word of 
 	 * the last phrase this object outputs.</p>
 	 */
 	private int phraseStart;
 	
 	/**
-	 * <p>Index in <code>content</code> of the first character after the last 
+	 * <p>Index in {@code content} of the first character after the last 
 	 * word of the next phrase this object will output, or content.length() 
 	 * if there are no more phrases for this object to output.</p>
 	 */
 	private int phraseEnd;
 	
 	/**
-	 * <p>Constructs a PhraseProducer that extracts phrases with <code>size</code> 
-	 * words from the {@link Chapter#getBody() body} of <code>chapter</code> as 
+	 * <p>Constructs a PhraseProducer that extracts phrases with {@code size} 
+	 * words from the {@link Chapter#getBody() body} of {@code chapter} as 
 	 * {@link java.lang.String#substring(int,int) substrings}.</p>
 	 * @param size the number of words in the phrases produced.
 	 * @param chapter the Chapter whose {@link Chapter#getBody() body} 
 	 * backs all the phrases this PhraseProducer produces
-	 * @throws IllegalArgumentException if <code>chapter</code>'s body 
-	 * has no words or fewer than <code>size</code> words
+	 * @throws IllegalArgumentException if {@code chapter}'s body 
+	 * has no words or fewer than {@code size} words
 	 */
 	public PhraseProducer(int size, Chapter chapter) {
 		if(size < MIN_SIZE){
@@ -131,13 +131,13 @@ public class PhraseProducer implements Iterator<String>{
 	}
 	
 	/**
-	 * <p>Returns true if the character at index <code>i</code> 
-	 * in <code>content<code> is a legal word-character, false 
+	 * <p>Returns true if the character at index {@code i} 
+	 * in {@code content{@code  is a legal word-character, false 
 	 * otherwise. Legal word-characters are: alphanumerics, 
 	 * apostrophe, hyphen, e-acute, or e-circumflex.</p>
-	 * @param i an index in <code>content</code>
-	 * @return true if the character at index <code>i</code> 
-	 * in <code>content<code> is a legal word-character, false 
+	 * @param i an index in {@code content}
+	 * @return true if the character at index {@code i} 
+	 * in {@code content{@code  is a legal word-character, false 
 	 * otherwise
 	 */
 	private boolean hasPhraseCharAt(int i){
@@ -145,10 +145,10 @@ public class PhraseProducer implements Iterator<String>{
 	}
 	
 	/**
-	 * <p>Returns true if <code>c</code> is a legal word-character: 
+	 * <p>Returns true if {@code c} is a legal word-character: 
 	 * alphanumeric, apostrophe, hyphen, e-acute, or e-circumflex.</p>
 	 * @param c a character to be tested for legality as a word-character
-	 * @return true if <code>c</code> is a legal word-character: 
+	 * @return true if {@code c} is a legal word-character: 
 	 * alphanumeric, apostrophe, hyphen, e-acute, or e-circumflex
 	 */
 	public static boolean isPhraseChar(Character c){
@@ -168,9 +168,9 @@ public class PhraseProducer implements Iterator<String>{
 	@Override
 	/**
 	 * <p>Returns true if there is at least one more phrase to extract
-	 * from <code>content</code>, false otherwise.</p>
+	 * from {@code content}, false otherwise.</p>
 	 * @return true if there is at least one more phrase to extract
-	 * from <code>content</code>, false otherwise
+	 * from {@code content}, false otherwise
 	 */
 	public boolean hasNext(){
 		return phraseEnd <= content.length();
@@ -178,10 +178,10 @@ public class PhraseProducer implements Iterator<String>{
 
 	@Override
 	/**
-	 * <p>Returns the next phrase with <code>size</code> words from 
-	 * </code>content</code>.</p>
-	 * @return the next phrase with <code>size</code> words from 
-	 * </code>content</code>
+	 * <p>Returns the next phrase with {@code size} words from 
+	 * }content}.</p>
+	 * @return the next phrase with {@code size} words from 
+	 * }content}
 	 */
 	public String next(){
 		outputCount++;
@@ -192,11 +192,11 @@ public class PhraseProducer implements Iterator<String>{
 	}
 	
 	/**
-	 * <p>In <code>content</code>, finds the next character after 
-	 * <code>phraseEnd</code> that's the first character after a 
+	 * <p>In {@code content}, finds the next character after 
+	 * {@code phraseEnd} that's the first character after a 
 	 * word.</p>
-	 * @return the index in <code>content</code> of the next 
-	 * word-end after <code>phraseEnd</code>
+	 * @return the index in {@code content} of the next 
+	 * word-end after {@code phraseEnd}
 	 */
 	private int nextPhraseEnd(){
 		for(int i=phraseEnd+1; i<=content.length(); i++){
@@ -210,8 +210,8 @@ public class PhraseProducer implements Iterator<String>{
 	/**
 	 * <p>Determines the index at which the next phrase starts after a phrase 
 	 * is returned by {@link #next() next()}.</p>
-	 * @return the next index in <code>content</code> at which the next word starts, 
-	 * or </code>content.length()</code> if there is no next word
+	 * @return the next index in {@code content} at which the next word starts, 
+	 * or }content.length()} if there is no next word
 	 */
 	private int nextPhraseStart(){
 		for(int i=phraseStart+1; i<content.length(); i++){

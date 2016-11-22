@@ -52,9 +52,9 @@ public class DetermineAnchors {
 	}
 	
 	/**
-	 * <p>Detects all the .txt files in <code>READ_FROM</code>, reads them 
+	 * <p>Detects all the .txt files in {@code READ_FROM}, reads them 
 	 * all, and organizes the extracted data by chapter name and by phrase. 
-	 * Saves files to <code>WRITE_TO</code> for each chapter. Each written 
+	 * Saves files to {@code WRITE_TO} for each chapter. Each written 
 	 * file contains on each line the information for one link, specifying 
 	 * the phrase being linked, the location in the chapter for which the 
 	 * file is named of the instance of the specified phrase on which the 
@@ -119,32 +119,32 @@ public class DetermineAnchors {
 	
 	/**
 	 * <p>Returns a {@literal Comparator<Location>} that sequences  
-	 * a list of <code>Location</code>s in the order of the chapter filenames 
+	 * a list of {@code Location}s in the order of the chapter filenames 
 	 * indicated in the second tab-delimited column of the 
 	 * {@link SetTrail#getTrailElements() trail file} named 
-	 * <code>trailFile</code>, or the {@link #PHRASE_SORTER default} 
-	 * phrase-sorter if <code>trailFile</code> does not exist or cannot 
+	 * {@code trailFile}, or the {@link #PHRASE_SORTER default} 
+	 * phrase-sorter if {@code trailFile} does not exist or cannot 
 	 * be read.</p>
 	 * 
-	 * <p><code>Location</code>s sorted by this Comparator such that 
-	 * there first comes a block of <code>Location</code>s whose 
+	 * <p>{@code Location}s sorted by this Comparator such that 
+	 * there first comes a block of {@code Location}s whose 
 	 * {@link Location#getFilename() filenames} pertain to the chapter 
 	 * whose name is represented in the first filename in the second 
-	 * tab-delimited column of <code>trailFile</code>, followed by a 
-	 * block of <code>Location</code>s whose 
+	 * tab-delimited column of {@code trailFile}, followed by a 
+	 * block of {@code Location}s whose 
 	 * {@link Location#getFilename() filenames} pertain to the chapter 
 	 * whose name is represented in the second filename in the second 
-	 * tab-delimited column of <code>trailFile</code>, and so on. 
-	 * Within each such block, <code>Location</code>s are sequenced 
+	 * tab-delimited column of {@code trailFile}, and so on. 
+	 * Within each such block, {@code Location}s are sequenced 
 	 * by {@link Location#getIndex() index}, with lower values first.</p>
 	 * @param trailFile the name of the file from which a sequence of 
 	 * chapter names is obtained
 	 * @return a {@literal Comparator<Location>} that sequences  
-	 * a list of <code>Location</code>s in the order of the chapter filenames 
+	 * a list of {@code Location}s in the order of the chapter filenames 
 	 * indicated in the second tab-delimited column of the 
 	 * {@link SetTrail#getTrailElements() trail file} named 
-	 * <code>trailFile</code>, or the {@link #PHRASE_SORTER default} 
-	 * phrase-sorter if <code>trailFile</code> does not exist or cannot 
+	 * {@code trailFile}, or the {@link #PHRASE_SORTER default} 
+	 * phrase-sorter if {@code trailFile} does not exist or cannot 
 	 * be read.
 	 */
 	public static Comparator<Location> getPhraseSorter(String trailFile){
@@ -208,7 +208,7 @@ public class DetermineAnchors {
 	}
 	
 	/**
-	 * <p>Sequences <code>Location</code>s according to the name of the 
+	 * <p>Sequences {@code Location}s according to the name of the 
 	 * book their filename starts with, in the order given by 
 	 * {@link #bookList bookList}. The default 
 	 * {@literal Comparator<Location>} returned by getPhraseSorter 
@@ -223,13 +223,13 @@ public class DetermineAnchors {
 	};
 	
 	/**
-	 * <p>Compares the filenames of two <code>Location</code>s according 
+	 * <p>Compares the filenames of two {@code Location}s according 
 	 * to the order of the ASOIAF books given by {@link #bookList bookList}.</p>
 	 * @param f1 the {@link Location#getFilename() filename} of a Location
 	 * @param f2 the {@link Location#getFilename() filename} of a Location
-	 * @return a negative value if <code>f1</code>'s book precedes that of 
-	 * <code>f2</code>, a positive value if <code>f2's</code> precedes 
-	 * <code>f1</code>'s, or zero if <code>f1</code> and <code>f2</code> 
+	 * @return a negative value if {@code f1}'s book precedes that of 
+	 * {@code f2}, a positive value if {@code f2's} precedes 
+	 * {@code f1}'s, or zero if {@code f1} and {@code f2} 
 	 * have the same book.
 	 */
 	private static int compareFilenames(String f1, String f2){
@@ -264,10 +264,10 @@ public class DetermineAnchors {
 	}
 	
 	/**
-	 * <p>Returns the Location in the list <code>locs</code> after the 
+	 * <p>Returns the Location in the list {@code locs} after the 
 	 * Location whose {@link Location#getIndex() index} and 
 	 * {@link Location#getFilename() filename} are specified by 
-	 * <code>index</code> and <code>chapter</code> respectively, or 
+	 * {@code index} and {@code chapter} respectively, or 
 	 * the first Location in the list if the indicated Location is the 
 	 * last in the list.</p>
 	 * @param locs a list of Location from which a Location is returned
@@ -275,14 +275,14 @@ public class DetermineAnchors {
 	 * chapter whose successor is to be returned
 	 * @param index the {@link Location#getIndex() index} of the chapter 
 	 * whose successor is to be returned
-	 * @return  the Location in the list <code>locs</code> after the 
+	 * @return  the Location in the list {@code locs} after the 
 	 * Location whose {@link Location#getIndex() index} and 
 	 * {@link Location#getFilename() filename} are specified by 
-	 * <code>index</code> and <code>chapter</code> respectively, or 
+	 * {@code index} and {@code chapter} respectively, or 
 	 * the first Location in the list if the indicated Location is the 
 	 * last in the list
 	 * @throws IllegalArgumentException if the Location specified by 
-	 * <code>chapter</code> and <code>index</code> is not present in 
+	 * {@code chapter} and {@code index} is not present in 
 	 * the specified list.
 	 */
 	public static Location locAfter(List<Location> locs, String chapter, int index){

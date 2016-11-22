@@ -148,14 +148,14 @@ public class IO {
 	}
     
 	/**
-	 * <p>Returns a new OutputStreamWriter writing to the file named <code>filename</code> 
+	 * <p>Returns a new OutputStreamWriter writing to the file named {@code filename} 
 	 * using {@link #ENCODING UTF-8 encoding}. If the result cannot be created, then 
 	 * the program {@link java.lang.System#exit(int) exits} after closing all 
-	 * specified <code>Closeable</code>s.</p>
+	 * specified {@code Closeable}s.</p>
 	 * @param filename the name of the file to which to write
-	 * @param closeUs <code>Closeable</code>s to close if the OutputStreamWriter cannot be 
+	 * @param closeUs {@code Closeable}s to close if the OutputStreamWriter cannot be 
 	 * created
-	 * @return a new OutputStreamWriter writing to the file named <code>filename</code> 
+	 * @return a new OutputStreamWriter writing to the file named {@code filename} 
 	 * using {@link #ENCODING UTF-8 encoding}
 	 */
 	public static OutputStreamWriter newOutputStreamWriter(String filename, Closeable... closeUs){
@@ -170,21 +170,21 @@ public class IO {
 	}
 	
 	/**
-	 * <p>Reads into a List each element from <code>source</code> of 
-	 * the type determined by <code>scannerOperation</code> as long 
-	 * as <code>continueTest</code> evaluates to true.</p>
+	 * <p>Reads into a List each element from {@code source} of 
+	 * the type determined by {@code scannerOperation} as long 
+	 * as {@code continueTest} evaluates to true.</p>
 	 * 
-	 * <p>For example, use <code>scannerOperation = NEXT_LINE</code> 
-	 * with <code>continueTest = SCANNER_HAS_NEXT_LINE</code> 
-	 * to extract the lines of <code>source</code> as a list.</p>
+	 * <p>For example, use {@code scannerOperation = NEXT_LINE} 
+	 * with {@code continueTest = SCANNER_HAS_NEXT_LINE} 
+	 * to extract the lines of {@code source} as a list.</p>
 	 * @param file	File to be converted into a list of Strings
 	 * @param scannerOperation a Function specifying the operation 
-	 * that this method's internal Scanner of <code>source</code> 
+	 * that this method's internal Scanner of {@code source} 
 	 * uses to generate new Strings for the returned list
 	 * @param continueTest a Predicate testing the state of the method's 
-	 * internal Scanner of <code>source</code>
-	 * @return a List containing each element of <code>source</code> of 
-	 * the type produced by <code>scannerOperation</code>
+	 * internal Scanner of {@code source}
+	 * @return a List containing each element of {@code source} of 
+	 * the type produced by {@code scannerOperation}
 	 */
 	public static List<String> fileContentsAsList(File source, Function<Scanner,String> scannerOperation, Predicate<Scanner> continueTest){
 		List<String> retList = null;
@@ -200,18 +200,18 @@ public class IO {
 	}
 	
 	/**
-	 * <p>Returns a List of Strings produced by <code>src</code> when 
-	 * it's sent to <code>scannerOperation.apply(src)</code>.</p>
+	 * <p>Returns a List of Strings produced by {@code src} when 
+	 * it's sent to {@code scannerOperation.apply(src)}.</p>
 	 * @param src a Scanner whose output elements are the elements of 
 	 * the returned list
 	 * @param scannerOperation an externally-defined reference to the 
-	 * method that <code>src</code> uses to produce elements for the 
+	 * method that {@code src} uses to produce elements for the 
 	 * returned list
-	 * @param continueTest a Predicate that tests the state of <code>src</code> 
+	 * @param continueTest a Predicate that tests the state of {@code src} 
 	 * to determine whether to continue adding elements from it to the 
 	 * returned list
-	 * @return a List containing each item returned by <code>src</code> 
-	 * when it performs the operation specified by <code>scannerOperation</code>
+	 * @return a List containing each item returned by {@code src} 
+	 * when it performs the operation specified by {@code scannerOperation}
 	 */
 	public static List<String> fileContentsAsList(Scanner src, Function<Scanner,String> scannerOperation, Predicate<Scanner> continueTest){
 		List<String> result = new ArrayList<>();

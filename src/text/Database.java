@@ -17,7 +17,7 @@ public class Database {
 	private FileBox textCorpus;
 	
 	/**
-	 * <p>Constructs a Database with an empty <code>textCorpus</code>.</p>
+	 * <p>Constructs a Database with an empty {@code textCorpus}.</p>
 	 */
 	public Database(){
 		textCorpus = new FileBox();
@@ -50,16 +50,16 @@ public class Database {
 	
 	/**
 	 * <p>Returns a PhraseBox containing exactly those phrase-instances 
-	 * represented in <code>this.textCorpus</code> that are independent 
+	 * represented in {@code this.textCorpus} that are independent 
 	 * of all the phrase-instances represented in 
-	 * <code>otherDatabase.textCorpus</code>.</p>
+	 * {@code otherDatabase.textCorpus}.</p>
 	 * @param otherDatabase another Database against whose phrase-
 	 * instances the phrase-instances of this Database are to be 
 	 * tested for independence.
 	 * @return a PhraseBox containing exactly those phrase-instances 
-	 * represented in <code>this.textCorpus</code> that are independent 
+	 * represented in {@code this.textCorpus} that are independent 
 	 * of all the phrase-instances represented in 
-	 * <code>otherDatabase.textCorpus</code>.
+	 * {@code otherDatabase.textCorpus}.
 	 */
 	public PhraseBox phrasesIndependentOf(Database otherDatabase){
 		PhraseBox result = new PhraseBox();

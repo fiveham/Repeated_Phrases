@@ -188,7 +188,7 @@ public class Tag extends HTMLEntity {
 	public final String content;
 	
 	/**
-	 * <p>Constructs a Tag with the specified <code>content</code>.</p>
+	 * <p>Constructs a Tag with the specified {@code content}.</p>
 	 * @param content the literal text of this tag inside the 
 	 * opening and closing angle brackets.
 	 */
@@ -245,26 +245,26 @@ public class Tag extends HTMLEntity {
 	}
 	
 	/**
-	 * <p>Returns true if this <code>Tag</code>'s 
+	 * <p>Returns true if this {@code Tag}'s 
 	 * {@link #getType() type} is equal to 
-	 * the specified <code>type</code>, false otherwise.</p>
+	 * the specified {@code type}, false otherwise.</p>
 	 * @param type the type of Tag to compare against this 
 	 * Tag's type
-	 * @return true if this <code>Tag</code>'s 
+	 * @return true if this {@code Tag}'s 
 	 * {@link #getType() type} is equal to 
-	 * the specified <code>type</code>, false otherwise
+	 * the specified {@code type}, false otherwise
 	 */
 	public boolean isType(String type){
 		return type.equals(getType());
 	}
 	
 	/**
-	 * <p>Returns true if <code>c</code> is a valid char for the 
+	 * <p>Returns true if {@code c} is a valid char for the 
 	 * type of a Tag, false otherwise. A valid char for a Tag 
 	 * type is a lowercase letter.</p>
 	 * @param c a char to be tested for whether it's valid 
 	 * in the type of a Tag
-	 * @return true if <code>c</code> is a valid char for the 
+	 * @return true if {@code c} is a valid char for the 
 	 * type of a Tag, false otherwise.
 	 */
 	public boolean isTagNameChar(char c){
@@ -275,11 +275,11 @@ public class Tag extends HTMLEntity {
 	/**
 	 * <p>Returns a String representation of this Tag, the 
 	 * plaintext equivalent of this Tag, an opening angle 
-	 * bracket followed by <code>content</code> followed 
+	 * bracket followed by {@code content} followed 
 	 * by a closing angle bracket.</p>
 	 * @return a String representation of this Tag, the 
 	 * plaintext equivalent of this Tag, an opening angle 
-	 * bracket followed by <code>content</code> followed 
+	 * bracket followed by {@code content} followed 
 	 * by a closing angle bracket.
 	 */
 	public String toString(){
@@ -327,8 +327,8 @@ public class Tag extends HTMLEntity {
 	
 	/**
 	 * <p>ReturnsC A tag is clopen if it does 
-	 * not start  with a <code>CLOSE</code> and ends 
-	 * with a <code>CLOSE</code>.</p>
+	 * not start  with a {@code CLOSE} and ends 
+	 * with a {@code CLOSE}.</p>
 	 * @return true if this Tag is an opening tag, 
 	 * false otherwise.
 	 */
@@ -338,9 +338,9 @@ public class Tag extends HTMLEntity {
 	
 	@Override
 	/**
-	 * <p>Returns true if <code>o</code> is a Tag and 
-	 * has <code>content</code> equal to 
-	 * <code>this.content</code>.</p>
+	 * <p>Returns true if {@code o} is a Tag and 
+	 * has {@code content} equal to 
+	 * {@code this.content}.</p>
 	 * @param o an object to be tested for equality 
 	 * with this Tag
 	 */

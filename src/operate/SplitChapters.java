@@ -41,8 +41,8 @@ public class SplitChapters {
     public static final Folder WRITE_TO = Folder.HTML_CHAPTERS;
     
     /**
-     * <p>Detects all html novel files in <code>READ_FROM</code>, reads them, and 
-     * saves individual files for each chapter to <code>WRITE_TO</code>.</p>
+     * <p>Detects all html novel files in {@code READ_FROM}, reads them, and 
+     * saves individual files for each chapter to {@code WRITE_TO}.</p>
      * @param args command-line arguments (unused)
      */
     public static void splitChapters(Consumer<String> msg) {
@@ -208,11 +208,11 @@ public class SplitChapters {
     }
 
     /**
-     * <p>Returns true if the <code>paragraph</code>'s only character-type 
+     * <p>Returns true if the {@code paragraph}'s only character-type 
      * contents are characters that can appear in chapter titles, 
      * false otherwise.</p>
      * @param paragraph a list of HTMLEntity, a piece of an HTMLFile
-     * @return true if the <code>paragraph</code>'s only character-type 
+     * @return true if the {@code paragraph}'s only character-type 
      * contents are characters that can appear in chapter titles, 
      * false otherwise
      */
@@ -235,11 +235,11 @@ public class SplitChapters {
     }
     
 	/**
-	 * <p>Returns true if <code>c</code> occurs in chapters' titles, 
+	 * <p>Returns true if {@code c} occurs in chapters' titles, 
 	 * false otherwise.</p>
 	 * @param c a char to be tested for status as a character that 
 	 * occurs in chapters' titles
-	 * @return true if <code>c</code> is an uppercase letter, space, 
+	 * @return true if {@code c} is an uppercase letter, space, 
 	 * or apostrophe
 	 */
 	public static boolean isLegalChapterTitleCharacter(char c){
@@ -247,18 +247,18 @@ public class SplitChapters {
 	}
 
     /**
-     * <p>Writes the contents of <code>buffer</code> to a file via <code>out</code>, 
+     * <p>Writes the contents of {@code buffer} to a file via {@code out}, 
      * prepended with {@link #writeHeader(String,OutputStreamWriter) a header} and 
      * appended with {@link #writerFooter(String,OutputStreamWriter) a footer}. If 
-     * <code>out == null</code>, does nothing.</p>
+     * {@code out == null}, does nothing.</p>
      * @param buffer a list of HTMLEntitys to be written as html text to a 
-     * file via <code>out</code>
-     * @param out writes to the file to which the content of <code>buffer</code> 
+     * file via {@code out}
+     * @param out writes to the file to which the content of {@code buffer} 
      * should be written; is {@link OutputStreamWriter#close() closed}
      * @param chapterName the name of the chapter being written, to be added to the 
      * header/footer tables
      * @throws IOException if an I/O error occurs writing to the file through 
-     * <code>out</code>
+     * {@code out}
      */
     private static void writeBuffer(List<HTMLEntity> buffer, OutputStreamWriter out, String chapterName, Consumer<String> msg) throws IOException{
         if(out != null){
@@ -274,7 +274,7 @@ public class SplitChapters {
 
     /**
      * <p>Returns the name of the file to which a chapter's content will be written.</p>
-     * @param bookFile the source file from <code>READ_FROM</code> from which the 
+     * @param bookFile the source file from {@code READ_FROM} from which the 
      * chapter's content was extracted
      * @param chapterIndex the chapter's number in its book (zero-based)
      * @param chapterName the name of the chapter as extracted from the text of its 
@@ -287,12 +287,12 @@ public class SplitChapters {
     }
 
     /**
-     * <p>Extracts a chapter's title from a <code>paragraph</code> 
+     * <p>Extracts a chapter's title from a {@code paragraph} 
      * {@link #isTitleParagraph(List<HTMLEntity>) containing a chapter title}.</p>
      * @param paragraph the paragraph whose contained chapter title 
      * is extracted and returned
      * @return the chapter title that's the sole visible content of 
-     * the specified <code>paragraph</code>
+     * the specified {@code paragraph}
      */
     private static String extractChapterTitle(List<HTMLEntity> paragraph){
         StringBuilder result = new StringBuilder( paragraph.size() );
@@ -403,7 +403,7 @@ public class SplitChapters {
      * a chapter title, false otherwise. A char is legal 
      * for a chapter title if it is a capital letter, a 
      * space, or an apostrophe</p>
-     * @param c a <code>char</code> to test for legality 
+     * @param c a {@code char} to test for legality 
      * in chapter titles
      * @return true if the specified char is legal for 
      * a chapter title, false otherwise

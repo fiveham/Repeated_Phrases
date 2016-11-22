@@ -37,10 +37,10 @@ public class PhraseBox{
 	
 	/**
 	 * <p>Constructs a PhraseBox with the phrase-instance 
-	 * data contents of <code>f</code>.</p>
+	 * data contents of {@code f}.</p>
 	 * @param f the file whose phrase-instance data is to 
 	 * be put into this PhraseBox
-	 * @throws FileNotFoundException if <code>f</code> 
+	 * @throws FileNotFoundException if {@code f} 
 	 * does not exist or cannot be read
 	 */
 	public PhraseBox(File f) throws FileNotFoundException{
@@ -49,7 +49,7 @@ public class PhraseBox{
 	
 	/**
 	 * <p>Constructs a PhraseBox with the phrase-instance 
-	 * data produced by <code>scan</code>. <code>scan.nextLine()</code> 
+	 * data produced by {@code scan}. {@code scan.nextLine()} 
 	 * is called repeatedly, and each resulting line is 
 	 * parsed as a line from a phrase-instance data file, such 
 	 * as those written to Folder.REPEATS, 
@@ -98,10 +98,10 @@ public class PhraseBox{
 	}
 	
 	/**
-	 * <p>Adds <code>location</code> to the {@literal List<Location>} 
-	 * mapped to <code>phrase</code> in the underlying hashmap.</p>
+	 * <p>Adds {@code location} to the {@literal List<Location>} 
+	 * mapped to {@code phrase} in the underlying hashmap.</p>
 	 * @param phrase the phrase being given another Location 
-	 * @param location a location at which <code>phrase</code> occurs
+	 * @param location a location at which {@code phrase} occurs
 	 */
 	public void add(String phrase, Location location){
 		if(map.containsKey(phrase)){
@@ -114,13 +114,13 @@ public class PhraseBox{
 	}
 	
 	/**
-	 * <p>Returns a list of the locations at which <code>phrase</code> 
+	 * <p>Returns a list of the locations at which {@code phrase} 
 	 * occurs.</p>
 	 * @param phrase any object, to maintain compatibility with 
 	 * {@link java.util.HashMap#get(Object) HashMap.get(Object)}, 
 	 * but should be a String phrase to get a real result
-	 * @return  a list of the locations at which <code>phrase</code> 
-	 * occurs if <code>phrase</code> is a String and has been mapped 
+	 * @return  a list of the locations at which {@code phrase} 
+	 * occurs if {@code phrase} is a String and has been mapped 
 	 * in the underlying HashMap
 	 */
 	public List<Location> get(Object phrase){
@@ -149,11 +149,11 @@ public class PhraseBox{
 	
 	/**
 	 * <p>Returns true if this PhraseBox has phrase-instance data 
-	 * for <code>phrase</code>, false otherwise.</p>
+	 * for {@code phrase}, false otherwise.</p>
 	 * @param phrase the phrase whose inclusion in this PhraseBox 
 	 * is determined
 	 * @return  true if this PhraseBox has phrase-instance data 
-	 * for <code>phrase</code>, false otherwise
+	 * for {@code phrase}, false otherwise
 	 */
 	public boolean contains(String phrase){
 		return map.containsKey(phrase);
@@ -179,7 +179,7 @@ public class PhraseBox{
 	/**
 	 * <p>Writes the phrase-instance data from this PhraseBox 
 	 * to a file via the OutputStreamWriter 
-	 * <code>phraseInstanceFile</code>.</p>
+	 * {@code phraseInstanceFile}.</p>
 	 * @param phraseInstanceFile an OutputStreamWriter by way of which 
 	 * the phrase-instance data in this PhraseBox is written to a file
 	 */

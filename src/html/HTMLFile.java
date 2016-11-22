@@ -128,12 +128,12 @@ public class HTMLFile {
 	
 	/**
 	 * <p>Constructs an HTMLFile representing the contents 
-	 * of the File <code>f</code>. 
+	 * of the File {@code f}. 
 	 * Calls {@link #HTMLFile(String,Scanner) this(String,Scanner)} 
 	 * using {@link java.io.File.getName() the file's name} and 
-	 * a new Scanner of <code>f</code>.</p>
+	 * a new Scanner of {@code f}.</p>
 	 * @param f the File whose contents go into this HTMLFile
-	 * @throws FileNotFoundException if <code>f</code> does 
+	 * @throws FileNotFoundException if {@code f} does 
 	 * not exist or cannot be read
 	 */
 	public HTMLFile(File f) throws FileNotFoundException{
@@ -145,8 +145,8 @@ public class HTMLFile {
 	
 	/**
 	 * <p>Constructs an HTMLFile that believes its filename is 
-	 * <code>name</code> and which gets the literal text it 
-	 * turns into HTMLEntitys via <code>scan</code>.</p>
+	 * {@code name} and which gets the literal text it 
+	 * turns into HTMLEntitys via {@code scan}.</p>
 	 * @param name the filename that this HTMLFile uses to determine 
 	 * information about itself assuming that the filename is structured 
 	 * the way that the chapter files are split by 
@@ -174,8 +174,8 @@ public class HTMLFile {
 	}
 	
 	/**
-	 * <p>Constructs an HTMLFile based on the elements of <code>content</code>, 
-	 * with the filename <code>name</code>.</p>
+	 * <p>Constructs an HTMLFile based on the elements of {@code content}, 
+	 * with the filename {@code name}.</p>
 	 * @param name the file address/name of this HTMLFile
 	 * @param content a list whose elements will be the elements of this HTMLFile
 	 */
@@ -223,13 +223,13 @@ public class HTMLFile {
 	
 	/**
 	 * <p>Adds a pair of anchor tags to this HTMLFile around 
-	 * based on the AnchorInfo <code>a</code>. The added Tags 
+	 * based on the AnchorInfo {@code a}. The added Tags 
 	 * are placed around the {@link Location#index word-index}-th 
-	 * word in this HTMLFile, specified by <code>a</code>'s 
+	 * word in this HTMLFile, specified by {@code a}'s 
 	 * {@link AnchorInfo#position position} after the word at 
-	 * that position is verified as the first word of <code>a</code>'s 
+	 * that position is verified as the first word of {@code a}'s 
 	 * {@link AnchorInfo#text phrase}. The link added via 
-	 * these tags links to <code>a</code>'s {@link AnchorInfo#linkTo destination}.</p>
+	 * these tags links to {@code a}'s {@link AnchorInfo#linkTo destination}.</p>
 	 * @param a an AnchorInfo specifying everything needed to 
 	 * create a link from one repeated phrase in this HTMLFile 
 	 * to the same repeated phrase in another HTMLFile chapter.
@@ -255,15 +255,15 @@ public class HTMLFile {
 	}
 	
 	/**
-	 * <p>Throws an exception if the <code>wordIndex</code>-th word in 
-	 * this HTMLFile is not <code>word</code>.</p>
-	 * @param word the word whose status as the <code>wordIndex</code>-th 
+	 * <p>Throws an exception if the {@code wordIndex}-th word in 
+	 * this HTMLFile is not {@code word}.</p>
+	 * @param word the word whose status as the {@code wordIndex}-th 
 	 * word in this HTMLFile is to be verified.
 	 * @param wordIndex the number of words prior to the word in 
-	 * this HTMLFile compared against <code>word</code>, starting 
+	 * this HTMLFile compared against {@code word}, starting 
 	 * counting after the chapter title.
-	 * @throws IllegalStateException if the <code>wordIndex</code>-th 
-	 * word in this HTMLFile is not <code>word</code>
+	 * @throws IllegalStateException if the {@code wordIndex}-th 
+	 * word in this HTMLFile is not {@code word}
 	 */
  	private void validateWordWithIndex(String word, int wordIndex){
 		String wordThere = wordAt( wordIndex);
@@ -274,10 +274,10 @@ public class HTMLFile {
 	}
  	
  	/**
- 	 * <p>Adds the HTMLEntity <code>item</code> to the underlying 
- 	 * list at index <code>position</code> in the list.</p>
+ 	 * <p>Adds the HTMLEntity {@code item} to the underlying 
+ 	 * list at index {@code position} in the list.</p>
  	 * @param position the index in the underlying list at which 
- 	 * <code>item</code> is inserted
+ 	 * {@code item} is inserted
  	 * @param item the HTMLEntity to be added to the underlying 
  	 * list
  	 */
@@ -287,10 +287,10 @@ public class HTMLFile {
  	}
  	
  	/**
- 	 * <p>Adds all elements of <code>list</code> to the underlying 
- 	 * list, starting at index </code>position</code>.</p>
+ 	 * <p>Adds all elements of {@code list} to the underlying 
+ 	 * list, starting at index }position}.</p>
  	 * @param position the index in the underlying list at which 
- 	 * elements of <code>list</code> are added
+ 	 * elements of {@code list} are added
  	 * @param list HTMLEntitys to be added to the underlying list
  	 * @return true if the underlying list was changed, false otherwise
  	 */
@@ -301,12 +301,12 @@ public class HTMLFile {
  	
  	/**
  	 * <p>Replaces the element in the underlying list at index 
- 	 * <code>position</code> with <code>elem</code>.</p>
+ 	 * {@code position} with {@code elem}.</p>
  	 * @param position the index in the underlying list at which 
- 	 * <code>elem</code> is placed
+ 	 * {@code elem} is placed
  	 * @param elem the HTMLEntity put into the list at index 
- 	 * <code>position</code>
- 	 * @return the element originally at index <code>position</code>
+ 	 * {@code position}
+ 	 * @return the element originally at index {@code position}
  	 */
  	public HTMLEntity set(int position, HTMLEntity elem){
  		modCount++;
@@ -322,7 +322,7 @@ public class HTMLFile {
  	}
 	
  	/**
- 	 * <p>Returns the <code>wordIndex</code>-th (zero-based) 
+ 	 * <p>Returns the {@code wordIndex}-th (zero-based) 
  	 * word after the chapter's title in this HTMLFile. The 
  	 * first word after the title has wordIndex 0.</p>
  	 * 
@@ -342,7 +342,7 @@ public class HTMLFile {
  	 * cause the crawl-accumulation process to end.</p>
  	 * @param wordIndex the number of words between the first word 
  	 * of the body of this file and the word to be retrieved
- 	 * @return the <code>wordIndex</code>-th (zero-based) 
+ 	 * @return the {@code wordIndex}-th (zero-based) 
  	 * word after the chapter's title in this HTMLFile
  	 */
 	private String wordAt(int wordIndex){
@@ -362,12 +362,12 @@ public class HTMLFile {
 	
 	/**
 	 * <p>Returns a list of indices in the underlying list at which 
-	 * an anchor tag must be inserted in order to link the <code>wordIndex</code>-th 
+	 * an anchor tag must be inserted in order to link the {@code wordIndex}-th 
 	 * word to another instance of the repeated phrase of which it is the 
 	 * first word.</p>
 	 * 
 	 * <p>If there are any {@link Tag Tags} amongst the literal characters of 
-	 * the <code>wordIndex</code>-th word, blindly adding opening and closing 
+	 * the {@code wordIndex}-th word, blindly adding opening and closing 
 	 * tags around the outside of the word could result in unbalanced tags. 
 	 * So, this method crawls along the underlying list finding any clusters of 
 	 * Tags inside the word and marking the points around them where extra closing 
@@ -382,7 +382,7 @@ public class HTMLFile {
 	 * @param wordIndex the number of words between the sought word in this file 
 	 * and the first word in the body of this chapter
 	 * @return  a list of indices in the underlying list at which 
-	 * an anchor tag must be inserted in order to link the <code>wordIndex</code>-th 
+	 * an anchor tag must be inserted in order to link the {@code wordIndex}-th 
 	 * word to another instance of the repeated phrase of which it is the 
 	 * first word
 	 */
@@ -408,15 +408,15 @@ public class HTMLFile {
 	/**
 	 * <p>Returns true if the underlying list contains a contiguous 
 	 * (ignoring Tags) region of literal characters starting at 
-	 * <code>index</code> which match the characters of <code>literal</code>, 
+	 * {@code index} which match the characters of {@code literal}, 
 	 * false otherwise.</p>
-	 * @param literal the literal text to be matched starting at <code>index</code> 
+	 * @param literal the literal text to be matched starting at {@code index} 
 	 * in the underlying list
 	 * @param index the position in the underlying list starting at which 
-	 * <code>literal</code> is to be sought
+	 * {@code literal} is to be sought
 	 * @return true if the underlying list contains a contiguous 
 	 * (ignoring Tags) region of literal characters starting at 
-	 * <code>index</code> which match the characters of <code>literal</code>, 
+	 * {@code index} which match the characters of {@code literal}, 
 	 * false otherwise.
 	 */
 	public boolean hasLiteralAt(String literal, int index){
@@ -431,9 +431,9 @@ public class HTMLFile {
 	}
 	
 	/**
-	 * <p>Returns true if this file contains the specified <code>literal</code> 
-	 * text starting at any position after <code>start</code> and ending at 
-	 * any position before <code>end</code>, false otherwise.</p>
+	 * <p>Returns true if this file contains the specified {@code literal} 
+	 * text starting at any position after {@code start} and ending at 
+	 * any position before {@code end}, false otherwise.</p>
 	 * @param literal 
 	 * @param start exclusive lower bound
 	 * @param end exclusive upper bound
@@ -449,14 +449,14 @@ public class HTMLFile {
 	}
 	
 	/**
-	 * <p>Returns true if the <code>c</code> matches <code>h</code>, false otherwise. 
-	 * Generally, this means that <code>c</code> is the literal character wrapped 
-	 * by </code>h</code> because </code>h</code> is a {@link CharLiteral Ch}. A <code>Tag</code> 
-	 * never matches. A <code>Code</code> matches <code>c</code> if 
-	 * it {@link CharCode#isEquivalent(char) is equivalent} to that <code>char</code>.</p>
-	 * @param c a literal <code>char</code> to be compared against <code>h</code>
-	 * @param h an HTMLEntity to be compared against <code>c</code>.
-	 * @return true if the <code>c</code> matches <code>h</code>, false otherwise
+	 * <p>Returns true if the {@code c} matches {@code h}, false otherwise. 
+	 * Generally, this means that {@code c} is the literal character wrapped 
+	 * by }h} because }h} is a {@link CharLiteral Ch}. A {@code Tag} 
+	 * never matches. A {@code Code} matches {@code c} if 
+	 * it {@link CharCode#isEquivalent(char) is equivalent} to that {@code char}.</p>
+	 * @param c a literal {@code char} to be compared against {@code h}
+	 * @param h an HTMLEntity to be compared against {@code c}.
+	 * @return true if the {@code c} matches {@code h}, false otherwise
 	 */
 	private boolean match(char c, HTMLEntity h){ //TODO move into HTMLEntity classes
 		if( CharLiteral.class.isInstance(h) ){
@@ -469,21 +469,21 @@ public class HTMLFile {
 	}
 	
 	/**
-	 * <p>Returns true if the element at index <code>position</code> in the underlying list 
-	 * makes <code>test1</code> evaluate to true and the element in the underlying list before 
-	 * or after (if <code>dir</code> is Direction.PREV or Direction.NEXT respectively) 
-	 * that element makes <code>test2</code> evaluate to true, false otherwise.</p>
+	 * <p>Returns true if the element at index {@code position} in the underlying list 
+	 * makes {@code test1} evaluate to true and the element in the underlying list before 
+	 * or after (if {@code dir} is Direction.PREV or Direction.NEXT respectively) 
+	 * that element makes {@code test2} evaluate to true, false otherwise.</p>
 	 * @param position the position in the underlying list from which to extract an HTMLEntity 
-	 * to send to <code>test1</code>
-	 * @param test1 the test to perform on the element of the underlying list at <code>position</code>
-	 * @param dir the direction to go from <code>position</code> to get another HTMLEntity to 
-	 * send to <code>test2</code> for evaluation
+	 * to send to {@code test1}
+	 * @param test1 the test to perform on the element of the underlying list at {@code position}
+	 * @param dir the direction to go from {@code position} to get another HTMLEntity to 
+	 * send to {@code test2} for evaluation
 	 * @param test2 the test to perform on the element before or after the element at 
-	 * <code>postion</code>, depending on the value of <code>dir</code>
-	 * @return true if the element at index <code>position</code> in the underlying list 
-	 * makes <code>test1</code> evaluate to true and the element in the underlying list before 
-	 * or after (if <code>dir</code> is Direction.PREV or Direction.NEXT respectively) 
-	 * that element makes <code>test2</code> evaluate to true, false otherwise
+	 * {@code postion}, depending on the value of {@code dir}
+	 * @return true if the element at index {@code position} in the underlying list 
+	 * makes {@code test1} evaluate to true and the element in the underlying list before 
+	 * or after (if {@code dir} is Direction.PREV or Direction.NEXT respectively) 
+	 * that element makes {@code test2} evaluate to true, false otherwise
 	 */
 	private boolean is(int position, Predicate<HTMLEntity> test1, Direction dir, Predicate<HTMLEntity> test2){
 		HTMLEntity item = content.get( position );
@@ -492,9 +492,9 @@ public class HTMLFile {
 	}
 	
 	/**
-	 * <p>Returns the first space-delimited word of <code>phrase</code>.</p>
+	 * <p>Returns the first space-delimited word of {@code phrase}.</p>
 	 * @param phrase a phrase of which the first word is returned
-	 * @return the first space-delimited word of <code>phrase</code>.
+	 * @return the first space-delimited word of {@code phrase}.
 	 */
 	public static final String firstWord(String phrase){
 		int index = phrase.indexOf(PhraseProducer.WORD_SEPARATOR);
@@ -502,7 +502,7 @@ public class HTMLFile {
 	}
 	
 	/**
-	 * <p>Prints this HTMLFile to a file named <code>name</code>.</p>
+	 * <p>Prints this HTMLFile to a file named {@code name}.</p>
 	 * @param name the name of the file this HTMLFile is being saved as.
 	 */
 	public void print(String name){
@@ -515,7 +515,7 @@ public class HTMLFile {
 	}
 	
 	/**
-	 * <p>Writes this HTMLFile to a file via <code>out</code>.</p>
+	 * <p>Writes this HTMLFile to a file via {@code out}.</p>
 	 * @param out an OutputStreamWriter for the file that 
 	 * this HTMLFile is being saved as
 	 * @throws IOException if an I/O error occurs
@@ -527,7 +527,7 @@ public class HTMLFile {
 	}
 	
 	/**
-	 * <p>Writes to the file specified by <code>name</code> the 
+	 * <p>Writes to the file specified by {@code name} the 
 	 * text equivalent of the contents of this file, except 
 	 * for everything before the end of the first table and 
 	 * everything after the beginning of the last table--the 
@@ -550,11 +550,11 @@ public class HTMLFile {
 	}
 	
 	/**
-	 * <p>Returns the index in the underlying list of the <code>wordIndex</code>th 
+	 * <p>Returns the index in the underlying list of the {@code wordIndex}th 
 	 * word in the file after the title.</p>
 	 * @param wordIndex the number of words between the sought word in this file 
 	 * and the first word in the body of this chapter
-	 * @return the index in the underlying list of the <code>wordIndex</code>th 
+	 * @return the index in the underlying list of the {@code wordIndex}th 
 	 * word in the file after the title
 	 */
 	public int getWord(int wordIndex){
@@ -578,36 +578,36 @@ public class HTMLFile {
 		
 		/**
 		 * <p>The value that was last returned by 
-		 * <code>applyAsInt(int)</code>. Initialized 
+		 * {@code applyAsInt(int)}. Initialized 
 		 * to Integer.MAX_VALUE. If 
-		 * <code>applyAsInt(int)</code> throws an exception, 
+		 * {@code applyAsInt(int)} throws an exception, 
 		 * the output is not stored.</p>
 		 */
 		private int storedWordIndex = Integer.MAX_VALUE;
 		
 		/**
-		 * <p>The value sent as input to <code>applyAsInt(int)</code> 
-		 * for which <code>applyAsInt(int)</code> last returned a 
+		 * <p>The value sent as input to {@code applyAsInt(int)} 
+		 * for which {@code applyAsInt(int)} last returned a 
 		 * result. Initialized to Integer.MAX_VALUE. If 
-		 * <code>applyAsInt(int)</code> throws an exception, 
+		 * {@code applyAsInt(int)} throws an exception, 
 		 * the input is not stored.</p>
 		 */
 		private int storedWordStart = Integer.MAX_VALUE;
 		
 		@Override
 		/**
-		 * <p>If <code>wordIndex</code> is the same as 
+		 * <p>If {@code wordIndex} is the same as 
 		 * {@link #storedWordIndex the stored input}, then the stored 
 		 * output is returned. Otherwise, crawls the underlying list 
 		 * from a starting point and increments a counter when a 
 		 * {@link #isWordStart(int) word start} is encountered until 
-		 * the counter reaches the input <code>wordIndex</code>, at 
+		 * the counter reaches the input {@code wordIndex}, at 
 		 * which point the index in the list at which the method is 
 		 * operating is returned.</p>
 		 * 
-		 * <p>If <code>wordIndex</code> is less than the stored input, 
+		 * <p>If {@code wordIndex} is less than the stored input, 
 		 * then the start point for traversing the list is set to 0, 
-		 * the very beginning of the list. If <code>wordIndex</code> 
+		 * the very beginning of the list. If {@code wordIndex} 
 		 * is greater than the stored input, then the start point 
 		 * for traversing the list is set to 
 		 * {@link #storedWordStart the stored output} to save the 
@@ -619,13 +619,13 @@ public class HTMLFile {
 		 * chapter
 		 * 
 		 * @return the index in this HTMLFile's underlying list of 
-		 * the first letter of the <code>wordIndex</code>th word in 
+		 * the first letter of the {@code wordIndex}th word in 
 		 * the body of this chapter.
 		 * 
-		 * @throws IllegalArgumentException if <code>wordIndex</code> is 
+		 * @throws IllegalArgumentException if {@code wordIndex} is 
 		 * less than {@link HTMLFile#baseWordIndex baseWordIndex}
 		 * 
-		 * @throws IllegalStateException if <code>wordIndex</code> is 
+		 * @throws IllegalStateException if {@code wordIndex} is 
 		 * too high such that there aren't enough words in this 
 		 * HTMLFile to count that high
 		 */
@@ -668,11 +668,11 @@ public class HTMLFile {
 	
 	/**
 	 * <p>Returns the position in the underlying list of the last character of 
-	 * the <code>wordIndex</code>-th word in the body of this chapter.</p>
+	 * the {@code wordIndex}-th word in the body of this chapter.</p>
 	 * @param wordIndex the number of words between the sought word in this file 
 	 * and the first word in the body of this chapter
 	 * @return the position in the underlying list of the last character of 
-	 * the <code>wordIndex</code>-th word in the body of this chapter
+	 * the {@code wordIndex}-th word in the body of this chapter
 	 */
 	public int getLastCharacter(int wordIndex){
 		return getLastCharacter(wordIndex, getWord(wordIndex));
@@ -680,14 +680,14 @@ public class HTMLFile {
 	
 	/**
 	 * <p>Returns the position in the underlying list of the last character of 
-	 * the <code>wordIndex</code>-th word in the body of this chapter.</p>
+	 * the {@code wordIndex}-th word in the body of this chapter.</p>
 	 * @param wordIndex the number of words between the sought word in this file 
 	 * and the first word in the body of this chapter
 	 * @param startPoint a position in (typically at the very start of) the 
-	 * <code>wordIndex</code>-th word, from which to start looking for the end 
+	 * {@code wordIndex}-th word, from which to start looking for the end 
 	 * of the current word
 	 * @return the position in the underlying list of the last character of 
-	 * the <code>wordIndex</code>-th word in the body of this chapter
+	 * the {@code wordIndex}-th word in the body of this chapter
 	 */
 	private int getLastCharacter(int wordIndex, int startPoint){
 		for(int i=startPoint; i<content.size(); i++){
@@ -701,12 +701,12 @@ public class HTMLFile {
 	
 	/**
 	 * <p>Returns an int array containing lower (inclusive) and 
-	 * upper (exclusive) bounds for the <code>wordIndex</code>th 
+	 * upper (exclusive) bounds for the {@code wordIndex}th 
 	 * word in this file.</p>
 	 * @param wordIndex the number of words between the sought word in this file 
 	 * and the first word in the body of this chapter
 	 * @return an int array containing lower (inclusive) and 
-	 * upper (exclusive) bounds for the <code>wordIndex</code>th 
+	 * upper (exclusive) bounds for the {@code wordIndex}th 
 	 * word in this file
 	 */
 	public int[] getWordBounds(int wordIndex){
@@ -715,12 +715,12 @@ public class HTMLFile {
 	}
 	
 	/**
-	 * <p>Returns true if the element at index <code>index</code> 
+	 * <p>Returns true if the element at index {@code index} 
 	 * in the underlying list is the first character of a word, 
 	 * false otherwise.</p>
 	 * @param index the index in the underlying list to be tested 
 	 * for whether it's the first character of a word
-	 * @return true if the element at index <code>index</code> 
+	 * @return true if the element at index {@code index} 
 	 * in the underlying list is the first character of a word, 
 	 * false otherwise
 	 */
@@ -730,12 +730,12 @@ public class HTMLFile {
 	}
 	
 	/**
-	 * <p>Returns true if the element at index <code>index</code> 
+	 * <p>Returns true if the element at index {@code index} 
 	 * in the underlying list is the last character of a word, 
 	 * false otherwise.</p>
 	 * @param index the index in the underlying list to be tested 
 	 * for whether it's the last character of a word
-	 * @return true if the element at index <code>index</code> 
+	 * @return true if the element at index {@code index} 
 	 * in the underlying list is the last character of a word, 
 	 * false otherwise
 	 */
@@ -745,11 +745,11 @@ public class HTMLFile {
 	}
 	
 	/**
-	 * <p>Returns true if <code>elem</code> is character-type and 
+	 * <p>Returns true if {@code elem} is character-type and 
 	 * is a word character, false otherwise.</p>
 	 * @param elem the HTMLEntity to be assessed for legality as a 
 	 * word character
-	 * @return  true if <code>elem</code> is character-type and 
+	 * @return  true if {@code elem} is character-type and 
 	 * is a word character, false otherwise
 	 */
 	private static boolean isWord(HTMLEntity elem){
@@ -757,14 +757,14 @@ public class HTMLFile {
 	}
 	
 	/**
-	 * <p>Evaluates to true if the specified HTMLEntity <code>h</code> 
+	 * <p>Evaluates to true if the specified HTMLEntity {@code h} 
 	 * is a character-type HTMLEntity: a {@link CharLiteral Ch} or a 
 	 * {@link CharCode Code}.</p>
 	 */
 	public static final Predicate<HTMLEntity> IS_CHARACTER = (h) -> CharLiteral.class.isInstance(h) || CharCode.class.isInstance(h);
 	
 	/**
-	 * <p>Evaluates to true if the specified HTMLEntity <code>h</code> 
+	 * <p>Evaluates to true if the specified HTMLEntity {@code h} 
 	 * {@link #IS_CHARACTER is character-type} and 
 	 * is not a {@link #isWord(HTMLEntity) legal word character}.</p>
 	 */
@@ -772,20 +772,20 @@ public class HTMLFile {
 
 	/**
 	 * <p>Returns the position in the underlying list of the element 
-	 * nearest to but not at <code>position</code> in the direction 
-	 * (before or after) specified by <code>direction</code> for which 
-	 * <code>condition</code> evaluates to true.</p>
+	 * nearest to but not at {@code position} in the direction 
+	 * (before or after) specified by {@code direction} for which 
+	 * {@code condition} evaluates to true.</p>
 	 * @param position the pre-starting position for this operation. One less 
-	 * than the starting point if <code>direction</code> is 
-	 * <code>Direction.NEXT</code>, or one more if it's <code>Direction.PREV</code>.
+	 * than the starting point if {@code direction} is 
+	 * {@code Direction.NEXT}, or one more if it's {@code Direction.PREV}.
 	 * @param condition a Predicate whose evaluation to true causes this 
 	 * method to return its current position in the underlying list
 	 * @param direction this method's direction of traversal of the 
 	 * underlying list
 	 * @return the position in the underlying list of the element 
-	 * nearest to but not at <code>position</code> in the direction 
-	 * (before or after) specified by <code>direction</code> for which 
-	 * <code>condition</code> evaluates to true
+	 * nearest to but not at {@code position} in the direction 
+	 * (before or after) specified by {@code direction} for which 
+	 * {@code condition} evaluates to true
 	 */
 	public int adjacentElement(int position, Predicate<HTMLEntity> condition, Direction direction){
 		for(int i=direction.apply(position); 
@@ -817,11 +817,11 @@ public class HTMLFile {
 	}
 	
 	/**
-	 * <p>Returns the <code>i</code>th element of the underlying 
+	 * <p>Returns the {@code i}th element of the underlying 
 	 * list.</p>
 	 * @param i the position in the underlying list of the 
 	 * HTMLEntity returned
-	 * @return  the <code>i</code>th element of the underlying 
+	 * @return  the {@code i}th element of the underlying 
 	 * list
 	 */
 	public HTMLEntity get(int i){
@@ -833,7 +833,7 @@ public class HTMLFile {
 	 * list and returns it.</p>
 	 * @param position the position in the underlying list of the element 
 	 * that is removed
-	 * @return the element at <code>position</code> in the underlying list 
+	 * @return the element at {@code position} in the underlying list 
 	 * before it was removed
 	 */
 	public HTMLEntity remove(int position){
@@ -843,7 +843,7 @@ public class HTMLFile {
 	
 	/**
 	 * <p>Removes from the underlying list all elements in the region 
-	 * bounded by <code>start</code> and <code>end</code>.</p>
+	 * bounded by {@code start} and {@code end}.</p>
 	 * @param start the inclusive lower bound of the region to be 
 	 * removed from the underlying list
 	 * @param end the exclusive upper bound of the region to be 
@@ -859,7 +859,7 @@ public class HTMLFile {
 	
 	/**
 	 * <p>Removes all content from the underlying list at or after 
-	 * the position <code>start</code>. This works like 
+	 * the position {@code start}. This works like 
 	 * {@link java.lang.String#substring(int) substring}, 
 	 * but in reverse.</p>
 	 * @param start the inclusive lower bound of the region of 
@@ -872,7 +872,7 @@ public class HTMLFile {
 	
 	/**
 	 * <p>Removes from the underlying list all elements for which 
-	 * <code>test</code> evaluates to true.</p>
+	 * {@code test} evaluates to true.</p>
 	 * @param test the Predicate that determines which elements are 
 	 * removed from the underlying list.
 	 */
@@ -888,10 +888,10 @@ public class HTMLFile {
  	/**
  	 * <p>Returns the position in the underlying list of the closing 
  	 * HTML tag corresponding to an opening HTML tag located at 
- 	 * <code>startPoint</code>.</p>
+ 	 * {@code startPoint}.</p>
  	 * 
  	 * <p>When another opening Tag of the same {@link Tag#getType() type} as 
- 	 * the opening tag at <code>startPoint</code> is encountered before 
+ 	 * the opening tag at {@code startPoint} is encountered before 
  	 * a closing tag of the same type, a counter is incremented. When a closing 
  	 * Tag of the same type is encountered, the counter is decreased. Only if 
  	 * the counter is at the correct value after a closing Tag is found will 
@@ -900,8 +900,8 @@ public class HTMLFile {
  	 * the index at which the search for a corresponding closing Tag is started, 
  	 * @return the position in the underlying list of the closing 
  	 * HTML tag corresponding to an opening HTML tag located at 
- 	 * <code>startPoint</code>
- 	 * @throws IllegalArgumentException if the element at <code>startPoint</code> 
+ 	 * {@code startPoint}
+ 	 * @throws IllegalArgumentException if the element at {@code startPoint} 
  	 * is not an {@link Tag#isOpening() opening} Tag.
  	 */
 	public int closingMatch(int startPoint){
@@ -947,15 +947,15 @@ public class HTMLFile {
 	
 	/**
 	 * <p>Returns a {@literal List<HTMLEntity>} representing the contents of the 
-	 * body scanned by <code>s</code>. Each HTML tag, whether opening or closing, gets 
+	 * body scanned by {@code s}. Each HTML tag, whether opening or closing, gets 
 	 * its own element in this list. Each HTML character code (&...;) 
 	 * does, too, as does each literal character not part of a tag or 
 	 * a code.<p>
 	 * <p>The type of the List returned is {@link repeatedphrases.ArrayList2 ArrayList2}.</p>
 	 * @param s a Scanner that produces the literal text of an HTML file 
-	 * to be rendered as an <code>HTMLFile</code> in memory
+	 * to be rendered as an {@code HTMLFile} in memory
 	 * @return a {@literal List<HTMLEntity>} representing the contents of the 
-	 * body scanned by <code>s</code>
+	 * body scanned by {@code s}
 	 */
 	private static ArrayList<HTMLEntity> getHTMLFileContent(Scanner s){
 		ArrayList<HTMLEntity> result = new ArrayList<>();
@@ -996,7 +996,7 @@ public class HTMLFile {
 	
 	/**
 	 * <p>Returns the character that ends an HTML tag or an 
-	 * HTML character code if <code>c</code> is the character 
+	 * HTML character code if {@code c} is the character 
 	 * that begins an HTML tag or an HTML character code 
 	 * respectively; returns null otherwise.
 	 * 
@@ -1011,7 +1011,7 @@ public class HTMLFile {
 	 * special text in HTML files is returned, if such a 
 	 * counterpart exists
 	 * @return the character that ends an HTML tag or an 
-	 * HTML character code if <code>c</code> is the character 
+	 * HTML character code if {@code c} is the character 
 	 * that begins an HTML tag or an HTML character code 
 	 * respectively; returns null otherwise
 	 */
@@ -1026,14 +1026,14 @@ public class HTMLFile {
 	/**
 	 * <p>Returns a sublist of the list underlying this object, 
 	 * whose bounds are indicated by the first and second entries 
-	 * in <code>bounds</code>.</p>
+	 * in {@code bounds}.</p>
 	 * @param bounds an int array whose first entry is the inclusive 
 	 * lower bound of the region to be returned and whose second 
 	 * entry is the exclusive upper bound of the region to be 
 	 * returned.
 	 * @return a sublist of the list underlying this object, 
 	 * whose bounds are indicated by the first and second entries 
-	 * in <code>bounds</code>
+	 * in {@code bounds}
 	 */
 	public List<HTMLEntity> section(int[] bounds){
 		return section(bounds[0], bounds[1]);
@@ -1051,13 +1051,13 @@ public class HTMLFile {
      * <p>Returns a StringBuilder whose contents are equal to the 
      * content returned by the specified Scanner.</p>
      * 
-     * <p>Reads content from <code>s</code> line by line and appends 
+     * <p>Reads content from {@code s} line by line and appends 
      * each line, with a newline character between lines, to a 
      * StringBuilder.</p>
      * @param s the Scanner whose contents are read out, 
      * accumulated, and returned
      * @return a StringBuilder whose contents are equal to the 
-     * content returned by <code>s</code>.
+     * content returned by {@code s}.
      */
 	private static StringBuilder readFile(Scanner s){
 				
@@ -1093,7 +1093,7 @@ public class HTMLFile {
 		
 		/**
 		 * <p>Constructs a ParagraphIterator that works 
-		 * on <code>HTMLFile.this.content</code>.</p>
+		 * on {@code HTMLFile.this.content}.</p>
 		 */
 		private ParagraphIterator(){
 			position = -1;
@@ -1150,7 +1150,7 @@ public class HTMLFile {
 	/**
 	 * <p>Returns true if the specified char is legal for 
 	 * a chapter title, false otherwise. Returns true if 
-	 * <code>c</code> is a capital letter, space, or 
+	 * {@code c} is a capital letter, space, or 
 	 * apostrophe, false otherwise.</p>
 	 * @param c a character to be tested for whether it is 
 	 * a legal character in a chapter title.

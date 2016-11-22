@@ -36,11 +36,11 @@ public class Corpus {
 	private PhraseProducer currentBuffer = null;
 	
 	/**
-	 * <p>Constructs a Corpus that produces phrases with <code>size</code> 
+	 * <p>Constructs a Corpus that produces phrases with {@code size} 
 	 * words, extracted from the {@link Chapter#body bodies} of 
 	 * {@link #chapters chapters}.<p>
 	 * @param size the number of words in each phrase
-	 * @param chapters a list of <code>Chapter</code>s to whose bodies 
+	 * @param chapters a list of {@code Chapter}s to whose bodies 
 	 * are examined to find phrases
 	 */
 	public Corpus(int size, Collection<Chapter> chapters) {
@@ -53,7 +53,7 @@ public class Corpus {
 	/**
 	 * <p>The initial value to which the chapterPointer 
 	 * is set. This is {@value} so that {@link #updateBuffer() updateBuffer}, 
-	 * which increments <code>chapterPointer</code>, can be used 
+	 * which increments {@code chapterPointer}, can be used 
 	 * to initially set the buffer during construction<p>
 	 */
 	public static final int INIT_POINTER_VALUE = -1;
@@ -86,14 +86,14 @@ public class Corpus {
 	
 	/**
 	 * <p>Returns true if the current chapter has a phrase of size 
-	 * <code>size</code> available, <code>false</code> otherwise.
+	 * {@code size} available, {@code false} otherwise.
 	 * If the {@link #chapterPointer current} Chapter does not have a phrase of size 
-	 * <code>size</code> available, focus is moved to the next chapter  
+	 * {@code size} available, focus is moved to the next chapter  
 	 * repeatedly until a chapter with an appropriately-sized phrase is found 
-	 * or there are no more chapters left, at which point, <code>false</code> 
+	 * or there are no more chapters left, at which point, {@code false} 
 	 * is returned.<p>
 	 * @return true if the current chapter has a phrase of size 
-	 * <code>size</code> available, false otherwise.
+	 * {@code size} available, false otherwise.
 	 */
 	public boolean hasNext(){
 		updateBuffer();
@@ -101,11 +101,11 @@ public class Corpus {
 	}
 	
 	/**
-	 * <p>Returns the next <code>size</code>-word phrase and stores 
-	 * that phrase's Location in <code>previousLocation</code>.<p>
-	 * @return the next <code>size</code>-word phrase
+	 * <p>Returns the next {@code size}-word phrase and stores 
+	 * that phrase's Location in {@code previousLocation}.<p>
+	 * @return the next {@code size}-word phrase
 	 * @throws IllegalStateException when there is no next 
-	 * <code>size</code>-word phrase
+	 * {@code size}-word phrase
 	 */
 	public String next(){
 		try{

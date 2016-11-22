@@ -93,10 +93,10 @@ public class SetTrail {
     }
 
     /**
-     * <p>Reads the html chapter files from <code>READ_FROM</code> and writes 
+     * <p>Reads the html chapter files from {@code READ_FROM} and writes 
      * modified versions of them with links to previous and next chapters 
      * added according to the data in the trail file named by the first 
-     * command-line argument to the folder <code>WRITE_TO</code>.</p>
+     * command-line argument to the folder {@code WRITE_TO}.</p>
      * @param args command-line arguments
      * @param msg
      */
@@ -159,7 +159,7 @@ public class SetTrail {
      * <p>Finds all anchor tags with the specified value of the 
      * specified attribute in the specified html file and changes 
      * the values of the href attributes of those anchors to 
-     * <code>address</code>.</p>
+     * {@code address}.</p>
      * @param file the html file whose anchor tags with the specified 
      * attribute and value are being modified
      * @param idValue the value to be used in determining which 
@@ -201,14 +201,14 @@ public class SetTrail {
     public static final String TITLE_START = "title=\"";
 
     /**
-     * <p>Returns a String based on <code>tag</code>, with the value 
+     * <p>Returns a String based on {@code tag}, with the value 
      * of the pre-existing href attribute replaced by the parameter 
-     * <code>address</code> and with the value of the pre-existing 
+     * {@code address} and with the value of the pre-existing 
      * title attribute replaced by a chapter title extracted from 
-     * <code>address</code> by calling {@link #title(String) title(address)}.</p>
+     * {@code address} by calling {@link #title(String) title(address)}.</p>
      * 
      * <p>For example, 
-     * <code>anchor("<a href=\"no.html\" title=\"no\">", "book_0_yes_yes.html")</code> 
+     * {@code anchor("<a href=\"no.html\" title=\"no\">", "book_0_yes_yes.html")} 
      * would return "<a href=\"book_0_yes_yes.html\" title=\"yes yes\">".</p>
      * @param tag
      * @param address
@@ -222,12 +222,12 @@ public class SetTrail {
      * <p>Returns the value for the title attribute of an anchor tag 
      * based on the specified address to which the anchor links.</p>
      * 
-     * <p>Returns <code>address</code> with its book name, chapter index, 
+     * <p>Returns {@code address} with its book name, chapter index, 
      * and file extension stripped away and underscores replaced 
      * with spaces.</p>
      * @param address the address of an html file for a chapter being 
      * linked.
-     * @return <code>address</code> with its book name, chapter index, 
+     * @return {@code address} with its book name, chapter index, 
      * and file extension stripped away.
      */
     private static String title(String address){
@@ -242,8 +242,8 @@ public class SetTrail {
 
     /**
      * <p>Replaces the pre-existing value of the attribute specified by 
-     * <code>attributeStart</code> in the specified <code>body</code> 
-     * of an html tag with <code>installValue</code>.</p>
+     * {@code attributeStart} in the specified {@code body} 
+     * of an html tag with {@code installValue}.</p>
      * 
      * @param body the text of an html tag of which a modified version 
      * is returned
@@ -254,12 +254,12 @@ public class SetTrail {
      * {@link #TITLE_START TITLE_START} or {@link #HREF_START HREF_START}.
      * 
      * @param installValue the value of the attribute named by 
-     * <code>attributeStart</code> to install in place of the 
+     * {@code attributeStart} to install in place of the 
      * pre-existing value
      * 
      * @return  the pre-existing value of the attribute specified by 
-     * <code>attributeStart</code> in the specified <code>body</code> 
-     * of an html tag with <code>installValue</code>
+     * {@code attributeStart} in the specified {@code body} 
+     * of an html tag with {@code installValue}
      */
     private static String replaceValueOfAttribute(String body, String attributeStart, String installValue){
         int start = body.indexOf(attributeStart)+attributeStart.length();
@@ -279,11 +279,11 @@ public class SetTrail {
     public static final int COLUMN_COUNT = 4;
 
     /**
-     * <p>Returns a list of <code>TrailElement</code>s describing each 
+     * <p>Returns a list of {@code TrailElement}s describing each 
      * chapter's predecessor and successor.</p>
      * @param trailFilename the name of the trail-file from which 
      * trail data is extracted
-     * @return a list of <code>TrailElement</code>s describing each 
+     * @return a list of {@code TrailElement}s describing each 
      * chapter's predecessor and successor
      */
     public static List<TrailElement> getTrailElements(String trailFilename){
@@ -327,13 +327,13 @@ public class SetTrail {
 
         /**
          * <p>Constructs a TrailElement indicating that the chapter 
-         * named by <code>focus</code> has the chapter named by 
-         * <code>prev</code as its predecessor and the chapter 
-         * named by <code>next</code> as its successor.</p>
-         * @param prev the chapter before <code>focus</code> in sequence
-         * @param focus the chapter in which links to <code>prev</code> 
-         * and <code>next</code> are to be installed
-         * @param next the chapter after <code>focus</code> in sequence
+         * named by {@code focus} has the chapter named by 
+         * {@code prev</code as its predecessor and the chapter 
+         * named by {@code next} as its successor.</p>
+         * @param prev the chapter before {@code focus} in sequence
+         * @param focus the chapter in which links to {@code prev} 
+         * and {@code next} are to be installed
+         * @param next the chapter after {@code focus} in sequence
          */
         public TrailElement(String prev, String focus, String next){
             this.prev = prev;
@@ -343,10 +343,10 @@ public class SetTrail {
 
         /**
          * <p>Compares two TrailElements, first by their 
-         * <code>focus</code>, then by their <code>prev</code>, 
-         * and last by their <code>next</code>.</p>
+         * {@code focus}, then by their {@code prev}, 
+         * and last by their {@code next}.</p>
          * @return an int whose sign reflects the natural ordering 
-         * between this TrailElement and <code>t</code>
+         * between this TrailElement and {@code t}
          */
         @Override
         public int compareTo(TrailElement t){

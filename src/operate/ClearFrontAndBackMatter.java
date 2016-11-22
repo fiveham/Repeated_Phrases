@@ -45,7 +45,7 @@ public class ClearFrontAndBackMatter {
     
 	/**
 	 * <p>Detects all the html files for the ASOIAF novels in 
-	 * <code>READ_FROM</code>, reads them, detects the paragraph 
+	 * {@code READ_FROM}, reads them, detects the paragraph 
 	 * containing the title of the Prologue and removes all 
 	 * content prior to that paragraph, and detects the paragraph 
 	 * containing the title of the first chapter-like feature after 
@@ -118,16 +118,16 @@ public class ClearFrontAndBackMatter {
 	}
 	
 	/**
-	 * <p>Returns <code>i-1</code> where <code>i</code> is 
-	 * the index in <code>file</code> of the second 
+	 * <p>Returns {@code i-1} where {@code i} is 
+	 * the index in {@code file} of the second 
 	 * paragraph containing the word "PROLOGUE", or the first if 
 	 * there isn't a second such paragraph.</p>
 	 * 
 	 * <p>Returning a reference to the second instance accounts 
 	 * for the table of contents.</p>
-	 * @param file the <code>HTMLFile</code> in which the Prologue 
+	 * @param file the {@code HTMLFile} in which the Prologue 
 	 * title is to be found
-	 * @return the index in <code>file</code> of the second 
+	 * @return the index in {@code file} of the second 
 	 * paragraph containing the word "PROLOGUE", or the first if 
 	 * there isn't a second such paragraph.
 	 */
@@ -161,13 +161,13 @@ public class ClearFrontAndBackMatter {
 	 * <p>Returns the index of the opening paragraph tag of the 
 	 * last paragraph containing the title of the first non-
 	 * chapter chapter-like element of the book whose html file 
-	 * <code>file</code> represents.</p>
+	 * {@code file} represents.</p>
 	 * @param file the HTMLFile whose first paragraph after the 
 	 * end of the last real chapter is returned
 	 * @return  the index of the opening paragraph tag of the 
 	 * last paragraph containing the title of the first non-
 	 * chapter chapter-like element of the book whose html file 
-	 * <code>file</code> represents.
+	 * {@code file} represents.
 	 */
 	private static int backMatterStart(HTMLFile file){
         String bookName = file.getExtensionlessName().substring(0,4);
@@ -214,7 +214,7 @@ public class ClearFrontAndBackMatter {
 	}
 	
 	/**
-	 * <p>Returns the index in <code>file</code> of the closing "p" tag 
+	 * <p>Returns the index in {@code file} of the closing "p" tag 
 	 * of the last paragraph that ends with the 
 	 * {@link #lastWords(String) last words} of the specified 
 	 * ASOIAF novella.</p>
@@ -232,7 +232,7 @@ public class ClearFrontAndBackMatter {
 	}
 	
 	/**
-	 * <p>Returns the index in <code>file</code> of the opening "p" tag 
+	 * <p>Returns the index in {@code file} of the opening "p" tag 
 	 * of the first paragraph that starts with the 
 	 * {@link #FIRST_WORDS(String) first words} of the specified 
 	 * ASOIAF novella.</p>

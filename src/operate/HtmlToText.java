@@ -9,20 +9,20 @@ import common.IO;
 import html.HTMLFile;
 
 /**
- * <p>Converts the HTML chapters in <code>READ_FROM</code> to 
+ * <p>Converts the HTML chapters in {@code READ_FROM} to 
  * .txt files containing only the contents of the chapters' 
- * bodies in <code>WRITE_TO</code>.</p>
+ * bodies in {@code WRITE_TO}.</p>
  */
 public class HtmlToText {
     
     /**
-     * <p>The <code>Folder</code> from which this class 
+     * <p>The {@code Folder} from which this class 
      * reads files to modify.</p>
      */
     public static final Folder READ_FROM = Folder.HTML_CHAPTERS;
 
     /**
-     * <p>The <code>Folder</code> to which this class 
+     * <p>The {@code Folder} to which this class 
      * writes files it creates.</p>
      */
     public static final Folder WRITE_TO = Folder.CORPUS;
@@ -32,9 +32,9 @@ public class HtmlToText {
     }
 
     /**
-     * <p>Detects all the .html files in <code>READ_FROM</code>, reads 
+     * <p>Detects all the .html files in {@code READ_FROM}, reads 
      * them as HTMLFiles, and prints them as .txt files in 
-     * <code>WRITE_TO</code>.</p>
+     * {@code WRITE_TO}.</p>
      * @param args command-line arguments (unused)
      */
     public static void htmlToText(Consumer<String> msg) {

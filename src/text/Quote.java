@@ -13,14 +13,14 @@ public class Quote implements Comparable<Quote>{
 	private final String text;
 	
 	/**
-	 * <p><code>phrase</code>'s word-index in its source chapter.</p>
+	 * <p>{@code phrase}'s word-index in its source chapter.</p>
 	 */
 	private final Location location;
 	
 	/**
-	 * <p>Constructs an <code>IntString</code> with the specified 
+	 * <p>Constructs an {@code IntString} with the specified 
 	 * word-index and phrase.</p>
-	 * @param index <code>phrase</code>'s word-index in its source 
+	 * @param index {@code phrase}'s word-index in its source 
 	 * chapter
 	 * @param phrase a phrase from the body of text being analysed
 	 */
@@ -40,15 +40,15 @@ public class Quote implements Comparable<Quote>{
 	@Override
 	/**
 	 * <p>Returns a string representation of this IntString, 
-	 * made of the concatenation of <code>index</code>, 
-	 * <code>Location.ELEMENT_DELIM</code> 
+	 * made of the concatenation of {@code index}, 
+	 * {@code Location.ELEMENT_DELIM} 
 	 * ({@value Location#ELEMENT_DELIM}), and 
-	 * <code>phrase</code>.</p>
+	 * {@code phrase}.</p>
 	 * @return a string representation of this IntString, 
-	 * made of the concatenation of <code>index</code>, 
-	 * <code>Location.ELEMENT_DELIM</code> 
+	 * made of the concatenation of {@code index}, 
+	 * {@code Location.ELEMENT_DELIM} 
 	 * ({@value Location#ELEMENT_DELIM}), and 
-	 * <code>phrase</code>.
+	 * {@code phrase}.
 	 */
 	public String toString(){
 		return index()+Location.ELEMENT_DELIM+text;

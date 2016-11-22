@@ -45,10 +45,10 @@ public class ClearExcessStructure{
 	}
 	
 	/**
-	 * <p>Detects the html files in the directory <code>READ_FROM</code>, 
+	 * <p>Detects the html files in the directory {@code READ_FROM}, 
 	 * reads each of them, removes divs, blockquotes, imgs, non-breaking 
 	 * spaces, and empty paragraphs from them, and saves them to 
-	 * <code>WRITE_TO</code>.</p>
+	 * {@code WRITE_TO}.</p>
 	 * @param args command-line arguments
 	 */
 	public static void clearXSStruct(Consumer<String> msg){
@@ -81,7 +81,7 @@ public class ClearExcessStructure{
 	
 	/**
 	 * <p>Removes empty paragraph blocks from the specified 
-	 * <code>HTMLFile</code>.</p>
+	 * {@code HTMLFile}.</p>
 	 */
 	private static void removeEmptyP(HTMLFile file){
 		HTMLFile.ParagraphIterator piter = file.paragraphIterator();

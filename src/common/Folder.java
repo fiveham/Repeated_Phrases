@@ -33,7 +33,7 @@ public enum Folder {
 	private File folder;
 	
 	/**
-	 * <p>The name of the directory, used in creating <code>folder</code>.</p>
+	 * <p>The name of the directory, used in creating {@code folder}.</p>
 	 */
 	private String folderName;
 	
@@ -53,20 +53,20 @@ public enum Folder {
 	
 	/**
 	 * <p>Returns the name for a file in this directory pertaining to 
-	 * phrases of the specified <code>size</code>.
+	 * phrases of the specified {@code size}.
 	 * @param size the number of words in the phrases in the file 
 	 * with this name which is in this directory or which is to be 
 	 * written in this directory.</p>
 	 * @return the name of the file pertaining to phrases of 
-	 * <code>size</code> words in this directory.
+	 * {@code size} words in this directory.
 	 */
 	public String filename(int size){
 		return folderName + File.separator + namebase + IO.FILENAME_COMPONENT_SEPARATOR_CHAR + size + IO.TXT_EXT;
 	}
 	
 	/**
-	 * <p>Returns a <code>File</code> representation of this directory.</p>
-	 * @return a <code>File</code> representation of this directory.
+	 * <p>Returns a {@code File} representation of this directory.</p>
+	 * @return a {@code File} representation of this directory.
 	 */
 	public File folder(){
 		return folder;
@@ -83,9 +83,9 @@ public enum Folder {
 	/**
 	 * <p>Returns the string used as the base of the 
 	 * names of files in this directory. 
-	 * Returns <code>null</code> if this directory is not 
-	 * <code>REPEATS</code>, <code>INDEPENDENT_INSTANCES</code>, 
-	 * or <code>DUPLICATE_INDEPENDENTS</code>.</p>
+	 * Returns {@code null} if this directory is not 
+	 * {@code REPEATS}, {@code INDEPENDENT_INSTANCES}, 
+	 * or {@code DUPLICATE_INDEPENDENTS}.</p>
 	 * @return the string used as the base of the 
 	 * names of files in this directory.
 	 */

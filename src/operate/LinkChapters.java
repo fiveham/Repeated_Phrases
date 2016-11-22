@@ -51,10 +51,10 @@ public class LinkChapters {
 
     /**
      * <p>For each corresponding pair of files from 
-     * <code>READ_SUBSTANCE</code> and 
-     * <code>READ_DECORATION</code>, adds 
+     * {@code READ_SUBSTANCE} and 
+     * {@code READ_DECORATION}, adds 
      * anchors based on the latter to the former and 
-     * saves the result to <code>WRITE_TO</code>.</p>
+     * saves the result to {@code WRITE_TO}.</p>
      * <p>Only anchors of phrases with at least a 
      * certain number of words specified in the 
      * command-line arguments will be applied.</p>
@@ -100,13 +100,13 @@ public class LinkChapters {
     }
 
     /**
-     * <p>Reads the files specified by <code>htmlFileName</code> and 
-     * <code>anchorFile</code>, adds anchor tags indicated by 
-     * the content of <code>anchorFile</code> to the in-memory 
-     * representation of <code>htmlFileName</code>, and saves the 
+     * <p>Reads the files specified by {@code htmlFileName} and 
+     * {@code anchorFile}, adds anchor tags indicated by 
+     * the content of {@code anchorFile} to the in-memory 
+     * representation of {@code htmlFileName}, and saves the 
      * modified html file to the location returned by 
-     * <code>IO.linkedChapterName(htmlFileName)</code>, which is 
-     * a location in <code>WRITE_TO</code> (13_linked_chapters).</p>
+     * {@code IO.linkedChapterName(htmlFileName)}, which is 
+     * a location in {@code WRITE_TO} (13_linked_chapters).</p>
      * @param htmlFileName the name of the html chapter file to which 
      * anchors will be added
      * @param anchorFile the name of the anchor-data file from which 
@@ -135,11 +135,11 @@ public class LinkChapters {
     }
 
     /**
-     * <p>Returns a list of <code>AnchorInfo</code>, each element of which is 
+     * <p>Returns a list of {@code AnchorInfo}, each element of which is 
      * based on a line from the specified file.</p>
      * @param f the file from which to extract anchor-definition 
      * data
-     * @return a list of <code>AnchorInfo</code>, each element of which is 
+     * @return a list of {@code AnchorInfo}, each element of which is 
      * based on a line from the specified file.
      */
     private static List<AnchorInfo> anchorInfo(File f){
@@ -173,16 +173,16 @@ public class LinkChapters {
     }
 
     /**
-     * <p>Returns a list of <code>FileDataPair</code>s pairing the html 
+     * <p>Returns a list of {@code FileDataPair}s pairing the html 
      * files from the folder {@value Folder#READ_SUBSTANCE} 
      * with the anchor-definition files from the folder 
      * {@value Folder#READ_DECORATION}.</p>
      * @param htmlFiles an array of the names of the html chapters in 
      * {@value Folder#READ_SUBSTANCE} 
      * @param anchFiles an array of the names of the anchor-definition 
-     * files in <code>READ_DECORATION</code> (11_anchors)
-     * @return a list of <code>FileDataPair</code>s pairing the html 
-     * files from the folder <code>READ_SUBSTANCE</code> 
+     * files in {@code READ_DECORATION} (11_anchors)
+     * @return a list of {@code FileDataPair}s pairing the html 
+     * files from the folder {@code READ_SUBSTANCE} 
      * with the anchor-definition files from the folder 
      * {@value Folder#READ_DECORATION}.
      */
@@ -208,15 +208,15 @@ public class LinkChapters {
     }
 
     /**
-     * <p>Returns true if <code>htmlFile</code>'s name prior to 
-     * its file extension is the same as that of <code>anchFile</code> 
+     * <p>Returns true if {@code htmlFile}'s name prior to 
+     * its file extension is the same as that of {@code anchFile} 
      * prior to its file extension, false otherwise.</p>
      * @param htmlFile the name of an html chapter file from the folder 
-     * <code>READ_SUBSTANCE.folderName()</code>
+     * {@code READ_SUBSTANCE.folderName()}
      * @param anchFile the name of an anchor-definition file from the 
-     * folder <code>READ_DECORATION.folderName()</code>
-     * @return true if <code>htmlFile</code>'s name prior to 
-     * its file extension is the same as that of <code>anchFile</code> 
+     * folder {@code READ_DECORATION.folderName()}
+     * @return true if {@code htmlFile}'s name prior to 
+     * its file extension is the same as that of {@code anchFile} 
      * prior to its file extension, false otherwise.
      */
     private static boolean matchNames(String htmlFile, String anchFile){
@@ -259,13 +259,13 @@ public class LinkChapters {
 
         /**
          * <p>The anchor file whose contents are added to 
-         * those of <code>htmlFile</code> as anchor tags.</p>
+         * those of {@code htmlFile} as anchor tags.</p>
          */
         public final String anchFile;
 
         /**
-         * <p>Constructs a FileDataPair with the specified <code>htmlFile</code> 
-         * and <code>anchFile</code>.</p>
+         * <p>Constructs a FileDataPair with the specified {@code htmlFile} 
+         * and {@code anchFile}.</p>
          * @param htmlFile the name of the HTML file to which anchor 
          * tags will be added
          * @param anchFile the name of the file from which anchor tag 
@@ -278,8 +278,8 @@ public class LinkChapters {
 
         @Override
         /**
-         * <p>Returns a String made of this FileDataPair's <code>htmlFile</code> 
-         * and <code>anchFile</code> separated by a tab (<code>"\t"</code>).</p>
+         * <p>Returns a String made of this FileDataPair's {@code htmlFile} 
+         * and {@code anchFile} separated by a tab ({@code "\t"}).</p>
          */
         public String toString(){
             String html = IO.stripFolderExtension(htmlFile);

@@ -14,7 +14,7 @@ import common.IO;
 /**
  * <p>Adds system-dependent newlines/linebreaks before 
  * opening html paragraph tags in html book files from 
- * <cod>READ_FROM</code> to increase the human-readability 
+ * <cod>READ_FROM} to increase the human-readability 
  * of those files.</p>
  */
 public class NewlineP{
@@ -49,12 +49,12 @@ public class NewlineP{
     }
 
     /**
-     * <p>Detects the html files in <code>READ_FROM</code>, reads them 
+     * <p>Detects the html files in {@code READ_FROM}, reads them 
      * using {@link #BEGIN_P BEGIN_P} as a Scanner's 
      * {@linkplain java.util.Scanner#useDelimiter(String) delimiter}, 
      * and accumulates the content returned by that Scanner, including 
      * a {@linkplain IO#NEW_LINE newline} and the value of 
-     * <code>BEGIN_P</code> before each element after the first one 
+     * {@code BEGIN_P} before each element after the first one 
      * produced by the Scanner.</p>
      * @param msg 
      */
@@ -91,7 +91,7 @@ public class NewlineP{
     /**
      * <p>Returns the name of the file to or from which this 
      * class should write or read content, depending on the 
-     * value of <code>folder</code>. If READ_FROM is specified, 
+     * value of {@code folder}. If READ_FROM is specified, 
      * then the value returned is the name of the file from 
      * which content should be read. If WRITE_TO is specified, 
      * then the value returned is the name of the file to which 
@@ -99,7 +99,7 @@ public class NewlineP{
      * @param filename the name of the file to which a 
      * folder reference should be prepended
      * @param folder the folder to which a reference is 
-     * prepended to <code>filename</code>
+     * prepended to {@code filename}
      * @return the name of the file to or from which this 
      * class should write or read content
      */
@@ -108,11 +108,11 @@ public class NewlineP{
     }
 
     /**
-     * <p>Returns a <code>String</code> containing all the contents 
-     * of the body that <code>s</code> reads, with newlines 
+     * <p>Returns a {@code String} containing all the contents 
+     * of the body that {@code s} reads, with newlines 
      * inserted before every opening paragraph tag.</p>
-     * @param s a Scanner reading a file from <code>READ_FROM</code>
-     * @return the text content produced by <code>s</code> 
+     * @param s a Scanner reading a file from {@code READ_FROM}
+     * @return the text content produced by {@code s} 
      * with newlines inserted before every opening 
      * paragraph tag.
      */

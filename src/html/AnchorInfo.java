@@ -28,7 +28,7 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 	
 	/**
 	 * <p>The location of the next instance of this anchor's 
-	 * phrase in the corpus. Its <code>toString()</code> value 
+	 * phrase in the corpus. Its {@code toString()} value 
 	 * and its filename component are used to create the value 
 	 * of the href attribute of this anchor.</p>
 	 */
@@ -39,9 +39,9 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 	 * the specified location to which to link.</p>
 	 * @param phrase the phrase of which two instances are linked by this 
 	 * anchor
-	 * @param position the <code>Location</code> of the phrase-instance on 
+	 * @param position the {@code Location} of the phrase-instance on 
 	 * which this anchor is installed
-	 * @param linkTo the <code>Location</code> of the phrase-instance to which 
+	 * @param linkTo the {@code Location} of the phrase-instance to which 
 	 * this anchor links
 	 */
 	public AnchorInfo(String phrase, Location position, Location linkTo) {
@@ -51,16 +51,16 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 	}
 	
 	/**
-	 * <p>Returns the number of words in this AnchorInfo's <code>phrase</code>.</p>
-	 * @return the number of words in this AnchorInfo's <code>phrase</code>.
+	 * <p>Returns the number of words in this AnchorInfo's {@code phrase}.</p>
+	 * @return the number of words in this AnchorInfo's {@code phrase}.
 	 */
 	public int phraseSize(){
 		return phrase.split(" ").length;
 	}
 	
 	/**
-	 * <p>Returns this object's <code>phrase</code>.</p>
-	 * @return this object's <code>phrase</code>.
+	 * <p>Returns this object's {@code phrase}.</p>
+	 * @return this object's {@code phrase}.
 	 */
 	public String phrase(){
 		return phrase;
@@ -81,9 +81,9 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 	}
 	
 	/**
-	 * <p>Returns the <code>Location</code> in the corpus of 
+	 * <p>Returns the {@code Location} in the corpus of 
 	 * the phrase that will have this anchor applied.</p>
-	 * @return the <code>Location</code> in the corpus of 
+	 * @return the {@code Location} in the corpus of 
 	 * the phrase that will have this anchor applied.
 	 */
 	public Location position(){
@@ -91,9 +91,9 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 	}
 	
 	/**
-	 * <p>Returns the <code>Location</code> to which this 
+	 * <p>Returns the {@code Location} to which this 
 	 * anchor links.</p>
-	 * @return the <code>Location</code> to which this 
+	 * @return the {@code Location} to which this 
 	 * anchor links.
 	 */
 	public Location linkTo(){
@@ -132,8 +132,8 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 	/**
 	 * <p>Returns the value of the id attribute of an anchor tag 
 	 * on a phrase at the specified Location. Provides the id for 
-	 * this anchor, based on <code>position</code> and the id for 
-	 * the destination of the link based on <code>linkTo</code>.</p>
+	 * this anchor, based on {@code position} and the id for 
+	 * the destination of the link based on {@code linkTo}.</p>
 	 * @param loc a Location whose equivalent id in an html file 
 	 * of a chapter is to be returned.
 	 * @return the value of the id attribute of an anchor tag 
@@ -156,10 +156,10 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 	/**
 	 * <p>Returns the plaintext contents of the opening tag of 
 	 * this anchor. This is the same as what is returned by 
-	 * <code>openingTag()</code> except for the angle brackets.</p>
+	 * {@code openingTag()} except for the angle brackets.</p>
 	 * @return the plaintext contents of the opening tag of 
 	 * this anchor. This is the same as what is returned by 
-	 * <code>openingTag()</code> except for the angle brackets.
+	 * {@code openingTag()} except for the angle brackets.
 	 */
 	public String openingTagText(){
 		return "a id=\""+locationID(position)+"\" href=\""+href(linkTo)+"\" title=\""+phrase+"\"";
@@ -178,10 +178,10 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 	/**
 	 * <p>Returns the plaintext contents of the closing tag of 
 	 * this anchor. This is the same as what is returned by 
-	 * <code>closingTag()</code> except for the angle brackets.</p>
+	 * {@code closingTag()} except for the angle brackets.</p>
 	 * @return the plaintext contents of the closing tag of 
 	 * this anchor. This is the same as what is returned by 
-	 * <code>closingTag()</code> except for the angle brackets.
+	 * {@code closingTag()} except for the angle brackets.
 	 */
 	public String closingTagText(){
 		return Tag.CLOSE + Tag.A;

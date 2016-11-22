@@ -9,15 +9,15 @@ import java.util.function.Predicate;
 public class CharCode extends HTMLEntity {
 	
 	/**
-	 * <p>The content of a <code>Code</code> representing the 
+	 * <p>The content of a {@code Code} representing the 
 	 * HTML character code for a non-breaking space.</p>
 	 */
 	public static final String NBSP = "nbsp";
 	
 	/**
 	 * <p>Evaluates to true if the specified HTMLEntity is a 
-	 * <code>Code</code> and represents a non-breaking space 
-	 * as determined by <code>NBSP</code>.</p>
+	 * {@code Code} and represents a non-breaking space 
+	 * as determined by {@code NBSP}.</p>
 	 */
 	public static final Predicate<HTMLEntity> IS_NBSP = (h) -> CharCode.class.isInstance(h) && NBSP.equals(((CharCode)h).code);
 	
@@ -30,7 +30,7 @@ public class CharCode extends HTMLEntity {
 	
 	/**
 	 * <p>Constructs a Code whose text between the beginning 
-	 * ampersand and the ending semicolon equals <code>code</code>.</p>
+	 * ampersand and the ending semicolon equals {@code code}.</p>
 	 * @param code the text of this HTML character code between 
 	 * the beginning ampersand and the ending semicolon
 	 */
@@ -39,7 +39,7 @@ public class CharCode extends HTMLEntity {
 	}
 	
 	/**
-	 * <p>Returns the literal text for this <code>Code</code> 
+	 * <p>Returns the literal text for this {@code Code} 
 	 * between its ampersand and semicolon.</p>
 	 * @return
 	 */
@@ -49,8 +49,8 @@ public class CharCode extends HTMLEntity {
 	
 	@Override
 	/**
-	 * <p>Returns a string representation of this <code>Code</code>, 
-	 * made of the starting ampersand, <code>code</code>, and 
+	 * <p>Returns a string representation of this {@code Code}, 
+	 * made of the starting ampersand, {@code code}, and 
 	 * the ending semicolon.</p>
 	 */
 	public String toString(){
@@ -97,12 +97,12 @@ public class CharCode extends HTMLEntity {
 	
 	@Override
 	/**
-	 * <p>Returns true if <code>o</code> is an <code>Code</code> and 
-	 * its <code>code</code> member is the same as that of this 
-	 * <code>Code</code>.</p>
-	 * @return s true if <code>o</code> is an <code>Code</code> and 
-	 * its <code>code</code> member is the same as that of this 
-	 * <code>Code</code>.
+	 * <p>Returns true if {@code o} is an {@code Code} and 
+	 * its {@code code} member is the same as that of this 
+	 * {@code Code}.</p>
+	 * @return s true if {@code o} is an {@code Code} and 
+	 * its {@code code} member is the same as that of this 
+	 * {@code Code}.
 	 */
 	public boolean equals(Object o){
 		return o instanceof CharCode && code.equals( ((CharCode)o).code );

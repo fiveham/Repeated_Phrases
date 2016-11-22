@@ -273,13 +273,13 @@ public class RepeatedPhrasesUI extends JFrame {
      * {@link opState} is null (no operation is being performed), then opState 
      * is changed to specify the operation being initiated, a staring message 
      * is set as the GUI's status, then a ButtonOperation is created and executed 
-     * which performs the action contained in <code>action</code> and then 
+     * which performs the action contained in {@code action} and then 
      * sets the GUI's status to an ending message.</p>
      * @param newOpState the button that was pressed
      * @param startMsg message displayed on the GUI as soon as this process begins
      * @param endMsg message displayed on the GUI once this process finishes
      * @param action the actions taken as a result of pressing the button 
-     * <code>newOpState</code>
+     * {@code newOpState}
      */
     private void buttonPress(JButton newOpState, String startMsg, String endMsg, Runnable action){
     	if(opState == null){
@@ -426,7 +426,7 @@ public class RepeatedPhrasesUI extends JFrame {
     	
     	/**
     	 * <p>Resets the {@linkplain RepeatedPhrasesUI#opState operation-state} to 
-    	 * <code>null</code>, allowing a button's operation to begin when a 
+    	 * {@code null}, allowing a button's operation to begin when a 
     	 * button is next pressed.</p>
     	 */
     	@Override
