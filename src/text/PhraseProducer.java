@@ -39,20 +39,7 @@ public class PhraseProducer implements Iterator<String>{
 	 */
 	private int outputCount;
 	
-	/**
-	 * <p>All the words from the file whose name is passed to 
-	 * the constructor are stored in this String, with one 
-	 * instance of {@code WORD_SEPARATOR} between each 
-	 * pair of adjacent words.</p>
-	 */
-	private final String content;
-	
-	/**
-	 * <p>The filename of the chapter whose 
-	 * {@link Chapter#getBody() body} this 
-	 * PhraseProducer traverses.</p>
-	 */
-	private final String filename;
+	private final Chapter chapter;
 	
 	/**
 	 * <p>Index in {@code content} of the first character of the next 
@@ -88,8 +75,7 @@ public class PhraseProducer implements Iterator<String>{
 		this.size = size;
 		outputCount = 0;
 		
-		this.filename = chapter.getName();
-		this.content = chapter.getBody();
+		this.chapter = chapter;
 		
 		phraseStart = initPhraseStart();
 		phraseEnd = initPhraseEnd();
@@ -103,7 +89,7 @@ public class PhraseProducer implements Iterator<String>{
 	 */
 	private int initPhraseEnd(){
 		int wordEndCount = 0;
-		for(int i=phraseStart+1; i<content.length(); i++){
+		for(int i=phraseStart+1; i<chapter.getBody().length(); i++){
 			wordEndCount++;
 			if( !hasPhraseCharAt(i) 
 					&& hasPhraseCharAt(i-1) 
@@ -111,7 +97,7 @@ public class PhraseProducer implements Iterator<String>{
 				return i;
 			}
 		}
-		throw new IllegalStateException("File "+filename+" contains "+wordEndCount+" words, but needs "+size+".");
+		throw new IllegalStateException("File "+chapter.getName()+" contains "+wordEndCount+" words, but needs "+size+".");
 	}
 	
 	/**
@@ -122,12 +108,12 @@ public class PhraseProducer implements Iterator<String>{
 	 * doesn't contain any words
 	 */
 	private int initPhraseStart(){
-		for(int i=0; i<content.length(); i++){
+		for(int i=0; i<chapter.getBody().length(); i++){
 			if(hasPhraseCharAt(i)){
 				return i;
 			}
 		}
-		throw new IllegalStateException("File "+filename+" doesn't contain a word");
+		throw new IllegalStateException("File "+chapter.getName()+" doesn't contain a word");
 	}
 	
 	/**
@@ -141,7 +127,9 @@ public class PhraseProducer implements Iterator<String>{
 	 * otherwise
 	 */
 	private boolean hasPhraseCharAt(int i){
-		return (0<=i && i<content.length()) && isPhraseChar(content.charAt(i));
+		return 0<=i 
+				&& i<chapter.getBody().length() 
+				&& isPhraseChar(chapter.getBody().charAt(i));
 	}
 	
 	/**
@@ -164,7 +152,7 @@ public class PhraseProducer implements Iterator<String>{
 	
 	public static final char E_ACUTE = '\u00E9';
 	public static final char E_CIRCUMFLEX = '\u00EA';
-
+	
 	@Override
 	/**
 	 * <p>Returns true if there is at least one more phrase to extract
@@ -173,9 +161,9 @@ public class PhraseProducer implements Iterator<String>{
 	 * from {@code content}, false otherwise
 	 */
 	public boolean hasNext(){
-		return phraseEnd <= content.length();
+		return phraseEnd <= chapter.getBody().length();
 	}
-
+	
 	@Override
 	/**
 	 * <p>Returns the next phrase with {@code size} words from 
@@ -185,7 +173,7 @@ public class PhraseProducer implements Iterator<String>{
 	 */
 	public String next(){
 		outputCount++;
-		String out = content.substring(phraseStart, phraseEnd);
+		String out = chapter.getBody().substring(phraseStart, phraseEnd);
 		phraseStart = nextPhraseStart();
 		phraseEnd = nextPhraseEnd();
 		return out;
@@ -199,12 +187,12 @@ public class PhraseProducer implements Iterator<String>{
 	 * word-end after {@code phraseEnd}
 	 */
 	private int nextPhraseEnd(){
-		for(int i=phraseEnd+1; i<=content.length(); i++){
+		for(int i=phraseEnd+1; i<=chapter.getBody().length(); i++){
 			if(hasPhraseCharAt(i-1) && !hasPhraseCharAt(i)){
 				return i;
 			}
 		}
-		return content.length()+1;
+		return chapter.getBody().length()+1;
 	}
 	
 	/**
@@ -214,12 +202,12 @@ public class PhraseProducer implements Iterator<String>{
 	 * or }content.length()} if there is no next word
 	 */
 	private int nextPhraseStart(){
-		for(int i=phraseStart+1; i<content.length(); i++){
+		for(int i=phraseStart+1; i<chapter.getBody().length(); i++){
 			if(!hasPhraseCharAt(i-1) && hasPhraseCharAt(i)){
 				return i;
 			}
 		}
-		return content.length();
+		return chapter.getBody().length();
 	}
 	
 	/**
