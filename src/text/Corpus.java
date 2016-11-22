@@ -69,7 +69,7 @@ public class Corpus {
 		//while currentBuffer doesn't have a next element 
 		//(or is null) update the buffer to a new buffer 
 		//of the next file 
-		while( !(currentBuffer != null && currentBuffer.hasNext()) 
+		while((currentBuffer == null || !currentBuffer.hasNext()) 
 				&& chapterPointer < chapters.size()-1){
 			
 			try{
@@ -77,10 +77,7 @@ public class Corpus {
 			} catch(IllegalArgumentException e){
 				//specified chapter didn't have enough tokens in it
 				//cycle around to the next chapter
-			}/* catch(IndexOutOfBoundsException e){
-				//The final buffer is already exhausted
-				return;
-			}*/
+			}
 		}
 	}
 	
