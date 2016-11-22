@@ -2,15 +2,15 @@ package text;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
-
 
 /**
  * <p>Iterates over a list of chapters, and extracts as many phrases 
  * of the specified {@link #size size} as possible from each 
  * chapter.</p>
  */
-public class Corpus {
+public class Corpus implements Iterator<String>{
 	
 	/**
 	 * <p>The number of words in the phrases this object produces.</p>
@@ -65,22 +65,25 @@ public class Corpus {
 	 * available.<p>
 	 */
 	private void updateBuffer(){
-		
 		//while currentBuffer doesn't have a next element 
 		//(or is null) update the buffer to a new buffer 
 		//of the next file 
-		while((currentBuffer == null || !currentBuffer.hasNext()) 
-				&& chapterPointer < chapters.size()-1){
-			
+		while(!bufferHasNext() && chapterPointer < chapters.size()-1){ //TODO use an Iterator<Chapter>
 			try{
 				currentBuffer = new PhraseProducer(size, chapters.get(++chapterPointer));
-			} catch(IllegalArgumentException e){
+			} catch(IllegalArgumentException f){
 				//specified chapter didn't have enough tokens in it
 				//cycle around to the next chapter
 			}
 		}
 	}
 	
+	private boolean bufferHasNext(){
+		return currentBuffer != null 
+				&& currentBuffer.hasNext();
+	}
+	
+	@Override
 	/**
 	 * <p>Returns true if the current chapter has a phrase of size 
 	 * {@code size} available, {@code false} otherwise.
@@ -96,7 +99,8 @@ public class Corpus {
 		updateBuffer();
 		return currentBuffer.hasNext();
 	}
-	
+
+	@Override
 	/**
 	 * <p>Returns the next {@code size}-word phrase and stores 
 	 * that phrase's Location in {@code previousLocation}.<p>
@@ -107,7 +111,9 @@ public class Corpus {
 	public String next(){
 		try{
 			updateBuffer();
-			previousLocation = new Location(currentBuffer.outputCount(), chapters.get(chapterPointer).getName() );
+			previousLocation = new Location(
+					currentBuffer.outputCount(), 
+					chapters.get(chapterPointer).getName());
 			return currentBuffer.next();
 		} catch(IndexOutOfBoundsException e){
 			throw new IllegalStateException("No next phrase available.");
@@ -126,8 +132,7 @@ public class Corpus {
 	public Location prevLocation(){
 		if(previousLocation != null){
 			return previousLocation;
-		}
-		else{
+		} else{
 			throw new IllegalStateException("No previous Location. No phrases have been output.");
 		}
 	}
