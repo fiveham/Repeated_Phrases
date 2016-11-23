@@ -52,7 +52,7 @@ public class SplitChapters {
 
         handlePQ(msg);
     }
-
+    
     private static void handleNovels(Consumer<String> msg){
         File[] readUs = READ_FROM.folder().listFiles(IO::isNovel);
 
@@ -99,7 +99,7 @@ public class SplitChapters {
             }
         }
     }
-
+    
     private static List<String> allEasyNovellaNames = new ArrayList<>(4);
     static{
 		allEasyNovellaNames.add("DE_0.html");
@@ -215,7 +215,7 @@ public class SplitChapters {
         
         return result.toString();
     }
-
+    
     private static String novellaTitle(String novellaName){
         switch(novellaName){
         case "DE_0.html" : return "THE HEDGE KNIGHT";
@@ -260,7 +260,7 @@ public class SplitChapters {
 	public static boolean isLegalChapterTitleCharacter(char c){
 		return ('A'<=c && c<='Z') || c==' ' || c=='\'';
 	}
-
+	
     /**
      * <p>Writes the contents of {@code buffer} to a file via {@code out}, prepended with
      * {@link #writeHeader(String,OutputStreamWriter) a header} and appended with
@@ -289,7 +289,7 @@ public class SplitChapters {
             out.close();
         }
     }
-
+    
     /**
      * <p>Returns the name of the file to which a chapter's content will be written.</p>
      * @param bookFile the source file from {@code READ_FROM} from which the chapter's content was
@@ -308,7 +308,7 @@ public class SplitChapters {
         		+ chapterName.replace(' ', IO.FILENAME_COMPONENT_SEPARATOR_CHAR) 
         		+ IO.HTML_EXT;
     }
-
+    
     /**
      * <p>Extracts a chapter's title from a {@code paragraph}
      * {@link #isTitleParagraph(List<HTMLEntity>) containing a chapter title}.</p>
@@ -326,7 +326,7 @@ public class SplitChapters {
 
         return result.toString();
     }
-
+    
     /**
      * <p>Of the header content to be added to individual chapters' files, this is the portion prior
      * to the name of the chapter.</p>
@@ -339,7 +339,7 @@ public class SplitChapters {
             + "<td class=\"prev_chapter\"><p class=\"prev_chapter\">"
             + "<a id=\"prev_chapter\" href=\"nowhere\" title=\"nothing\" style=\"change_chapter\">"
             + "&lt;&lt;</a></p></td><td class=\"chapter_title\"><p class=\"chapter_title\">";
-
+    
     /**
      * <p>Of the header content to be added to individual chapters' files, this is the portion after
      * the name of the chapter.</p>
@@ -349,7 +349,7 @@ public class SplitChapters {
     		"</p></td><td class=\"next_chapter\"><p class=\"next_chapter\">"
             + "<a id=\"next_chapter\" href=\"nowhere\" title=\"nothing\" style=\"change_chapter\">"
             + "&gt;&gt;</a></p></td></tr></table></div><div class=\"chapter_body\">";
-
+    
     /**
      * <p>Adds a header to the specified file consisting of an opening html tag, opening head tag,
      * charset and stylesheet specifications, closing head tag, opening body tag, opening div tag
@@ -365,7 +365,7 @@ public class SplitChapters {
         String header = HEADER_FRONT + chapterName + HEADER_BACK + IO.NEW_LINE;
         out.write(header);
     }
-
+    
     /**
      * <p>Of the footer content to be added to individual chapters' files, this is the portion prior
      * to the name of the chapter.</p>
@@ -376,7 +376,7 @@ public class SplitChapters {
             + "<td class=\"prev_chapter\"><p class=\"prev_chapter\">"
             + "<a id=\"prev_chapter\" href=\"nowhere\" title=\"nothing\" style=\"change_chapter\">"
             + "&lt;&lt;</a></p></td><td class=\"chapter_title\"><p class=\"chapter_title\">";
-
+    
     /**
      * <p>Of the footer content to be added to individual chapters' files, this is the portion after
      * the name of the chapter.</p>
@@ -386,7 +386,7 @@ public class SplitChapters {
     		"</p></td><td class=\"next_chapter\"><p class=\"next_chapter\">"
             + "<a id=\"next_chapter\" href=\"nowhere\" title=\"nothing\" style=\"change_chapter\">"
             + "&gt;&gt;</a></p></td></tr></table></div></div></body></html>";
-
+    
     /**
      * <p>Adds a footer to the specified file consisting of a closing div for the chapter body, a
      * chapter-navigation table containing the chapter's title, in its own div, a closing div tag
@@ -399,7 +399,7 @@ public class SplitChapters {
         String footer = FOOTER_FRONT + chapterName + FOOTER_BACK;
         out.write(footer);
     }
-
+    
     /**
      * <p>Returns true if the specified HTMLEntity is a literal character that is legal for a
      * chapter title, false otherwise.</p>
@@ -410,7 +410,7 @@ public class SplitChapters {
     public static boolean isTitleChar(HTMLEntity h){
         return CharLiteral.class.isInstance(h) && isTitle(((CharLiteral)h).c);
     }
-
+    
     /**
      * <p>Returns true if the specified char is legal for a chapter title, false otherwise. A char
      * is legal for a chapter title if it is a capital letter, a space, or an apostrophe</p>
