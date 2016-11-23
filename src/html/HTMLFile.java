@@ -908,7 +908,9 @@ public class HTMLFile {
         		}
         	} else if(mate.equals(c)){ //we are looking for a '>' or a ';' //we've found that mate
     			//then we can stop looking for that mate
-    			HTMLEntity newEntry = mate==Tag.END ? new Tag(tagCode.toString()) : new CharCode(tagCode.toString());
+    			HTMLEntity newEntry = mate==Tag.END 
+    					? new Tag(tagCode.toString()) 
+    					: new CharCode(tagCode.toString());
     			result.add( newEntry);
     			mate = null;
     			tagCode = null;
@@ -936,9 +938,9 @@ public class HTMLFile {
      */
 	public static Character risingCounterpart(Character c){
     	switch(c){
-    		case Tag.START  : return Tag.END;
+    		case Tag.START      : return Tag.END;
     		case CharCode.START : return CharCode.END;
-    		default         : return null;
+    		default             : return null;
         }
     }
 	
@@ -1047,7 +1049,7 @@ public class HTMLFile {
          * this ParagraphIterator was constructed
          */
 		private void concurrentModificationCheck(){
-			if( this.modCount != HTMLFile.this.modCount ){
+			if(this.modCount != HTMLFile.this.modCount){
 				throw new ConcurrentModificationException(
 						"Mismatch between " 
 						+ "ParagraphIterator.this.modCount and HTMLFile.this.modCount: (" 
