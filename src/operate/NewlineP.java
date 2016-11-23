@@ -14,7 +14,7 @@ import common.IO;
 /**
  * <p>Adds system-dependent newlines/linebreaks before 
  * opening html paragraph tags in html book files from 
- * <cod>READ_FROM} to increase the human-readability 
+ * {@code READ_FROM} to increase the human-readability 
  * of those files.</p>
  */
 public class NewlineP{
