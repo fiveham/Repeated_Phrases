@@ -136,7 +136,7 @@ public class ClearFrontAndBackMatter {
         
         int chapterStartIndex = file.adjacentElement(hasFirstWordsAt, Direction.NEXT, -1);
         
-        Predicate<Integer> isPrologueBlock = (i) -> HTMLFile.IS_PARAGRAPHISH_OPEN.test(file.get(i)) 
+        Predicate<Integer> isPrologueBlock = (i) -> HTMLFile.isParagraphishOpen(file.get(i)) 
         		&& file.hasLiteralBetween("PROLOGUE",i,file.closingMatch(i));
         int pLocation = file.adjacentElement(isPrologueBlock, Direction.PREV, chapterStartIndex);
         
@@ -173,7 +173,7 @@ public class ClearFrontAndBackMatter {
         Predicate<Integer> hasLastWordsAt = (i) -> file.hasLiteralAt(lastWords, i);
         
         int textIndex = file.adjacentElement(hasLastWordsAt, Direction.PREV, file.elementCount());
-        int pIndex = file.adjacentElement(textIndex, HTMLFile.IS_PARAGRAPHISH_OPEN, Direction.NEXT);
+        int pIndex = file.adjacentElement(textIndex, HTMLFile::isParagraphishOpen, Direction.NEXT);
         
         return pIndex;
 	}
