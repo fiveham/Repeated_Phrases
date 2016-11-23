@@ -1,6 +1,5 @@
 package html;
 
-import java.util.function.Predicate;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -179,8 +178,9 @@ public class Tag extends HTMLEntity {
 		return Tag.class.isInstance(h) && HEADERS.contains(((Tag)h).getType());
 	}
 			
-	public static final Predicate<HTMLEntity> IS_HEADER_OPEN = 
-			(h) -> isHeader(h) && isOpen(h);
+	public static boolean isHeaderOpen(HTMLEntity h){
+		return isHeader(h) && isOpen(h);
+	}
 	
     /**
      * <p>The literal text of this tag inside its opening and closing angle brackets.</p>

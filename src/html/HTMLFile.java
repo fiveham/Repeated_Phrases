@@ -982,7 +982,7 @@ public class HTMLFile {
 	}
 	
 	public static final Predicate<HTMLEntity> IS_PARAGRAPHISH_OPEN = //TODO use methods and ::
-			(h) -> Tag.isPOpen(h) || Tag.IS_HEADER_OPEN.test(h) ;
+			(h) -> Tag.isPOpen(h) || Tag.isHeaderOpen(h) ;
 	
     /**
      * <p>A utility class that crawls the list of HTMLEntity that underlies this HTMLFile and
