@@ -145,12 +145,12 @@ public class SplitChapters {
             int footnoteIndex = pq.adjacentElement(
             		(i) -> pq.hasLiteralAt("Footnote",i), Direction.PREV, pq.elementCount());
             
-            int bodyEndIndex = pq.adjacentElement( footnoteIndex, Tag.IS_P_OPEN, Direction.PREV);
+            int bodyEndIndex = pq.adjacentElement( footnoteIndex, Tag::isPOpen, Direction.PREV);
             List<HTMLEntity> bodySection = pq.section(0,bodyEndIndex);
             
             int footnoteStart = pq.adjacentElement(
             		pq.elementCount(), 
-            		Tag.IS_P_OPEN, 
+            		Tag::isPOpen, 
             		Direction.PREV);
             List<HTMLEntity> footnoteSection = pq.section(footnoteStart);
             
@@ -169,14 +169,14 @@ public class SplitChapters {
                 HTMLFile file = files[i];
                 
                 //replace superscript 1 with asterisk
-                int noteIndex = file.adjacentElement(-1, Tag.IS_SUP, Direction.NEXT);
+                int noteIndex = file.adjacentElement(-1, Tag::isSup, Direction.NEXT);
                 noteIndex = file.adjacentElement(noteIndex, isSuperscript1, Direction.NEXT);
                 file.set(noteIndex, new CharLiteral('*'));
                 
                 //replace internal link with external link
                 int noteAnchorIndex = file.adjacentElement(
                 		noteIndex, 
-                		Tag.IS_A_OPEN, 
+                		Tag::isAnchorOpen, 
                 		Direction.PREV);
                 file.set(noteAnchorIndex, new Tag("a id=\"FOOTNOTE\" href=\"" + hrefs[i] + "\"" ));
                 

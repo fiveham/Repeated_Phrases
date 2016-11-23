@@ -60,10 +60,10 @@ public class ClearExcessStructure{
 					+ f.getName())){
 				HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
 				
-				file.removeAll( Tag.IS_DIV );
-				file.removeAll( Tag.IS_BLOCKQUOTE );
-				file.removeAll( Tag.IS_IMG );
-				file.removeAll( CharCode.IS_NBSP );
+				file.removeAll(Tag::isDiv);
+				file.removeAll(Tag::isBlockquote);
+				file.removeAll(Tag::isImg);
+				file.removeAll(CharCode.IS_NBSP);
 				removeEmptyP(file);
 				
 				file.print(out);

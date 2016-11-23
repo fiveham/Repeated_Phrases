@@ -47,113 +47,121 @@ public class Tag extends HTMLEntity {
     /**
      * Evaluates to true if the HTMLEntity tested is an opening Tag.
      */
-	public static final Predicate<HTMLEntity> IS_OPEN = 
-			(h) -> Tag.class.isInstance(h) && ((Tag)h).isOpening();
-		
+	public static boolean isOpen(HTMLEntity h){
+		return Tag.class.isInstance(h) && ((Tag)h).isOpening();
+	}
+	
     /**
      * Evaluates to true if the HTMLEntity tested is a closing Tag.
      */
-	public static final Predicate<HTMLEntity> IS_CLOSE = 
-			(h) -> Tag.class.isInstance(h) && ((Tag)h).isClosing();
+	public static boolean isClose(HTMLEntity h){
+		return Tag.class.isInstance(h) && ((Tag)h).isClosing();
+	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag and has type "p".</p>
      */
-	public static final Predicate<HTMLEntity> IS_P = 
-			(h) -> Tag.class.isInstance(h) 
-			&& P.equals(((Tag)h).getType());
-			
+	public static boolean isP(HTMLEntity h){
+		return Tag.class.isInstance(h) && P.equals(((Tag)h).getType());
+	}
+	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "p", and is opening.</p>
      */
-	public static final Predicate<HTMLEntity> IS_P_OPEN = 
-			(h) -> IS_P.test(h)  
-			&& ((Tag)h).isOpening();
+	public static boolean isPOpen(HTMLEntity h){
+		return isP(h) && ((Tag)h).isOpening();
+	}
 			
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "p", and is closing.</p>
      */
-	public static final Predicate<HTMLEntity> IS_P_CLOSE = 
-			(h) -> IS_P.test(h)  
-			&& ((Tag)h).isClosing();
+	public static boolean isPClose(HTMLEntity h){
+		return isP(h) && ((Tag)h).isClosing();
+	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag and has type "div".</p>
      */
-	public static final Predicate<HTMLEntity> IS_DIV = 
-			(h) -> Tag.class.isInstance(h) 
-			&& DIV.equals(((Tag)h).getType());
+	public static boolean isDiv(HTMLEntity h){
+		return Tag.class.isInstance(h) && DIV.equals(((Tag)h).getType());
+	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "div", and is opening.</p>
      */
-	public static final Predicate<HTMLEntity> IS_DIV_OPEN = 
-			(h) -> IS_DIV.test(h)  
-			&& ((Tag)h).isOpening();
+	public static boolean isDivOpen(HTMLEntity h){
+		return isDiv(h) && ((Tag)h).isOpening();
+	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "div", and is closing.</p>
      */
-	public static final Predicate<HTMLEntity> IS_DIV_CLOSE = 
-			(h) -> IS_DIV.test(h)  
-			&& ((Tag)h).isClosing();
+	public static boolean isDivClose(HTMLEntity h){
+		return isDiv(h) && ((Tag)h).isClosing();
+	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag and has type "blockquote".</p>
      */
-	public static final Predicate<HTMLEntity> IS_BLOCKQUOTE = 
-			(h) -> Tag.class.isInstance(h) 
-			&& BLOCKQUOTE.equals(((Tag)h).getType());
+	public static boolean isBlockquote(HTMLEntity h){
+		return Tag.class.isInstance(h) && BLOCKQUOTE.equals(((Tag)h).getType());
+	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag and has type "img".</p>
      */
-	public static final Predicate<HTMLEntity> IS_IMG = 
-			(h) -> Tag.class.isInstance(h) 
-			&& IMG.equals(((Tag)h).getType());
+	public static boolean isImg(HTMLEntity h){
+		return Tag.class.isInstance(h) && IMG.equals(((Tag)h).getType());
+	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, and has type "table".</p>
      */
-	public static final Predicate<HTMLEntity> IS_TABLE = 
-			(h) -> Tag.class.isInstance(h) 
-			&& TABLE.equals(((Tag)h).getType());
+	public static boolean isTable(HTMLEntity h){
+		return Tag.class.isInstance(h) && TABLE.equals(((Tag)h).getType());
+	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "table", and is opening.</p>
      */
-	public static final Predicate<HTMLEntity> IS_TABLE_OPEN = 
-			(h) -> IS_TABLE.test(h) && ((Tag)h).isOpening();
+	public static boolean isTableOpen(HTMLEntity h){
+		return isTable(h) && ((Tag)h).isOpening();
+	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "table" and is closing.</p>
      */
-	public static final Predicate<HTMLEntity> IS_TABLE_CLOSE = 
-			(h) -> IS_TABLE.test(h) && ((Tag)h).isClosing();
+	public static boolean isTableClose(HTMLEntity h){
+		return isTable(h) && ((Tag)h).isClosing();
+	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag and has type "a".</p>
      */
-	public static final Predicate<HTMLEntity> IS_A = 
-			(h) -> Tag.class.isInstance(h) && A.equals(((Tag)h).getType());
+	public static boolean isAnchor(HTMLEntity h){
+		return Tag.class.isInstance(h) && A.equals(((Tag)h).getType());
+	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "a", and is opening.</p>
      */
-	public static final Predicate<HTMLEntity> IS_A_OPEN = 
-			(h) -> IS_A.test(h) && ((Tag)h).isOpening();
+	public static boolean isAnchorOpen(HTMLEntity h){
+		return isAnchor(h) && ((Tag)h).isOpening();
+	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "a", and is closing.</p>
      */
-	public static final Predicate<HTMLEntity> IS_A_CLOSE = 
-			(h) -> IS_A.test(h) && ((Tag)h).isClosing();
+	public static boolean isAnchorClose(HTMLEntity h){
+		return isAnchor(h) && ((Tag)h).isClosing();
+	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag and has type "sup".</p>
      */
-	public static final Predicate<HTMLEntity> IS_SUP = 
-			(h) -> Tag.class.isInstance(h) && SUP.equals(((Tag)h).getType());
+	public static boolean isSup(HTMLEntity h){
+		return Tag.class.isInstance(h) && SUP.equals(((Tag)h).getType());
+	}
 	
 	public static final List<String> HEADERS;
 	static{
@@ -166,12 +174,13 @@ public class Tag extends HTMLEntity {
 		HEADERS.add("h6");
 	}
 	
-	//TODO use methods + :: for these Predicates
-	public static final Predicate<HTMLEntity> IS_HEADER = 
-			(h) -> Tag.class.isInstance(h) && HEADERS.contains(((Tag)h).getType());
-	
+	//TODO move former-predicate methods to appropriate places in class file
+	public static boolean isHeader(HTMLEntity h){
+		return Tag.class.isInstance(h) && HEADERS.contains(((Tag)h).getType());
+	}
+			
 	public static final Predicate<HTMLEntity> IS_HEADER_OPEN = 
-			(h) -> IS_HEADER.test(h) && IS_OPEN.test(h);
+			(h) -> isHeader(h) && isOpen(h);
 	
     /**
      * <p>The literal text of this tag inside its opening and closing angle brackets.</p>

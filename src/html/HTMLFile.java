@@ -488,8 +488,8 @@ public class HTMLFile {
      * @param name the name of the file to which to write the text equivalent of this HTMLFile
      */
 	public void printAsText(String name){
-		int afterHeader = adjacentElement(-1, Tag.IS_TABLE_CLOSE, Direction.NEXT);
-		int beforeFooter = adjacentElement(content.size(), Tag.IS_TABLE_OPEN, Direction.PREV);
+		int afterHeader = adjacentElement(-1, Tag::isTableClose, Direction.NEXT);
+		int beforeFooter = adjacentElement(content.size(), Tag::isTableOpen, Direction.PREV);
 		
 		try(OutputStreamWriter out = IO.newOutputStreamWriter(name);){
 			for(int i=afterHeader; i<=beforeFooter; i++){
@@ -822,7 +822,7 @@ public class HTMLFile {
       */
 	public int closingMatch(int startPoint){
 		HTMLEntity a = content.get(startPoint);
-		if( !Tag.IS_OPEN.test(a) ){
+		if(!Tag.isOpen(a)){
 			throw new IllegalArgumentException("The element at index "+startPoint+
 					" (\""+a.toString()+"\") is not an opening tag.");
 		}
@@ -982,7 +982,7 @@ public class HTMLFile {
 	}
 	
 	public static final Predicate<HTMLEntity> IS_PARAGRAPHISH_OPEN = //TODO use methods and ::
-			(h) -> Tag.IS_P_OPEN.test(h) || Tag.IS_HEADER_OPEN.test(h) ;
+			(h) -> Tag.isPOpen(h) || Tag.IS_HEADER_OPEN.test(h) ;
 	
     /**
      * <p>A utility class that crawls the list of HTMLEntity that underlies this HTMLFile and

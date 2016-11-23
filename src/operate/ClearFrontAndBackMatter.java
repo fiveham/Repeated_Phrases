@@ -225,7 +225,7 @@ public class ClearFrontAndBackMatter {
 
         int literalIndex = file.adjacentElement(predicate, Direction.PREV, file.elementCount());
 
-        return file.adjacentElement(literalIndex, Tag.IS_P_CLOSE, Direction.NEXT);
+        return file.adjacentElement(literalIndex, Tag::isPClose, Direction.NEXT);
 	}
 	
     /**
@@ -241,6 +241,6 @@ public class ClearFrontAndBackMatter {
 
         int literalIndex = file.adjacentElement(predicate, Direction.NEXT, -1);
 
-        return file.adjacentElement(literalIndex, Tag.IS_P_OPEN, Direction.PREV);
+        return file.adjacentElement(literalIndex, Tag::isPOpen, Direction.PREV);
 	}
 }
