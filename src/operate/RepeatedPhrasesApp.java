@@ -8,10 +8,10 @@ import common.IO;
 
 public class RepeatedPhrasesApp {
 	
-	/**
-	 * <p>Ensures that the working directory has the folders specified 
-	 * in {@link Folders Folders}.</p>
-	 */
+    /**
+     * <p>Ensures that the working directory has the folders specified in
+     * {@link Folders Folders}.</p>
+     */
 	public static void ensureFolders(Consumer<String> msg){
 		for(Folder f : Folder.values()){
 			File name = f.folder();
@@ -23,17 +23,12 @@ public class RepeatedPhrasesApp {
 	}
 	
     /**
-     * <p>Calls the main methods of HtmlToText, 
-     * FindRepeatedPhrases, RemoveDependentPhrases,
-     * RemoveUniqueIndependents, DetermineAnchors, 
-     * LinkChapters, and SetTrail.
-     * 
-     * Passes the first command line argument to 
-     * DetermineAnchors and SetTrail, and passes the 
-     * second command-line argument to LinkChapters 
-     * if it is present and if it parses as an int.</p>
+     * <p>Calls the main methods of HtmlToText, FindRepeatedPhrases, RemoveDependentPhrases,
+     * RemoveUniqueIndependents, DetermineAnchors, LinkChapters, and SetTrail. Passes the first
+     * command line argument to DetermineAnchors and SetTrail, and passes the second command-line
+     * argument to LinkChapters if it is present and if it parses as an int.</p>
      * @param args command-line arguments
-     * @param msg 
+     * @param msg
      */
     public static void isolateChaptersAndLink(String[] args, Consumer<String> msg) {
     	validateArgs(args, msg);
@@ -71,14 +66,13 @@ public class RepeatedPhrasesApp {
     }
     
     /**
-     * <p>Checks that the command-line arguments passed to main() include 
-     * an existing file to be passed to SetTrail, and returns the int 
-     * value of the second command-line argument, if it is present and 
-     * parses as an int, for use as the phrase-size threshold passed to 
+     * <p>Checks that the command-line arguments passed to main() include an existing file to be
+     * passed to SetTrail, and returns the int value of the second command-line argument, if it is
+     * present and parses as an int, for use as the phrase-size threshold passed to
      * {@link LinkChapters#main(String[]) LinkChapters}.</p>
      * @param args command-line arguments passed from main()
-     * @return the int value of the second command-line argument, if 
-     * it is present and parses as an int, {@value #IO.PHRASE_SIZE_FOR_ANCHOR} otherwise.
+     * @return the int value of the second command-line argument, if it is present and parses as an
+     * int, {@value #IO.PHRASE_SIZE_FOR_ANCHOR} otherwise.
      */
     static int validateArgs(String[] args, Consumer<String> msg){
         if( args.length < 1 ){

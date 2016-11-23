@@ -27,25 +27,22 @@ import operate.RepeatedPhrasesApp;
 import operate.SetTrail;
 
 /**
- * <p>The GUI for this application. Creates a small 
- * window that displays its current working directory, has text 
- * fields for entering the name of a trail file and a phrase size 
- * minimum for linking, has an exit button that closes the program, 
- * has a label for displaying messages about the current operation, 
- * and has four buttons to perform individual operations: create 
- * needed folders; turn the HTML books into fully linked chapters; 
- * change the order of chapters after having created fully linked 
- * chapters, and; change the order of chapters without changing 
- * the chapter sequence used by inter-phrase links.</p>
+ * <p>The GUI for this application. Creates a small window that displays its current working
+ * directory, has text fields for entering the name of a trail file and a phrase size minimum for
+ * linking, has an exit button that closes the program, has a label for displaying messages about
+ * the current operation, and has four buttons to perform individual operations: create needed
+ * folders; turn the HTML books into fully linked chapters; change the order of chapters after
+ * having created fully linked chapters, and; change the order of chapters without changing the
+ * chapter sequence used by inter-phrase links.</p>
  */
 public class RepeatedPhrasesUI extends JFrame {
 
     /**
-	 * <p>Automatically generated.</p>
-	 */
+     * <p>Automatically generated.</p>
+     */
 	private static final long serialVersionUID = -5770990784488877775L;
 
-	/**
+    /**
      * <p>Creates new form RepeatedPhrasesUI</p>
      */
     public RepeatedPhrasesUI() {
@@ -54,10 +51,8 @@ public class RepeatedPhrasesUI extends JFrame {
     }
 
     /**
-     * <p>Initializes the components. This was created 
-     * automagically in NetBeans; so, it's "that dark 
-     * shadowy place" in The Lion King: "You must never 
-     * go there, my son."</p>
+     * <p>Initializes the components. This was created automagically in NetBeans; so, it's "that
+     * dark shadowy place" in The Lion King: "You must never go there, my son."</p>
      */
     private void initComponents() {
 
@@ -217,13 +212,13 @@ public class RepeatedPhrasesUI extends JFrame {
     }
     
     /**
-     * <p>When the "Create Folders" button is pressed. Checks that no other 
-     * button's operation is in progress, and if so, establishes that this 
-     * is the current operation and initiates a worker thread that 
-     * {@link EnsureFolders#ensureFolders(Consumer<String>) ensures the needed folders exist}, 
-     * which, when it finishes, establishes that there is no longer an 
-     * operation in progress, allowing other buttons to work again.</p>
-     * @param evt 
+     * <p>When the "Create Folders" button is pressed. Checks that no other button's operation is in
+     * progress, and if so, establishes that this is the current operation and initiates a worker
+     * thread that
+     * {@link EnsureFolders#ensureFolders(Consumer<String>) ensures the needed folders exist},
+     * which, when it finishes, establishes that there is no longer an operation in progress,
+     * allowing other buttons to work again.</p>
+     * @param evt
      */
     private void createFoldersButtonActionPerformed(ActionEvent evt) {
         buttonPress(createFoldersButton, 
@@ -234,7 +229,7 @@ public class RepeatedPhrasesUI extends JFrame {
 
     /**
      * <p>The second button, "Chapterize Books; Add Links"</p>
-     * @param evt 
+     * @param evt
      */
     private void chapterizeLinkButtonActionPerformed(ActionEvent evt) {
         String[] trailAndLimit = trailAndLimit();
@@ -246,7 +241,7 @@ public class RepeatedPhrasesUI extends JFrame {
 
     /**
      * <p>The third button, "Change Chapter Order"</p>
-     * @param evt 
+     * @param evt
      */
     private void changeOrderButtonActionPerformed(ActionEvent evt) {
         String[] trailAndLimit = trailAndLimit();
@@ -258,7 +253,7 @@ public class RepeatedPhrasesUI extends JFrame {
     
     /**
      * <p>The fourth button, "Change Trail (Keep Link Order)"</p>
-     * @param evt 
+     * @param evt
      */
     private void changeTrailButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_changeTrailButtonActionPerformed
         String trail = trailFileField.getText();
@@ -269,17 +264,15 @@ public class RepeatedPhrasesUI extends JFrame {
     }
     
     /**
-     * <p>Provides the basic structure of all button-press event responses: if 
-     * {@link opState} is null (no operation is being performed), then opState 
-     * is changed to specify the operation being initiated, a staring message 
-     * is set as the GUI's status, then a ButtonOperation is created and executed 
-     * which performs the action contained in {@code action} and then 
-     * sets the GUI's status to an ending message.</p>
+     * <p>Provides the basic structure of all button-press event responses: if {@link opState} is
+     * null (no operation is being performed), then opState is changed to specify the operation
+     * being initiated, a staring message is set as the GUI's status, then a ButtonOperation is
+     * created and executed which performs the action contained in {@code action} and then sets the
+     * GUI's status to an ending message.</p>
      * @param newOpState the button that was pressed
      * @param startMsg message displayed on the GUI as soon as this process begins
      * @param endMsg message displayed on the GUI once this process finishes
-     * @param action the actions taken as a result of pressing the button 
-     * {@code newOpState}
+     * @param action the actions taken as a result of pressing the button {@code newOpState}
      */
     private void buttonPress(JButton newOpState, String startMsg, String endMsg, Runnable action){
     	if(opState == null){
@@ -296,10 +289,8 @@ public class RepeatedPhrasesUI extends JFrame {
     }
 
     /**
-     * <p>Sets look and feel for the GUI, and creates/queues 
-     * a Runnable that instantiates the GUI window and makes 
-     * its window 
-     * {@linkplain java.awt.Window#setVisible() visible}.</p>
+     * <p>Sets look and feel for the GUI, and creates/queues a Runnable that instantiates the GUI
+     * window and makes its window {@linkplain java.awt.Window#setVisible() visible}.</p>
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -307,6 +298,10 @@ public class RepeatedPhrasesUI extends JFrame {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html For
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html details
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html see
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -351,18 +346,16 @@ public class RepeatedPhrasesUI extends JFrame {
     private JLabel statusLabel;
     
     /**
-     * <p>Displays a message on the GUI identifying an action that 
-     * the current process has taken.</p>
+     * <p>Displays a message on the GUI identifying an action that the current process has
+     * taken.</p>
      */
     private Consumer<String> statusLabelMsg = (s) -> statusLabel.setText(s);
     
     /**
-     * <p>Returns a string array containing the trail file specified 
-     * by the user in the GUI as the first element and the phrase 
-     * size limit specified by the user in the GUI as the second 
-     * element. The trail-file element is not guaranteed to name an 
-     * existing, readable, structurally correct trail file. The size 
-     * term is not guaranteed to parse as an int.</p>
+     * <p>Returns a string array containing the trail file specified by the user in the GUI as the
+     * first element and the phrase size limit specified by the user in the GUI as the second
+     * element. The trail-file element is not guaranteed to name an existing, readable, structurally
+     * correct trail file. The size term is not guaranteed to parse as an int.</p>
      */
     private String[] trailAndLimit(){
         String trail = trailFileField.getText();
@@ -372,41 +365,37 @@ public class RepeatedPhrasesUI extends JFrame {
     }
     
     /**
-     * <p>Identifies the application's operating state and prevents 
-     * multiple processes from running at once. This is set to refer 
-     * to the most recently pressed button by the methods called 
-     * by the buttons' event-listeners and is reset to null once the 
-     * processes initiated by those method-calls finish.</p>
+     * <p>Identifies the application's operating state and prevents multiple processes from running
+     * at once. This is set to refer to the most recently pressed button by the methods called by
+     * the buttons' event-listeners and is reset to null once the processes initiated by those
+     * method-calls finish.</p>
      */
     private JButton opState = null;
     
     /**
-     * <p>A {@link SwingWorker} for the operations performed when one of the 
-     * buttons (other than exit) of this window is pressed.</p>
+     * <p>A {@link SwingWorker} for the operations performed when one of the buttons (other than
+     * exit) of this window is pressed.</p>
      */
     private class ButtonOperation extends SwingWorker<Void,Void>{
     	
-    	/**
-    	 * <p>The action this ButtonOperation performs when its 
-    	 * button is pressed.</p>
-    	 */
+        /**
+         * <p>The action this ButtonOperation performs when its button is pressed.</p>
+         */
     	private Runnable action;
     	
-    	/**
-    	 * <p>Constructs a ButtonOperation with the specified action.</p>
-    	 * @param action the action this ButtonOperation performs when 
-    	 * its button is pressed
-    	 */
+        /**
+         * <p>Constructs a ButtonOperation with the specified action.</p>
+         * @param action the action this ButtonOperation performs when its button is pressed
+         */
     	private ButtonOperation(Runnable action){
     		this.action = action;
     	}
     	
-    	/**
-    	 * <p>Calls {@link #action action}'s {@code run} method inside 
-    	 * a try-block, with two subsequent catch blocks for OutOfMemoryError 
-    	 * and RuntimeException, sending a message to the GUI in either case, 
-    	 * with the latter including the exception's message.</p>
-    	 */
+        /**
+         * <p>Calls {@link #action action}'s {@code run} method inside a try-block, with two
+         * subsequent catch blocks for OutOfMemoryError and RuntimeException, sending a message to
+         * the GUI in either case, with the latter including the exception's message.</p>
+         */
     	@Override
     	public Void doInBackground(){
     		try{
@@ -424,11 +413,10 @@ public class RepeatedPhrasesUI extends JFrame {
     		return null;
     	}
     	
-    	/**
-    	 * <p>Resets the {@linkplain RepeatedPhrasesUI#opState operation-state} to 
-    	 * {@code null}, allowing a button's operation to begin when a 
-    	 * button is next pressed.</p>
-    	 */
+        /**
+         * <p>Resets the {@linkplain RepeatedPhrasesUI#opState operation-state} to {@code null},
+         * allowing a button's operation to begin when a button is next pressed.</p>
+         */
     	@Override
     	public final void done(){
     		opState = null;

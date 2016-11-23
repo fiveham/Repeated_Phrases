@@ -11,28 +11,24 @@ import common.IO;
 import text.Location;
 
 /**
- * <p>Reads the quote files from {@code READ_FROM} 
- * line by line and writes their contents, to corresponding 
- * files in {@code WRITE_TO}, except for lines containing 
- * only one Location.} The number of Locations represented 
- * on a line is determined by accounting for the semicolon 
- * ({@code Location.ELEMENT_DELIM}) used to separate the 
- * two components of a Location 
+ * <p>Reads the quote files from {@code READ_FROM} line by line and writes their contents, to
+ * corresponding files in {@code WRITE_TO}, except for lines containing only one  Location.} The
+ * number of Locations represented on a line is determined by accounting for the semicolon
+ * ({@code Location.ELEMENT_DELIM}) used to separate the two components of a Location
  * {@link java.lang.String#toString() in string form}.</p>
  */
 public class RemoveUniqueIndependents {
 
     /**
-     * <p>The folder from which this class reads quote data for 
-     * independent quotes including those with only one independent 
-     * instance.</p>
+     * <p>The folder from which this class reads quote data for independent quotes including those
+     * with only one independent instance.</p>
      * @see Folder#INDEPENDENT_INSTANCES
      */
     public static final Folder READ_FROM = Folder.INDEPENDENT_INSTANCES;
 
     /**
-     * <p>The folder where the read-in quote data with the 
-     * unique independent instances removed are saved.</p>
+     * <p>The folder where the read-in quote data with the unique independent instances removed are
+     * saved.</p>
      */
     public static final Folder WRITE_TO = Folder.DUPLICATE_INDEPENDENTS;
 
@@ -41,9 +37,8 @@ public class RemoveUniqueIndependents {
     }
 
     /**
-     * <p>Reads each file from {@code READ_FROM} and prints only the 
-     * lines of each file that have more than one Location to a corresponding 
-     * file in {@code WRITE_TO}.</p>
+     * <p>Reads each file from {@code READ_FROM} and prints only the lines of each file that have
+     * more than one Location to a corresponding file in {@code WRITE_TO}.</p>
      * @param args command-line arguments (unused)
      */
     public static void rmUniqIndeps(Consumer<String> msg) {

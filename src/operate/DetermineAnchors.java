@@ -20,54 +20,44 @@ import text.Quote;
 import text.PhraseBox;
 
 /**
- * <p>This class reads every quote from ASOIAF 
- * represented in the files in 
- * {@link #READ_FROM the folder for non-singular independent repeated phrases}, 
- * reorganizes that quote data by chapter, and 
- * saves it to {@link #WRITE_TO the folder for that}, 
- * where each chapter represented in the read-in data 
- * has its own output file. Each chapter-file produced 
- * contains on each line a phrase that needs anchor tags 
- * applied to it in the chapter's HTML file, the 
- * FindRepeatedPhrases-style word-index of that quote 
- * in its original file, and the Location to which this 
- * quote, once its anchor tags are applied, needs to 
- * link.</p>
+ * <p>This class reads every quote from ASOIAF represented in the files in
+ * {@link #READ_FROM the folder for non-singular independent repeated phrases}, reorganizes that
+ * quote data by chapter, and saves it to {@link #WRITE_TO the folder for that}, where each chapter
+ * represented in the read-in data has its own output file. Each chapter-file produced contains on
+ * each line a phrase that needs anchor tags applied to it in the chapter's HTML file, the
+ * FindRepeatedPhrases-style word-index of that quote in its original file, and the Location to
+ * which this quote, once its anchor tags are applied, needs to link.</p>
  */
 public class DetermineAnchors {
 	
-	/**
-	 * <p>The folder from which this class reads quote data.</p>
-	 */
+    /**
+     * <p>The folder from which this class reads quote data.</p>
+     */
 	public static final Folder READ_FROM = Folder.DUPLICATE_INDEPENDENTS;
 	
-	/**
-	 * <p>The folder to which this class writes the anchor-definitions 
-	 * that it generates.</p>
-	 */
+    /**
+     * <p>The folder to which this class writes the anchor-definitions that it generates.</p>
+     */
 	public static final Folder WRITE_TO = Folder.ANCHORS;
 	
 	public static void main(String[] args){
 		determineAnchors(args, IO.DEFAULT_MSG);
 	}
 	
-	/**
-	 * <p>Detects all the .txt files in {@code READ_FROM}, reads them 
-	 * all, and organizes the extracted data by chapter name and by phrase. 
-	 * Saves files to {@code WRITE_TO} for each chapter. Each written 
-	 * file contains on each line the information for one link, specifying 
-	 * the phrase being linked, the location in the chapter for which the 
-	 * file is named of the instance of the specified phrase on which the 
-	 * link is applied, and the 
-	 * {@link text.Location#toString() string representation} of 
-	 * the Location of the instance of the phrase to which the link leads.</p>
-	 * @param args command-line arguments. args[0], if present, names a file 
-	 * to be used in sequencing the 
-	 * @param msg a messenger that {@link System#out prints} to the console 
-	 * when this class is run from the command-line or 
-	 * {@link javax.swing.JLabel#setText(String) sets the text of a label} in 
-	 * the GUI if this class is run from the GUI.
-	 */
+    /**
+     * <p>Detects all the .txt files in {@code READ_FROM}, reads them all, and organizes the
+     * extracted data by chapter name and by phrase. Saves files to {@code WRITE_TO} for each
+     * chapter. Each written file contains on each line the information for one link, specifying the
+     * phrase being linked, the location in the chapter for which the file is named of the instance
+     * of the specified phrase on which the link is applied, and the
+     * {@link text.Location#toString() string representation} of the Location of the instance of the
+     * phrase to which the link leads.</p>
+     * @param args command-line arguments. args[0], if present, names a file to be used in
+     * sequencing the
+     * @param msg a messenger that {@link System#out prints} to the console when this class is run
+     * from the command-line or {@link javax.swing.JLabel#setText(String) sets the text of a label}
+     * in the GUI if this class is run from the GUI.
+     */
 	public static void determineAnchors(String[] args, Consumer<String> msg) {
 		Comparator<Location> phraseSorter = getPhraseSorter( args.length > 0 ? args[0] : "");
 		
@@ -117,36 +107,26 @@ public class DetermineAnchors {
 		}
 	}
 	
-	/**
-	 * <p>Returns a {@literal Comparator<Location>} that sequences  
-	 * a list of {@code Location}s in the order of the chapter filenames 
-	 * indicated in the second tab-delimited column of the 
-	 * {@link SetTrail#getTrailElements() trail file} named 
-	 * {@code trailFile}, or the {@link #PHRASE_SORTER default} 
-	 * phrase-sorter if {@code trailFile} does not exist or cannot 
-	 * be read.</p>
-	 * 
-	 * <p>{@code Location}s sorted by this Comparator such that 
-	 * there first comes a block of {@code Location}s whose 
-	 * {@link Location#getFilename() filenames} pertain to the chapter 
-	 * whose name is represented in the first filename in the second 
-	 * tab-delimited column of {@code trailFile}, followed by a 
-	 * block of {@code Location}s whose 
-	 * {@link Location#getFilename() filenames} pertain to the chapter 
-	 * whose name is represented in the second filename in the second 
-	 * tab-delimited column of {@code trailFile}, and so on. 
-	 * Within each such block, {@code Location}s are sequenced 
-	 * by {@link Location#getIndex() index}, with lower values first.</p>
-	 * @param trailFile the name of the file from which a sequence of 
-	 * chapter names is obtained
-	 * @return a {@literal Comparator<Location>} that sequences  
-	 * a list of {@code Location}s in the order of the chapter filenames 
-	 * indicated in the second tab-delimited column of the 
-	 * {@link SetTrail#getTrailElements() trail file} named 
-	 * {@code trailFile}, or the {@link #PHRASE_SORTER default} 
-	 * phrase-sorter if {@code trailFile} does not exist or cannot 
-	 * be read.
-	 */
+    /**
+     * <p>Returns a {@literal Comparator<Location>} that sequences a list of {@code Location}s in
+     * the order of the chapter filenames indicated in the second tab-delimited column of the
+     * {@link SetTrail#getTrailElements() trail file} named {@code trailFile}, or the
+     * {@link #PHRASE_SORTER default} phrase-sorter if {@code trailFile} does not exist or cannot be
+     * read.</p> <p>{@code Location}s sorted by this Comparator such that there first comes a block
+     * of {@code Location}s whose {@link Location#getFilename() filenames} pertain to the chapter
+     * whose name is represented in the first filename in the second tab-delimited column of
+     * {@code trailFile}, followed by a block of {@code Location}s whose
+     * {@link Location#getFilename() filenames} pertain to the chapter whose name is represented in
+     * the second filename in the second tab-delimited column of {@code trailFile}, and so on.
+     * Within each such block, {@code Location}s are sequenced by {@link Location#getIndex() index},
+     * with lower values first.</p>
+     * @param trailFile the name of the file from which a sequence of chapter names is obtained
+     * @return a {@literal Comparator<Location>} that sequences a list of {@code Location}s in the
+     * order of the chapter filenames indicated in the second tab-delimited column of the
+     * {@link SetTrail#getTrailElements() trail file} named {@code trailFile}, or the
+     * {@link #PHRASE_SORTER default} phrase-sorter if {@code trailFile} does not exist or cannot be
+     * read.
+     */
 	public static Comparator<Location> getPhraseSorter(String trailFile){
 		File f = new File(trailFile);
 		return f.exists() && f.canRead() 
@@ -176,14 +156,12 @@ public class DetermineAnchors {
 				: PHRASE_SORTER;
 	}
 	
-	/**
-	 * <p>Returns a string containing all the lines of all the 
-	 * files containing non-unique independent repeated 
-	 * phrase information from {@value Folder#READ_FROM.foldername}.</p>
-	 * @return a string containing all the lines of all the 
-	 * files containing non-unique independent repeated 
-	 * phrase information from {@value Folder#READ_FROM.foldername}
-	 */
+    /**
+     * <p>Returns a string containing all the lines of all the files containing non-unique
+     * independent repeated phrase information from {@value Folder#READ_FROM.foldername}.</p>
+     * @return a string containing all the lines of all the files containing non-unique independent
+     * repeated phrase information from {@value Folder#READ_FROM.foldername}
+     */
 	private static String getDupPhraseData(Consumer<String> msg){
 		StringBuilder sb = new StringBuilder();
 		
@@ -207,13 +185,11 @@ public class DetermineAnchors {
 		return sb.delete(sb.length()-1, sb.length()).toString();
 	}
 	
-	/**
-	 * <p>Sequences {@code Location}s according to the name of the 
-	 * book their filename starts with, in the order given by 
-	 * {@link #bookList bookList}. The default 
-	 * {@literal Comparator<Location>} returned by getPhraseSorter 
-	 * when it's passed an invalid filename.</p>
-	 */
+    /**
+     * <p>Sequences {@code Location}s according to the name of the book their filename starts with,
+     * in the order given by {@link #bookList bookList}. The default {@literal Comparator<Location>}
+     * returned by getPhraseSorter when it's passed an invalid filename.</p>
+     */
 	private static final Comparator<Location> PHRASE_SORTER = new Comparator<Location>(){
 		@Override
 		public int compare(Location loc1, Location loc2){
@@ -222,16 +198,15 @@ public class DetermineAnchors {
 		}
 	};
 	
-	/**
-	 * <p>Compares the filenames of two {@code Location}s according 
-	 * to the order of the ASOIAF books given by {@link #bookList bookList}.</p>
-	 * @param f1 the {@link Location#getFilename() filename} of a Location
-	 * @param f2 the {@link Location#getFilename() filename} of a Location
-	 * @return a negative value if {@code f1}'s book precedes that of 
-	 * {@code f2}, a positive value if {@code f2's} precedes 
-	 * {@code f1}'s, or zero if {@code f1} and {@code f2} 
-	 * have the same book.
-	 */
+    /**
+     * <p>Compares the filenames of two {@code Location}s according to the order of the ASOIAF books
+     * given by {@link #bookList bookList}.</p>
+     * @param f1 the {@link Location#getFilename() filename} of a Location
+     * @param f2 the {@link Location#getFilename() filename} of a Location
+     * @return a negative value if {@code f1}'s book precedes that of {@code f2}, a positive value
+     * if {@code f2's} precedes {@code f1}'s, or zero if {@code f1} and {@code f2} have the same
+     * book.
+     */
 	private static int compareFilenames(String f1, String f2){
 		
 		String[] split1 = IO.stripExtension(f1).split(IO.FILENAME_COMPONENT_SEPARATOR, HTMLFile.FILENAME_ELEMENT_COUNT);
@@ -248,9 +223,9 @@ public class DetermineAnchors {
 				: Integer.parseInt(chapterNumber1) - Integer.parseInt(chapterNumber2);
 	}
 	
-	/**
-	 * <p>The default order of the books of ASOIAF.</p>
-	 */
+    /**
+     * <p>The default order of the books of ASOIAF.</p>
+     */
 	public static final List<String> bookList = new ArrayList<>();
 	static{
 		bookList.add("AGOT");
@@ -263,28 +238,23 @@ public class DetermineAnchors {
 		bookList.add("RP");
 	}
 	
-	/**
-	 * <p>Returns the Location in the list {@code locs} after the 
-	 * Location whose {@link Location#getIndex() index} and 
-	 * {@link Location#getFilename() filename} are specified by 
-	 * {@code index} and {@code chapter} respectively, or 
-	 * the first Location in the list if the indicated Location is the 
-	 * last in the list.</p>
-	 * @param locs a list of Location from which a Location is returned
-	 * @param chapter the {@link Location#getFilename() filename} of the 
-	 * chapter whose successor is to be returned
-	 * @param index the {@link Location#getIndex() index} of the chapter 
-	 * whose successor is to be returned
-	 * @return  the Location in the list {@code locs} after the 
-	 * Location whose {@link Location#getIndex() index} and 
-	 * {@link Location#getFilename() filename} are specified by 
-	 * {@code index} and {@code chapter} respectively, or 
-	 * the first Location in the list if the indicated Location is the 
-	 * last in the list
-	 * @throws IllegalArgumentException if the Location specified by 
-	 * {@code chapter} and {@code index} is not present in 
-	 * the specified list.
-	 */
+    /**
+     * <p>Returns the Location in the list {@code locs} after the Location whose
+     * {@link Location#getIndex() index} and {@link Location#getFilename() filename} are specified
+     * by {@code index} and {@code chapter} respectively, or the first Location in the list if the
+     * indicated Location is the last in the list.</p>
+     * @param locs a list of Location from which a Location is returned
+     * @param chapter the {@link Location#getFilename() filename} of the chapter whose successor is
+     * to be returned
+     * @param index the {@link Location#getIndex() index} of the chapter whose successor is to be
+     * returned
+     * @return the Location in the list {@code locs} after the Location whose
+     * {@link Location#getIndex() index} and {@link Location#getFilename() filename} are specified
+     * by {@code index} and {@code chapter} respectively, or the first Location in the list if the
+     * indicated Location is the last in the list
+     * @throws IllegalArgumentException if the Location specified by {@code chapter} and
+     * {@code index} is not present in the specified list.
+     */
 	public static Location locAfter(List<Location> locs, String chapter, int index){
 		Location here = new Location(index, chapter);
 		int i = locs.indexOf(here);
@@ -297,27 +267,25 @@ public class DetermineAnchors {
 		}
 	}
 	
-	/**
-	 * <p>Returns the name of the file to which data for AnchorInfo 
-	 * objects should be written to add anchor tags to the html 
-	 * source file pertaining to the chapter to which the 
-	 * specified filename pertains.</p>
-	 * @param chapter a filename of the chapter that the 
-	 * returned String is the name of the anchordata file for
-	 * @return the name of the file to which data for AnchorInfo 
-	 * objects should be written to add anchor tags to the html 
-	 * source file pertaining to the chapter to which the 
-	 * specified filename pertains.
-	 * @see common.Folder#ANCHORS
-	 */
+    /**
+     * <p>Returns the name of the file to which data for AnchorInfo objects should be written to add
+     * anchor tags to the html source file pertaining to the chapter to which the specified filename
+     * pertains.</p>
+     * @param chapter a filename of the chapter that the returned String is the name of the
+     * anchordata file for
+     * @return the name of the file to which data for AnchorInfo objects should be written to add
+     * anchor tags to the html source file pertaining to the chapter to which the specified filename
+     * pertains.
+     * @see common.Folder#ANCHORS
+     */
 	public static String anchorOutName(String chapter){
 		return Folder.ANCHORS.folderName() + File.separator 
 				+ IO.stripFolderExtension(chapter) 
 				+ ANCHOR_EXT;
 	}
 	
-	/**
-	 * <p>The file extension for anchor-data files: {@value}</p>
-	 */
+    /**
+     * <p>The file extension for anchor-data files: {@value}</p>
+     */
 	public static final String ANCHOR_EXT = ".anchordata" + IO.TXT_EXT;
 }

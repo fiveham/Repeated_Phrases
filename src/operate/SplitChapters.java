@@ -21,28 +21,27 @@ import common.Folder;
 import common.IO;
 
 /**
- * <p>Splits an ASOIAF main series novel HTML file into 
- * files for its individual chapters.</p>
+ * <p>Splits an ASOIAF main series novel HTML file into files for its individual chapters.</p>
  */
 public class SplitChapters {
 	
     /**
-     * <p>The folder from which this class reads html files of the ASOIAF novels 
-     * which have been prepared to be split into individual chapters.</p>
+     * <p>The folder from which this class reads html files of the ASOIAF novels which have been
+     * prepared to be split into individual chapters.</p>
      * @see Folder#HTML_BOOKS_CORRECT_APOSTROPHES
      */
     public static final Folder READ_FROM = Folder.HTML_BOOKS_CORRECT_APOSTROPHES;
     
     /**
-     * <p>The folder to which this class writes individual chapter html files 
-     * from the ASOIAF novels.</p>
+     * <p>The folder to which this class writes individual chapter html files from the ASOIAF
+     * novels.</p>
      * @see Folder#HTML_CHAPTERS_UNCHECKED
      */
     public static final Folder WRITE_TO = Folder.HTML_CHAPTERS;
     
     /**
-     * <p>Detects all html novel files in {@code READ_FROM}, reads them, and 
-     * saves individual files for each chapter to {@code WRITE_TO}.</p>
+     * <p>Detects all html novel files in {@code READ_FROM}, reads them, and saves individual files
+     * for each chapter to {@code WRITE_TO}.</p>
      * @param args command-line arguments (unused)
      */
     public static void splitChapters(Consumer<String> msg) {
@@ -179,8 +178,8 @@ public class SplitChapters {
     }
 
     /**
-     * <p>Returns the name of the chapter-file for novellas 
-     * after they've had head/foot tables added.</p>
+     * <p>Returns the name of the chapter-file for novellas after they've had head/foot tables
+     * added.</p>
      * @param novellaName
      * @return
      */
@@ -208,13 +207,11 @@ public class SplitChapters {
     }
 
     /**
-     * <p>Returns true if the {@code paragraph}'s only character-type 
-     * contents are characters that can appear in chapter titles, 
-     * false otherwise.</p>
+     * <p>Returns true if the {@code paragraph}'s only character-type contents are characters that
+     * can appear in chapter titles, false otherwise.</p>
      * @param paragraph a list of HTMLEntity, a piece of an HTMLFile
-     * @return true if the {@code paragraph}'s only character-type 
-     * contents are characters that can appear in chapter titles, 
-     * false otherwise
+     * @return true if the {@code paragraph}'s only character-type contents are characters that can
+     * appear in chapter titles, false otherwise
      */
     private static boolean isTitleParagraph(List<HTMLEntity> paragraph){
         int titleCharCount = 0;
@@ -234,31 +231,26 @@ public class SplitChapters {
         return titleCharCount > 0;
     }
     
-	/**
-	 * <p>Returns true if {@code c} occurs in chapters' titles, 
-	 * false otherwise.</p>
-	 * @param c a char to be tested for status as a character that 
-	 * occurs in chapters' titles
-	 * @return true if {@code c} is an uppercase letter, space, 
-	 * or apostrophe
-	 */
+    /**
+     * <p>Returns true if {@code c} occurs in chapters' titles, false otherwise.</p>
+     * @param c a char to be tested for status as a character that occurs in chapters' titles
+     * @return true if {@code c} is an uppercase letter, space, or apostrophe
+     */
 	public static boolean isLegalChapterTitleCharacter(char c){
 		return ('A'<=c && c<='Z') || c==' ' || c=='\'';
 	}
 
     /**
-     * <p>Writes the contents of {@code buffer} to a file via {@code out}, 
-     * prepended with {@link #writeHeader(String,OutputStreamWriter) a header} and 
-     * appended with {@link #writerFooter(String,OutputStreamWriter) a footer}. If 
-     * {@code out == null}, does nothing.</p>
-     * @param buffer a list of HTMLEntitys to be written as html text to a 
-     * file via {@code out}
-     * @param out writes to the file to which the content of {@code buffer} 
-     * should be written; is {@link OutputStreamWriter#close() closed}
-     * @param chapterName the name of the chapter being written, to be added to the 
-     * header/footer tables
-     * @throws IOException if an I/O error occurs writing to the file through 
-     * {@code out}
+     * <p>Writes the contents of {@code buffer} to a file via {@code out}, prepended with
+     * {@link #writeHeader(String,OutputStreamWriter) a header} and appended with
+     * {@link #writerFooter(String,OutputStreamWriter) a footer}. If {@code out == null}, does
+     * nothing.</p>
+     * @param buffer a list of HTMLEntitys to be written as html text to a file via {@code out}
+     * @param out writes to the file to which the content of {@code buffer} should be written; is
+     * {@link OutputStreamWriter#close() closed}
+     * @param chapterName the name of the chapter being written, to be added to the header/footer
+     * tables
+     * @throws IOException if an I/O error occurs writing to the file through {@code out}
      */
     private static void writeBuffer(List<HTMLEntity> buffer, OutputStreamWriter out, String chapterName, Consumer<String> msg) throws IOException{
         if(out != null){
@@ -274,11 +266,11 @@ public class SplitChapters {
 
     /**
      * <p>Returns the name of the file to which a chapter's content will be written.</p>
-     * @param bookFile the source file from {@code READ_FROM} from which the 
-     * chapter's content was extracted
+     * @param bookFile the source file from {@code READ_FROM} from which the chapter's content was
+     * extracted
      * @param chapterIndex the chapter's number in its book (zero-based)
-     * @param chapterName the name of the chapter as extracted from the text of its 
-     * source html novel file, including spaces
+     * @param chapterName the name of the chapter as extracted from the text of its source html
+     * novel file, including spaces
      * @return the name of the file to which a chapter's content will be written
      */
     private static String chapterFileName(String bookFile, int chapterIndex, String chapterName){
@@ -287,12 +279,10 @@ public class SplitChapters {
     }
 
     /**
-     * <p>Extracts a chapter's title from a {@code paragraph} 
+     * <p>Extracts a chapter's title from a {@code paragraph}
      * {@link #isTitleParagraph(List<HTMLEntity>) containing a chapter title}.</p>
-     * @param paragraph the paragraph whose contained chapter title 
-     * is extracted and returned
-     * @return the chapter title that's the sole visible content of 
-     * the specified {@code paragraph}
+     * @param paragraph the paragraph whose contained chapter title is extracted and returned
+     * @return the chapter title that's the sole visible content of the specified {@code paragraph}
      */
     private static String extractChapterTitle(List<HTMLEntity> paragraph){
         StringBuilder result = new StringBuilder( paragraph.size() );
@@ -307,8 +297,8 @@ public class SplitChapters {
     }
 
     /**
-     * <p>Of the header content to be added to individual chapters' files, 
-     * this is the portion prior to the name of the chapter.</p>
+     * <p>Of the header content to be added to individual chapters' files, this is the portion prior
+     * to the name of the chapter.</p>
      * @see #writeHeader(String,OutputStreamWriter)
      */
     public static final String HEADER_FRONT = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />"
@@ -318,8 +308,8 @@ public class SplitChapters {
             + "<td class=\"chapter_title\"><p class=\"chapter_title\">";
 
     /**
-     * <p>Of the header content to be added to individual chapters' files, 
-     * this is the portion after the name of the chapter.</p>
+     * <p>Of the header content to be added to individual chapters' files, this is the portion after
+     * the name of the chapter.</p>
      * @see #writeHeader(String,OutputStreamWriter)
      */
     public static final String HEADER_BACK = "</p></td><td class=\"next_chapter\"><p class=\"next_chapter\">"
@@ -327,20 +317,15 @@ public class SplitChapters {
             + "</table></div><div class=\"chapter_body\">";
 
     /**
-     * <p>Adds a header to the specified file consisting of an 
-     * opening html tag, opening head tag, charset and stylesheet 
-     * specifications, closing head tag, opening body tag, 
-     * opening div tag for the overall chapter, opening div 
-     * tag for the chapter-navigation table before the chapter 
-     * body, chapter-navigation table before the chapter body 
-     * with the chapter's name included, closing div for the header 
-     * table, and an opening div for the body of the chapter.</p>
-     * @param chapterName the name of the chapter to which this 
-     * header will be applied by being added to the central cell 
-     * of the header chapter-navigation table
+     * <p>Adds a header to the specified file consisting of an opening html tag, opening head tag,
+     * charset and stylesheet specifications, closing head tag, opening body tag, opening div tag
+     * for the overall chapter, opening div tag for the chapter-navigation table before the chapter
+     * body, chapter-navigation table before the chapter body with the chapter's name included,
+     * closing div for the header table, and an opening div for the body of the chapter.</p>
+     * @param chapterName the name of the chapter to which this header will be applied by being
+     * added to the central cell of the header chapter-navigation table
      * @param out specifies the file to which the header is written
-     * @throws IOException if an I/O error occurs while writing 
-     * to the file
+     * @throws IOException if an I/O error occurs while writing to the file
      */
     public static void writeHeader(String chapterName, OutputStreamWriter out) throws IOException{
         String header = HEADER_FRONT + chapterName + HEADER_BACK + IO.NEW_LINE;
@@ -348,8 +333,8 @@ public class SplitChapters {
     }
 
     /**
-     * <p>Of the footer content to be added to individual chapters' files, 
-     * this is the portion prior to the name of the chapter.</p>
+     * <p>Of the footer content to be added to individual chapters' files, this is the portion prior
+     * to the name of the chapter.</p>
      * @see #writeFooter(String,OutputStreamWriter)
      */
     public static final String FOOTER_FRONT = "</div><div class=\"foot\"><table class=\"foot\"><tr class=\"foot\">"
@@ -358,8 +343,8 @@ public class SplitChapters {
             + "<td class=\"chapter_title\"><p class=\"chapter_title\">";
 
     /**
-     * <p>Of the footer content to be added to individual chapters' files, 
-     * this is the portion after the name of the chapter.</p>
+     * <p>Of the footer content to be added to individual chapters' files, this is the portion after
+     * the name of the chapter.</p>
      * @see #writeFooter(String,OutputStreamWriter)
      */
     public static final String FOOTER_BACK = "</p></td><td class=\"next_chapter\"><p class=\"next_chapter\">"
@@ -367,17 +352,12 @@ public class SplitChapters {
             + "</table></div></div></body></html>";
 
     /**
-     * <p>Adds a footer to the specified file consisting of 
-     * a closing div for the chapter body, a chapter-navigation 
-     * table containing the chapter's title, in its own div, a 
-     * closing div tag for the overall chapter, and closing body 
-     * and html tags.</p>
-     * @param chapterName the name of the chapter to which this 
-     * footer is applied
-     * @param out specifies the file to which the footer is 
-     * written
-     * @throws IOException if an I/O error occurs while writing 
-     * the file
+     * <p>Adds a footer to the specified file consisting of a closing div for the chapter body, a
+     * chapter-navigation table containing the chapter's title, in its own div, a closing div tag
+     * for the overall chapter, and closing body and html tags.</p>
+     * @param chapterName the name of the chapter to which this footer is applied
+     * @param out specifies the file to which the footer is written
+     * @throws IOException if an I/O error occurs while writing the file
      */
     public static void writeFooter(String chapterName, OutputStreamWriter out) throws IOException{
         String footer = FOOTER_FRONT + chapterName + FOOTER_BACK;
@@ -385,13 +365,10 @@ public class SplitChapters {
     }
 
     /**
-     * <p>Returns true if the specified HTMLEntity is a 
-     * literal character that is legal for a chapter 
-     * title, false otherwise.</p>
-     * @param h an HTMLEntity to be tested for status as a
-     * legal chapter title character
-     * @return  true if the specified HTMLEntity is a 
-     * literal character that is legal for a chapter 
+     * <p>Returns true if the specified HTMLEntity is a literal character that is legal for a
+     * chapter title, false otherwise.</p>
+     * @param h an HTMLEntity to be tested for status as a legal chapter title character
+     * @return true if the specified HTMLEntity is a literal character that is legal for a chapter
      * title, false otherwise
      */
     public static boolean isTitleChar(HTMLEntity h){
@@ -399,14 +376,10 @@ public class SplitChapters {
     }
 
     /**
-     * <p>Returns true if the specified char is legal for 
-     * a chapter title, false otherwise. A char is legal 
-     * for a chapter title if it is a capital letter, a 
-     * space, or an apostrophe</p>
-     * @param c a {@code char} to test for legality 
-     * in chapter titles
-     * @return true if the specified char is legal for 
-     * a chapter title, false otherwise
+     * <p>Returns true if the specified char is legal for a chapter title, false otherwise. A char
+     * is legal for a chapter title if it is a capital letter, a space, or an apostrophe</p>
+     * @param c a {@code char} to test for legality in chapter titles
+     * @return true if the specified char is legal for a chapter title, false otherwise
      */
     public static boolean isTitle(char c){
         return ('A' <= c && c <= 'Z') || c == ' ' || c == '\'';

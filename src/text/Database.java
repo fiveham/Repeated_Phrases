@@ -6,39 +6,38 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
- * <p>Stores quote data chapter-first.</p>
- * <p>Wraps a {@link text.FileBox FileBox}.</p>
+ * <p>Stores quote data chapter-first.</p> <p>Wraps a {@link text.FileBox FileBox}.</p>
  */
 public class Database {
 	
-	/**
-	 * <p>The wrapped FileBox.</p>
-	 */
+    /**
+     * <p>The wrapped FileBox.</p>
+     */
 	private FileBox textCorpus;
 	
-	/**
-	 * <p>Constructs a Database with an empty {@code textCorpus}.</p>
-	 */
+    /**
+     * <p>Constructs a Database with an empty {@code textCorpus}.</p>
+     */
 	public Database(){
 		textCorpus = new FileBox();
 	}
 	
-	/**
-	 * <p>Constructs a Database with a FileBox containing all the quote data from the 
-	 * specified File.</p>
-	 * @param f the file containing quote data to be read
-	 * @throws FileNotFoundException if the specified File does not exist or cannot be read
-	 */
+    /**
+     * <p>Constructs a Database with a FileBox containing all the quote data from the specified
+     * File.</p>
+     * @param f the file containing quote data to be read
+     * @throws FileNotFoundException if the specified File does not exist or cannot be read
+     */
 	public Database(File f) throws FileNotFoundException{
 		textCorpus = new FileBox(f);
 	}
 	
-	/**
-	 * <p>Returns a shortened form of the specified String.</p>
-	 * @param phrase the phrase of which a shortened form will be returned
-	 * @return the first 25 characters of phrase + " ... " + the last 25 characters if the phrase 
-	 * has 60 or more characters, otherwise the entire phrase.
-	 */
+    /**
+     * <p>Returns a shortened form of the specified String.</p>
+     * @param phrase the phrase of which a shortened form will be returned
+     * @return the first 25 characters of phrase + " ... " + the last 25 characters if the phrase
+     * has 60 or more characters, otherwise the entire phrase.
+     */
 	private static String shortForm(String phrase){
 		if(phrase.length() < 60){
 			return phrase;
@@ -46,16 +45,14 @@ public class Database {
 		return phrase.substring(0, 25) + " ... " + phrase.substring(phrase.length()-26);
 	}
 	
-	/**
-	 * <p>Returns a PhraseBox containing exactly those quotes represented in 
-	 * {@code this.textCorpus} that are independent of all the quotes represented in 
-	 * {@code otherDatabase.textCorpus}.</p>
-	 * @param otherDatabase another Database against whose quotes the quotes of this Database are 
-	 * to be tested for independence.
-	 * @return a PhraseBox containing exactly those quotes represented in {@code this.textCorpus} 
-	 * that are independent of all the quotes represented in 
-	 * {@code otherDatabase.textCorpus}.
-	 */
+    /**
+     * <p>Returns a PhraseBox containing exactly those quotes represented in {@code this.textCorpus}
+     * that are independent of all the quotes represented in {@code otherDatabase.textCorpus}.</p>
+     * @param otherDatabase another Database against whose quotes the quotes of this Database are to
+     * be tested for independence.
+     * @return a PhraseBox containing exactly those quotes represented in {@code this.textCorpus}
+     * that are independent of all the quotes represented in {@code otherDatabase.textCorpus}.
+     */
 	public PhraseBox phrasesIndependentOf(Database otherDatabase){
 		PhraseBox result = new PhraseBox();
 		

@@ -18,41 +18,36 @@ import java.util.function.Consumer;
 import java.util.HashMap;
 
 /**
- * <p>This class reads html files of the ASOIAF novels and 
- * saves copies of them from which the content before the 
- * Prologue and the content after the last chapter have been 
- * removed.</p>
+ * <p>This class reads html files of the ASOIAF novels and saves copies of them from which the
+ * content before the Prologue and the content after the last chapter have been removed.</p>
  */
 public class ClearFrontAndBackMatter {
 	
-	/**
-	 * <p>The directory from which this class reads html files of the 
-	 * ASOIAF books from which it will remove front and back matter.</p>
-	 * @see Folder#HTML_BOOKS_UNSTRUCTURED
-	 */
+    /**
+     * <p>The directory from which this class reads html files of the ASOIAF books from which it
+     * will remove front and back matter.</p>
+     * @see Folder#HTML_BOOKS_UNSTRUCTURED
+     */
 	public static final Folder READ_FROM = Folder.HTML_BOOKS_UNSTRUCTURED;
 	
-	/**
-	 * <p>The directory to which this class writes HTML files of the 
-	 * ASOIAF books from which it has removed front and back matter.</p>
-	 * @see Folder#HTML_BOOKS_CHAPTER_CORE
-	 */
+    /**
+     * <p>The directory to which this class writes HTML files of the ASOIAF books from which it has
+     * removed front and back matter.</p>
+     * @see Folder#HTML_BOOKS_CHAPTER_CORE
+     */
 	public static final Folder WRITE_TO = Folder.HTML_BOOKS_CHAPTER_CORE;
 	
     public static void main(String[] args){
         clearFrontBack(IO.DEFAULT_MSG);
     }
     
-	/**
-	 * <p>Detects all the html files for the ASOIAF novels in 
-	 * {@code READ_FROM}, reads them, detects the paragraph 
-	 * containing the title of the Prologue and removes all 
-	 * content prior to that paragraph, and detects the paragraph 
-	 * containing the title of the first chapter-like feature after 
-	 * the last actual chapter and removes everything at or after 
-	 * that.<p/>
-	 * @param args command-line arguments
-	 */
+    /**
+     * <p>Detects all the html files for the ASOIAF novels in {@code READ_FROM}, reads them, detects
+     * the paragraph containing the title of the Prologue and removes all content prior to that
+     * paragraph, and detects the paragraph containing the title of the first chapter-like feature
+     * after the last actual chapter and removes everything at or after that.<p/>
+     * @param args command-line arguments
+     */
 	public static void clearFrontBack(Consumer<String> msg) {
 
         handleNovels(msg);
@@ -117,20 +112,14 @@ public class ClearFrontAndBackMatter {
         }
 	}
 	
-	/**
-	 * <p>Returns {@code i-1} where {@code i} is 
-	 * the index in {@code file} of the second 
-	 * paragraph containing the word "PROLOGUE", or the first if 
-	 * there isn't a second such paragraph.</p>
-	 * 
-	 * <p>Returning a reference to the second instance accounts 
-	 * for the table of contents.</p>
-	 * @param file the {@code HTMLFile} in which the Prologue 
-	 * title is to be found
-	 * @return the index in {@code file} of the second 
-	 * paragraph containing the word "PROLOGUE", or the first if 
-	 * there isn't a second such paragraph.
-	 */
+    /**
+     * <p>Returns {@code i-1} where {@code i} is the index in {@code file} of the second paragraph
+     * containing the word "PROLOGUE", or the first if there isn't a second such paragraph.</p>
+     * <p>Returning a reference to the second instance accounts for the table of contents.</p>
+     * @param file the {@code HTMLFile} in which the Prologue title is to be found
+     * @return the index in {@code file} of the second paragraph containing the word "PROLOGUE", or
+     * the first if there isn't a second such paragraph.
+     */
 	private static int prologueTitleBlock(HTMLFile file, String bookname){
         String firstWords = ClearFrontAndBackMatter.FIRST_WORDS.get(bookname);
         Predicate<Integer> hasFirstWordsAt = (i) -> file.hasLiteralAt(firstWords, i);
@@ -157,18 +146,16 @@ public class ClearFrontAndBackMatter {
 		FIRST_WORDS.put("ADWD.html", "The night was");
 	}
 	
-	/**
-	 * <p>Returns the index of the opening paragraph tag of the 
-	 * last paragraph containing the title of the first non-
-	 * chapter chapter-like element of the book whose html file 
-	 * {@code file} represents.</p>
-	 * @param file the HTMLFile whose first paragraph after the 
-	 * end of the last real chapter is returned
-	 * @return  the index of the opening paragraph tag of the 
-	 * last paragraph containing the title of the first non-
-	 * chapter chapter-like element of the book whose html file 
-	 * {@code file} represents.
-	 */
+    /**
+     * <p>Returns the index of the opening paragraph tag of the last paragraph containing the title
+     * of the first non- chapter chapter-like element of the book whose html file {@code file}
+     * represents.</p>
+     * @param file the HTMLFile whose first paragraph after the end of the last real chapter is
+     * returned
+     * @return the index of the opening paragraph tag of the last paragraph containing the title of
+     * the first non- chapter chapter-like element of the book whose html file {@code file}
+     * represents.
+     */
 	private static int backMatterStart(HTMLFile file){
         String bookName = file.getExtensionlessName().substring(0,4);
         String lastWords = LAST_WORDS.get(bookName);
@@ -213,15 +200,13 @@ public class ClearFrontAndBackMatter {
         }
 	}
 	
-	/**
-	 * <p>Returns the index in {@code file} of the closing "p" tag 
-	 * of the last paragraph that ends with the 
-	 * {@link #lastWords(String) last words} of the specified 
-	 * ASOIAF novella.</p>
-	 * @param file
-	 * @param novella
-	 * @return
-	 */
+    /**
+     * <p>Returns the index in {@code file} of the closing "p" tag of the last paragraph that ends
+     * with the {@link #lastWords(String) last words} of the specified ASOIAF novella.</p>
+     * @param file
+     * @param novella
+     * @return
+     */
 	private static int lastWordsP(HTMLFile file, File novella){
         String lastWords = lastWords(novella.getName());
         Predicate<Integer> predicate = (i) -> file.hasLiteralAt(lastWords, i);
@@ -231,15 +216,13 @@ public class ClearFrontAndBackMatter {
         return file.adjacentElement(literalIndex, Tag.IS_P_CLOSE, Direction.NEXT);
 	}
 	
-	/**
-	 * <p>Returns the index in {@code file} of the opening "p" tag 
-	 * of the first paragraph that starts with the 
-	 * {@link #FIRST_WORDS(String) first words} of the specified 
-	 * ASOIAF novella.</p>
-	 * @param file
-	 * @param novella
-	 * @return
-	 */
+    /**
+     * <p>Returns the index in {@code file} of the opening "p" tag of the first paragraph that
+     * starts with the {@link #FIRST_WORDS(String) first words} of the specified ASOIAF novella.</p>
+     * @param file
+     * @param novella
+     * @return
+     */
 	private static int firstWordsP(HTMLFile file, File novella){
         String firstWords = firstWords(novella.getName());
         Predicate<Integer> predicate = (i) -> file.hasLiteralAt(firstWords, i);

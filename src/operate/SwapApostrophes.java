@@ -15,38 +15,35 @@ import html.HTMLFile;
 import text.PhraseProducer;
 
 /**
- * Scans each specified file looking for single-quote characters, 
- * and replaces them with proper apostrophes ("\'") if the 
- * characters around the single-quote match any of several PATTERNS.
+ * Scans each specified file looking for single-quote characters, and replaces them with proper
+ * apostrophes ("\'") if the characters around the single-quote match any of several PATTERNS.
  */
 public class SwapApostrophes{
 
     /**
-     * <p>The folder from which this class reads html novels files 
-     * whose apostrophes it will correct.</p>
+     * <p>The folder from which this class reads html novels files whose apostrophes it will
+     * correct.</p>
      * @see Folder#HTML_BOOKS_CHAPTER_CORE
      */
     public static final Folder READ_FROM = Folder.HTML_BOOKS_CHAPTER_CORE;
 
     /**
-     * <p>The folder where this class writes the modified html novel 
-     * files it creates.</p>
+     * <p>The folder where this class writes the modified html novel files it creates.</p>
      * @see Folder#HTML_BOOKS_CORRECT_APOSTROPHES
      */
     public static final Folder WRITE_TO = Folder.HTML_BOOKS_CORRECT_APOSTROPHES;
 
     /**
-     * <p>The apostrophe character ({@value}), used in 
-     * {@link #ApoPattern apostrophe-replacement context codes} 
-     * and as the literal apostrophe to install in place of right 
-     * single quote apostrophes that match a replacement pattern.</p>
+     * <p>The apostrophe character ({@value}), used in
+     * {@link #ApoPattern apostrophe-replacement context codes} and as the literal apostrophe to
+     * install in place of right single quote apostrophes that match a replacement pattern.</p>
      */
     public static final char APOSTROPHE = '\'';
 
     /**
-     * <p>The right single quote conventionally used as an apostrophe as 
-     * well as as a closing quote in nested quotes. To be replaced in the 
-     * corpus at certain places with an {@link #APOSTROPHE apostrophe}.</p>
+     * <p>The right single quote conventionally used as an apostrophe as well as as a closing quote
+     * in nested quotes. To be replaced in the corpus at certain places with an
+     * {@link #APOSTROPHE apostrophe}.</p>
      */
     public static final char RIGHT_SINGLE_QUOTE = '\u2019';
 
@@ -55,10 +52,9 @@ public class SwapApostrophes{
     }
 
     /**
-     * <p>Detects all the ASOIAF novel files in {@link #READ_FROM READ_FROM}, 
-     * reads them line by line, finds all the right single quotes, and replaces 
-     * those that fit any {@link #PATTERNS replacement pattern} with an 
-     * {@link #APOSTROPHE apostrophe}.</p>
+     * <p>Detects all the ASOIAF novel files in {@link #READ_FROM READ_FROM}, reads them line by
+     * line, finds all the right single quotes, and replaces those that fit any
+     * {@link #PATTERNS replacement pattern} with an {@link #APOSTROPHE apostrophe}.</p>
      * @param args command-line arguments (unused)
      */
     public static void swapApostrophes(Consumer<String> msg){
@@ -91,15 +87,12 @@ public class SwapApostrophes{
     }
 
     /**
-     * <p>Returns true if the text at and around {@code index} in 
-     * {@code line} matches any of the {@link #ApoPattern patterns} 
-     * in {@link #PATTERNS PATTERNS}, false otherwise.</p>
+     * <p>Returns true if the text at and around {@code index} in {@code line} matches any of the
+     * {@link #ApoPattern patterns} in {@link #PATTERNS PATTERNS}, false otherwise.</p>
      * @param line a line that has a right single quote at {@code index}
-     * @param index the location in {@code line} of a right single 
-     * quote
-     * @return true if the text at and around {@code index} in 
-     * {@code line} matches any of the {@link #ApoPattern patterns} 
-     * in {@link #PATTERNS PATTERNS}, false otherwise
+     * @param index the location in {@code line} of a right single quote
+     * @return true if the text at and around {@code index} in {@code line} matches any of the
+     * {@link #ApoPattern patterns} in {@link #PATTERNS PATTERNS}, false otherwise
      */
     private static boolean shouldChangeCharacter(StringBuilder line, int index){
         for( ApoPattern pattern : PATTERNS){
@@ -111,10 +104,9 @@ public class SwapApostrophes{
     }
 
     /**
-     * <p>All the conditions according to which a right single 
-     * quote may be changed to an apostrophe.</p>
-     * </p>The vast majority of these are plural possessives 
-     * quoted from the text of ASOIAF.</p>
+     * <p>All the conditions according to which a right single quote may be changed to an
+     * apostrophe.</p> </p>The vast majority of these are plural possessives quoted from the text of
+     * ASOIAF.</p>
      */
     private static final List<ApoPattern> PATTERNS = new ArrayList<>();
     static{
@@ -220,56 +212,50 @@ public class SwapApostrophes{
     }
 
     /**
-     * <p>Represents a pattern of characters around an 
-     * apostrophe, meant for use in determining which 
-     * instances of a right single quote in the text 
-     * of ASOIAF should be ordinary apostrophes instead.</p>
+     * <p>Represents a pattern of characters around an apostrophe, meant for use in determining
+     * which instances of a right single quote in the text of ASOIAF should be ordinary apostrophes
+     * instead.</p>
      */
     public static class ApoPattern{
 
         /**
-         * <p>Used in a string sent to ApoPattern's constructor, 
-         * this represents any {@link #isWordChar(Character) word character}. 
-         * It is an asterisk: {@value}</p>
+         * <p>Used in a string sent to ApoPattern's constructor, this represents any
+         * {@link #isWordChar(Character) word character}. It is an asterisk: {@value}</p>
          */
         public static final char WORD_CHAR = '*';
 
         /**
-         * <p>Used in a string sent to ApoPattern's constructor, 
-         * this represents any {@link #isWordChar(Character) non-word character}. 
-         * It is an ampersand: {@value}</p>
+         * <p>Used in a string sent to ApoPattern's constructor, this represents any
+         * {@link #isWordChar(Character) non-word character}. It is an ampersand: {@value}</p>
          */
         public static final char NON_WORD_CHAR = '&';
 
         /**
-         * <p>Used in a string sent to ApoPattern's constructor, 
-         * this represents any {@link #isAlphabetical(Character) alphabetic character}.
-         * It is an at sign: {@value}</p>
+         * <p>Used in a string sent to ApoPattern's constructor, this represents any
+         * {@link #isAlphabetical(Character) alphabetic character}. It is an at sign: {@value}</p>
          */
         public static final char ALPHA_CHAR = '@';
 
         /**
-         * <p>A list of the characters from the string used to 
-         * construct this ApoPatern prior to the apostrophe, 
-         * in reverse order. For example, sending "ab'cd" to 
-         * the constructor makes {@code before} equivalent 
-         * to {@code before = new ArrayList<>(); before.add(new Character('b')); before.add(new Character('a'));}</p>
+         * <p>A list of the characters from the string used to construct this ApoPatern prior to the
+         * apostrophe, in reverse order. For example, sending "ab'cd" to the constructor makes
+         * {@code before} equivalent to
+         * {@code before = new ArrayList<>(); before.add(new Character('b')); before.add(new Character('a'));}</p>
          */
         private List<Character> before;
 
         /**
-         * <p>A list of the characters from the string used to 
-         * construct this ApoPatern after to the apostrophe. 
-         * For example, sending "ab'cd" to 
-         * the constructor makes {@code before} equivalent 
-         * to {@code after = new ArrayList<>(); after.add(new Character('c')); after.add(new Character('d'));}</p>
+         * <p>A list of the characters from the string used to construct this ApoPatern after to the
+         * apostrophe. For example, sending "ab'cd" to the constructor makes {@code before}
+         * equivalent to
+         * {@code after = new ArrayList<>(); after.add(new Character('c')); after.add(new Character('d'));}</p>
          */
         private List<Character> after;
 
         /**
          * <p>Constructs an ApoPattern based on the specified string.</p>
-         * @param s a string containing an apostrophe used to specify 
-         * characters around an apostrophe
+         * @param s a string containing an apostrophe used to specify characters around an
+         * apostrophe
          */
         public ApoPattern(String s){
             s = s.toLowerCase();
@@ -285,15 +271,12 @@ public class SwapApostrophes{
         }
 
         /**
-         * <p>Returns true if the content of {@code line} around 
-         * position {@code index} matches this ApoPattern, 
-         * false otherwise.</p>
+         * <p>Returns true if the content of {@code line} around position {@code index} matches this
+         * ApoPattern, false otherwise.</p>
          * @param line string in which to try to match this ApoPattern
-         * @param index position in {@code line} around which 
-         * to try to match this ApoPattern
-         * @return true if the content of {@code line} around 
-         * position {@code index} matches this ApoPattern, 
-         * false otherwise
+         * @param index position in {@code line} around which to try to match this ApoPattern
+         * @return true if the content of {@code line} around position {@code index} matches this
+         * ApoPattern, false otherwise
          */
         public boolean match(StringBuilder line, int index){
         	
@@ -321,9 +304,8 @@ public class SwapApostrophes{
         }
 
         /**
-         * <p>Returns the character at the specified {@code index} in 
-         * {@code list} if {@code index} is within the bounds of 
-         * {@code list}, null otherwise.</p>
+         * <p>Returns the character at the specified {@code index} in {@code list} if {@code index}
+         * is within the bounds of {@code list}, null otherwise.</p>
          * @param index
          * @param list
          * @return
@@ -335,19 +317,18 @@ public class SwapApostrophes{
         }
 
         /**
-         * <p>Returns the index in {@code cleanLine} at which the 
-         * {@link IntChar#i index} of the element there equals {@code soughtIndex}.</p>
-         * @param cleanLine an HTML-free representation of a literal line from 
-         * an HTML file being processed
-         * @param soughtIndex an index in the original HTML file line such that 
-         * if the line's character from that point ended up in the HTML-free 
-         * {@code cleanLine}, the position in {@code cleanLine} of 
-         * the IntChar derived from that character in the literal line is returned
-         * @return the index in the HTML-free {@code cleanLine} of the IntChar 
-         * derived from the character at {@code soughtIndex} in the original, 
-         * literal text line from an HTML file, or -1 if the character at 
-         * {@code soughtIndex} in the literal HTML-file line is not represented 
-         * in the HTML-free {@code cleanLine}.
+         * <p>Returns the index in {@code cleanLine} at which the {@link IntChar#i index} of the
+         * element there equals {@code soughtIndex}.</p>
+         * @param cleanLine an HTML-free representation of a literal line from an HTML file being
+         * processed
+         * @param soughtIndex an index in the original HTML file line such that if the line's
+         * character from that point ended up in the HTML-free {@code cleanLine}, the position in
+         * {@code cleanLine} of the IntChar derived from that character in the literal line is
+         * returned
+         * @return the index in the HTML-free {@code cleanLine} of the IntChar derived from the
+         * character at {@code soughtIndex} in the original, literal text line from an HTML file, or
+         * -1 if the character at {@code soughtIndex} in the literal HTML-file line is not
+         * represented in the HTML-free {@code cleanLine}.
          */
         private int cleanPointer(List<IntChar> cleanLine, int soughtIndex){
             for(int i=0; i<cleanLine.size(); i++){
@@ -359,13 +340,11 @@ public class SwapApostrophes{
         }
 
         /**
-         * <p>Creates a representation of a literal {@code line} from an 
-         * HTML file such that {@link Tag Tags} and {@link CharCode Codes} are 
-         * excluded.</p>
+         * <p>Creates a representation of a literal {@code line} from an HTML file such that
+         * {@link Tag Tags} and {@link CharCode Codes} are excluded.</p>
          * @param line a literal text line from an HTML file
-         * @return  a representation of a literal {@code line} from an 
-         * HTML file such that {@link Tag Tags} and {@link CharCode Codes} are 
-         * excluded
+         * @return a representation of a literal {@code line} from an HTML file such that
+         * {@link Tag Tags} and {@link CharCode Codes} are excluded
          */
         private List<IntChar> cleanLine(StringBuilder line){
             List<IntChar> result = new ArrayList<>();
@@ -395,8 +374,8 @@ public class SwapApostrophes{
         }
 
         /**
-         * <p>Pairs an int index in the string of a literal text line from an 
-         * HTML file with the char at that index in the line.</p>
+         * <p>Pairs an int index in the string of a literal text line from an HTML file with the
+         * char at that index in the line.</p>
          */
         public static class IntChar{
             public final int i;
@@ -408,20 +387,15 @@ public class SwapApostrophes{
         }
 
         /**
-         * <p>Returns true if the character from a line of an HTML file 
-         * matches the corresponding character from the string used to 
-         * construct this ApoPattern, false otherwise.</p>
-         * 
-         * <p>The special characters {@link #WORD_CHAR WORD_CHAR}, 
-         * {@link #NON_WORD_CHAR NON_WORD_CHAR}, and {@link #ALPHA_CHAR ALPHA_CHAR} 
-         * in this instance's code initiate specific tests; all other characters 
-         * are tested literally against the {@code fromLine} character.</p>
-         * @param fromInstanceCode a character from the string used to construct 
-         * this ApoPattern
+         * <p>Returns true if the character from a line of an HTML file matches the corresponding
+         * character from the string used to construct this ApoPattern, false otherwise.</p> <p>The
+         * special characters {@link #WORD_CHAR WORD_CHAR}, {@link #NON_WORD_CHAR NON_WORD_CHAR},
+         * and {@link #ALPHA_CHAR ALPHA_CHAR} in this instance's code initiate specific tests; all
+         * other characters are tested literally against the {@code fromLine} character.</p>
+         * @param fromInstanceCode a character from the string used to construct this ApoPattern
          * @param fromLine a character from a line from an HTML file
-         * @return true if the character from a line of an HTML file 
-         * matches the corresponding character from the string used to 
-         * construct this ApoPattern, false otherwise
+         * @return true if the character from a line of an HTML file matches the corresponding
+         * character from the string used to construct this ApoPattern, false otherwise
          */
         private static boolean match(Character fromInstanceCode, Character fromLine){
             switch(fromInstanceCode){
@@ -433,11 +407,9 @@ public class SwapApostrophes{
         }
 
         /**
-         * <p>Returns true if {@code c} is an alphabetical character, 
-         * false otherwise.</p>
+         * <p>Returns true if {@code c} is an alphabetical character, false otherwise.</p>
          * @param c a character to be evaluated as alphabetical or not
-         * @return true if {@code c} is an alphabetical character, 
-         * false otherwise
+         * @return true if {@code c} is an alphabetical character, false otherwise
          */
         private static boolean isAlphabetical(Character c){
             return c != null 
@@ -449,12 +421,9 @@ public class SwapApostrophes{
     }
 
     /**
-     * <p>Returns a list of indices in {@code line} at which 
-     * right single quotes are located.</p>
-     * @param line a string to be analysed to find the locations of 
-     * all right single quotes in it
-     * @return a list of indices in {@code line} at which 
-     * right single quotes are located
+     * <p>Returns a list of indices in {@code line} at which right single quotes are located.</p>
+     * @param line a string to be analysed to find the locations of all right single quotes in it
+     * @return a list of indices in {@code line} at which right single quotes are located
      */
     private static List<Integer> singleQuoteIndices(StringBuilder line){
         List<Integer> result = new ArrayList<>();
@@ -467,14 +436,10 @@ public class SwapApostrophes{
     }
 
     /**
-     * <p>Returns true if {@code c{@code  is a character that might 
-     * need to be changed to an apostrophe, false if {@code c} 
-     * cannot need to be changed to an apostrophe.</p>
-     * @param c a character whose candidacy for needing to be replaced 
-     * by an apostrophe is determined
-     * @return true if {@code c{@code  is a character that might 
-     * need to be changed to an apostrophe, false if {@code c} 
-     * cannot need to be changed to an apostrophe
+     * <p>Returns true if {@code c} cannot need to be changed to an apostrophe.</p>
+     * @param c a character whose candidacy for needing to be replaced by an apostrophe is
+     * determined
+     * @return true if {@code c} cannot need to be changed to an apostrophe
      */
     private static boolean isPossibleApostrophe(char c){
         return c == RIGHT_SINGLE_QUOTE;

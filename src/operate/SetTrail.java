@@ -18,43 +18,31 @@ import common.Folder;
 import common.IO;
 
 /**
- * <p>Opens the file specified as a command-line argument 
- * and assigns the files named in the second tab-delimited 
- * column therein links to the other files on the same 
- * line. The file named in the first column is linked 
- * as the previous chapter, and the file named in the 
- * third column is linked as the next chapter.</p>
- * 
- * <p>This allows you to set the addresses to which the 
- * "previous chapter" and "next chapter" arrows at the 
- * top and bottom of the ASOIAF chapter html files link.</p>
- * 
- * <p>The file should be formatted as three columns of tab-
- * delimited values. Each line gives specifications for a 
- * single chapter, named in the middle column. The left-hand 
- * column specifies the file to be linked as "previous chapter", 
- * and the right-hand column indicates the file to be linked 
- * as "next chapter". Leaving the left or right column empty 
- * for a given middle column value causes the corresponding 
- * link(s) for that file to be set targeting the empty string 
- * as their address so they go nowhere.</p>
- * 
- * <p>These trail files are also used to determine the sorting 
- * order of chapters; so, they must have an entry for each 
- * existing chapter.</p>
+ * <p>Opens the file specified as a command-line argument and assigns the files named in the second
+ * tab-delimited column therein links to the other files on the same line. The file named in the
+ * first column is linked as the previous chapter, and the file named in the third column is linked
+ * as the next chapter.</p> <p>This allows you to set the addresses to which the "previous chapter"
+ * and "next chapter" arrows at the top and bottom of the ASOIAF chapter html files link.</p> <p>The
+ * file should be formatted as three columns of tab- delimited values. Each line gives
+ * specifications for a single chapter, named in the middle column. The left-hand column specifies
+ * the file to be linked as "previous chapter", and the right-hand column indicates the file to be
+ * linked as "next chapter". Leaving the left or right column empty for a given middle column value
+ * causes the corresponding link(s) for that file to be set targeting the empty string as their
+ * address so they go nowhere.</p> <p>These trail files are also used to determine the sorting order
+ * of chapters; so, they must have an entry for each existing chapter.</p>
  */
 public class SetTrail {
 
     /**
-     * <p>The folder from which this class reads HTML chapters to 
-     * which to add links for previous and next chapters.</p>
+     * <p>The folder from which this class reads HTML chapters to which to add links for previous
+     * and next chapters.</p>
      * @see Folder#LINKED_CHAPTERS
      */
     public static final Folder READ_FROM = Folder.LINKED_CHAPTERS;
 
     /**
-     * <p>The folder where this class writes the html chapter files 
-     * to which it has added links for previous and next chapters.</p>
+     * <p>The folder where this class writes the html chapter files to which it has added links for
+     * previous and next chapters.</p>
      * @see Folder#READABLE
      */
     public static final Folder WRITE_TO = Folder.READABLE;
@@ -65,38 +53,34 @@ public class SetTrail {
     public static final String ID_ATTRIB = "id";
 
     /**
-     * <p>The value of the id attribute of the anchors in the 
-     * head and foot tables for html chapters which link to 
-     * the previous chapter.</p>
+     * <p>The value of the id attribute of the anchors in the head and foot tables for html chapters
+     * which link to the previous chapter.</p>
      */
     public static final String PREV_CHAPTER = "prev_chapter";
 
     /**
-     * <p>The value of the id attribute for the anchors in the 
-     * head and foot tables for html chapters which link to 
-     * the next chapter.</p>
+     * <p>The value of the id attribute for the anchors in the head and foot tables for html
+     * chapters which link to the next chapter.</p>
      */
     public static final String NEXT_CHAPTER = "next_chapter";
 
     /**
-     * <p>The text of the html "href" attribute followed by an 
-     * equals sign and a quote.</p>
+     * <p>The text of the html "href" attribute followed by an equals sign and a quote.</p>
      */
     public static final String HREF_START = "href=\"";
 
     /**
      * <p>Calls {@link #setTrail(String[],Consumer<String>) setTrail()}.</p>
-     * @param args 
+     * @param args
      */
     public static void main(String[] args){
         setTrail(args, IO.DEFAULT_MSG);
     }
 
     /**
-     * <p>Reads the html chapter files from {@code READ_FROM} and writes 
-     * modified versions of them with links to previous and next chapters 
-     * added according to the data in the trail file named by the first 
-     * command-line argument to the folder {@code WRITE_TO}.</p>
+     * <p>Reads the html chapter files from {@code READ_FROM} and writes modified versions of them
+     * with links to previous and next chapters added according to the data in the trail file named
+     * by the first command-line argument to the folder {@code WRITE_TO}.</p>
      * @param args command-line arguments
      * @param msg
      */
@@ -156,18 +140,15 @@ public class SetTrail {
     }
 
     /**
-     * <p>Finds all anchor tags with the specified value of the 
-     * specified attribute in the specified html file and changes 
-     * the values of the href attributes of those anchors to 
+     * <p>Finds all anchor tags with the specified value of the specified attribute in the specified
+     * html file and changes the values of the href attributes of those anchors to
      * {@code address}.</p>
-     * @param file the html file whose anchor tags with the specified 
-     * attribute and value are being modified
-     * @param idValue the value to be used in determining which 
-     * anchors to modify
-     * @param idAttrib the attribute to use in determining which 
-     * anchors to modify
-     * @param address the relative address of an html chapter 
-     * file to which to link as an adjacent chapter
+     * @param file the html file whose anchor tags with the specified attribute and value are being
+     * modified
+     * @param idValue the value to be used in determining which anchors to modify
+     * @param idAttrib the attribute to use in determining which anchors to modify
+     * @param address the relative address of an html chapter file to which to link as an adjacent
+     * chapter
      */
     private static void setAdjacentChapterLinks(HTMLFile file, String idValue, String idAttrib, String address){
         Predicate<HTMLEntity> isAnchorWithMatchID = (h) -> isAnchorWithMatchID(h, idValue, idAttrib);
@@ -195,21 +176,17 @@ public class SetTrail {
     public static final String QUOTE = "\"";
 
     /**
-     * <p>The title attribute of an html tag and the quote that 
-     * begins the attribute's value.</p>
+     * <p>The title attribute of an html tag and the quote that begins the attribute's value.</p>
      */
     public static final String TITLE_START = "title=\"";
 
     /**
-     * <p>Returns a String based on {@code tag}, with the value 
-     * of the pre-existing href attribute replaced by the parameter 
-     * {@code address} and with the value of the pre-existing 
-     * title attribute replaced by a chapter title extracted from 
-     * {@code address} by calling {@link #title(String) title(address)}.</p>
-     * 
-     * <p>For example, 
-     * {@code anchor("<a href=\"no.html\" title=\"no\">", "book_0_yes_yes.html")} 
-     * would return "<a href=\"book_0_yes_yes.html\" title=\"yes yes\">".</p>
+     * <p>Returns a String based on {@code tag}, with the value of the pre-existing href attribute
+     * replaced by the parameter {@code address} and with the value of the pre-existing title
+     * attribute replaced by a chapter title extracted from {@code address} by calling
+     * {@link #title(String) title(address)}.</p> <p>For example,
+     * {@code anchor("<a href=\"no.html\" title=\"no\">", "book_0_yes_yes.html")} would return "<a
+     * href=\"book_0_yes_yes.html\" title=\"yes yes\">".</p>
      * @param tag
      * @param address
      * @return
@@ -219,16 +196,11 @@ public class SetTrail {
     }
 
     /**
-     * <p>Returns the value for the title attribute of an anchor tag 
-     * based on the specified address to which the anchor links.</p>
-     * 
-     * <p>Returns {@code address} with its book name, chapter index, 
-     * and file extension stripped away and underscores replaced 
-     * with spaces.</p>
-     * @param address the address of an html file for a chapter being 
-     * linked.
-     * @return {@code address} with its book name, chapter index, 
-     * and file extension stripped away.
+     * <p>Returns the value for the title attribute of an anchor tag based on the specified address
+     * to which the anchor links.</p> <p>Returns {@code address} with its book name, chapter index,
+     * and file extension stripped away and underscores replaced with spaces.</p>
+     * @param address the address of an html file for a chapter being linked.
+     * @return {@code address} with its book name, chapter index, and file extension stripped away.
      */
     private static String title(String address){
         if(address.isEmpty()){
@@ -241,25 +213,16 @@ public class SetTrail {
     }
 
     /**
-     * <p>Replaces the pre-existing value of the attribute specified by 
-     * {@code attributeStart} in the specified {@code body} 
-     * of an html tag with {@code installValue}.</p>
-     * 
-     * @param body the text of an html tag of which a modified version 
-     * is returned
-     * 
-     * @param attributeStart identifies the attribute whose value is 
-     * to be modified. Must  be the name of an attribute 
-     * followed by an equals sign followed by a double quote, such as 
+     * <p>Replaces the pre-existing value of the attribute specified by {@code attributeStart} in
+     * the specified {@code body} of an html tag with {@code installValue}.</p>
+     * @param body the text of an html tag of which a modified version is returned
+     * @param attributeStart identifies the attribute whose value is to be modified. Must be the
+     * name of an attribute followed by an equals sign followed by a double quote, such as
      * {@link #TITLE_START TITLE_START} or {@link #HREF_START HREF_START}.
-     * 
-     * @param installValue the value of the attribute named by 
-     * {@code attributeStart} to install in place of the 
-     * pre-existing value
-     * 
-     * @return  the pre-existing value of the attribute specified by 
-     * {@code attributeStart} in the specified {@code body} 
-     * of an html tag with {@code installValue}
+     * @param installValue the value of the attribute named by {@code attributeStart} to install in
+     * place of the pre-existing value
+     * @return the pre-existing value of the attribute specified by {@code attributeStart} in the
+     * specified {@code body} of an html tag with {@code installValue}
      */
     private static String replaceValueOfAttribute(String body, String attributeStart, String installValue){
         int start = body.indexOf(attributeStart)+attributeStart.length();
@@ -270,21 +233,17 @@ public class SetTrail {
     }
 
     /**
-     * <p>Number of columns to anticipate in input file: {@value}</p>
-     * 
-     * <p>The fourth column is unused at this time, 
-     * but expecting it allows the third column to 
-     * be cleanly isolated if a fourth column exists.</p>
+     * <p>Number of columns to anticipate in input file: {@value}</p> <p>The fourth column is unused
+     * at this time, but expecting it allows the third column to be cleanly isolated if a fourth
+     * column exists.</p>
      */
     public static final int COLUMN_COUNT = 4;
 
     /**
-     * <p>Returns a list of {@code TrailElement}s describing each 
-     * chapter's predecessor and successor.</p>
-     * @param trailFilename the name of the trail-file from which 
-     * trail data is extracted
-     * @return a list of {@code TrailElement}s describing each 
-     * chapter's predecessor and successor
+     * <p>Returns a list of {@code TrailElement}s describing each chapter's predecessor and
+     * successor.</p>
+     * @param trailFilename the name of the trail-file from which trail data is extracted
+     * @return a list of {@code TrailElement}s describing each chapter's predecessor and successor
      */
     public static List<TrailElement> getTrailElements(String trailFilename){
         List<String> lines = IO.fileContentsAsList(
@@ -300,8 +259,8 @@ public class SetTrail {
     }
 
     /**
-     * <p>Represents an element of a chapter trail, a sequence 
-     * of backward and forward links between chapters.</p>
+     * <p>Represents an element of a chapter trail, a sequence of backward and forward links between
+     * chapters.</p>
      */
     public static class TrailElement implements Comparable<TrailElement>{
     	
@@ -315,8 +274,8 @@ public class SetTrail {
         private final String prev;
 
         /**
-         * <p>The chapter for which links to the specified preceding and 
-         * succeeding chapters are to be installed.</p>
+         * <p>The chapter for which links to the specified preceding and succeeding chapters are to
+         * be installed.</p>
          */
         private final String focus;
 
@@ -326,13 +285,11 @@ public class SetTrail {
         private final String next;
 
         /**
-         * <p>Constructs a TrailElement indicating that the chapter 
-         * named by {@code focus} has the chapter named by 
-         * {@code prev</code as its predecessor and the chapter 
-         * named by {@code next} as its successor.</p>
+         * <p>Constructs a TrailElement indicating that the chapter named by {@code focus} has the
+         * chapter named by {@code next} as its successor.</p>
          * @param prev the chapter before {@code focus} in sequence
-         * @param focus the chapter in which links to {@code prev} 
-         * and {@code next} are to be installed
+         * @param focus the chapter in which links to {@code prev} and {@code next} are to be
+         * installed
          * @param next the chapter after {@code focus} in sequence
          */
         public TrailElement(String prev, String focus, String next){
@@ -342,11 +299,10 @@ public class SetTrail {
         }
 
         /**
-         * <p>Compares two TrailElements, first by their 
-         * {@code focus}, then by their {@code prev}, 
+         * <p>Compares two TrailElements, first by their {@code focus}, then by their {@code prev},
          * and last by their {@code next}.</p>
-         * @return an int whose sign reflects the natural ordering 
-         * between this TrailElement and {@code t}
+         * @return an int whose sign reflects the natural ordering between this TrailElement and
+         * {@code t}
          */
         @Override
         public int compareTo(TrailElement t){

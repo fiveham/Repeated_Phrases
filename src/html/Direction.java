@@ -5,24 +5,14 @@ import java.util.function.BiPredicate;
 import java.util.function.IntUnaryOperator;
 
 /**
- * <p>Represents a direction of motion on a Collection.
- * NEXT is motion to the right (increasing index).
- * PREV is motion to the left (decreasing index).</p>
- * 
- * <p>{@link #crawlTest crawlTest} tests 
- * that the specified position is not outside the bounds 
- * of the specified collection.</p>
- * 
- * <p>For rightward motion, {@code crawlTest} tests 
- * that the specified position is less than the size of 
- * the specified collection. For leftward motion, 
- * {@code crawlTest} tests that the specified 
- * position is non-negative and therefore not less than 
- * the minimum position in the collection.</p>
- * 
- * <p>{@link #apply apply} returns one more than the specified 
- * value for NEXT and one less than the specified value 
- * in the case of PREV.</p>
+ * <p>Represents a direction of motion on a Collection. NEXT is motion to the right (increasing
+ * index). PREV is motion to the left (decreasing index).</p> <p>{@link #crawlTest crawlTest} tests
+ * that the specified position is not outside the bounds of the specified collection.</p> <p>For
+ * rightward motion, {@code crawlTest} tests that the specified position is less than the size of
+ * the specified collection. For leftward motion, {@code crawlTest} tests that the specified
+ * position is non-negative and therefore not less than the minimum position in the collection.</p>
+ * <p>{@link #apply apply} returns one more than the specified value for NEXT and one less than the
+ * specified value in the case of PREV.</p>
  */
 public enum Direction{
 	
@@ -38,45 +28,35 @@ public enum Direction{
 		this.crawlTest = crawlTest;
 	}
 	
-	/**
-	 * <p>Returns the operation that this Direction 
-	 * applies to an int position in a collection 
-	 * to generate the next position in the collection.</p>
-	 * @return
-	 */
+    /**
+     * <p>Returns the operation that this Direction applies to an int position in a collection to
+     * generate the next position in the collection.</p>
+     * @return
+     */
 	public IntUnaryOperator op(){
 		return op;
 	}
 	
-	/**
-	 * <p>Applies this Direction's operation to the specified 
-	 * position in a collection and returns the result.
-	 * For {@link #NEXT NEXT}, returns {@code i+1}.
-	 * For {@link #PREV PREV}, returns {@code i-1}.</p>
-	 * @param i position in a collection, for which the 
-	 * next position is generated and returned.
-	 * @return the next position in a collection after 
-	 * the specified position {@code i}.
-	 */
+    /**
+     * <p>Applies this Direction's operation to the specified position in a collection and returns
+     * the result. For {@link #NEXT NEXT}, returns {@code i+1}. For {@link #PREV PREV}, returns
+     * {@code i-1}.</p>
+     * @param i position in a collection, for which the next position is generated and returned.
+     * @return the next position in a collection after the specified position {@code i}.
+     */
 	public int apply(int i){
 		return op.applyAsInt(i);
 	}
 	
-	/**
-	 * <p>Returns true if the position in the specified collection 
-	 * is within the bounds of the collection. 
-	 * For NEXT, returns true if the specified position is 
-	 * less than the size of the specified collection, 
-	 * false otherwise.
-	 * For PREV, returns true if the specified position is 
-	 * greater than or equal to 0, the lower bound 
-	 * of any collection, false otherwise.</p>
-	 * @param i a position in the collection.
-	 * @param c the collection against whose bounds {@code i} 
-	 * is compared
-	 * @return true if {@code i} is within the bounds 
-	 * of {@code c}, false otherwise.
-	 */
+    /**
+     * <p>Returns true if the position in the specified collection is within the bounds of the
+     * collection. For NEXT, returns true if the specified position is less than the size of the
+     * specified collection, false otherwise. For PREV, returns true if the specified position is
+     * greater than or equal to 0, the lower bound of any collection, false otherwise.</p>
+     * @param i a position in the collection.
+     * @param c the collection against whose bounds {@code i} is compared
+     * @return true if {@code i} is within the bounds of {@code c}, false otherwise.
+     */
 	public boolean crawlTest(int i, Collection<?> c){
 		return crawlTest.test(i,c);
 	}

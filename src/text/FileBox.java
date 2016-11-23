@@ -12,46 +12,41 @@ import java.util.Set;
 import common.IO;
 
 /**
- * <p>Wraps a Map linking chapter filenames with data 
- * structures that store pairs of String and int. 
- * This is used to store quote data in a way 
- * that enables all the quotes from a given 
- * chapter to be accessed easily.</p>
+ * <p>Wraps a Map linking chapter filenames with data structures that store pairs of String and int.
+ * This is used to store quote data in a way that enables all the quotes from a given chapter to be
+ * accessed easily.</p>
  */
 public class FileBox{
 	
-	/**
-	 * <p>The wrapped HashMap.</p>
-	 */
+    /**
+     * <p>The wrapped HashMap.</p>
+     */
 	private final Map<String, List<Quote>> hashmap;
 	
-	/**
-	 * <p>Constructs a FileBox with no contents.</p>
-	 */
+    /**
+     * <p>Constructs a FileBox with no contents.</p>
+     */
 	public FileBox() {
 		hashmap = new HashMap<>();
 	}
 	
-	/**
-	 * <p>Constructs a FileBox with all the quote 
-	 * data contained in the specified File {@code f}.</p>
-	 * @param f a File from which to read quote data
-	 * @throws FileNotFoundException when {@code f} does 
-	 * not exist or cannot be read
-	 */
+    /**
+     * <p>Constructs a FileBox with all the quote data contained in the specified File
+     * {@code f}.</p>
+     * @param f a File from which to read quote data
+     * @throws FileNotFoundException when {@code f} does not exist or cannot be read
+     */
 	public FileBox(File f) throws FileNotFoundException{
 		this(new Scanner(f, IO.ENCODING));
 	}
 	
-	/**
-	 * <p>Constructs a FileBox containing the quote 
-	 * data represented in the body that {@code scan} 
-	 * reads.</p>
-	 * @param scan a Scanner that produces quote 
-	 * data as though reading files that go in {@link #Folder.REPEATS REPEATS}, 
-	 * {@link #Folder.INDEPENDENT_INSTANCES INDEPENDENT_INSTANCES}, or 
-	 * {@link #Folder.DUPLICATE_INDEPENDENTS DUPLICATE_INDEPENDENTS}.
-	 */
+    /**
+     * <p>Constructs a FileBox containing the quote data represented in the body that {@code scan}
+     * reads.</p>
+     * @param scan a Scanner that produces quote data as though reading files that go in
+     * {@link #Folder.REPEATS REPEATS}, {@link #Folder.INDEPENDENT_INSTANCES INDEPENDENT_INSTANCES},
+     * or {@link #Folder.DUPLICATE_INDEPENDENTS DUPLICATE_INDEPENDENTS}.
+     */
 	public FileBox(Scanner scan){
 		try{
 			hashmap = new HashMap<>();
@@ -85,51 +80,43 @@ public class FileBox{
 		}
 	}
 	
-	/**
-	 * <p>Returns a {@link java.util.Set Set} of the names of the 
-	 * files of the chapters for which this FileBox has phrase-
-	 * instance data.</p>
-	 * @return  a {@link java.util.Set Set} of the names of the 
-	 * files of the chapters for which this FileBox has phrase-
-	 * instance data
-	 */
+    /**
+     * <p>Returns a {@link java.util.Set Set} of the names of the files of the chapters for which
+     * this FileBox has phrase- instance data.</p>
+     * @return a {@link java.util.Set Set} of the names of the files of the chapters for which this
+     * FileBox has phrase- instance data
+     */
 	public Set<String> filenames(){
 		return hashmap.keySet();
 	}
 	
-	/**
-	 * <p>Returns the number of mappings in the underlying HashMap, 
-	 * equal to the size of the Set returned by {@link #filenames() filenames()}, 
-	 * as the one-to-many mappings are achieved via a one-to-one 
-	 * mapping from key filenames to value {@literal List<IntString>}s.</p>
-	 * @return the number of mappings in the underlying HashMap
-	 */
+    /**
+     * <p>Returns the number of mappings in the underlying HashMap, equal to the size of the Set
+     * returned by {@link #filenames() filenames()}, as the one-to-many mappings are achieved via a
+     * one-to-one mapping from key filenames to value {@literal List<IntString>}s.</p>
+     * @return the number of mappings in the underlying HashMap
+     */
 	public int size(){
 		return hashmap.size();
 	}
 	
-	/**
-	 * <p>Returns the {@literal List<IntString>} mapped in the 
-	 * underlying HashMap for the key {@code o}. Returns 
-	 * {@code null} if there is no mapping for {@code o} 
-	 * in the underlying HashMap.</p>
-	 * @param o the key filename whose value {@literal List<IntString>} 
-	 * is to be returned
-	 * @return the {@literal List<IntString>} mapped in the 
-	 * underlying HashMap for the key {@code o}
-	 */
+    /**
+     * <p>Returns the {@literal List<IntString>} mapped in the underlying HashMap for the key
+     * {@code o}. Returns {@code null} if there is no mapping for {@code o} in the underlying
+     * HashMap.</p>
+     * @param o the key filename whose value {@literal List<IntString>} is to be returned
+     * @return the {@literal List<IntString>} mapped in the underlying HashMap for the key {@code o}
+     */
 	public List<Quote> get(Object o){
 		return hashmap.get(o);
 	}
 	
-	/**
-	 * <p>Returns true if there is an entry for {@code filename} 
-	 * in this FileBox, false otherwise.</p>
-	 * @param filename the filename whose status as a key in the 
-	 * underlying HashMap is returned
-	 * @return true if there is an entry for {@code filename} 
-	 * in this FileBox, false otherwise.
-	 */
+    /**
+     * <p>Returns true if there is an entry for {@code filename} in this FileBox, false
+     * otherwise.</p>
+     * @param filename the filename whose status as a key in the underlying HashMap is returned
+     * @return true if there is an entry for {@code filename} in this FileBox, false otherwise.
+     */
 	public boolean contains(String filename){
 		return hashmap.containsKey(filename);
 	}
