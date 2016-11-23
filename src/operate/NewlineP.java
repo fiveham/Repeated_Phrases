@@ -36,13 +36,6 @@ public class NewlineP{
     public static final String BEGIN_P = "<p ";
     
     /**
-     * @param args command-line arguments
-     */
-    public static void main(String[] args){
-        newlineP(IO.DEFAULT_MSG);
-    }
-
-    /**
      * <p>Detects the html files in {@code READ_FROM}, reads them using {@link #BEGIN_P BEGIN_P} as
      * a Scanner's {@linkplain java.util.Scanner#useDelimiter(String) delimiter}, and accumulates
      * the content returned by that Scanner, including a {@linkplain IO#NEW_LINE newline} and the

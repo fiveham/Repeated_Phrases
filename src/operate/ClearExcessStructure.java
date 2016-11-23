@@ -38,10 +38,6 @@ public class ClearExcessStructure{
      */
 	public static final Folder WRITE_TO = Folder.HTML_BOOKS_UNSTRUCTURED;
 	
-	public static void main(String[] args){
-		clearXSStruct(IO.DEFAULT_MSG);
-	}
-	
     /**
      * <p>Detects the html files in the directory {@code READ_FROM}, reads each of them, removes
      * divs, blockquotes, imgs, non-breaking spaces, and empty paragraphs from them, and saves them

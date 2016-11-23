@@ -40,10 +40,6 @@ public class DetermineAnchors {
      */
 	public static final Folder WRITE_TO = Folder.ANCHORS;
 	
-	public static void main(String[] args){
-		determineAnchors(args, IO.DEFAULT_MSG);
-	}
-	
     /**
      * <p>Detects all the .txt files in {@code READ_FROM}, reads them all, and organizes the
      * extracted data by chapter name and by phrase. Saves files to {@code WRITE_TO} for each

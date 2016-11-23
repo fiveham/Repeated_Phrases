@@ -37,10 +37,6 @@ public class ClearFrontAndBackMatter {
      */
 	public static final Folder WRITE_TO = Folder.HTML_BOOKS_CHAPTER_CORE;
 	
-    public static void main(String[] args){
-        clearFrontBack(IO.DEFAULT_MSG);
-    }
-    
     /**
      * <p>Detects all the html files for the ASOIAF novels in {@code READ_FROM}, reads them, detects
      * the paragraph containing the title of the Prologue and removes all content prior to that

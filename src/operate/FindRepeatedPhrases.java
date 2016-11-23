@@ -47,11 +47,7 @@ public class FindRepeatedPhrases {
      * Jon II.</p>
      */
 	public static final int MAX_PHRASE_SIZE = 218;
-        
-        public static void main(String[] args){
-            findRepPhrases(IO.DEFAULT_MSG);
-        }
-	
+    
     /**
      * <p>Gets a list of the files to be analysed via
      * {@code READ_FROM.folder().listFiles(IO.IS_TXT)}, loops from {@code MIN_PHRASE_SIZE} to

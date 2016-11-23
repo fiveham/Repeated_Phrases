@@ -39,11 +39,7 @@ public class LinkChapters {
      * @see Folder#HTML_CHAPTERS
      */
     public static final Folder READ_SUBSTANCE = Folder.HTML_CHAPTERS;
-
-    public static void main(String[] args){
-        linkChapters(args, IO.DEFAULT_MSG);
-    }
-
+    
     /**
      * <p>For each corresponding pair of files from {@code READ_SUBSTANCE} and
      * {@code READ_DECORATION}, adds anchors based on the latter to the former and saves the result

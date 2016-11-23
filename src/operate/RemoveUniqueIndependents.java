@@ -31,11 +31,7 @@ public class RemoveUniqueIndependents {
      * saved.</p>
      */
     public static final Folder WRITE_TO = Folder.DUPLICATE_INDEPENDENTS;
-
-    public static void main(String[] args){
-        rmUniqIndeps(IO.DEFAULT_MSG);
-    }
-
+    
     /**
      * <p>Reads each file from {@code READ_FROM} and prints only the lines of each file that have
      * more than one Location to a corresponding file in {@code WRITE_TO}.</p>

@@ -23,11 +23,7 @@ public class HtmlToText {
      * <p>The {@code Folder} to which this class writes files it creates.</p>
      */
     public static final Folder WRITE_TO = Folder.CORPUS;
-
-    public static void main(String[] args){
-        htmlToText(IO.DEFAULT_MSG);
-    }
-
+    
     /**
      * <p>Detects all the .html files in {@code READ_FROM}, reads them as HTMLFiles, and prints them
      * as .txt files in {@code WRITE_TO}.</p>

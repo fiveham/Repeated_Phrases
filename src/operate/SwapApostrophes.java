@@ -47,11 +47,7 @@ public class SwapApostrophes{
      * {@link #APOSTROPHE apostrophe}.</p>
      */
     public static final char RIGHT_SINGLE_QUOTE = '\u2019';
-
-    public static void main(String[] args){
-        swapApostrophes(IO.DEFAULT_MSG);
-    }
-
+    
     /**
      * <p>Detects all the ASOIAF novel files in {@link #READ_FROM READ_FROM}, reads them line by
      * line, finds all the right single quotes, and replaces those that fit any

@@ -70,14 +70,6 @@ public class SetTrail {
     public static final String HREF_START = "href=\"";
     
     /**
-     * <p>Calls {@link #setTrail(String[],Consumer<String>) setTrail()}.</p>
-     * @param args
-     */
-    public static void main(String[] args){
-        setTrail(args, IO.DEFAULT_MSG);
-    }
-    
-    /**
      * <p>Reads the html chapter files from {@code READ_FROM} and writes modified versions of them
      * with links to previous and next chapters added according to the data in the trail file named
      * by the first command-line argument to the folder {@code WRITE_TO}.</p>
