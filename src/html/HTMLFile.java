@@ -344,13 +344,15 @@ public class HTMLFile {
 		result.add(lo);
 		for(int i=lo+1; i<hi; i++){
 			if( is(i, 
-					IS_CHARACTER, 
+					HTMLFile::isCharacter, 
 					Direction.PREV, 
 					Tag.class::isInstance) //htmlFile.get(i) is a character preceded by a tag.
+					
+					//htmlFile.get(i) is a Tag preceded by a character.
 					|| is(i, 
 							Tag.class::isInstance, 
 							Direction.PREV, 
-							IS_CHARACTER) ){ //htmlFile.get(i) is a Tag preceded by a character.
+							HTMLFile::isCharacter)){
 				result.add(i);
 			}
 		}
@@ -377,7 +379,7 @@ public class HTMLFile {
 			if( !match(c, content.get(index)) ){
 				return false;
 			}
-			index = adjacentElement(index, IS_CHARACTER, Direction.NEXT);
+			index = adjacentElement(index, HTMLFile::isCharacter, Direction.NEXT);
 		}
 		return true;
 	}
@@ -629,7 +631,7 @@ public class HTMLFile {
 	private int getLastCharacter(int wordIndex, int startPoint){
 		for(int i=startPoint; i<content.size(); i++){
 			
-			if( !isWord( adjacentElement(i, Direction.NEXT, IS_CHARACTER) ) ){
+			if( !isWord( adjacentElement(i, Direction.NEXT, HTMLFile::isCharacter) ) ){
 				return i;
 			}
 		}
@@ -659,7 +661,7 @@ public class HTMLFile {
      */
 	public boolean isWordStart(int index){
 		return isWord(content.get(index)) 
-				&& !isWord( adjacentElement(index, Direction.PREV, IS_CHARACTER) );
+				&& !isWord( adjacentElement(index, Direction.PREV, HTMLFile::isCharacter) );
 	}
 	
     /**
@@ -672,7 +674,7 @@ public class HTMLFile {
      */
 	public boolean isWordEnd(int index){
 		return isWord(content.get(index))
-				&& !isWord( adjacentElement(index, Direction.NEXT, IS_CHARACTER) );
+				&& !isWord( adjacentElement(index, Direction.NEXT, HTMLFile::isCharacter) );
 	}
 	
     /**
@@ -690,16 +692,18 @@ public class HTMLFile {
      * <p>Evaluates to true if the specified HTMLEntity {@code h} is a character-type HTMLEntity: a
      * {@link CharLiteral Ch} or a {@link CharCode Code}.</p>
      */
-	public static final Predicate<HTMLEntity> IS_CHARACTER = 
-			(h) -> CharLiteral.class.isInstance(h) || CharCode.class.isInstance(h);
+	public static boolean isCharacter(HTMLEntity h){
+		return CharLiteral.class.isInstance(h) || CharCode.class.isInstance(h);
+	}
 	
     /**
      * <p>Evaluates to true if the specified HTMLEntity {@code h}
      * {@link #IS_CHARACTER is character-type} and is not a
      * {@link #isWord(HTMLEntity) legal word character}.</p>
      */
-	public static final Predicate<HTMLEntity> IS_CHARACTER_NOT_WORD = 
-			IS_CHARACTER.and((h) -> !isWord(h));
+	public static boolean isCharacterNotWord(HTMLEntity h){
+		return isCharacter(h) && !isWord(h);
+	}
 
     /**
      * <p>Returns the position in the underlying list of the element nearest to but not at
@@ -981,8 +985,9 @@ public class HTMLFile {
 		return result;
 	}
 	
-	public static final Predicate<HTMLEntity> IS_PARAGRAPHISH_OPEN = //TODO use methods and ::
-			(h) -> Tag.isPOpen(h) || Tag.isHeaderOpen(h) ;
+	public static boolean isParagraphishOpen(HTMLEntity h){
+		return Tag.isPOpen(h) || Tag.isHeaderOpen(h);
+	}
 	
     /**
      * <p>A utility class that crawls the list of HTMLEntity that underlies this HTMLFile and
@@ -1014,7 +1019,7 @@ public class HTMLFile {
          */
 		public boolean hasNext(){
 			concurrentModificationCheck();
-			return -1 != adjacentElement(position, IS_PARAGRAPHISH_OPEN, Direction.NEXT);
+			return -1 != adjacentElement(position, HTMLFile::isParagraphishOpen, Direction.NEXT);
 		}
 		
 		@Override
@@ -1028,7 +1033,7 @@ public class HTMLFile {
          */
 		public int[] next(){
 			concurrentModificationCheck();
-			int start = adjacentElement(position, IS_PARAGRAPHISH_OPEN, Direction.NEXT);
+			int start = adjacentElement(position, HTMLFile::isParagraphishOpen, Direction.NEXT);
 			int end = closingMatch(start);
 			int[] result = {start, end+1};
 			position = end;
