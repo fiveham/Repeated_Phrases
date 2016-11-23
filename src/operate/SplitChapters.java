@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
@@ -45,27 +46,24 @@ public class SplitChapters {
      * @param args command-line arguments (unused)
      */
     public static void splitChapters(Consumer<String> msg) {
-
         handleNovels(msg);
-
         handleNovellas(msg);
-
         handlePQ(msg);
     }
     
     private static void handleNovels(Consumer<String> msg){
         File[] readUs = READ_FROM.folder().listFiles(IO::isNovel);
-
+        
         for(File f : readUs){
             try{
                 HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
-
+                
                 HTMLFile.ParagraphIterator piter = file.paragraphIterator();
                 List<HTMLEntity> buffer = new ArrayList<>();
                 OutputStreamWriter out = null;
                 int writeCount = 0;
                 String chapterName = null;
-
+                
                 while(piter.hasNext()){
                     int[] paragraphBounds = piter.next();
                     
@@ -73,7 +71,7 @@ public class SplitChapters {
                     
                     if( isTitleParagraph(paragraph) ){
                         writeBuffer(buffer, out, chapterName, msg);
-
+                        
                         chapterName = extractChapterTitle(paragraph);
                         buffer = new ArrayList<>();
                         out = IO.newOutputStreamWriter( WRITE_TO.folderName() 
@@ -85,11 +83,11 @@ public class SplitChapters {
                         buffer.add(new CharLiteral('\n'));
                     }
                 }
-
+                
                 //reached end of file
                 //dump the buffer to a file
                 writeBuffer(buffer, out, chapterName, msg);
-
+                
             } catch(FileNotFoundException e){
                 msg.accept("FileNotFoundException occured for file "+f.getName());
             } catch(UnsupportedEncodingException e){
@@ -100,13 +98,11 @@ public class SplitChapters {
         }
     }
     
-    private static List<String> allEasyNovellaNames = new ArrayList<>(4);
-    static{
-		allEasyNovellaNames.add("DE_0.html");
-		allEasyNovellaNames.add("DE_1.html");
-		allEasyNovellaNames.add("DE_2.html");
-		allEasyNovellaNames.add("RP.html");
-    }
+    private static List<String> allEasyNovellaNames = Arrays.asList(
+		"DE_0.html",
+		"DE_1.html",
+		"DE_2.html",
+		"RP.html");
     
     private static void handleNovellas(Consumer<String> msg){
         
