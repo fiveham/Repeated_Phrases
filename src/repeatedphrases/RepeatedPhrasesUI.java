@@ -36,12 +36,12 @@ import operate.SetTrail;
  * chapter sequence used by inter-phrase links.</p>
  */
 public class RepeatedPhrasesUI extends JFrame {
-
+	
     /**
      * <p>Automatically generated.</p>
      */
 	private static final long serialVersionUID = -5770990784488877775L;
-
+	
     /**
      * <p>Creates new form RepeatedPhrasesUI</p>
      */
@@ -49,13 +49,13 @@ public class RepeatedPhrasesUI extends JFrame {
         initComponents();
         this.setTitle("Repeated Phrase Analyser");
     }
-
+    
     /**
      * <p>Initializes the components. This was created automagically in NetBeans; so, it's "that
      * dark shadowy place" in The Lion King: "You must never go there, my son."</p>
      */
     private void initComponents() {
-
+    	
         jPanel1 = new JPanel();
         pwdTitleLabel = new JLabel();
         pwdLabel = new JLabel();
@@ -70,45 +70,51 @@ public class RepeatedPhrasesUI extends JFrame {
         exitButton = new JButton();
         statusTitleLabel = new JLabel();
         statusLabel = new JLabel();
-
+        
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
+        
         jPanel1.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
         jPanel1.setFont(new Font("Tahoma", 0, 10)); // NOI18N
-
+        
         pwdTitleLabel.setText("Operating location (working directory):");
-
+        
         pwdLabel.setText(new File(".").getAbsolutePath());
-
+        
         trailFileLabel.setText("Trail file");
-        trailFileLabel.setToolTipText("Address/name of a trail file relative to the current working directory");
-
+        trailFileLabel.setToolTipText("Address/name of a trail file relative to the current working" 
+        		+ " directory");
+        
         phraseSizeLimitLabel.setText("Min word-count for phrase-link");
-        phraseSizeLimitLabel.setToolTipText("The minimum number of words a repeated phrase must have to have links applied on its instances");
-
+        phraseSizeLimitLabel.setToolTipText("The minimum number of words a repeated phrase must " 
+        		+ "have to have links applied on its instances");
+        
         createFoldersButton.setText("Create Folders");
-        createFoldersButton.setToolTipText("Creates the folders needed for this program to work in the current working direcory");
+        createFoldersButton.setToolTipText("Creates the folders needed for this program to work in" 
+        		+ " the current working direcory");
         createFoldersButton.addActionListener(this::createFoldersButtonActionPerformed);
-
-        chapterizeLinkButton.setToolTipText("Splits the books into chapters, finds linkable repeated phrases, and links them");
+        
+        chapterizeLinkButton.setToolTipText("Splits the books into chapters, finds linkable " 
+        		+ "repeated phrases, and links them");
         chapterizeLinkButton.setText("Chapterize Books; Add Links");
         chapterizeLinkButton.addActionListener(this::chapterizeLinkButtonActionPerformed);
-
-        changeOrderButton.setToolTipText("Changes the order of chapters used for linking to a phrase's next instance and for linking to previous and next chapters");
+        
+        changeOrderButton.setToolTipText("Changes the order of chapters used for linking to a " 
+        		+ "phrase's next instance and for linking to previous and next chapters");
         changeOrderButton.setText("Change Chapter Order");
         changeOrderButton.addActionListener(this::changeOrderButtonActionPerformed);
-
+        
         changeTrailButton.setText("Change Trail (Keep Link Order)");
-        changeTrailButton.setToolTipText("Changes the order of chapters represented in previous- and next-chapter links without changing next-quote order");
+        changeTrailButton.setToolTipText("Changes the order of chapters represented in previous-" 
+        		+ "and next-chapter links without changing next-quote order");
         changeTrailButton.addActionListener(this::changeTrailButtonActionPerformed);
-
+        
         exitButton.setText("Exit");
         exitButton.addActionListener(this::exitButtonActionPerformed);
-
+        
         statusTitleLabel.setText("Status:");
-
+        
         statusLabel.setText("undefined");
-
+        
         GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -119,37 +125,73 @@ public class RepeatedPhrasesUI extends JFrame {
                     .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(trailFileLabel)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(trailFileField, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(
+                        		trailFileField, 
+                        		GroupLayout.PREFERRED_SIZE, 
+                        		250, 
+                        		GroupLayout.PREFERRED_SIZE)
                         .addGap(74, 74, 74))
                     .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(statusLabel)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(chapterizeLinkButton, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(
+                                		LayoutStyle.ComponentPlacement.RELATED, 
+                                		GroupLayout.DEFAULT_SIZE, 
+                                		Short.MAX_VALUE)
+                                .addComponent(
+                                		chapterizeLinkButton, 
+                                		GroupLayout.PREFERRED_SIZE, 
+                                		200, 
+                                		GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(statusTitleLabel)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(createFoldersButton, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(
+                                		LayoutStyle.ComponentPlacement.RELATED, 
+                                		GroupLayout.DEFAULT_SIZE, 
+                                		Short.MAX_VALUE)
+                                .addComponent(
+                                		createFoldersButton, 
+                                		GroupLayout.PREFERRED_SIZE, 
+                                		200, 
+                                		GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap())
                     .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                            .addGroup(
+                            		GroupLayout.Alignment.TRAILING, 
+                            		jPanel1Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(changeOrderButton, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
+                                .addComponent(
+                                		changeOrderButton, 
+                                		GroupLayout.PREFERRED_SIZE, 
+                                		200, 
+                                		GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createParallelGroup(
+                                		GroupLayout.Alignment.LEADING)
                                     .addComponent(pwdTitleLabel)
                                     .addComponent(pwdLabel)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(phraseSizeLimitLabel)
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(phraseSizeLimitField, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(
+                                        		phraseSizeLimitField, 
+                                        		GroupLayout.PREFERRED_SIZE, 
+                                        		40, 
+                                        		GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(exitButton)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 220, Short.MAX_VALUE)
-                                .addComponent(changeTrailButton, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(
+                                		LayoutStyle.ComponentPlacement.RELATED, 
+                                		220, 
+                                		Short.MAX_VALUE)
+                                .addComponent(
+                                		changeTrailButton, 
+                                		GroupLayout.PREFERRED_SIZE, 
+                                		200, 
+                                		GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
@@ -162,13 +204,21 @@ public class RepeatedPhrasesUI extends JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(trailFileLabel)
-                    .addComponent(trailFileField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(
+                    		trailFileField, 
+                    		GroupLayout.PREFERRED_SIZE, 
+                    		GroupLayout.DEFAULT_SIZE, 
+                    		GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                             .addComponent(phraseSizeLimitLabel)
-                            .addComponent(phraseSizeLimitField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addComponent(
+                            		phraseSizeLimitField, 
+                            		GroupLayout.PREFERRED_SIZE,
+                            		GroupLayout.DEFAULT_SIZE, 
+                            		GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(createFoldersButton))
                     .addComponent(statusTitleLabel))
@@ -184,22 +234,30 @@ public class RepeatedPhrasesUI extends JFrame {
                     .addComponent(exitButton))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
-
+        
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(
+                		jPanel1, 
+                		GroupLayout.PREFERRED_SIZE, 
+                		GroupLayout.DEFAULT_SIZE, 
+                		GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(
+                		jPanel1, 
+                		GroupLayout.PREFERRED_SIZE, 
+                		GroupLayout.DEFAULT_SIZE, 
+                		GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 36, Short.MAX_VALUE))
         );
-
+        
         pack();
     }
     
@@ -226,7 +284,7 @@ public class RepeatedPhrasesUI extends JFrame {
         		"Done: Put html books in "+Folder.HTML_BOOKS.folderName(), 
         		() -> RepeatedPhrasesApp.ensureFolders(statusLabelMsg));
     }
-
+    
     /**
      * <p>The second button, "Chapterize Books; Add Links"</p>
      * @param evt
@@ -238,7 +296,7 @@ public class RepeatedPhrasesUI extends JFrame {
         		"Done: Chapters ready: "+Folder.READABLE.folderName(), 
         		() -> RepeatedPhrasesApp.isolateChaptersAndLink(trailAndLimit, statusLabelMsg));
     }
-
+    
     /**
      * <p>The third button, "Change Chapter Order"</p>
      * @param evt
@@ -255,7 +313,7 @@ public class RepeatedPhrasesUI extends JFrame {
      * <p>The fourth button, "Change Trail (Keep Link Order)"</p>
      * @param evt
      */
-    private void changeTrailButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_changeTrailButtonActionPerformed
+    private void changeTrailButtonActionPerformed(ActionEvent evt) {
         String trail = trailFileField.getText();
         buttonPress(changeTrailButton, 
         		"Changing trail sequence ("+ trail +")", 
@@ -287,7 +345,7 @@ public class RepeatedPhrasesUI extends JFrame {
     				.execute();
     	}
     }
-
+    
     /**
      * <p>Sets look and feel for the GUI, and creates/queues a Runnable that instantiates the GUI
      * window and makes its window {@linkplain java.awt.Window#setVisible() visible}.</p>
@@ -298,10 +356,6 @@ public class RepeatedPhrasesUI extends JFrame {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html For
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html details
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html see
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -324,7 +378,7 @@ public class RepeatedPhrasesUI extends JFrame {
         /* Create and display the form */
         EventQueue.invokeLater(() -> new RepeatedPhrasesUI().setVisible(true));
     }
-
+    
     private JButton createFoldersButton;
     private JButton chapterizeLinkButton;
     private JButton changeOrderButton;
@@ -338,10 +392,10 @@ public class RepeatedPhrasesUI extends JFrame {
     
     private JLabel trailFileLabel;
     private JTextField trailFileField;
-
+    
     private JLabel pwdTitleLabel;
     private JLabel pwdLabel;
-
+    
     private JLabel statusTitleLabel;
     private JLabel statusLabel;
     

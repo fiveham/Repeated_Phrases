@@ -97,7 +97,13 @@ public class DetermineAnchors {
 					
 					Location linkTo = locAfter(locs, chapter, positionedPhrase.index());
 					
-					out.write( phrase + IO.LOCATION_DELIM + positionedPhrase.index() + IO.LOCATION_DELIM + linkTo.toString() + IO.NEW_LINE);
+					out.write(
+							phrase 
+							+ IO.LOCATION_DELIM 
+							+ positionedPhrase.index() 
+							+ IO.LOCATION_DELIM 
+							+ linkTo.toString() 
+							+ IO.NEW_LINE);
 				}
 				
 				out.close();
@@ -165,7 +171,9 @@ public class DetermineAnchors {
 	private static String getDupPhraseData(Consumer<String> msg){
 		StringBuilder sb = new StringBuilder();
 		
-		for(int size=FindRepeatedPhrases.MIN_PHRASE_SIZE; size<FindRepeatedPhrases.MAX_PHRASE_SIZE; size++){
+		for(int size = FindRepeatedPhrases.MIN_PHRASE_SIZE; 
+				size < FindRepeatedPhrases.MAX_PHRASE_SIZE; 
+				size++){
 			
 			String name = READ_FROM.filename(size);
 			msg.accept("Reading anchorable phrase data from "+IO.stripFolder(name));
@@ -209,11 +217,13 @@ public class DetermineAnchors {
      */
 	private static int compareFilenames(String f1, String f2){
 		
-		String[] split1 = IO.stripExtension(f1).split(IO.FILENAME_COMPONENT_SEPARATOR, HTMLFile.FILENAME_ELEMENT_COUNT);
+		String[] split1 = IO.stripExtension(f1)
+				.split(IO.FILENAME_COMPONENT_SEPARATOR, HTMLFile.FILENAME_ELEMENT_COUNT);
 		String book1 = split1[0];
 		String chapterNumber1 = split1[1];
 		
-		String[] split2 = IO.stripExtension(f2).split(IO.FILENAME_COMPONENT_SEPARATOR, HTMLFile.FILENAME_ELEMENT_COUNT);
+		String[] split2 = IO.stripExtension(f2)
+				.split(IO.FILENAME_COMPONENT_SEPARATOR, HTMLFile.FILENAME_ELEMENT_COUNT);
 		String book2 = split2[0];
 		String chapterNumber2 = split2[1];
 		
@@ -259,7 +269,8 @@ public class DetermineAnchors {
 		Location here = new Location(index, chapter);
 		int i = locs.indexOf(here);
 		if(i<0){
-			throw new IllegalArgumentException("The Location "+here.toString()+" is not present in the specified list.");
+			throw new IllegalArgumentException(
+					"The Location "+here.toString() + " is not present in the specified list.");
 		} else{
 			i++;
 			int nextInCycle = i==locs.size() ? 0 : i;

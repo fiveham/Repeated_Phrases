@@ -32,43 +32,43 @@ import common.IO;
  * of chapters; so, they must have an entry for each existing chapter.</p>
  */
 public class SetTrail {
-
+	
     /**
      * <p>The folder from which this class reads HTML chapters to which to add links for previous
      * and next chapters.</p>
      * @see Folder#LINKED_CHAPTERS
      */
     public static final Folder READ_FROM = Folder.LINKED_CHAPTERS;
-
+    
     /**
      * <p>The folder where this class writes the html chapter files to which it has added links for
      * previous and next chapters.</p>
      * @see Folder#READABLE
      */
     public static final Folder WRITE_TO = Folder.READABLE;
-
+    
     /**
      * <p>The string that names the "id" attribute of an html tag.</p>
      */
     public static final String ID_ATTRIB = "id";
-
+    
     /**
      * <p>The value of the id attribute of the anchors in the head and foot tables for html chapters
      * which link to the previous chapter.</p>
      */
     public static final String PREV_CHAPTER = "prev_chapter";
-
+    
     /**
      * <p>The value of the id attribute for the anchors in the head and foot tables for html
      * chapters which link to the next chapter.</p>
      */
     public static final String NEXT_CHAPTER = "next_chapter";
-
+    
     /**
      * <p>The text of the html "href" attribute followed by an equals sign and a quote.</p>
      */
     public static final String HREF_START = "href=\"";
-
+    
     /**
      * <p>Calls {@link #setTrail(String[],Consumer<String>) setTrail()}.</p>
      * @param args
@@ -76,7 +76,7 @@ public class SetTrail {
     public static void main(String[] args){
         setTrail(args, IO.DEFAULT_MSG);
     }
-
+    
     /**
      * <p>Reads the html chapter files from {@code READ_FROM} and writes modified versions of them
      * with links to previous and next chapters added according to the data in the trail file named
@@ -91,7 +91,7 @@ public class SetTrail {
         String trailSource = args[0];
         msg.accept("Getting trail data from " + trailSource );
         List<TrailElement> elements = getTrailElements( trailSource );
-
+        
         for(int i=0; i<elements.size(); i++){
         	TrailElement node = elements.get(i);
             msg.accept("Trail-linking "+node.focus());
@@ -103,28 +103,46 @@ public class SetTrail {
                 try{
                     file = new HTMLFile(fileToModify);
                 } catch( FileNotFoundException e){
-                	throw new RuntimeException(IO.ERROR_EXIT_MSG + READ_FROM.folderName() + File.separator + node.focus() + " for reading");
+                	throw new RuntimeException(
+                			IO.ERROR_EXIT_MSG 
+                			+ READ_FROM.folderName() 
+                			+ File.separator 
+                			+ node.focus() 
+                			+ " for reading");
                 }
-
-                setAdjacentChapterLinks(file, PREV_CHAPTER, ID_ATTRIB, availableConnected(elements, i, TrailElement.PREV));
-                setAdjacentChapterLinks(file, NEXT_CHAPTER, ID_ATTRIB, availableConnected(elements, i, TrailElement.NEXT));
                 
-                file.print( WRITE_TO.folderName() + File.separator + node.focus());
+                setAdjacentChapterLinks(
+                		file, 
+                		PREV_CHAPTER, 
+                		ID_ATTRIB, 
+                		availableConnected(elements, i, TrailElement.PREV));
+                setAdjacentChapterLinks(
+                		file, 
+                		NEXT_CHAPTER, 
+                		ID_ATTRIB, 
+                		availableConnected(elements, i, TrailElement.NEXT));
+                
+                file.print(WRITE_TO.folderName() + File.separator + node.focus());
             }
         }
     }
     
-    private static String availableConnected(List<TrailElement> elements, int index, Function<TrailElement,String> connection){
+    private static String availableConnected(
+    		List<TrailElement> elements, 
+    		int index, 
+    		Function<TrailElement,String> connection){
+    	
     	TrailElement node = elements.get(index);
     	
     	List<String> visited = new ArrayList<>();
     	
     	String name = null;
-    	while( !new File(READ_FROM.folderName() + File.separator + (name=connection.apply(node)) ).exists() && !visited.contains(name) ){
+    	while( !new File(READ_FROM.folderName() + File.separator + (name = connection.apply(node)))
+    			.exists() 
+    			&& !visited.contains(name) ){
     		visited.add(name);
     		
     		node = getTrailElementWithFocus(elements, name);
-    		
     	}
     	
     	return visited.contains(name) ? "" : connection.apply(node);
@@ -150,8 +168,14 @@ public class SetTrail {
      * @param address the relative address of an html chapter file to which to link as an adjacent
      * chapter
      */
-    private static void setAdjacentChapterLinks(HTMLFile file, String idValue, String idAttrib, String address){
-        Predicate<HTMLEntity> isAnchorWithMatchID = (h) -> isAnchorWithMatchID(h, idValue, idAttrib);
+    private static void setAdjacentChapterLinks(
+    		HTMLFile file, 
+    		String idValue, 
+    		String idAttrib,
+    		String address){
+    	
+        Predicate<HTMLEntity> isAnchorWithMatchID = 
+        		(h) -> isAnchorWithMatchID(h, idValue, idAttrib);
         int pointer = -1;
         while( -1 != (pointer=file.adjacentElement(pointer, isAnchorWithMatchID, Direction.NEXT))){
 
@@ -192,7 +216,8 @@ public class SetTrail {
      * @return
      */
     private static String anchor(String tag, String address){
-        return replaceValueOfAttribute( replaceValueOfAttribute(tag, HREF_START, address), TITLE_START, title(address));
+        return replaceValueOfAttribute(
+        		replaceValueOfAttribute(tag, HREF_START, address), TITLE_START, title(address));
     }
 
     /**
@@ -207,9 +232,10 @@ public class SetTrail {
             return address;
         }
         String name = IO.stripFolderExtension(address);
-        String withoutBook = name.substring(name.indexOf(IO.FILENAME_COMPONENT_SEPARATOR_CHAR)+1);
-        String withoutIndx = withoutBook.substring(withoutBook.indexOf(IO.FILENAME_COMPONENT_SEPARATOR_CHAR)+1);
-        return withoutIndx.replace(IO.FILENAME_COMPONENT_SEPARATOR_CHAR,' ');
+        String withoutBook = name.substring(1 + name.indexOf(IO.FILENAME_COMPONENT_SEPARATOR_CHAR));
+        String withoutIndx = withoutBook.substring(
+        		1 + withoutBook.indexOf(IO.FILENAME_COMPONENT_SEPARATOR_CHAR));
+        return withoutIndx.replace(IO.FILENAME_COMPONENT_SEPARATOR_CHAR, ' ');
     }
 
     /**
@@ -224,7 +250,11 @@ public class SetTrail {
      * @return the pre-existing value of the attribute specified by {@code attributeStart} in the
      * specified {@code body} of an html tag with {@code installValue}
      */
-    private static String replaceValueOfAttribute(String body, String attributeStart, String installValue){
+    private static String replaceValueOfAttribute(
+    		String body, 
+    		String attributeStart, 
+    		String installValue){
+    	
         int start = body.indexOf(attributeStart)+attributeStart.length();
         int end = body.indexOf(QUOTE, start);
         String front = body.substring(0,start);

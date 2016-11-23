@@ -17,7 +17,8 @@ public class CharCode extends HTMLEntity {
      * <p>Evaluates to true if the specified HTMLEntity is a {@code Code} and represents a
      * non-breaking space as determined by {@code NBSP}.</p>
      */
-	public static final Predicate<HTMLEntity> IS_NBSP = (h) -> CharCode.class.isInstance(h) && NBSP.equals(((CharCode)h).code);
+	public static final Predicate<HTMLEntity> IS_NBSP = 
+			(h) -> CharCode.class.isInstance(h) && NBSP.equals(((CharCode)h).code);
 	
     /**
      * <p>The text of this HTML character code between the ampersand that begins it and the
@@ -72,17 +73,10 @@ public class CharCode extends HTMLEntity {
      */
 	public boolean isEquivalent(char c){
 		/*
-         * It may be necessary in the future to include a detailed 
-         * It may be necessary in the future to include a detailed It may be necessary in the future
-         * It may be necessary in the future to include a detailed to include a detailed test for
-         * It may be necessary in the future to include a detailed whether a literal char is
-         * It may be necessary in the future to include a detailed equivalent to a given Code, but
-         * It may be necessary in the future to include a detailed for now, it is sufficient to say
-         * It may be necessary in the future to include a detailed that no literal character is
-         * It may be necessary in the future to include a detailed equivalent to any Code, because
-         * It may be necessary in the future to include a detailed only HTMLFile.match() calls this,
-         * It may be necessary in the future to include a detailed and it only needs to know so it
-         * It may be necessary in the future to include a detailed can try to match characters.
+         * It may be necessary in the future to include a detailed test for whether a literal char 
+         * is equivalent to a given Code, but for now, it is sufficient to say that no literal 
+         * character is equivalent to any Code, because only HTMLFile.match() calls this, and it 
+         * only needs to know so it can try to match characters.
          */
 		return false;
 	}

@@ -129,9 +129,11 @@ public class HTMLFile {
 		int p = filename.indexOf( IO.FILENAME_ELEMENT_DELIM );
 		extensionlessName = p>=0 ? filename.substring(0,p) : filename;
 		
-		String[] split = extensionlessName.split(IO.FILENAME_COMPONENT_SEPARATOR, FILENAME_ELEMENT_COUNT);
+		String[] split = extensionlessName
+				.split(IO.FILENAME_COMPONENT_SEPARATOR, FILENAME_ELEMENT_COUNT);
 		chapterName = FILENAME_CHAPTERNAME_INDEX < split.length 
-				? split[FILENAME_CHAPTERNAME_INDEX].replace(IO.FILENAME_COMPONENT_SEPARATOR_CHAR,' ') 
+				? split[FILENAME_CHAPTERNAME_INDEX]
+						.replace(IO.FILENAME_COMPONENT_SEPARATOR_CHAR, ' ') 
 				: null;
 		
 		baseWordIndex = chapterName!=null 
@@ -153,9 +155,11 @@ public class HTMLFile {
 		int p = filename.indexOf( IO.FILENAME_ELEMENT_DELIM );
 		extensionlessName = p>=0 ? filename.substring(0,p) : filename;
 		
-		String[] split = extensionlessName.split(IO.FILENAME_COMPONENT_SEPARATOR, FILENAME_ELEMENT_COUNT);
+		String[] split = extensionlessName
+				.split(IO.FILENAME_COMPONENT_SEPARATOR, FILENAME_ELEMENT_COUNT);
 		chapterName = FILENAME_CHAPTERNAME_INDEX < split.length 
-				? split[FILENAME_CHAPTERNAME_INDEX].replace(IO.FILENAME_COMPONENT_SEPARATOR_CHAR,' ') 
+				? split[FILENAME_CHAPTERNAME_INDEX]
+						.replace(IO.FILENAME_COMPONENT_SEPARATOR_CHAR,' ') 
 				: null;
 		
 		baseWordIndex = chapterName!=null 
@@ -229,8 +233,11 @@ public class HTMLFile {
  	private void validateWordWithIndex(String word, int wordIndex){
 		String wordThere = wordAt( wordIndex);
 		if( !word.equals( wordThere )){
-			//throw new IllegalStateException("Sought word ("+word+") is not equal to the word ("+wordThere+"|"+debugContext(getWord(wordIndex)+wordThere.length())+") with the specified word-index ("+wordIndex+") in this file");
-			throw new IllegalStateException("Sought word ("+word+") is not equal to the word ("+wordThere+") with the specified word-index ("+wordIndex+") in this file");
+			throw new IllegalStateException(
+					"Sought word (" + word 
+					+ ") is not equal to the word (" + wordThere 
+					+ ") with the specified word-index (" + wordIndex 
+					+ ") in this file");
 		}
 	}
  	
@@ -336,8 +343,14 @@ public class HTMLFile {
 		
 		result.add(lo);
 		for(int i=lo+1; i<hi; i++){
-			if( is(i, IS_CHARACTER, Direction.PREV, Tag.class::isInstance) //htmlFile.get(i) is a character preceded by a tag.
-					|| is(i, Tag.class::isInstance, Direction.PREV, IS_CHARACTER) ){ //htmlFile.get(i) is a Tag preceded by a character.
+			if( is(i, 
+					IS_CHARACTER, 
+					Direction.PREV, 
+					Tag.class::isInstance) //htmlFile.get(i) is a character preceded by a tag.
+					|| is(i, 
+							Tag.class::isInstance, 
+							Direction.PREV, 
+							IS_CHARACTER) ){ //htmlFile.get(i) is a Tag preceded by a character.
 				result.add(i);
 			}
 		}
@@ -423,7 +436,12 @@ public class HTMLFile {
      * {@code dir} is Direction.PREV or Direction.NEXT respectively) that element makes
      * {@code test2} evaluate to true, false otherwise
      */
-	private boolean is(int position, Predicate<HTMLEntity> test1, Direction dir, Predicate<HTMLEntity> test2){
+	private boolean is(
+			int position, 
+			Predicate<HTMLEntity> test1, 
+			Direction dir, 
+			Predicate<HTMLEntity> test2){
+		
 		HTMLEntity item = content.get( position );
 		HTMLEntity prevOrNext = content.get( dir.apply(position) );
 		return test1.test(item) && test2.test(prevOrNext);
@@ -495,11 +513,12 @@ public class HTMLFile {
 		return getWordCache.applyAsInt(wordIndex);
 	}
 	
+	//TODO split into a new class
     /**
      * <p>Does the work for {@link #getWord(int) getWord()} and stores its most recent input and
      * output to more quickly return a result.</p>
      */
-	private final IntUnaryOperator getWordCache = new IntUnaryOperator(){ //TODO split into a new class
+	private final IntUnaryOperator getWordCache = new IntUnaryOperator(){
 		
         /**
          * <p>When this record of how many times this HTMLFile has been modified is different from
@@ -547,7 +566,9 @@ public class HTMLFile {
 		public int applyAsInt(int wordIndex){
 			if(wordIndex < baseWordIndex){
 				throw new IllegalArgumentException(
-						"wordIndex "+wordIndex+" less than baseWordIndex ("+baseWordIndex+") is not allowable.");
+						"wordIndex " + wordIndex 
+						+ " less than baseWordIndex (" + baseWordIndex 
+						+ ") is not allowable.");
 			} else if(this.modCount == HTMLFile.this.modCount && wordIndex==storedWordIndex){
 				return storedWordStart;
 			} else{
@@ -574,7 +595,9 @@ public class HTMLFile {
 					}
 				}
 				
-				String msg = "The specified wordIndex ("+wordIndex+") is too high (max value of "+previousWordIndex+").";
+				String msg = "The specified wordIndex (" + wordIndex 
+						+ ") is too high (max value of " + previousWordIndex 
+						+ ").";
 				
 				throw new IllegalStateException(msg);
 			}
@@ -659,21 +682,24 @@ public class HTMLFile {
      * @return true if {@code elem} is character-type and is a word character, false otherwise
      */
 	private static boolean isWord(HTMLEntity elem){
-		return CharLiteral.class.isInstance(elem) && PhraseProducer.isPhraseChar( ((CharLiteral)elem).c );
+		return CharLiteral.class.isInstance(elem) 
+				&& PhraseProducer.isPhraseChar( ((CharLiteral)elem).c );
 	}
 	
     /**
      * <p>Evaluates to true if the specified HTMLEntity {@code h} is a character-type HTMLEntity: a
      * {@link CharLiteral Ch} or a {@link CharCode Code}.</p>
      */
-	public static final Predicate<HTMLEntity> IS_CHARACTER = (h) -> CharLiteral.class.isInstance(h) || CharCode.class.isInstance(h);
+	public static final Predicate<HTMLEntity> IS_CHARACTER = 
+			(h) -> CharLiteral.class.isInstance(h) || CharCode.class.isInstance(h);
 	
     /**
      * <p>Evaluates to true if the specified HTMLEntity {@code h}
      * {@link #IS_CHARACTER is character-type} and is not a
      * {@link #isWord(HTMLEntity) legal word character}.</p>
      */
-	public static final Predicate<HTMLEntity> IS_CHARACTER_NOT_WORD = IS_CHARACTER.and((h) -> !isWord(h));
+	public static final Predicate<HTMLEntity> IS_CHARACTER_NOT_WORD = 
+			IS_CHARACTER.and((h) -> !isWord(h));
 
     /**
      * <p>Returns the position in the underlying list of the element nearest to but not at
@@ -700,7 +726,11 @@ public class HTMLFile {
 		return -1;
 	}
 	
-	public HTMLEntity adjacentElement(int position, Direction direction, Predicate<HTMLEntity> typeRestriction){
+	public HTMLEntity adjacentElement(
+			int position, 
+			Direction direction, 
+			Predicate<HTMLEntity> typeRestriction){
+		
 		int index = adjacentElement(position, typeRestriction, direction);
 		return index>=0 ? content.get(index) : null;
 	}
@@ -847,7 +877,11 @@ public class HTMLFile {
 		StringBuilder fileBody = readFile(s);
 		
 		//iterate over the individual characters of the html file
-		Character mate = null; //stores '>' or ';' while iterating through an HTML tag or character code so we know when to stop skipping characters.
+		
+		//stores '>' or ';' while iterating through an HTML tag or character code so we know when 
+		//to stop skipping characters.
+		Character mate = null;
+		
         StringBuilder tagCode = null;
 		for(int i=0; i<fileBody.length(); i++){
         	char c = fileBody.charAt(i);
@@ -855,16 +889,20 @@ public class HTMLFile {
         	if(mate==null){ //we're not looking for a closing angle bracket or a semicolon.
         		Character counterpart = risingCounterpart(c);
         		
-        		if( counterpart==null ){ //the current character c isn't an opening angle bracket or ampersand.
+        		//if the current character c isn't an opening angle bracket or ampersand.
+        		if(counterpart==null){
         			result.add( new CharLiteral(c) );
         		} else{
         			//c is a special character and we need to take special action.
-        			//store the counterpart of c so we know what to look for later to end this special condition.
+        			//store the counterpart of c so we know what to look for later to end this 
+        			//special condition.
         			mate = counterpart;
-        			tagCode = new StringBuilder(); //prepare to add characters to the body of the tag or code
+        			
+        			//prepare to add characters to the body of the tag or code
+        			tagCode = new StringBuilder();
         			//do not add c to the list.
         		}
-        	} else if( mate.equals(c) ){ //we are looking for a '>' or a ';' //we've found that mate
+        	} else if(mate.equals(c)){ //we are looking for a '>' or a ';' //we've found that mate
     			//then we can stop looking for that mate
     			HTMLEntity newEntry = mate==Tag.END ? new Tag(tagCode.toString()) : new CharCode(tagCode.toString());
     			result.add( newEntry);
@@ -935,7 +973,7 @@ public class HTMLFile {
 			result.append(s.nextLine());
 		}
 		while(s.hasNextLine()){
-			result.append( CharLiteral.NEW_LINE ).append(s.nextLine());
+			result.append(CharLiteral.NEW_LINE).append(s.nextLine());
 		}
 		
 		s.close();
@@ -943,7 +981,8 @@ public class HTMLFile {
 		return result;
 	}
 	
-	public static final Predicate<HTMLEntity> IS_PARAGRAPHISH_OPEN = (h) -> Tag.IS_P_OPEN.test(h) || Tag.IS_HEADER_OPEN.test(h) ;
+	public static final Predicate<HTMLEntity> IS_PARAGRAPHISH_OPEN = //TODO use methods and ::
+			(h) -> Tag.IS_P_OPEN.test(h) || Tag.IS_HEADER_OPEN.test(h) ;
 	
     /**
      * <p>A utility class that crawls the list of HTMLEntity that underlies this HTMLFile and
@@ -1005,7 +1044,8 @@ public class HTMLFile {
 		private void concurrentModificationCheck(){
 			if( this.modCount != HTMLFile.this.modCount ){
 				throw new ConcurrentModificationException(
-						"Mismatch between ParagraphIterator.this.modCount and HTMLFile.this.modCount: (" 
+						"Mismatch between " 
+						+ "ParagraphIterator.this.modCount and HTMLFile.this.modCount: (" 
 						+ this.modCount + " != " + HTMLFile.this.modCount + ")");
 			}
 		}

@@ -134,22 +134,26 @@ public class Tag extends HTMLEntity {
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag and has type "a".</p>
      */
-	public static final Predicate<HTMLEntity> IS_A = (h) -> Tag.class.isInstance(h) && A.equals(((Tag)h).getType());
+	public static final Predicate<HTMLEntity> IS_A = 
+			(h) -> Tag.class.isInstance(h) && A.equals(((Tag)h).getType());
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "a", and is opening.</p>
      */
-	public static final Predicate<HTMLEntity> IS_A_OPEN = (h) -> IS_A.test(h) && ((Tag)h).isOpening();
+	public static final Predicate<HTMLEntity> IS_A_OPEN = 
+			(h) -> IS_A.test(h) && ((Tag)h).isOpening();
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "a", and is closing.</p>
      */
-	public static final Predicate<HTMLEntity> IS_A_CLOSE = (h) -> IS_A.test(h) && ((Tag)h).isClosing();
+	public static final Predicate<HTMLEntity> IS_A_CLOSE = 
+			(h) -> IS_A.test(h) && ((Tag)h).isClosing();
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag and has type "sup".</p>
      */
-	public static final Predicate<HTMLEntity> IS_SUP = (h) -> Tag.class.isInstance(h) && SUP.equals(((Tag)h).getType());
+	public static final Predicate<HTMLEntity> IS_SUP = 
+			(h) -> Tag.class.isInstance(h) && SUP.equals(((Tag)h).getType());
 	
 	public static final List<String> HEADERS;
 	static{
@@ -162,9 +166,12 @@ public class Tag extends HTMLEntity {
 		HEADERS.add("h6");
 	}
 	
-	public static final Predicate<HTMLEntity> IS_HEADER = (h) -> Tag.class.isInstance(h) && HEADERS.contains(((Tag)h).getType());
+	//TODO use methods + :: for these Predicates
+	public static final Predicate<HTMLEntity> IS_HEADER = 
+			(h) -> Tag.class.isInstance(h) && HEADERS.contains(((Tag)h).getType());
 	
-	public static final Predicate<HTMLEntity> IS_HEADER_OPEN = (h) -> IS_HEADER.test(h) && IS_OPEN.test(h);
+	public static final Predicate<HTMLEntity> IS_HEADER_OPEN = 
+			(h) -> IS_HEADER.test(h) && IS_OPEN.test(h);
 	
     /**
      * <p>The literal text of this tag inside its opening and closing angle brackets.</p>

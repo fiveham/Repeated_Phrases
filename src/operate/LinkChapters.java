@@ -62,7 +62,8 @@ public class LinkChapters {
         List<FileDataPair> fileDataPairs = 
                 getFileDataPairs( 
                         READ_SUBSTANCE.folder().list(IO::isHtml), 
-                        READ_DECORATION.folder().list( (dir,name) -> name.endsWith( DetermineAnchors.ANCHOR_EXT ) ) );
+                        READ_DECORATION.folder()
+                        		.list((dir,name) -> name.endsWith(DetermineAnchors.ANCHOR_EXT)));
 
         msg.accept("Got "+fileDataPairs.size()+" FileDataPairs");
 
@@ -140,7 +141,8 @@ public class LinkChapters {
         chapter = IO.stripExtension(chapter) + IO.TXT_EXT;
 
         while(s.hasNextLine() && s.hasNext()){
-            String line = s.nextLine();	//This line is made of a phrase, tab, an int, tab, and the toString() of a Location
+        	//This line is made of a phrase, tab, an int, tab, and the toString() of a Location
+            String line = s.nextLine();	
             String[] elements = line.split(IO.LOCATION_DELIM);
 
             String phrase = elements[0];
@@ -175,7 +177,7 @@ public class LinkChapters {
         
         for(String h : hList){
         	for(String a : aList){
-        		if( matchNames(h,a) ){
+        		if(matchNames(h,a)){
         			result.add( new FileDataPair( 
         					READ_SUBSTANCE.folderName()  + File.separator + h, 
         					READ_DECORATION.folderName() + File.separator + a));
@@ -260,7 +262,8 @@ public class LinkChapters {
             if(html.equals(anch)){
                 return html;
             } else{
-                throw new IllegalStateException("Chapter mismatch: different names: "+html+" "+anch);
+                throw new IllegalStateException(
+                		"Chapter mismatch: different names: " + html + " " + anch);
             }
         }
     }

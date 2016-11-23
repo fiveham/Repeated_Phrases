@@ -31,7 +31,10 @@ public class Launch {
 		try{
 			String jarName = getJarName();
 			
-            Process p = Runtime.getRuntime().exec("java -classpath "+jarName+" "+MAX_HEAP+" repeatedphrases.RepeatedPhrasesUI");
+            Process p = Runtime.getRuntime().exec(
+            		"java -classpath " + jarName 
+            		+ " " + MAX_HEAP 
+            		+ " repeatedphrases.RepeatedPhrasesUI");
             
             StreamGobbler errEat = new StreamGobbler(p.getErrorStream());
             StreamGobbler outEat = new StreamGobbler(p.getInputStream());

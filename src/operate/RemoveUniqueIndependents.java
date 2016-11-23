@@ -45,10 +45,15 @@ public class RemoveUniqueIndependents {
 
         for(int i=FindRepeatedPhrases.MIN_PHRASE_SIZE; i<FindRepeatedPhrases.MAX_PHRASE_SIZE; i++){
             try(Scanner scan = new Scanner(new File( READ_FROM.filename(i) ), IO.ENCODING ); 
-                        OutputStreamWriter out  = IO.newOutputStreamWriter( WRITE_TO.filename(i), scan )){
-                while( scan.hasNextLine() && scan.hasNext() ){
+                        OutputStreamWriter out  = IO.newOutputStreamWriter(
+                        		WRITE_TO.filename(i), 
+                        		scan)){
+                while(scan.hasNextLine() && scan.hasNext()){
                     String line = scan.nextLine();
-                    if( line.indexOf(Location.ELEMENT_DELIM) != line.lastIndexOf(Location.ELEMENT_DELIM)){ //then there's multiple Locations on that line
+                    if( line.indexOf(
+                    		Location.ELEMENT_DELIM) != line.lastIndexOf(Location.ELEMENT_DELIM)){
+                    	//then there's multiple Locations on that line
+                    	
                         //the case of -1 == -1 can be ignored because a phrase 
                         //with no Locations will not have been printed to file.
                         out.write(line + IO.NEW_LINE);

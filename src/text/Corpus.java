@@ -61,7 +61,7 @@ public class Corpus implements Iterator<Quote>{
 		//while currentBuffer doesn't have a next element 
 		//(or is null) update the buffer to a new buffer 
 		//of the next file 
-		while(!bufferHasNext() && chapterPointer < chapters.size()-1){ //TODO use an Iterator<Chapter>
+		while(!bufferHasNext() && chapterPointer < chapters.size()-1){ //TODO use Iterator<Chapter>
 			try{
 				currentBuffer = new PhraseProducer(size, chapters.get(++chapterPointer));
 			} catch(IllegalArgumentException f){

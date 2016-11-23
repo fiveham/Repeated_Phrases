@@ -103,8 +103,6 @@ public class FindRepeatedPhrases {
 		List<Chapter> retList = new ArrayList<>( filesToRead.length );
 		
 		for(File chapterFile : filesToRead){
-			//String fullName = READ_FROM.folderName() + File.separator + chapterFile.getName();
-			//retList.add( new Chapter(fullName, fileAsString(chapterFile) ) );
 			retList.add( new Chapter(chapterFile.getName(), fileAsString(chapterFile) ) );
 		}
 		
@@ -163,8 +161,13 @@ public class FindRepeatedPhrases {
      * @return a {@code PhraseBox} with phrases of the specified size, containing all such phrases
      * that are repeated in the corpus, as well as some number of unique phrases.
      */
-	private static PhraseBox scanCorpus(int phraseSize, List<Chapter> chapters, PhraseBox repeatPhrasesForPrevSize, Consumer<String> msg){
-		msg.accept("Finding "+phraseSize+"-word phrases");// for "+phraseSize+"-word phrases");
+	private static PhraseBox scanCorpus(
+			int phraseSize, 
+			List<Chapter> chapters, 
+			PhraseBox repeatPhrasesForPrevSize, 
+			Consumer<String> msg){
+		
+		msg.accept("Finding "+phraseSize+"-word phrases");
 		
 		Corpus corpus = new Corpus(phraseSize, chapters);
 		PhraseBox corpusAsStructure = new PhraseBox();

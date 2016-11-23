@@ -28,7 +28,7 @@ public class RemoveDependentPhrases {
      * <p>An exclusive lower bound for how small the smaller of two phrase-sizes being used at once
      * for dependence-testing can be. No phrase can be of this size ({@value}).</p>
      */
-    public static final int LOW_SIZE_EXCLUSIVE_LOWER_BOUND = 0;//INIT_LOW_SIZE-2;
+    public static final int LOW_SIZE_EXCLUSIVE_LOWER_BOUND = 0;
 
     /**
      * <p>The directory from which this class reads quote data.</p>
@@ -73,7 +73,11 @@ public class RemoveDependentPhrases {
                 smallerPhrases.phrasesIndependentOf(largerPhrases)
                         .printPhrasesWithLocations(WRITE_TO.filename(lowSize));
             } catch(FileNotFoundException e){
-            	throw new RuntimeException(IO.ERROR_EXIT_MSG + READ_FROM.filename(lowSize) + " or " + READ_FROM.filename(lowSize+1) );
+            	throw new RuntimeException(
+            			IO.ERROR_EXIT_MSG 
+            			+ READ_FROM.filename(lowSize) 
+            			+ " or " 
+            			+ READ_FROM.filename(lowSize+1));
             }
         }
     }

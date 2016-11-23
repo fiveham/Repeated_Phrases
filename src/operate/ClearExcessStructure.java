@@ -54,7 +54,10 @@ public class ClearExcessStructure{
 			
 			msg.accept("Removing structure from "+f.getName());
 			
-			try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName() + File.separator + f.getName() );){
+			try(OutputStreamWriter out = IO.newOutputStreamWriter(
+					WRITE_TO.folderName() 
+					+ File.separator 
+					+ f.getName())){
 				HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
 				
 				file.removeAll( Tag.IS_DIV );

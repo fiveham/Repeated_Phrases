@@ -68,11 +68,11 @@ public class NewlineP{
                 out.write(content);
                 out.close();
             } catch(FileNotFoundException e){
-                msg.accept("FileNotFoundException occured for file "+filename);//+": "+e.getMessage());
+                msg.accept("FileNotFoundException occured for file "+filename);
             } catch(UnsupportedEncodingException e){
-                msg.accept("UnsupportedEncodingException occured for file "+filename);//+": "+e.getMessage());
+                msg.accept("UnsupportedEncodingException occured for file "+filename);
             } catch(IOException e){
-                msg.accept("IOException occured for file "+filename);//+": "+e.getMessage());
+                msg.accept("IOException occured for file "+filename);
             }
         }
 

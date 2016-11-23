@@ -62,7 +62,10 @@ public class ClearFrontAndBackMatter {
 
                 msg.accept("Removing front/back matter: "+f.getName());
 
-                try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName()+File.separator+f.getName() );){
+                try(OutputStreamWriter out = IO.newOutputStreamWriter(
+                		WRITE_TO.folderName() 
+                		+ File.separator 
+                		+ f.getName())){
                     HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
 
                     int pWhereFirstWords = firstWordsP(file, f);
@@ -75,11 +78,16 @@ public class ClearFrontAndBackMatter {
                     out.close();
 
                 } catch(FileNotFoundException e){
-                    msg.accept("FileNotFoundException occured for file "+f.getName()+": "+e.getMessage());
+                    msg.accept(
+                    		"FileNotFoundException occured for file " + f.getName() 
+                    		+ ": " + e.getMessage());
                 } catch(UnsupportedEncodingException e){
-                    msg.accept("UnsupportedEncodingException occured for file "+f.getName()+": "+e.getMessage());
+                    msg.accept(
+                    		"UnsupportedEncodingException occured for file " + f.getName() 
+                    		+ ": " + e.getMessage());
                 } catch(IOException e){
-                    msg.accept("IOException occured for file "+f.getName()+": "+e.getMessage());
+                    msg.accept(
+                    		"IOException occured for file " + f.getName() + ": " + e.getMessage());
                 }
             }
 	}
@@ -90,24 +98,26 @@ public class ClearFrontAndBackMatter {
 
             msg.accept("Removing front/back matter: "+f.getName());
 
-            try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName()+File.separator+f.getName() );){
+            try(OutputStreamWriter out = IO.newOutputStreamWriter(
+            		WRITE_TO.folderName() 
+            		+ File.separator 
+            		+ f.getName())){
                 HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
-
+                
                 int pWherePrologueTitle = prologueTitleBlock(file, f.getName());
                 file.removeAll(0,pWherePrologueTitle);
-
+                
                 int pWhereBackMatterStart = backMatterStart(file);
                 file.removeAll(pWhereBackMatterStart);
                 
                 file.print(out);
                 out.close();
-
             } catch(FileNotFoundException e){
-                msg.accept("FileNotFoundException for file "+f.getName());
+                msg.accept("FileNotFoundException for file " + f.getName());
             } catch(UnsupportedEncodingException e){
-                msg.accept("UnsupportedEncodingException  for file "+f.getName());
+                msg.accept("UnsupportedEncodingException  for file " + f.getName());
             } catch(IOException e){
-                msg.accept("IOException for file "+f.getName());
+                msg.accept("IOException for file " + f.getName());
             }
         }
 	}
@@ -185,7 +195,8 @@ public class ClearFrontAndBackMatter {
         case "DE_2.html" : return "A light summer";
         case "PQ.html"   : return "The Dance of";
         case "RP.html"   : return "He was the grandson";
-        default : throw new IllegalArgumentException(novellaName+" is not a recognized name of an ASOIAF novella html file.");
+        default : throw new IllegalArgumentException(
+        		novellaName+" is not a recognized name of an ASOIAF novella html file.");
         }
 	}
 	
@@ -196,7 +207,8 @@ public class ClearFrontAndBackMatter {
         case "DE_2.html" : return "of comic dwarfs?";
         case "PQ.html"   : return "Ser Gwayne Hightower.";
         case "RP.html"   : return "danced and died.";
-        default : throw new IllegalArgumentException(novellaName+" is not a recognized name of an ASOIAF novella html file.");
+        default : throw new IllegalArgumentException(
+        		novellaName+" is not a recognized name of an ASOIAF novella html file.");
         }
 	}
 	

@@ -88,7 +88,11 @@ public class PhraseProducer implements Iterator<Quote>{
 				return i;
 			}
 		}
-		throw new IllegalStateException("File "+chapter.getName()+" contains "+wordEndCount+" words, but needs "+size+".");
+		throw new IllegalStateException(
+				"File " + chapter.getName() 
+				+ " contains " + wordEndCount 
+				+ " words, but needs " + size 
+				+ ".");
 	}
 	
     /**

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
@@ -63,7 +64,11 @@ public class SwapApostrophes{
         for(File srcFile : readUs){
             msg.accept("Normalizing apostrophes: "+srcFile.getName());
 
-            try(OutputStreamWriter out = IO.newOutputStreamWriter( WRITE_TO.folderName() + File.separator + srcFile.getName() );){
+            try(OutputStreamWriter out = IO.newOutputStreamWriter(
+            		WRITE_TO.folderName() 
+            		+ File.separator 
+            		+ srcFile.getName())){
+            	
                 List<String> lines = IO.fileContentsAsList(
                 		srcFile, 
                 		Scanner::nextLine, 
@@ -108,108 +113,108 @@ public class SwapApostrophes{
      * apostrophe.</p> </p>The vast majority of these are plural possessives quoted from the text of
      * ASOIAF.</p>
      */
-    private static final List<ApoPattern> PATTERNS = new ArrayList<>();
-    static{
-        PATTERNS.add(new ApoPattern("@'@"));	//everything from I'm to shouldn't've
-        PATTERNS.add(new ApoPattern("&o'&"));	//of
-        PATTERNS.add(new ApoPattern("&t'&"));	//to
-        PATTERNS.add(new ApoPattern("&'*"));	//'Yaya, the 'bite, 'bout, 'cat (shadowcat), 'tis, 'twas, 'twixt, 'prentice, 'em, 'ud
-        PATTERNS.add(new ApoPattern("&ha'&"));	//have, usually "gods have mercy"
-        PATTERNS.add(new ApoPattern("&f'&"));	//for
-        PATTERNS.add(new ApoPattern("&a'&"));	//at, as pronounced by some wildlings
-        PATTERNS.add(new ApoPattern("traitors' graves"));
-        PATTERNS.add(new ApoPattern("traitors' collars"));
-        PATTERNS.add(new ApoPattern("traitors' heads"));	//"@@@ traitors' @@@@@"
-        PATTERNS.add(new ApoPattern("wolves' work"));
-        PATTERNS.add(new ApoPattern("wolves' heads"));	//"@@@ wolves' @@@@"
-        PATTERNS.add(new ApoPattern("rams' heads"));
-        PATTERNS.add(new ApoPattern("lions' heads"));
-        PATTERNS.add(new ApoPattern("lions' paws"));
-        PATTERNS.add(new ApoPattern("lions' tails"));
-        PATTERNS.add(new ApoPattern("&the alchemists' guild&"));
-        PATTERNS.add(new ApoPattern("&the alchemists' vile&"));	//"&the alchemists' @@@@"
-        PATTERNS.add(new ApoPattern("pyromancers' piss"));
-        PATTERNS.add(new ApoPattern("@@@s' own&"));
-        PATTERNS.add(new ApoPattern("&the @o@s' @@@@"));
-        PATTERNS.add(new ApoPattern("&the boys' grandfather&"));
-        PATTERNS.add(new ApoPattern("&the boys' heads&"));	//"@@@ the boys' @@@@@"
-        PATTERNS.add(new ApoPattern("&merchants' sons&"));
-        PATTERNS.add(new ApoPattern("&merchants' stalls&"));	//"&merchants' s@@@"
-        PATTERNS.add(new ApoPattern("merchants' carts"));
-        PATTERNS.add(new ApoPattern("the merchants' row"));
-        PATTERNS.add(new ApoPattern("the merchants' wagons"));
-        PATTERNS.add(new ApoPattern("&their mothers' @@@"));	//"&their mothers' @@@@@"
-        PATTERNS.add(new ApoPattern("whores' skirts"));
-        PATTERNS.add(new ApoPattern("&your brothers' @@@@"));
-        PATTERNS.add(new ApoPattern("&my brothers' ghosts&"));	//"@@ brothers' @@@@"
-        PATTERNS.add(new ApoPattern("&his brothers' @@@@"));
-        PATTERNS.add(new ApoPattern("@@@@s' nest"));
-        PATTERNS.add(new ApoPattern("horses' hooves"));
-        PATTERNS.add(new ApoPattern("be keepin'&"));
-        PATTERNS.add(new ApoPattern("is carryin'&"));	//"@@@@in' @@@"
-        PATTERNS.add(new ApoPattern("@@@@ts' respite"));
-        PATTERNS.add(new ApoPattern("years' remission"));
-        PATTERNS.add(new ApoPattern("pigs' feet"));
-        PATTERNS.add(new ApoPattern("calves' brains"));
-        PATTERNS.add(new ApoPattern("servants' steps"));
-        PATTERNS.add(new ApoPattern("servants' time"));
-        PATTERNS.add(new ApoPattern("servants' corridor"));
-        PATTERNS.add(new ApoPattern("lords' bannermen"));
-        PATTERNS.add(new ApoPattern("lords' entrance"));
-        PATTERNS.add(new ApoPattern("were lords' sons"));
-        PATTERNS.add(new ApoPattern("&goats' milk&"));
-        PATTERNS.add(new ApoPattern("&slavers' filth&"));
-        PATTERNS.add(new ApoPattern("&slavers' pyramid&"));
-        PATTERNS.add(new ApoPattern("&sailors' stor@"));
-        PATTERNS.add(new ApoPattern("&sailors' temple&"));
-        PATTERNS.add(new ApoPattern("&smugglers' cove&"));
-        PATTERNS.add(new ApoPattern("&smugglers' stars&"));
-        PATTERNS.add(new ApoPattern("&days' ride&"));
-        PATTERNS.add(new ApoPattern("&days' food&"));
-        PATTERNS.add(new ApoPattern("&days' sail&"));
-        PATTERNS.add(new ApoPattern("&hours' ride&"));
-        PATTERNS.add(new ApoPattern("&hours' sail&"));
-        PATTERNS.add(new ApoPattern("bakers'&"));
-        PATTERNS.add(new ApoPattern("@ mummers' @@@@"));
-        PATTERNS.add(new ApoPattern("with strangers' eyes"));
-        PATTERNS.add(new ApoPattern("their masters' business"));
-        PATTERNS.add(new ApoPattern("the challengers' paddock"));
-        PATTERNS.add(new ApoPattern("stoops' wife"));
-        PATTERNS.add(new ApoPattern("&or one of the lannisters'&"));
-        PATTERNS.add(new ApoPattern("ladies' cats"));
-        PATTERNS.add(new ApoPattern("bastards' names"));
-        PATTERNS.add(new ApoPattern("the rangers' search"));
-        PATTERNS.add(new ApoPattern("their fathers' rusted swords"));
-        PATTERNS.add(new ApoPattern("his cousins' eyes"));
-        PATTERNS.add(new ApoPattern("maidens' judgments"));
-        PATTERNS.add(new ApoPattern("a singers' tourney"));
-        PATTERNS.add(new ApoPattern("a fools' joust"));
-        PATTERNS.add(new ApoPattern("an outlaws' lair"));
-        PATTERNS.add(new ApoPattern("rats' eyes"));
-        PATTERNS.add(new ApoPattern("the wildlings' herds"));
-        PATTERNS.add(new ApoPattern("dead friends' father"));
-        PATTERNS.add(new ApoPattern("archers' stakes"));
-        PATTERNS.add(new ApoPattern("heralds' trumpets"));
-        PATTERNS.add(new ApoPattern("the climbers' rope"));
-        PATTERNS.add(new ApoPattern("griffins' men"));
-        PATTERNS.add(new ApoPattern("their masters' possessions"));
-        PATTERNS.add(new ApoPattern("their neighbors' daughters"));
-        PATTERNS.add(new ApoPattern("the musicians' gallery"));
-        PATTERNS.add(new ApoPattern("kings' blood"));
-        PATTERNS.add(new ApoPattern("the besiegers' cheers"));
-        PATTERNS.add(new ApoPattern("gulls' eggs"));
-        PATTERNS.add(new ApoPattern("the defenders' shouts"));
-        PATTERNS.add(new ApoPattern("priests' song"));
-        PATTERNS.add(new ApoPattern("heroes' tombs"));
-        PATTERNS.add(new ApoPattern("some robbers' den"));
-        PATTERNS.add(new ApoPattern("babies' bottoms"));
-        PATTERNS.add(new ApoPattern("sound of lovers' footsteps"));
-        PATTERNS.add(new ApoPattern("the murderers' secret"));
-        PATTERNS.add(new ApoPattern("abandoned crofters' village"));
-        PATTERNS.add(new ApoPattern("the diggers' eyes were"));
-        PATTERNS.add(new ApoPattern("my sons' things"));
-        PATTERNS.add(new ApoPattern("&lil'&"));
-    }
+    private static final List<ApoPattern> PATTERNS = Arrays.asList(
+        new ApoPattern("@'@"),	//everything from I'm to shouldn't've
+        new ApoPattern("&o'&"),	//of
+        new ApoPattern("&t'&"),	//to
+        
+        //'Yaya, the 'bite, 'bout, 'cat (shadowcat), 'tis, 'twas, 'twixt, 'prentice, 'em, 'ud
+        new ApoPattern("&'*"),	
+        new ApoPattern("&ha'&"),	//have, usually "gods have mercy"
+        new ApoPattern("&f'&"),	//for
+        new ApoPattern("&a'&"),	//at, as pronounced by some wildlings
+        new ApoPattern("traitors' graves"),
+        new ApoPattern("traitors' collars"),
+        new ApoPattern("traitors' heads"),	//"@@@ traitors' @@@@@"
+        new ApoPattern("wolves' work"),
+        new ApoPattern("wolves' heads"),	//"@@@ wolves' @@@@"
+        new ApoPattern("rams' heads"),
+        new ApoPattern("lions' heads"),
+        new ApoPattern("lions' paws"),
+        new ApoPattern("lions' tails"),
+        new ApoPattern("&the alchemists' guild&"),
+        new ApoPattern("&the alchemists' vile&"),	//"&the alchemists' @@@@"
+        new ApoPattern("pyromancers' piss"),
+        new ApoPattern("@@@s' own&"),
+        new ApoPattern("&the @o@s' @@@@"),
+        new ApoPattern("&the boys' grandfather&"),
+        new ApoPattern("&the boys' heads&"),	//"@@@ the boys' @@@@@"
+        new ApoPattern("&merchants' sons&"),
+        new ApoPattern("&merchants' stalls&"),	//"&merchants' s@@@"
+        new ApoPattern("merchants' carts"),
+        new ApoPattern("the merchants' row"),
+        new ApoPattern("the merchants' wagons"),
+        new ApoPattern("&their mothers' @@@"),	//"&their mothers' @@@@@"
+        new ApoPattern("whores' skirts"),
+        new ApoPattern("&your brothers' @@@@"),
+        new ApoPattern("&my brothers' ghosts&"),	//"@@ brothers' @@@@"
+        new ApoPattern("&his brothers' @@@@"),
+        new ApoPattern("@@@@s' nest"),
+        new ApoPattern("horses' hooves"),
+        new ApoPattern("be keepin'&"),
+        new ApoPattern("is carryin'&"),	//"@@@@in' @@@"
+        new ApoPattern("@@@@ts' respite"),
+        new ApoPattern("years' remission"),
+        new ApoPattern("pigs' feet"),
+        new ApoPattern("calves' brains"),
+        new ApoPattern("servants' steps"),
+        new ApoPattern("servants' time"),
+        new ApoPattern("servants' corridor"),
+        new ApoPattern("lords' bannermen"),
+        new ApoPattern("lords' entrance"),
+        new ApoPattern("were lords' sons"),
+        new ApoPattern("&goats' milk&"),
+        new ApoPattern("&slavers' filth&"),
+        new ApoPattern("&slavers' pyramid&"),
+        new ApoPattern("&sailors' stor@"),
+        new ApoPattern("&sailors' temple&"),
+        new ApoPattern("&smugglers' cove&"),
+        new ApoPattern("&smugglers' stars&"),
+        new ApoPattern("&days' ride&"),
+        new ApoPattern("&days' food&"),
+        new ApoPattern("&days' sail&"),
+        new ApoPattern("&hours' ride&"),
+        new ApoPattern("&hours' sail&"),
+        new ApoPattern("bakers'&"),
+        new ApoPattern("@ mummers' @@@@"),
+        new ApoPattern("with strangers' eyes"),
+        new ApoPattern("their masters' business"),
+        new ApoPattern("the challengers' paddock"),
+        new ApoPattern("stoops' wife"),
+        new ApoPattern("&or one of the lannisters'&"),
+        new ApoPattern("ladies' cats"),
+        new ApoPattern("bastards' names"),
+        new ApoPattern("the rangers' search"),
+        new ApoPattern("their fathers' rusted swords"),
+        new ApoPattern("his cousins' eyes"),
+        new ApoPattern("maidens' judgments"),
+        new ApoPattern("a singers' tourney"),
+        new ApoPattern("a fools' joust"),
+        new ApoPattern("an outlaws' lair"),
+        new ApoPattern("rats' eyes"),
+        new ApoPattern("the wildlings' herds"),
+        new ApoPattern("dead friends' father"),
+        new ApoPattern("archers' stakes"),
+        new ApoPattern("heralds' trumpets"),
+        new ApoPattern("the climbers' rope"),
+        new ApoPattern("griffins' men"),
+        new ApoPattern("their masters' possessions"),
+        new ApoPattern("their neighbors' daughters"),
+        new ApoPattern("the musicians' gallery"),
+        new ApoPattern("kings' blood"),
+        new ApoPattern("the besiegers' cheers"),
+        new ApoPattern("gulls' eggs"),
+        new ApoPattern("the defenders' shouts"),
+        new ApoPattern("priests' song"),
+        new ApoPattern("heroes' tombs"),
+        new ApoPattern("some robbers' den"),
+        new ApoPattern("babies' bottoms"),
+        new ApoPattern("sound of lovers' footsteps"),
+        new ApoPattern("the murderers' secret"),
+        new ApoPattern("abandoned crofters' village"),
+        new ApoPattern("the diggers' eyes were"),
+        new ApoPattern("my sons' things"),
+        new ApoPattern("&lil'&"));
 
     /**
      * <p>Represents a pattern of characters around an apostrophe, meant for use in determining
@@ -338,7 +343,7 @@ public class SwapApostrophes{
             }
             return -1;
         }
-
+        
         /**
          * <p>Creates a representation of a literal {@code line} from an HTML file such that
          * {@link Tag Tags} and {@link CharCode Codes} are excluded.</p>
@@ -348,19 +353,23 @@ public class SwapApostrophes{
          */
         private List<IntChar> cleanLine(StringBuilder line){
             List<IntChar> result = new ArrayList<>();
-
-            Character mate = null; //stores '>' or ';' while iterating through an HTML tag or character code so we know when to stop skipping characters.
+            
+            //stores '>' or ';' while iterating through an HTML tag or character code so we know 
+            //when to stop skipping characters.
+            Character mate = null;
             for(int i=0; i<line.length(); i++){
                 char c = line.charAt(i);
-
+                
                 if(mate==null){ //we're not looking for a closing angle bracket or a semicolon.
                     Character counterpart = HTMLFile.risingCounterpart(c);
-
-                    if( counterpart==null ){ //the current character c isn't an opening angle bracket or ampersand.
+                    
+                    if(counterpart==null){
+                    	//the current character c isn't an opening angle bracket or ampersand.
                         result.add( new IntChar(i,c) );
                     } else{
                         //c is a special character and we need to take special action.
-                        //store the counterpart of c so we know what to look for later to end this special condition.
+                        //store the counterpart of c so we know what to look for later to end this 
+                    	//special condition.
                         mate = counterpart;
                         //do not add c to the list.
                     }
@@ -369,10 +378,10 @@ public class SwapApostrophes{
                     mate = null;
                 } //else, we need to keep looking for that mate
             }
-
+            
             return result;
         }
-
+        
         /**
          * <p>Pairs an int index in the string of a literal text line from an HTML file with the
          * char at that index in the line.</p>
@@ -385,7 +394,7 @@ public class SwapApostrophes{
                 this.c = c;
             }
         }
-
+        
         /**
          * <p>Returns true if the character from a line of an HTML file matches the corresponding
          * character from the string used to construct this ApoPattern, false otherwise.</p> <p>The
@@ -402,10 +411,11 @@ public class SwapApostrophes{
             case WORD_CHAR     : return PhraseProducer.isPhraseChar(fromLine);
             case NON_WORD_CHAR : return !PhraseProducer.isPhraseChar(fromLine);
             case ALPHA_CHAR    : return isAlphabetical(fromLine);
-            default            : return fromLine!=null && fromInstanceCode.equals(Character.toLowerCase(fromLine)); 
+            default            : return fromLine != null 
+            		&& fromInstanceCode.equals(Character.toLowerCase(fromLine)); 
             }
         }
-
+        
         /**
          * <p>Returns true if {@code c} is an alphabetical character, false otherwise.</p>
          * @param c a character to be evaluated as alphabetical or not
@@ -419,7 +429,7 @@ public class SwapApostrophes{
                     && PhraseProducer.isPhraseChar(c);
         }
     }
-
+    
     /**
      * <p>Returns a list of indices in {@code line} at which right single quotes are located.</p>
      * @param line a string to be analysed to find the locations of all right single quotes in it

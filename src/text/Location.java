@@ -121,7 +121,8 @@ public class Location implements Comparable<Location>{
 		if(filename.equals(thatLocation.filename)){
 			return this.index - thatLocation.index;
 		} else{
-			throw new IllegalArgumentException("mismatching filenames: "+filename+" and "+thatLocation.filename);
+			throw new IllegalArgumentException(
+					"mismatching filenames: " + filename + " and " + thatLocation.filename);
 		}
 	}
 	

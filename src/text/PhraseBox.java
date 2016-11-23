@@ -72,7 +72,8 @@ public class PhraseBox{
 			
 			scan.close();
 		} catch(ArrayIndexOutOfBoundsException e){
-			throw new IllegalArgumentException("The content scanned by the specified Scanner is not structured like a record of phrases and locations.");
+			throw new IllegalArgumentException("The content scanned by the specified Scanner is " 
+					+ "not structured like a record of phrases and locations.");
 		}
 	}
 	
@@ -145,7 +146,9 @@ public class PhraseBox{
      */
 	public void removeUniques(Consumer<String> msg){
 		final int initSize = size();
-		map.entrySet().removeIf(e -> map.get(e.getKey()).size() <= FindRepeatedPhrases.UNIQUE_PHRASE_LOCATION_COUNT);
+		map.entrySet().removeIf(
+				(e) -> map.get(e.getKey()).size() 
+						<= FindRepeatedPhrases.UNIQUE_PHRASE_LOCATION_COUNT);
 		msg.accept("Removed "+ (initSize - size()) +" non-repeated terms");
 	}
 	

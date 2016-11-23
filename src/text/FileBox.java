@@ -76,7 +76,9 @@ public class FileBox{
 			
 			scan.close();
 		} catch(ArrayIndexOutOfBoundsException e){
-			throw new IllegalArgumentException("The content scanned by the specified Scanner is not structured like a record of phrases and locations.");
+			throw new IllegalArgumentException(
+					"The content scanned by the specified Scanner is not structured like a record " 
+					+ "of phrases and locations.");
 		}
 	}
 	

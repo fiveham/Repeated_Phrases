@@ -39,7 +39,11 @@ public class HtmlToText {
             try{
                 msg.accept("Saving as text "+f.getName());
                 HTMLFile file = new HTMLFile(f);
-                file.printAsText( WRITE_TO.folderName() + File.separator + IO.stripExtension(f.getName()) + IO.TXT_EXT );
+                file.printAsText(
+                		WRITE_TO.folderName() 
+                		+ File.separator 
+                		+ IO.stripExtension(f.getName()) 
+                		+ IO.TXT_EXT);
             } catch(FileNotFoundException e){
             	throw new RuntimeException(IO.ERROR_EXIT_MSG + f.getName() + " for reading");
             }
