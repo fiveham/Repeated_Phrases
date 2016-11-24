@@ -1,8 +1,8 @@
 package operate;
 
+import common.Book;
 import common.IO;
 import html.HTMLFile;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
-
 import text.FileBox;
 import text.Location;
 import text.Quote;
@@ -213,7 +212,7 @@ public class DetermineAnchors {
 		String book2 = split2[0];
 		String chapterNumber2 = split2[1];
 		
-		int comp = bookList.indexOf(book1) - bookList.indexOf(book2);
+		int comp = bookList.get(book1) - bookList.get(book2);
 		return comp != 0 
 				? comp 
 				: Integer.parseInt(chapterNumber1) - Integer.parseInt(chapterNumber2);
@@ -222,15 +221,13 @@ public class DetermineAnchors {
     /**
      * <p>The default order of the books of ASOIAF.</p>
      */
-	public static final List<String> bookList = Arrays.asList(
-		"AGOT",
-		"ACOK",
-		"ASOS",
-		"AFFC",
-		"ADWD",
-		"DE",
-		"PQ",
-		"RP");
+	public static final Map<String,Integer> bookList;
+	static{
+	    bookList = new HashMap<>();
+	    for(Book b : Book.values()){
+	        bookList.put(b.name(), b.ordinal());
+	    }
+	}
 	
     /**
      * <p>Returns the Location in the list {@code locs} after the Location whose
