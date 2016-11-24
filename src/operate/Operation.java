@@ -2,39 +2,38 @@ package operate;
 
 import common.Folder;
 
-//TODO move the readDecoration arg to the first position to save space
 //TODO add a member that accepts a Consumer<String> and let it point to these classes' work methods
 public enum Operation{
     CLEAR_EXCESS_STRUCTURE(
-            Folder.HTML_BOOKS_UNSTRUCTURED, Folder.HTML_BOOKS_NEWLINE,             null), 
+            null,           Folder.HTML_BOOKS_UNSTRUCTURED, Folder.HTML_BOOKS_NEWLINE), 
     CLEAR_FRONT_AND_BACK_MATTER(
-            Folder.HTML_BOOKS_CHAPTER_CORE, Folder.HTML_BOOKS_UNSTRUCTURED,        null),
+            null,           Folder.HTML_BOOKS_CHAPTER_CORE, Folder.HTML_BOOKS_UNSTRUCTURED),
     DETERMINE_ANCHORS(
-            Folder.ANCHORS,                 Folder.DUPLICATE_INDEPENDENTS,         null), 
+            null,           Folder.ANCHORS,                 Folder.DUPLICATE_INDEPENDENTS), 
     FIND_REPEATED_PHRASES(
-            Folder.REPEATS,                 Folder.CORPUS,                         null), 
+            null,           Folder.REPEATS,                 Folder.CORPUS), 
     HTML_TO_TEXT(
-            Folder.CORPUS,                  Folder.HTML_CHAPTERS,                  null), 
+            null,           Folder.CORPUS,                  Folder.HTML_CHAPTERS), 
     LINK_CHAPTERS(
-            Folder.LINKED_CHAPTERS,         Folder.HTML_CHAPTERS,                  Folder.ANCHORS), 
+            Folder.ANCHORS, Folder.LINKED_CHAPTERS,         Folder.HTML_CHAPTERS), 
     NEWLINE_P(
-            Folder.HTML_BOOKS_NEWLINE,      Folder.HTML_BOOKS,                     null), 
+            null,           Folder.HTML_BOOKS_NEWLINE,      Folder.HTML_BOOKS), 
     REMOVE_DEPENDENT_PHRASES(
-            Folder.INDEPENDENT_INSTANCES,   Folder.REPEATS,                        null), 
+            null,           Folder.INDEPENDENT_INSTANCES,   Folder.REPEATS), 
     REMOVE_UNIQUE_INDEPENDENTS(
-            Folder.DUPLICATE_INDEPENDENTS,  Folder.INDEPENDENT_INSTANCES,          null), 
+            null,           Folder.DUPLICATE_INDEPENDENTS,  Folder.INDEPENDENT_INSTANCES), 
     SET_TRAIL(
-            Folder.READABLE,                Folder.LINKED_CHAPTERS,                null), 
+            null,           Folder.READABLE,                Folder.LINKED_CHAPTERS), 
     SPLIT_CHAPTERS(
-            Folder.HTML_CHAPTERS,           Folder.HTML_BOOKS_CORRECT_APOSTROPHES, null), 
+            null,           Folder.HTML_CHAPTERS,           Folder.HTML_BOOKS_CORRECT_APOSTROPHES), 
     SWAP_APOSTROPHES(
-            Folder.HTML_BOOKS_CORRECT_APOSTROPHES, Folder.HTML_BOOKS_CHAPTER_CORE, null);
+            null,           Folder.HTML_BOOKS_CORRECT_APOSTROPHES, Folder.HTML_BOOKS_CHAPTER_CORE);
     
     private final Folder writeTo;
     private final Folder readFrom;
     private final Folder readDecoration;
     
-    private Operation(Folder writeTo, Folder readFrom, Folder readDecoration){
+    private Operation(Folder readDecoration, Folder writeTo, Folder readFrom){
         this.writeTo = writeTo;
         this.readFrom = readFrom;
         this.readDecoration = readDecoration;
