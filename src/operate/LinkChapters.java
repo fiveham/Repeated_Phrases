@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
-import common.Folder;
 import common.IO;
 import html.AnchorInfo;
 import html.HTMLFile;
@@ -193,7 +192,7 @@ public class LinkChapters{ //TODO find out where/how this class writes stuff out
      * returned value
      * @return the filename/address of the specified html chapter file after the file has had links
      * to repeated phrases later in the corpus added
-     * @see repeatedphrases.Folder.LINKED_CHAPTERS
+     * @see operate.Folder.LINKED_CHAPTERS
      */
 	public static String linkedChapterName(String originalName){
 		int index = originalName.lastIndexOf(File.separator);

@@ -8,7 +8,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
-import common.Folder;
 import common.IO;
 
 /**

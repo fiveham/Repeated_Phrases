@@ -1,6 +1,5 @@
 package operate;
 
-import common.Folder;
 import common.IO;
 import html.HTMLFile;
 import java.util.ArrayList;
@@ -275,7 +274,7 @@ public class DetermineAnchors {
      * @return the name of the file to which data for AnchorInfo objects should be written to add
      * anchor tags to the html source file pertaining to the chapter to which the specified filename
      * pertains.
-     * @see common.Folder#ANCHORS
+     * @see operate.Folder#ANCHORS
      */
 	public static String anchorOutName(String chapter){
 		return Folder.ANCHORS.folderName() + File.separator 

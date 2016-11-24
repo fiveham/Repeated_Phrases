@@ -1,6 +1,8 @@
-package common;
+package operate;
 
 import java.io.File;
+
+import common.IO;
 
 /**
  * <p>Represents the folders that play significant roles in this project: Five folders for entire 
@@ -9,21 +11,21 @@ import java.io.File;
  * the corpus and adding links for those phrases to the html chapters.</p>
  */
 public enum Folder {
-	
-	HTML_BOOKS					  ("00_html_books",	                     null),
-	HTML_BOOKS_NEWLINE			  ("01_html_books_newline",	             null),
-	HTML_BOOKS_UNSTRUCTURED		  ("02_html_books_unstructured",         null),
-	HTML_BOOKS_CHAPTER_CORE		  ("03_html_books_chapter_core",         null),
-	HTML_BOOKS_CORRECT_APOSTROPHES("04_html_books_correct_apostrophes",  null),
-	HTML_CHAPTERS				  ("05_html_chapters",                   null),
-	CORPUS						  ("06_corpus",                          null),
-	REPEATS						  ("07_repeats",                         "repeats" ),
-	INDEPENDENT_INSTANCES		  ("08_independent_instances",           "independent_instances" ),
-	DUPLICATE_INDEPENDENTS		  ("09_duplicate_independents",          "duplicate_independents" ),
-	ANCHORS						  ("10_anchors",                         null),
-	LINKED_CHAPTERS				  ("11_linked_chapters",                 null),
-	READABLE					  ("12_readable",                        null);
-	
+    
+    HTML_BOOKS					  ("00_html_books",	                    null),
+    HTML_BOOKS_NEWLINE			  ("01_html_books_newline",	            null),
+    HTML_BOOKS_UNSTRUCTURED		  ("02_html_books_unstructured",        null),
+    HTML_BOOKS_CHAPTER_CORE		  ("03_html_books_chapter_core",        null),
+    HTML_BOOKS_CORRECT_APOSTROPHES("04_html_books_correct_apostrophes", null),
+    HTML_CHAPTERS				  ("05_html_chapters",                  null),
+    CORPUS						  ("06_corpus",                         null),
+    REPEATS						  ("07_repeats",                        "repeats" ),
+    INDEPENDENT_INSTANCES		  ("08_independent_instances",          "independent_instances" ),
+    DUPLICATE_INDEPENDENTS		  ("09_duplicate_independents",         "duplicate_independents" ),
+    ANCHORS						  ("10_anchors",                        null),
+    LINKED_CHAPTERS				  ("11_linked_chapters",                null),
+    READABLE					  ("12_readable",                       null);
+    
 	/**
 	 * <p>The actual directory</p>
 	 */
@@ -35,7 +37,7 @@ public enum Folder {
 	private String folderName;
 	
 	/**
-	 * <p>The base of the name of files to be saved in or read from this directory.  This is 
+	 * <p>The base of the name of files to be saved in or read from this directory. This is 
 	 * non-null only for those directories whose contents pertain to phrases of certain sizes 
 	 * rather than chapters or entire books.</p>
 	 */

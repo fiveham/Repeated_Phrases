@@ -3,7 +3,6 @@ package operate;
 import java.io.File;
 import java.util.function.Consumer;
 
-import common.Folder;
 import common.IO;
 
 //TODO use references to elements of Operations once they are properly defined

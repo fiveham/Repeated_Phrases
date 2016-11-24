@@ -1,6 +1,5 @@
 package repeatedphrases;
 
-import common.Folder;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -23,6 +22,8 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
+
+import operate.Folder;
 import operate.RepeatedPhrasesApp;
 import operate.SetTrail;
 
