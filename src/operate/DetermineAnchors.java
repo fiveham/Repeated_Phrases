@@ -2,7 +2,7 @@ package operate;
 
 import common.IO;
 import html.HTMLFile;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -222,17 +222,15 @@ public class DetermineAnchors {
     /**
      * <p>The default order of the books of ASOIAF.</p>
      */
-	public static final List<String> bookList = new ArrayList<>();
-	static{
-		bookList.add("AGOT");
-		bookList.add("ACOK");
-		bookList.add("ASOS");
-		bookList.add("AFFC");
-		bookList.add("ADWD");
-		bookList.add("DE");
-		bookList.add("PQ");
-		bookList.add("RP");
-	}
+	public static final List<String> bookList = Arrays.asList(
+		"AGOT",
+		"ACOK",
+		"ASOS",
+		"AFFC",
+		"ADWD",
+		"DE",
+		"PQ",
+		"RP");
 	
     /**
      * <p>Returns the Location in the list {@code locs} after the Location whose
