@@ -2,11 +2,17 @@ package operate;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import common.Folder;
 import common.IO;
 import text.Database;
+import text.FileBox;
+import text.Location;
+import text.PhraseBox;
+import text.Quote;
 
 /**
  * <p>This class searches the population of known phrases that occur more than once in the text of A
@@ -63,10 +69,10 @@ public class RemoveDependentPhrases {
             try{
                 Database largerPhrases = (smallerPhrases != null)
                         ? smallerPhrases
-                        : new Database(new File( READ_FROM.filename(lowSize+1) ));
+                        : new Database(new File(READ_FROM.filename(lowSize+1)));
                 smallerPhrases = new Database(new File(READ_FROM.filename(lowSize)));
 
-                smallerPhrases.phrasesIndependentOf(largerPhrases)
+                phrasesIndependentOf(smallerPhrases.textCorpus(), largerPhrases.textCorpus())
                         .printPhrasesWithLocations(WRITE_TO.filename(lowSize));
             } catch(FileNotFoundException e){
             	throw new RuntimeException(
@@ -76,5 +82,88 @@ public class RemoveDependentPhrases {
             			+ READ_FROM.filename(lowSize+1));
             }
         }
+    }
+    
+    /**
+     * <p>Returns a PhraseBox containing exactly those quotes represented in {@code this.textCorpus}
+     * that are independent of all the quotes represented in {@code otherDatabase.textCorpus}.</p>
+     * @param largerDatabase another Database against whose quotes the quotes of this Database are to
+     * be tested for independence.
+     * @return a PhraseBox containing exactly those quotes represented in {@code this.textCorpus}
+     * that are independent of all the quotes represented in {@code otherDatabase.textCorpus}.
+     */
+    private static PhraseBox phrasesIndependentOf(FileBox small, FileBox largerDatabase){
+        PhraseBox result = new PhraseBox();
+        
+        for(String filename : small.filenames()){
+            if(largerDatabase.contains(filename)){
+                
+                Map<Integer, String> fileForLargePhrases = 
+                        largerDatabase.get(filename).stream()
+                                .collect(Collectors.toMap(Quote::index, Quote::text));
+                
+                for(Quote phraseHere : small.get(filename)){
+                    
+                    String largerPhraseWithIndexOneLess = phraseHere.index() == 0 
+                            ? null 
+                            : fileForLargePhrases.get(phraseHere.index()-1);
+                    
+                    String largerPhraseWithSameIndex = 
+                            fileForLargePhrases.size() == phraseHere.index() 
+                                    ? null
+                                    : fileForLargePhrases.get(phraseHere.index());
+                    
+                    Boolean lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase = 
+                            largerPhraseWithIndexOneLess == null
+                                    ? null
+                                    : largerPhraseWithIndexOneLess.endsWith(phraseHere.text());
+                    
+                    Boolean sameIndexLargerPhraseExistsAndStartsWithSmallPhrase = 
+                            largerPhraseWithSameIndex == null
+                                    ? null
+                                    : largerPhraseWithSameIndex.startsWith(phraseHere.text());
+                    
+                    if(lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase == null 
+                            && sameIndexLargerPhraseExistsAndStartsWithSmallPhrase == null){
+                        
+                        result.add(phraseHere.text(), new Location(phraseHere.index(), filename));
+                    } else if(!((lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase  == null 
+                            ||    lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase  == true) 
+                            ||   (sameIndexLargerPhraseExistsAndStartsWithSmallPhrase == null 
+                            ||    sameIndexLargerPhraseExistsAndStartsWithSmallPhrase == true))){
+                        
+                        throw new IllegalStateException(
+                                "The smaller phrase \"" 
+                                + shortForm(phraseHere.text()) 
+                                + "\" is contained at the proper location in zero or one of the " 
+                                + "two larger phrases that could contain it: " 
+                                + "Phrase at some index in file " + filename + ": \"" 
+                                + shortForm(largerPhraseWithIndexOneLess) 
+                                + "\" --- " 
+                                + "Phrase at some index in file " + filename + ": \"" 
+                                + shortForm(largerPhraseWithSameIndex) 
+                                + "\".");
+                    }
+                }
+            } else{
+                small.get(filename).forEach(
+                        (lp) -> result.add(lp.text(), new Location(lp.index(), filename)));
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * <p>Returns a shortened form of the specified String.</p>
+     * @param phrase the phrase of which a shortened form will be returned
+     * @return the first 25 characters of phrase + " ... " + the last 25 characters if the phrase
+     * has 60 or more characters, otherwise the entire phrase.
+     */
+    private static String shortForm(String phrase){
+        if(phrase.length() < 60){
+            return phrase;
+        }
+        return phrase.substring(0, 25) + " ... " + phrase.substring(phrase.length()-26);
     }
 }
