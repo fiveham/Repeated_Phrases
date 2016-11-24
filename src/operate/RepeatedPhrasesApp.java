@@ -98,7 +98,7 @@ public class RepeatedPhrasesApp {
     
     public static void linksAndTrail(String[] args, Consumer<String> msg) {
     	
-        int limit = RepeatedPhrasesApp.validateArgs(args, msg);
+        int limit = validateArgs(args, msg);
         String[] trailArgs = new String[]{ args[0] };
         
         msg.accept("Determining links to add to phrases");
