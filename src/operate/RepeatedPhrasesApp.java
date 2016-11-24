@@ -37,31 +37,31 @@ public class RepeatedPhrasesApp {
         ensureFolders(msg);
         
         msg.accept("Newlining parargraphs");
-        NewlineP.newlineP(null, msg);
+        Operation.NEWLINE_P.operate(null, msg);
         
         msg.accept("Removing inconsistent divs etc");
-        ClearExcessStructure.clearXSStruct(null, msg);
+        Operation.CLEAR_EXCESS_STRUCTURE.operate(null, msg);
         
         msg.accept("Removing non-chapter matter");
-        ClearFrontAndBackMatter.clearFrontBack(null, msg);
+        Operation.CLEAR_FRONT_AND_BACK_MATTER.operate(null, msg);
         
         msg.accept("Normalizing apostrophes");
-        SwapApostrophes.swapApostrophes(null, msg);
+        Operation.SWAP_APOSTROPHES.operate(null, msg);
         
         msg.accept("Splitting books into chapters");
-        SplitChapters.splitChapters(null, msg);
+        Operation.SPLIT_CHAPTERS.operate(null, msg);
         
         msg.accept("Creating plaintext corpus");
-        HtmlToText.htmlToText(null, msg);
+        Operation.HTML_TO_TEXT.operate(null, msg);
         
         msg.accept("Finding repeat phrases in corpus");
-        FindRepeatedPhrases.findRepPhrases(null, msg);
+        Operation.FIND_REPEATED_PHRASES.operate(null, msg);
         
         msg.accept("Ignoring dependent quotes");
-        RemoveDependentPhrases.rmDepPhrases(null, msg);
+        Operation.REMOVE_DEPENDENT_PHRASES.operate(null, msg);
         
         msg.accept("Ignoring unique independent instances");
-        RemoveUniqueIndependents.rmUniqIndeps(null, msg);
+        Operation.REMOVE_UNIQUE_INDEPENDENTS.operate(null, msg);
         
         linksAndTrail(args, msg);
     }
@@ -82,11 +82,11 @@ public class RepeatedPhrasesApp {
         
         String trail = args[0];
         
-        if( !(new File(trail)).exists() ){
+        if(!(new File(trail)).exists()){
             throw new IllegalArgumentException("I can't find that trail-file: \""+trail+"\".");
         }
         
-        if( args.length < 2 ){
+        if(args.length < 2){
             return IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR;
         }
         
@@ -103,12 +103,12 @@ public class RepeatedPhrasesApp {
         String[] trailArgs = new String[]{ args[0] };
         
         msg.accept("Determining links to add to phrases");
-        DetermineAnchors.determineAnchors(trailArgs, msg);
+        Operation.DETERMINE_ANCHORS.operate(trailArgs, msg);
         
         msg.accept("Adding links to html chapters");
-        LinkChapters.linkChapters( new String[]{ Integer.toString(limit) }, msg );
+        Operation.LINK_CHAPTERS.operate(new String[]{Integer.toString(limit)}, msg);
         
         msg.accept("Adding prev- and next-chapter links");
-        SetTrail.setTrail( trailArgs, msg );
+        Operation.SET_TRAIL.operate(trailArgs, msg);
     }
 }
