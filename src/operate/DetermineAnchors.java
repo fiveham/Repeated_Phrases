@@ -123,30 +123,33 @@ public class DetermineAnchors {
 	public static Comparator<Location> getPhraseSorter(String trailFile){
 		File f = new File(trailFile);
 		return f.exists() && f.canRead() 
-				? new Comparator<Location>(){ //TODO use a nested class
-					private Map<String,Integer> chapterIndices;
-					{
-						List<SetTrail.TrailElement> elems = SetTrail.getTrailElements(trailFile);
-						chapterIndices = new HashMap<>();
-						for(int i=0; i<elems.size(); i++){
-							chapterIndices.put( IO.stripFolderExtension(elems.get(i).focus()), i );
-						}
-					}
-					
-					@Override
-					public int compare(Location loc1, Location loc2){
-						String chapter1 = IO.stripFolderExtension(loc1.getFilename());
-						String chapter2 = IO.stripFolderExtension(loc2.getFilename());
-						
-						int indexInChapter1 = chapterIndices.get(chapter1);
-						int indexInChapter2 = chapterIndices.get(chapter2);
-						
-						return indexInChapter1 != indexInChapter2 
-								? indexInChapter1 - indexInChapter2 
-								: loc1.getIndex() - loc2.getIndex();
-					}
-				} 
+				? new AdHocComparator(trailFile) 
 				: PHRASE_SORTER;
+	}
+	
+	private static class AdHocComparator implements Comparator<Location>{
+	    private final Map<String,Integer> chapterIndices;
+	    
+        private AdHocComparator(String trailFile){
+            List<SetTrail.TrailElement> elems = SetTrail.getTrailElements(trailFile);
+            chapterIndices = new HashMap<>();
+            for(int i=0; i<elems.size(); i++){
+                chapterIndices.put(IO.stripFolderExtension(elems.get(i).focus()), i);
+            }
+        }
+        
+        @Override
+        public int compare(Location loc1, Location loc2){
+            String chapter1 = IO.stripFolderExtension(loc1.getFilename());
+            String chapter2 = IO.stripFolderExtension(loc2.getFilename());
+            
+            int indexInChapter1 = chapterIndices.get(chapter1);
+            int indexInChapter2 = chapterIndices.get(chapter2);
+            
+            return indexInChapter1 != indexInChapter2 
+                    ? indexInChapter1 - indexInChapter2 
+                    : loc1.getIndex() - loc2.getIndex();
+        }
 	}
 	
     /**
