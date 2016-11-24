@@ -37,31 +37,31 @@ public class RepeatedPhrasesApp {
         ensureFolders(msg);
         
         msg.accept("Newlining parargraphs");
-        NewlineP.newlineP(msg);
+        NewlineP.newlineP(null, msg);
         
         msg.accept("Removing inconsistent divs etc");
-        ClearExcessStructure.clearXSStruct(msg);
+        ClearExcessStructure.clearXSStruct(null, msg);
         
         msg.accept("Removing non-chapter matter");
-        ClearFrontAndBackMatter.clearFrontBack(msg);
+        ClearFrontAndBackMatter.clearFrontBack(null, msg);
         
         msg.accept("Normalizing apostrophes");
-        SwapApostrophes.swapApostrophes(msg);
+        SwapApostrophes.swapApostrophes(null, msg);
         
         msg.accept("Splitting books into chapters");
-        SplitChapters.splitChapters(msg);
+        SplitChapters.splitChapters(null, msg);
         
         msg.accept("Creating plaintext corpus");
-        HtmlToText.htmlToText(msg);
+        HtmlToText.htmlToText(null, msg);
         
         msg.accept("Finding repeat phrases in corpus");
-        FindRepeatedPhrases.findRepPhrases(msg);
+        FindRepeatedPhrases.findRepPhrases(null, msg);
         
         msg.accept("Ignoring dependent quotes");
-        RemoveDependentPhrases.rmDepPhrases(msg);
+        RemoveDependentPhrases.rmDepPhrases(null, msg);
         
         msg.accept("Ignoring unique independent instances");
-        RemoveUniqueIndependents.rmUniqIndeps(msg);
+        RemoveUniqueIndependents.rmUniqIndeps(null, msg);
         
         linksAndTrail(args, msg);
     }
@@ -103,7 +103,7 @@ public class RepeatedPhrasesApp {
         String[] trailArgs = new String[]{ args[0] };
         
         msg.accept("Determining links to add to phrases");
-        DetermineAnchors.determineAnchors( trailArgs, msg );
+        DetermineAnchors.determineAnchors(trailArgs, msg);
         
         msg.accept("Adding links to html chapters");
         LinkChapters.linkChapters( new String[]{ Integer.toString(limit) }, msg );

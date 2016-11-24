@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,7 +47,7 @@ public class DetermineAnchors {
      * in the GUI if this class is run from the GUI.
      */
 	public static void determineAnchors(String[] args, Consumer<String> msg) {
-		Comparator<Location> phraseSorter = getPhraseSorter( args.length > 0 ? args[0] : "");
+		Comparator<Location> phraseSorter = getPhraseSorter(args.length > 0 ? args[0] : "");
 		
 		msg.accept("Rendering phrase data as filebox and phrasebox.");
 		
@@ -123,8 +124,8 @@ public class DetermineAnchors {
 	public static Comparator<Location> getPhraseSorter(String trailFile){
 		File f = new File(trailFile);
 		return f.exists() && f.canRead() 
-				? new Comparator<Location>(){
-					private HashMap<String,Integer> chapterIndices;
+				? new Comparator<Location>(){ //TODO use a nested class
+					private Map<String,Integer> chapterIndices;
 					{
 						List<SetTrail.TrailElement> elems = SetTrail.getTrailElements(trailFile);
 						chapterIndices = new HashMap<>();

@@ -41,7 +41,7 @@ public class SwapApostrophes{
      * {@link #PATTERNS replacement pattern} with an {@link #APOSTROPHE apostrophe}.</p>
      * @param args command-line arguments (unused)
      */
-    public static void swapApostrophes(Consumer<String> msg){
+    public static void swapApostrophes(String[] args, Consumer<String> msg){
         File[] readUs = OPERATION.readFrom().folder().listFiles(IO::isHtml);
 
         for(File srcFile : readUs){

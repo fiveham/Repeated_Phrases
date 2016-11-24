@@ -47,7 +47,7 @@ public class RemoveDependentPhrases {
      * System.exit is called, ending the program.</p>
      * @param args command-line arguments (unused)
      */
-    public static void rmDepPhrases(Consumer<String> msg) {
+    public static void rmDepPhrases(String[] args, Consumer<String> msg) {
         
         FileBox smallerPhrases = null; //inter-loop storage
         

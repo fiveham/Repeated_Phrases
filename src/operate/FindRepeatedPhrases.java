@@ -47,7 +47,7 @@ public class FindRepeatedPhrases {
      * phrase.</p>
      * @param args Command-line arguments (unused)
      */
-	public static void findRepPhrases(Consumer<String> msg) {
+	public static void findRepPhrases(String[] args, Consumer<String> msg) {
 		
 		File[] readUs = OPERATION.readFrom().folder().listFiles(IO::isTxt);
 		final List<Chapter> chapters = getChapters( readUs );

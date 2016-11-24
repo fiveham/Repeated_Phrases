@@ -29,10 +29,8 @@ public class ClearFrontAndBackMatter {
      * after the last actual chapter and removes everything at or after that.<p/>
      * @param args command-line arguments
      */
-	public static void clearFrontBack(Consumer<String> msg) {
-
+	public static void clearFrontBack(String[] args, Consumer<String> msg) {
         handleNovels(msg);
-
         handleNovellas(msg);
 	}
 	

@@ -35,7 +35,7 @@ public class ClearExcessStructure{
      * to {@code WRITE_TO}.</p>
      * @param args command-line arguments
      */
-	public static void clearXSStruct(Consumer<String> msg){
+	public static void clearXSStruct(String[] args, Consumer<String> msg){
 		File[] readUs = OPERATION.readFrom().folder().listFiles(IO::isHtml);
 		for(File f : readUs){
 			

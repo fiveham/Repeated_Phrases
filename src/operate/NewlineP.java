@@ -31,7 +31,7 @@ public class NewlineP{
      * value of {@code BEGIN_P} before each element after the first one produced by the Scanner.</p>
      * @param msg
      */
-    public static void newlineP(Consumer<String> msg){
+    public static void newlineP(String[] args, Consumer<String> msg){
         
         String[] readUs = OPERATION.readFrom().folder().list(IO::isHtml);
         

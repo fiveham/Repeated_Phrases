@@ -24,7 +24,7 @@ public class RemoveUniqueIndependents {
      * more than one Location to a corresponding file in {@code WRITE_TO}.</p>
      * @param args command-line arguments (unused)
      */
-    public static void rmUniqIndeps(Consumer<String> msg) {
+    public static void rmUniqIndeps(String[] args, Consumer<String> msg) {
 
         for(int i=FindRepeatedPhrases.MIN_PHRASE_SIZE; i<FindRepeatedPhrases.MAX_PHRASE_SIZE; i++){
             try(Scanner scan = new Scanner(new File(OPERATION.readFrom().filename(i)), IO.ENCODING); 

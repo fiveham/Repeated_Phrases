@@ -19,7 +19,7 @@ public class HtmlToText {
      * as .txt files in {@code WRITE_TO}.</p>
      * @param args command-line arguments (unused)
      */
-    public static void htmlToText(Consumer<String> msg) {
+    public static void htmlToText(String[] args, Consumer<String> msg) {
         File[] readUs = OPERATION.readFrom().folder().listFiles(IO::isHtml);
         for(File f : readUs){
             try{

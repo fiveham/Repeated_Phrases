@@ -31,7 +31,7 @@ public class SplitChapters {
      * for each chapter to {@code WRITE_TO}.</p>
      * @param args command-line arguments (unused)
      */
-    public static void splitChapters(Consumer<String> msg) {
+    public static void splitChapters(String[] args, Consumer<String> msg) {
         handleNovels(msg);
         handleNovellas(msg);
         handlePQ(msg);
