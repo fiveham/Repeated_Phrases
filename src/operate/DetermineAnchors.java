@@ -29,15 +29,7 @@ import text.PhraseBox;
  */
 public class DetermineAnchors {
 	
-    /**
-     * <p>The folder from which this class reads quote data.</p>
-     */
-	public static final Folder READ_FROM = Folder.DUPLICATE_INDEPENDENTS;
-	
-    /**
-     * <p>The folder to which this class writes the anchor-definitions that it generates.</p>
-     */
-	public static final Folder WRITE_TO = Folder.ANCHORS;
+    public static final Operation OPERATION = Operation.DETERMINE_ANCHORS;
 	
     /**
      * <p>Detects all the .txt files in {@code READ_FROM}, reads them all, and organizes the
@@ -170,7 +162,7 @@ public class DetermineAnchors {
 				size < FindRepeatedPhrases.MAX_PHRASE_SIZE; 
 				size++){
 			
-			String name = READ_FROM.filename(size);
+			String name = OPERATION.readFrom().filename(size);
 			msg.accept("Reading anchorable phrase data from "+IO.stripFolder(name));
 			try{
 				List<String> lines = IO.fileContentsAsList( 

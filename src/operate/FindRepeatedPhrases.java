@@ -1,14 +1,12 @@
 package operate;
 
+import common.IO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.function.Consumer;
-
-import common.Folder;
-import common.IO;
 import text.Chapter;
 import text.Corpus;
 import text.PhraseBox;
@@ -21,15 +19,7 @@ import text.Quote;
  */
 public class FindRepeatedPhrases {
 	
-    /**
-     * <p>The {@code Folder} from which this class reads files to modify.</p>
-     */
-	public static final Folder READ_FROM = Folder.CORPUS;
-	
-    /**
-     * <p>The {@code Folder} to which this class writes files it creates.</p>
-     */
-	public static final Folder WRITE_TO = Folder.REPEATS;
+    public static final Operation OPERATION = Operation.FIND_REPEATED_PHRASES;
 	
     /**
      * <p>Number of locations in the corpus at which a unique phrase occurs, by definition.</p>
@@ -59,7 +49,7 @@ public class FindRepeatedPhrases {
      */
 	public static void findRepPhrases(Consumer<String> msg) {
 		
-		File[] readUs = READ_FROM.folder().listFiles(IO::isTxt);
+		File[] readUs = OPERATION.readFrom().folder().listFiles(IO::isTxt);
 		final List<Chapter> chapters = getChapters( readUs );
 		PhraseBox repeatedPhrasesFromPrevLoop = new PhraseBox();
 		repeatedPhrasesFromPrevLoop.add(ZERO_WORD_PHRASE, null);
@@ -78,7 +68,7 @@ public class FindRepeatedPhrases {
 			words.removeUniques(msg);
 			
 			//print repeated phrases and all their locations in the corpus to a file
-			words.printPhrasesWithLocations( WRITE_TO.filename(phraseSize) );
+			words.printPhrasesWithLocations(OPERATION.writeTo().filename(phraseSize));
 			
 			//Store the current list of repeated phrases for the next loop
 			repeatedPhrasesFromPrevLoop = words;

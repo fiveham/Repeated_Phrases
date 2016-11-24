@@ -1,13 +1,11 @@
 package operate;
 
+import common.IO;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Scanner;
 import java.util.function.Consumer;
-
-import common.Folder;
-import common.IO;
 import text.Location;
 
 /**
@@ -18,19 +16,8 @@ import text.Location;
  * {@link java.lang.String#toString() in string form}.</p>
  */
 public class RemoveUniqueIndependents {
-
-    /**
-     * <p>The folder from which this class reads quote data for independent quotes including those
-     * with only one independent instance.</p>
-     * @see Folder#INDEPENDENT_INSTANCES
-     */
-    public static final Folder READ_FROM = Folder.INDEPENDENT_INSTANCES;
-
-    /**
-     * <p>The folder where the read-in quote data with the unique independent instances removed are
-     * saved.</p>
-     */
-    public static final Folder WRITE_TO = Folder.DUPLICATE_INDEPENDENTS;
+    
+    public static final Operation OPERATION = Operation.REMOVE_UNIQUE_INDEPENDENTS;
     
     /**
      * <p>Reads each file from {@code READ_FROM} and prints only the lines of each file that have
@@ -40,13 +27,13 @@ public class RemoveUniqueIndependents {
     public static void rmUniqIndeps(Consumer<String> msg) {
 
         for(int i=FindRepeatedPhrases.MIN_PHRASE_SIZE; i<FindRepeatedPhrases.MAX_PHRASE_SIZE; i++){
-            try(Scanner scan = new Scanner(new File( READ_FROM.filename(i) ), IO.ENCODING ); 
+            try(Scanner scan = new Scanner(new File(OPERATION.readFrom().filename(i)), IO.ENCODING); 
                         OutputStreamWriter out  = IO.newOutputStreamWriter(
-                        		WRITE_TO.filename(i), 
+                        		OPERATION.writeTo().filename(i), 
                         		scan)){
                 while(scan.hasNextLine() && scan.hasNext()){
                     String line = scan.nextLine();
-                    if( line.indexOf(
+                    if(line.indexOf(
                     		Location.ELEMENT_DELIM) != line.lastIndexOf(Location.ELEMENT_DELIM)){
                     	//then there's multiple Locations on that line
                     	

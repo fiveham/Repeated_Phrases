@@ -1,6 +1,5 @@
 package operate;
 
-import common.Folder;
 import common.IO;
 import html.CharCode;
 import html.HTMLFile;
@@ -28,16 +27,8 @@ import java.util.function.Consumer;
  */
 public class ClearExcessStructure{
 	
-    /**
-     * <p>The directory from which this class reads files it modifies.</p>
-     */
-	public static final Folder READ_FROM = Folder.HTML_BOOKS_NEWLINE;
-	
-    /**
-     * <p>The director to which this class writes files it has modified.</p>
-     */
-	public static final Folder WRITE_TO = Folder.HTML_BOOKS_UNSTRUCTURED;
-	
+    public static final Operation OPERATION = Operation.CLEAR_EXCESS_STRUCTURE;
+    
     /**
      * <p>Detects the html files in the directory {@code READ_FROM}, reads each of them, removes
      * divs, blockquotes, imgs, non-breaking spaces, and empty paragraphs from them, and saves them
@@ -45,13 +36,13 @@ public class ClearExcessStructure{
      * @param args command-line arguments
      */
 	public static void clearXSStruct(Consumer<String> msg){
-		File[] readUs = READ_FROM.folder().listFiles(IO::isHtml);
+		File[] readUs = OPERATION.readFrom().folder().listFiles(IO::isHtml);
 		for(File f : readUs){
 			
 			msg.accept("Removing structure from "+f.getName());
 			
 			try(OutputStreamWriter out = IO.newOutputStreamWriter(
-					WRITE_TO.folderName() 
+			        OPERATION.writeTo().folderName() 
 					+ File.separator 
 					+ f.getName())){
 				HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));

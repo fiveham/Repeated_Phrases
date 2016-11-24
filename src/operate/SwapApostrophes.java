@@ -1,5 +1,8 @@
 package operate;
 
+import common.IO;
+import html.CharCode;
+import html.HTMLFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -8,11 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
-
-import common.Folder;
-import common.IO;
-import html.CharCode;
-import html.HTMLFile;
 import text.PhraseProducer;
 
 /**
@@ -20,20 +18,9 @@ import text.PhraseProducer;
  * apostrophes ("\'") if the characters around the single-quote match any of several PATTERNS.
  */
 public class SwapApostrophes{
-
-    /**
-     * <p>The folder from which this class reads html novels files whose apostrophes it will
-     * correct.</p>
-     * @see Folder#HTML_BOOKS_CHAPTER_CORE
-     */
-    public static final Folder READ_FROM = Folder.HTML_BOOKS_CHAPTER_CORE;
-
-    /**
-     * <p>The folder where this class writes the modified html novel files it creates.</p>
-     * @see Folder#HTML_BOOKS_CORRECT_APOSTROPHES
-     */
-    public static final Folder WRITE_TO = Folder.HTML_BOOKS_CORRECT_APOSTROPHES;
-
+    
+    public static final Operation OPERATION = Operation.SWAP_APOSTROPHES;
+    
     /**
      * <p>The apostrophe character ({@value}), used in
      * {@link #ApoPattern apostrophe-replacement context codes} and as the literal apostrophe to
@@ -55,13 +42,13 @@ public class SwapApostrophes{
      * @param args command-line arguments (unused)
      */
     public static void swapApostrophes(Consumer<String> msg){
-        File[] readUs = READ_FROM.folder().listFiles(IO::isHtml);
+        File[] readUs = OPERATION.readFrom().folder().listFiles(IO::isHtml);
 
         for(File srcFile : readUs){
             msg.accept("Normalizing apostrophes: "+srcFile.getName());
 
             try(OutputStreamWriter out = IO.newOutputStreamWriter(
-            		WRITE_TO.folderName() 
+            		OPERATION.writeTo().folderName() 
             		+ File.separator 
             		+ srcFile.getName())){
             	

@@ -1,5 +1,6 @@
 package operate;
 
+import common.IO;
 import html.Direction;
 import html.HTMLFile;
 import html.Tag;
@@ -10,10 +11,6 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 import java.util.function.Predicate;
-
-import common.Folder;
-import common.IO;
-
 import java.util.function.Consumer;
 import java.util.HashMap;
 
@@ -23,19 +20,7 @@ import java.util.HashMap;
  */
 public class ClearFrontAndBackMatter {
 	
-    /**
-     * <p>The directory from which this class reads html files of the ASOIAF books from which it
-     * will remove front and back matter.</p>
-     * @see Folder#HTML_BOOKS_UNSTRUCTURED
-     */
-	public static final Folder READ_FROM = Folder.HTML_BOOKS_UNSTRUCTURED;
-	
-    /**
-     * <p>The directory to which this class writes HTML files of the ASOIAF books from which it has
-     * removed front and back matter.</p>
-     * @see Folder#HTML_BOOKS_CHAPTER_CORE
-     */
-	public static final Folder WRITE_TO = Folder.HTML_BOOKS_CHAPTER_CORE;
+	public static final Operation OPERATION = Operation.CLEAR_FRONT_AND_BACK_MATTER;
 	
     /**
      * <p>Detects all the html files for the ASOIAF novels in {@code READ_FROM}, reads them, detects
@@ -52,14 +37,14 @@ public class ClearFrontAndBackMatter {
 	}
 	
 	private static void handleNovellas(Consumer<String> msg){
-            File[] novellaFiles = READ_FROM.folder().listFiles(IO::isNovella);
+            File[] novellaFiles = OPERATION.readFrom().folder().listFiles(IO::isNovella);
 
             for(File f : novellaFiles){
 
                 msg.accept("Removing front/back matter: "+f.getName());
 
                 try(OutputStreamWriter out = IO.newOutputStreamWriter(
-                		WRITE_TO.folderName() 
+                		OPERATION.writeTo().folderName() 
                 		+ File.separator 
                 		+ f.getName())){
                     HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
@@ -89,13 +74,13 @@ public class ClearFrontAndBackMatter {
 	}
 	
 	private static void handleNovels(Consumer<String> msg){
-        File[] novelFiles = READ_FROM.folder().listFiles(IO::isNovel);
+        File[] novelFiles = OPERATION.readFrom().folder().listFiles(IO::isNovel);
         for(File f : novelFiles){
 
             msg.accept("Removing front/back matter: "+f.getName());
 
             try(OutputStreamWriter out = IO.newOutputStreamWriter(
-            		WRITE_TO.folderName() 
+                    OPERATION.writeTo().folderName() 
             		+ File.separator 
             		+ f.getName())){
                 HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));

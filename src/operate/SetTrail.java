@@ -1,5 +1,6 @@
 package operate;
 
+import common.IO;
 import html.Direction;
 import html.HTMLEntity;
 import html.HTMLFile;
@@ -13,9 +14,6 @@ import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-
-import common.Folder;
-import common.IO;
 
 /**
  * <p>Opens the file specified as a command-line argument and assigns the files named in the second
@@ -33,19 +31,7 @@ import common.IO;
  */
 public class SetTrail {
 	
-    /**
-     * <p>The folder from which this class reads HTML chapters to which to add links for previous
-     * and next chapters.</p>
-     * @see Folder#LINKED_CHAPTERS
-     */
-    public static final Folder READ_FROM = Folder.LINKED_CHAPTERS;
-    
-    /**
-     * <p>The folder where this class writes the html chapter files to which it has added links for
-     * previous and next chapters.</p>
-     * @see Folder#READABLE
-     */
-    public static final Folder WRITE_TO = Folder.READABLE;
+    public static final Operation OPERATION = Operation.SET_TRAIL;
     
     /**
      * <p>The string that names the "id" attribute of an html tag.</p>
@@ -88,7 +74,8 @@ public class SetTrail {
         	TrailElement node = elements.get(i);
             msg.accept("Trail-linking "+node.focus());
             
-            File fileToModify = new File( READ_FROM.folderName() + File.separator + node.focus());
+            File fileToModify = 
+                    new File(OPERATION.readFrom().folderName() + File.separator + node.focus());
             
             if(fileToModify.exists()){
                 HTMLFile file = null;
@@ -97,7 +84,7 @@ public class SetTrail {
                 } catch( FileNotFoundException e){
                 	throw new RuntimeException(
                 			IO.ERROR_EXIT_MSG 
-                			+ READ_FROM.folderName() 
+                			+ OPERATION.readFrom().folderName() 
                 			+ File.separator 
                 			+ node.focus() 
                 			+ " for reading");
@@ -114,7 +101,7 @@ public class SetTrail {
                 		ID_ATTRIB, 
                 		availableConnected(elements, i, TrailElement.NEXT));
                 
-                file.print(WRITE_TO.folderName() + File.separator + node.focus());
+                file.print(OPERATION.writeTo().folderName() + File.separator + node.focus());
             }
         }
     }
@@ -129,9 +116,12 @@ public class SetTrail {
     	List<String> visited = new ArrayList<>();
     	
     	String name = null;
-    	while( !new File(READ_FROM.folderName() + File.separator + (name = connection.apply(node)))
+    	while(!new File(
+    	        OPERATION.readFrom().folderName() 
+    	        + File.separator 
+    	        + (name = connection.apply(node)))
     			.exists() 
-    			&& !visited.contains(name) ){
+    			&& !visited.contains(name)){
     		visited.add(name);
     		
     		node = getTrailElementWithFocus(elements, name);

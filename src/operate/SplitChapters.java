@@ -1,5 +1,6 @@
 package operate;
 
+import common.IO;
 import html.CharCode;
 import html.CharLiteral;
 import html.Direction;
@@ -18,27 +19,12 @@ import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import common.Folder;
-import common.IO;
-
 /**
  * <p>Splits an ASOIAF main series novel HTML file into files for its individual chapters.</p>
  */
 public class SplitChapters {
 	
-    /**
-     * <p>The folder from which this class reads html files of the ASOIAF novels which have been
-     * prepared to be split into individual chapters.</p>
-     * @see Folder#HTML_BOOKS_CORRECT_APOSTROPHES
-     */
-    public static final Folder READ_FROM = Folder.HTML_BOOKS_CORRECT_APOSTROPHES;
-    
-    /**
-     * <p>The folder to which this class writes individual chapter html files from the ASOIAF
-     * novels.</p>
-     * @see Folder#HTML_CHAPTERS_UNCHECKED
-     */
-    public static final Folder WRITE_TO = Folder.HTML_CHAPTERS;
+    public static final Operation OPERATION = Operation.SPLIT_CHAPTERS;
     
     /**
      * <p>Detects all html novel files in {@code READ_FROM}, reads them, and saves individual files
@@ -52,7 +38,7 @@ public class SplitChapters {
     }
     
     private static void handleNovels(Consumer<String> msg){
-        File[] readUs = READ_FROM.folder().listFiles(IO::isNovel);
+        File[] readUs = OPERATION.readFrom().folder().listFiles(IO::isNovel);
         
         for(File f : readUs){
             try{
@@ -74,9 +60,9 @@ public class SplitChapters {
                         
                         chapterName = extractChapterTitle(paragraph);
                         buffer = new ArrayList<>();
-                        out = IO.newOutputStreamWriter( WRITE_TO.folderName() 
+                        out = IO.newOutputStreamWriter(OPERATION.writeTo().folderName() 
                                 + File.separator 
-                                + chapterFileName(f.getName(), writeCount, chapterName) );
+                                + chapterFileName(f.getName(), writeCount, chapterName));
                         writeCount++;
                     } else{
                         buffer.addAll(paragraph);
@@ -106,17 +92,17 @@ public class SplitChapters {
     
     private static void handleNovellas(Consumer<String> msg){
         
-        String[] extantEasyNovellas = READ_FROM.folder()
+        String[] extantEasyNovellas = OPERATION.readFrom().folder()
         		.list((dir,name) -> allEasyNovellaNames.contains(name));
         
         for(String novella : extantEasyNovellas){
             try(OutputStreamWriter out = IO.newOutputStreamWriter(
-            		WRITE_TO.folderName() 
+            		OPERATION.writeTo().folderName() 
             		+ File.separator 
             		+ novellaOut(novella))){
                 
                 HTMLFile file = new HTMLFile(
-                		new File(READ_FROM.folderName() + File.separator + novella));
+                		new File(OPERATION.readFrom().folderName() + File.separator + novella));
                 List<HTMLEntity> pseudoBuffer = file.section(0);
                 
                 String title = novellaTitle(novella);
@@ -136,7 +122,7 @@ public class SplitChapters {
         String novella = "PQ.html";
         
         try{
-            HTMLFile pq = new HTMLFile(new File(READ_FROM.folderName() + File.separator + novella));
+            HTMLFile pq = new HTMLFile(new File(OPERATION.readFrom().folderName() + File.separator + novella));
             
             int footnoteIndex = pq.adjacentElement(
             		(i) -> pq.hasLiteralAt("Footnote",i), Direction.PREV, pq.elementCount());
@@ -178,7 +164,7 @@ public class SplitChapters {
                 
                 //save the file
                 OutputStreamWriter out = IO.newOutputStreamWriter(
-                		WRITE_TO.folderName() 
+                		OPERATION.writeTo().folderName() 
                 		+ File.separator 
                 		+ file.getName());
                 writeBuffer(file.section(0), out, file.chapterName(), msg);

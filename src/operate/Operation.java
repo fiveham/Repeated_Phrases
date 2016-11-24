@@ -2,7 +2,9 @@ package operate;
 
 import common.Folder;
 
-public enum Operation {
+//TODO move the readDecoration arg to the first position to save space
+//TODO add a member that accepts a Consumer<String> and let it point to these classes' work methods
+public enum Operation{
     CLEAR_EXCESS_STRUCTURE(
             Folder.HTML_BOOKS_UNSTRUCTURED, Folder.HTML_BOOKS_NEWLINE,             null), 
     CLEAR_FRONT_AND_BACK_MATTER(

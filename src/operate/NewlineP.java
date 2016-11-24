@@ -17,18 +17,7 @@ import common.IO;
  */
 public class NewlineP{
 	
-    /**
-     * <p>The folder from which this class reads the html ASOIAF book files.</p>
-     * @see Folder#HTML_BOOKS
-     */
-    public static final Folder READ_FROM = Folder.HTML_BOOKS;
-    
-    /**
-     * <p>The folder to which this class writes copies of the html ASOIAF book files with
-     * {@linkplain IO#NEW_LINE newlines} before each paragraph.</p>
-     * @see Folder#HTML_BOOKS
-     */
-    public static final Folder WRITE_TO = Folder.HTML_BOOKS_NEWLINE;
+    public static final Operation OPERATION = Operation.NEWLINE_P;
     
     /**
      * <p>The first characters of an opening paragraph tag.</p>
@@ -43,21 +32,22 @@ public class NewlineP{
      * @param msg
      */
     public static void newlineP(Consumer<String> msg){
-
-        String[] readUs = READ_FROM.folder().list(IO::isHtml);
-
+        
+        String[] readUs = OPERATION.readFrom().folder().list(IO::isHtml);
+        
         for(String filename : readUs){
-
-            String inName = getInOutName(filename, READ_FROM);
-            String outName = getInOutName(filename, WRITE_TO);
-
-            try(Scanner scan = new Scanner(new File(inName), IO.ENCODING);
-            		OutputStreamWriter out = IO.newOutputStreamWriter( outName );){
+            
+            String inName = getInOutName(filename, OPERATION.readFrom());
+            String outName = getInOutName(filename, OPERATION.writeTo());
+            
+            try(
+                    Scanner scan = new Scanner(new File(inName), IO.ENCODING);
+            		OutputStreamWriter out = IO.newOutputStreamWriter(outName)){
                 
                 scan.useDelimiter(BEGIN_P);
                 String content = getContent(scan);
                 scan.close();
-
+                
                 out.write(content);
                 out.close();
             } catch(FileNotFoundException e){
@@ -68,10 +58,10 @@ public class NewlineP{
                 msg.accept("IOException occured for file "+filename);
             }
         }
-
+        
         msg.accept("Done");
     }
-
+    
     /**
      * <p>Returns the name of the file to or from which this class should write or read content,
      * depending on the value of {@code folder}. If READ_FROM is specified, then the value returned
@@ -84,7 +74,7 @@ public class NewlineP{
     private static String getInOutName(String filename, Folder folder){
         return folder.folderName() + File.separator + IO.stripFolder(filename);
     }
-
+    
     /**
      * <p>Returns a {@code String} containing all the contents of the body that {@code s} reads,
      * with newlines inserted before every opening paragraph tag.</p>
@@ -94,12 +84,12 @@ public class NewlineP{
      */
     private static String getContent(Scanner s){
         StringBuilder result = new StringBuilder();
-
+        
         if(s.hasNext()){
             result.append(s.next());
         }
         while(s.hasNext()){
-            result.append( IO.NEW_LINE ).append(BEGIN_P).append(s.next());
+            result.append(IO.NEW_LINE).append(BEGIN_P).append(s.next());
         }
         return result.toString();
     } 

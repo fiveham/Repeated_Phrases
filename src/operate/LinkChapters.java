@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 //import java.util.Iterator;
 import java.util.Scanner;
 import java.util.function.Consumer;
@@ -20,25 +21,9 @@ import text.Location;
  * corresponding file in {@link #READ_DECORATION READ_DECORATION} is added to the html file and the
  * result is saved to {@link #WRITE_TO WRITE_TO}.</p>
  */
-public class LinkChapters {
+public class LinkChapters{ //TODO find out where/how this class writes stuff out
 	
-    /**
-     * <p>The directory in which this operation saves its output files.</p>
-     * @see Folder#LINKED_CHAPTERS
-     */
-    public static final Folder WRITE_TO = Folder.LINKED_CHAPTERS;
-
-    /**
-     * <p>The directory from which this operation reads anchor-definition files.</p>
-     * @see Folder#ANCHORS
-     */
-    public static final Folder READ_DECORATION = Folder.ANCHORS;
-
-    /**
-     * <p>The directory from which this operation reads html chapter files.</p>
-     * @see Folder#HTML_CHAPTERS
-     */
-    public static final Folder READ_SUBSTANCE = Folder.HTML_CHAPTERS;
+    public static final Operation OPERATION = Operation.LINK_CHAPTERS;
     
     /**
      * <p>For each corresponding pair of files from {@code READ_SUBSTANCE} and
@@ -48,27 +33,27 @@ public class LinkChapters {
      * @param args command-line arguments
      */
     public static void linkChapters(String[] args, Consumer<String> msg) {
-
+        
         int threshold = getPhraseSizeThreshold(args);
-
+        
         msg.accept("Starting LinkChapters");
-
+        
         msg.accept("Getting HTML-anchor-data pairs.");
-
+        
         List<FileDataPair> fileDataPairs = 
                 getFileDataPairs( 
-                        READ_SUBSTANCE.folder().list(IO::isHtml), 
-                        READ_DECORATION.folder()
+                        OPERATION.readFrom().folder().list(IO::isHtml), 
+                        OPERATION.readDecoration().folder()
                         		.list((dir,name) -> name.endsWith(DetermineAnchors.ANCHOR_EXT)));
-
+        
         msg.accept("Got "+fileDataPairs.size()+" FileDataPairs");
-
+        
         for(FileDataPair pair : fileDataPairs){
             msg.accept("Adding links to "+pair.toString());
             combineFiles( pair.htmlFile, pair.anchFile, threshold );
         }
     }
-
+    
     /**
      * <p>Returns the first command-line argument, if there are any, parsed as an int, if that's
      * possible, {@value #PHRASE_SIZE_THRESHOLD_FOR_ANCHOR} otherwise.</p>
@@ -84,7 +69,7 @@ public class LinkChapters {
         }
         return IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR;
     }
-
+    
     /**
      * <p>Reads the files specified by {@code htmlFileName} and {@code anchorFile}, adds anchor tags
      * indicated by the content of {@code anchorFile} to the in-memory representation of
@@ -103,19 +88,19 @@ public class LinkChapters {
         } catch(FileNotFoundException e){
             throw new RuntimeException(IO.ERROR_EXIT_MSG + htmlFileName + " for reading.");
         }
-
+        
         List<AnchorInfo> anchorInfo = anchorInfo(new File(anchorFile));
         anchorInfo.sort(null);
-
+        
         for(AnchorInfo a : anchorInfo){
             if(a.phraseSize() >= threshold){
                 htmlFile.addAnchor(a);
             }
         }
-
+        
         htmlFile.print(linkedChapterName(htmlFileName));
     }
-
+    
     /**
      * <p>Returns a list of {@code AnchorInfo}, each element of which is based on a line from the
      * specified file.</p>
@@ -125,35 +110,35 @@ public class LinkChapters {
      */
     private static List<AnchorInfo> anchorInfo(File f){
         List<AnchorInfo> result = new ArrayList<>();
-
+        
         Scanner s = null;
         try{
             s = new Scanner(f, IO.ENCODING);
         } catch(FileNotFoundException e){
             throw new RuntimeException(IO.ERROR_EXIT_MSG + f.getName() + " for reading.");
         }
-
+        
         String chapter = f.getName();
         chapter = IO.stripExtension(chapter) + IO.TXT_EXT;
-
+        
         while(s.hasNextLine() && s.hasNext()){
         	//This line is made of a phrase, tab, an int, tab, and the toString() of a Location
             String line = s.nextLine();	
             String[] elements = line.split(IO.LOCATION_DELIM);
-
+            
             String phrase = elements[0];
             int rawIndex = Integer.parseInt(elements[1]);
-
+            
             String[] location = elements[2].split(Location.ELEMENT_DELIM);
             Location loc = new Location(Integer.parseInt(location[1]), location[0]);
-
+            
             result.add( new AnchorInfo(phrase, new Location(rawIndex, chapter), loc) );
         }
-
+        
         s.close();
         return result;
     }
-
+    
     /**
      * <p>Returns a list of {@code FileDataPair}s pairing the html files from the folder
      * {@value Folder#READ_SUBSTANCE} with the anchor-definition files from the folder
@@ -172,20 +157,21 @@ public class LinkChapters {
         List<String> aList = new ArrayList<>(Arrays.asList(anchFiles));
         
         for(String h : hList){
-        	for(String a : aList){
-        		if(matchNames(h,a)){
-        			result.add( new FileDataPair( 
-        					READ_SUBSTANCE.folderName()  + File.separator + h, 
-        					READ_DECORATION.folderName() + File.separator + a));
-        			aList.remove(a);
-        			break; //go to next value of h and dodge a ConcurrentModificationException
-        		}
+        	Optional<String> aMatch = aList.stream()
+        	        .filter((a) -> matchNames(h,a))
+        	        .findFirst();
+        	if(aMatch.isPresent()){
+        	    String a = aMatch.get();
+        	    result.add( new FileDataPair( 
+        	            OPERATION.readFrom().folderName()  + File.separator + h, 
+        	            OPERATION.readDecoration().folderName() + File.separator + a));
+        	    aList.remove(a);
         	}
         }
         
         return result;
     }
-
+    
     /**
      * <p>Returns true if {@code htmlFile}'s name prior to its file extension is the same as that of
      * {@code anchFile} prior to its file extension, false otherwise.</p>
