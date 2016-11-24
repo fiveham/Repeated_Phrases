@@ -33,7 +33,7 @@ public class HtmlToText {
         File[] readUs = READ_FROM.folder().listFiles(IO::isHtml);
         for(File f : readUs){
             try{
-                msg.accept("Saving as text "+f.getName());
+                msg.accept("Saving as text " + f.getName());
                 HTMLFile file = new HTMLFile(f);
                 file.printAsText(
                 		WRITE_TO.folderName() 
