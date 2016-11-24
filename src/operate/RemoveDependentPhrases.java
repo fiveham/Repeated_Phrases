@@ -1,14 +1,12 @@
 package operate;
 
+import common.Folder;
+import common.IO;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import common.Folder;
-import common.IO;
-import text.Database;
 import text.FileBox;
 import text.Location;
 import text.PhraseBox;
@@ -62,17 +60,17 @@ public class RemoveDependentPhrases {
      */
     public static void rmDepPhrases(Consumer<String> msg) {
 
-        Database smallerPhrases = null; //inter-loop storage
+        FileBox smallerPhrases = null; //inter-loop storage
 
         for(int lowSize=INIT_LOW_SIZE; lowSize>LOW_SIZE_EXCLUSIVE_LOWER_BOUND; lowSize--){
 
             try{
-                Database largerPhrases = (smallerPhrases != null)
+                FileBox largerPhrases = (smallerPhrases != null)
                         ? smallerPhrases
-                        : new Database(new File(READ_FROM.filename(lowSize+1)));
-                smallerPhrases = new Database(new File(READ_FROM.filename(lowSize)));
+                        : new FileBox(new File(READ_FROM.filename(lowSize+1)));
+                smallerPhrases = new FileBox(new File(READ_FROM.filename(lowSize)));
 
-                phrasesIndependentOf(smallerPhrases.textCorpus(), largerPhrases.textCorpus())
+                phrasesIndependentOf(smallerPhrases, largerPhrases)
                         .printPhrasesWithLocations(WRITE_TO.filename(lowSize));
             } catch(FileNotFoundException e){
             	throw new RuntimeException(
