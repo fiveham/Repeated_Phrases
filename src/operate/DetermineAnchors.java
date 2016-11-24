@@ -13,6 +13,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.function.Consumer;
+import java.util.stream.IntStream;
+
 import text.FileBox;
 import text.Location;
 import text.Quote;
@@ -161,24 +163,22 @@ public class DetermineAnchors {
 	private static String getDupPhraseData(Consumer<String> msg){
 		StringBuilder sb = new StringBuilder();
 		
-		for(int size = FindRepeatedPhrases.MIN_PHRASE_SIZE; 
-				size < FindRepeatedPhrases.MAX_PHRASE_SIZE; 
-				size++){
-			
-			String name = OPERATION.readFrom().filename(size);
-			msg.accept("Reading anchorable phrase data from "+IO.stripFolder(name));
-			try{
-				List<String> lines = IO.fileContentsAsList( 
-						new Scanner(new File( name ), IO.ENCODING), 
-						Scanner::nextLine, 
-						Scanner::hasNextLine);
-				for(String line : lines){
-					sb.append(line).append("\n");
-				}
-			} catch(FileNotFoundException e){
-				throw new RuntimeException(IO.ERROR_EXIT_MSG + name + " for reading.");
-			}
-		}
+		IntStream.range(FindRepeatedPhrases.MIN_PHRASE_SIZE, FindRepeatedPhrases.MAX_PHRASE_SIZE)
+		        .mapToObj(OPERATION.readFrom()::filename)
+		        .forEach((name) -> {
+		            msg.accept("Reading anchorable phrase data from "+IO.stripFolder(name));
+		            try{
+		                List<String> lines = IO.fileContentsAsList( 
+		                        new Scanner(new File( name ), IO.ENCODING), 
+		                        Scanner::nextLine, 
+		                        Scanner::hasNextLine);
+		                for(String line : lines){
+		                    sb.append(line).append("\n");
+		                }
+		            } catch(FileNotFoundException e){
+		                throw new RuntimeException(IO.ERROR_EXIT_MSG + name + " for reading.");
+		            }
+		        });
 		
 		return sb.delete(sb.length()-1, sb.length()).toString();
 	}
