@@ -13,7 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.function.Consumer;
-
 import text.FileBox;
 import text.Location;
 import text.Quote;
@@ -63,13 +62,13 @@ public class DetermineAnchors {
 		msg.accept("Got anchorable phrase data.");
 		
 		msg.accept("Generating phrase-first data structure.");
-		PhraseBox phrasebox = new PhraseBox( new Scanner( allAnchorablePhraseInstances ) );
+		PhraseBox phrasebox = new PhraseBox(new Scanner(allAnchorablePhraseInstances));
 		for(String phrase : phrasebox.phrases()){
 			phrasebox.get(phrase).sort(phraseSorter);
 		}
 		
 		msg.accept("Generating chaptername-first data structure.");
-		FileBox filebox = new FileBox( new Scanner( allAnchorablePhraseInstances ) );
+		FileBox filebox = new FileBox(new Scanner(allAnchorablePhraseInstances));
 		
 		//create a file for each chapter and fill it with phrases 
 		//that need to be tagged in that chapter, the locations in 

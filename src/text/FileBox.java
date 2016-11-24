@@ -93,16 +93,6 @@ public class FileBox{
 	}
 	
     /**
-     * <p>Returns the number of mappings in the underlying HashMap, equal to the size of the Set
-     * returned by {@link #filenames() filenames()}, as the one-to-many mappings are achieved via a
-     * one-to-one mapping from key filenames to value {@literal List<IntString>}s.</p>
-     * @return the number of mappings in the underlying HashMap
-     */
-	public int size(){
-		return hashmap.size();
-	}
-	
-    /**
      * <p>Returns the {@literal List<IntString>} mapped in the underlying HashMap for the key
      * {@code o}. Returns {@code null} if there is no mapping for {@code o} in the underlying
      * HashMap.</p>

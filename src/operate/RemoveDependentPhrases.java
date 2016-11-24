@@ -85,19 +85,19 @@ public class RemoveDependentPhrases {
     /**
      * <p>Returns a PhraseBox containing exactly those quotes represented in {@code this.textCorpus}
      * that are independent of all the quotes represented in {@code otherDatabase.textCorpus}.</p>
-     * @param largerDatabase another Database against whose quotes the quotes of this Database are to
-     * be tested for independence.
+     * @param small a FileBox of smaller phrases
+     * @param large a FileBox of larger phrases
      * @return a PhraseBox containing exactly those quotes represented in {@code this.textCorpus}
      * that are independent of all the quotes represented in {@code otherDatabase.textCorpus}.
      */
-    private static PhraseBox phrasesIndependentOf(FileBox small, FileBox largerDatabase){
+    private static PhraseBox phrasesIndependentOf(FileBox small, FileBox large){
         PhraseBox result = new PhraseBox();
         
         for(String filename : small.filenames()){
-            if(largerDatabase.contains(filename)){
+            if(large.contains(filename)){
                 
                 Map<Integer, String> fileForLargePhrases = 
-                        largerDatabase.get(filename).stream()
+                        large.get(filename).stream()
                                 .collect(Collectors.toMap(Quote::index, Quote::text));
                 
                 for(Quote phraseHere : small.get(filename)){
