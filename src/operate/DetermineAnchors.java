@@ -188,13 +188,9 @@ public class DetermineAnchors {
      * in the order given by {@link #bookList bookList}. The default {@literal Comparator<Location>}
      * returned by getPhraseSorter when it's passed an invalid filename.</p>
      */
-	private static final Comparator<Location> PHRASE_SORTER = new Comparator<Location>(){
-		@Override
-		public int compare(Location loc1, Location loc2){
-			int comp = compareFilenames(loc1.getFilename(), loc2.getFilename());
-			return comp != 0 ? comp : loc1.getIndex() - loc2.getIndex();
-		}
-	};
+	private static final Comparator<Location> PHRASE_SORTER = 
+	        Comparator.comparing(Location::getFilename, DetermineAnchors::compareFilenames)
+	                .thenComparing(Location::getIndex, Integer::compare);
 	
     /**
      * <p>Compares the filenames of two {@code Location}s according to the order of the ASOIAF books
