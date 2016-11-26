@@ -47,8 +47,6 @@ public class DetermineAnchors {
      * in the GUI if this class is run from the GUI.
      */
 	public static void determineAnchors(String[] args, Consumer<String> msg) {
-		Comparator<Location> phraseSorter = getPhraseSorter(args.length > 0 ? args[0] : "");
-		
 		msg.accept("Rendering phrase data as filebox and phrasebox.");
 		
 		String allAnchorablePhraseInstances = getDupPhraseData(msg);
@@ -56,6 +54,7 @@ public class DetermineAnchors {
 		
 		msg.accept("Generating phrase-first data structure.");
 		PhraseBox phrasebox = new PhraseBox(new Scanner(allAnchorablePhraseInstances));
+        Comparator<Location> phraseSorter = getPhraseSorter(args.length > 0 ? args[0] : "");
 		for(String phrase : phrasebox.phrases()){
 			phrasebox.get(phrase).sort(phraseSorter);
 		}
