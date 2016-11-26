@@ -94,12 +94,12 @@ public class SetTrail {
                 		file, 
                 		PREV_CHAPTER, 
                 		ID_ATTRIB, 
-                		availableConnected(elements, i, TrailElement.PREV));
+                		availableConnected(elements, i, TrailElement::prev));
                 setAdjacentChapterLinks(
                 		file, 
                 		NEXT_CHAPTER, 
                 		ID_ATTRIB, 
-                		availableConnected(elements, i, TrailElement.NEXT));
+                		availableConnected(elements, i, TrailElement::next));
                 
                 file.print(OPERATION.writeTo().folderName() + File.separator + node.focus());
             }
@@ -138,7 +138,7 @@ public class SetTrail {
     	}
     	throw new NoSuchElementException("No entry for file \""+focus+"\" in the trail file.");
     }
-
+    
     /**
      * <p>Finds all anchor tags with the specified value of the specified attribute in the specified
      * html file and changes the values of the href attributes of those anchors to
@@ -160,10 +160,10 @@ public class SetTrail {
         		(h) -> isAnchorWithMatchID(h, idValue, idAttrib);
         int pointer = -1;
         while( -1 != (pointer=file.adjacentElement(pointer, isAnchorWithMatchID, Direction.NEXT))){
-
+            
             String tag = file.get(pointer).toString();
             tag = tag.substring(1,tag.length()-1);
-
+            
             file.set(pointer, new Tag( anchor(tag, address)));
         }
     }
@@ -175,17 +175,17 @@ public class SetTrail {
     	}
     	return false;
     }
-
+    
     /**
      * <p>The closing quote for an html tag attribute's value.</p>
      */
     public static final String QUOTE = "\"";
-
+    
     /**
      * <p>The title attribute of an html tag and the quote that begins the attribute's value.</p>
      */
     public static final String TITLE_START = "title=\"";
-
+    
     /**
      * <p>Returns a String based on {@code tag}, with the value of the pre-existing href attribute
      * replaced by the parameter {@code address} and with the value of the pre-existing title
@@ -201,7 +201,7 @@ public class SetTrail {
         return replaceValueOfAttribute(
         		replaceValueOfAttribute(tag, HREF_START, address), TITLE_START, title(address));
     }
-
+    
     /**
      * <p>Returns the value for the title attribute of an anchor tag based on the specified address
      * to which the anchor links.</p> <p>Returns {@code address} with its book name, chapter index,
@@ -219,7 +219,7 @@ public class SetTrail {
         		1 + withoutBook.indexOf(IO.FILENAME_COMPONENT_SEPARATOR_CHAR));
         return withoutIndx.replace(IO.FILENAME_COMPONENT_SEPARATOR_CHAR, ' ');
     }
-
+    
     /**
      * <p>Replaces the pre-existing value of the attribute specified by {@code attributeStart} in
      * the specified {@code body} of an html tag with {@code installValue}.</p>
@@ -243,7 +243,7 @@ public class SetTrail {
         String back = body.substring(end);
         return front + installValue + back;
     }
-
+    
     /**
      * <p>Number of columns to anticipate in input file: {@value}</p> <p>The fourth column is unused
      * at this time, but expecting it allows the third column to be cleanly isolated if a fourth
@@ -276,10 +276,6 @@ public class SetTrail {
      */
     public static class TrailElement implements Comparable<TrailElement>{
     	
-    	public static final Function<TrailElement,String> PREV = (te) -> te.prev();
-    	
-    	public static final Function<TrailElement,String> NEXT = (te) -> te.next();
-
         /**
          * <p>The chapter to be linked as the preceding chapter in the trail.</p>
          */
