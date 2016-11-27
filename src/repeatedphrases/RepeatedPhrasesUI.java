@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.border.LineBorder;
@@ -285,7 +286,7 @@ public class RepeatedPhrasesUI extends JFrame {
     private void createFoldersButtonActionPerformed(ActionEvent evt) {
         buttonPress(createFoldersButton, 
         		"Creating needed folders", 
-        		"Done: Put html books in "+Folder.HTML_BOOKS.folderName(), 
+        		() -> "Done: Put html books in " + Folder.HTML_BOOKS.folderName(), 
         		() -> app.ensureFolders(statusLabelMsg));
     }
     
@@ -296,8 +297,8 @@ public class RepeatedPhrasesUI extends JFrame {
     private void chapterizeLinkButtonActionPerformed(ActionEvent evt) {
         String[] trailAndLimit = trailAndLimit();
         buttonPress(chapterizeLinkButton, 
-        		"Doing all the work ("+ trailAndLimit[0] +", "+ trailAndLimit[1] +")", 
-        		"Done: Chapters ready: "+Folder.READABLE.folderName(), 
+        		"Doing all the work (" + trailAndLimit[0] + ", " + trailAndLimit[1] + ")", 
+        		() -> "Done: Chapters ready: " + Folder.READABLE.folderName(), 
         		() -> app.isolateChaptersAndLink(trailAndLimit, statusLabelMsg));
     }
     
@@ -308,8 +309,8 @@ public class RepeatedPhrasesUI extends JFrame {
     private void changeOrderButtonActionPerformed(ActionEvent evt) {
         String[] trailAndLimit = trailAndLimit();
         buttonPress(changeOrderButton, 
-        		"Changing chapter order ("+ trailAndLimit[0] +", "+ trailAndLimit[1] +")", 
-        		"Done: Chapter order changed", 
+        		"Changing chapter order (" + trailAndLimit[0] + ", " + trailAndLimit[1] + ")", 
+        		() -> "Done: Chapter order changed", 
         		() -> app.linksAndTrail(trailAndLimit, statusLabelMsg));
     }
     
@@ -320,8 +321,8 @@ public class RepeatedPhrasesUI extends JFrame {
     private void changeTrailButtonActionPerformed(ActionEvent evt) {
         String trail = trailFileField.getText();
         buttonPress(changeTrailButton, 
-        		"Changing trail sequence ("+ trail +")", 
-        		"Done: Trail changed to "+trail, 
+        		"Changing trail sequence (" + trail + ")", 
+        		() -> "Done: Trail changed to " + trail, 
         		() -> SetTrail.setTrail(new String[]{trail}, statusLabelMsg));
     }
     
@@ -336,7 +337,12 @@ public class RepeatedPhrasesUI extends JFrame {
      * @param endMsg message displayed on the GUI once this process finishes
      * @param action the actions taken as a result of pressing the button {@code newOpState}
      */
-    private void buttonPress(JButton newOpState, String startMsg, String endMsg, Runnable action){
+    private void buttonPress(
+            JButton newOpState, 
+            String startMsg, 
+            Supplier<String> endMsg, 
+            Runnable action){
+        
     	if(opState == null){
     		opState = newOpState;
     		statusLabel.setText(startMsg);
@@ -344,7 +350,7 @@ public class RepeatedPhrasesUI extends JFrame {
     		new ButtonOperation(
     				() -> {
 	    				action.run();
-	    				statusLabel.setText(endMsg);
+	    				statusLabel.setText(endMsg.get());
 	    			})
     				.execute();
     	}
