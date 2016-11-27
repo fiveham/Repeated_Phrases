@@ -7,12 +7,16 @@ import common.IO;
 
 //TODO use references to elements of Operations once they are properly defined
 public class RepeatedPhrasesApp {
+    
+    public RepeatedPhrasesApp(){
+        
+    }
 	
     /**
      * <p>Ensures that the working directory has the folders specified in
      * {@link Folders Folders}.</p>
      */
-	public static void ensureFolders(Consumer<String> msg){
+	public void ensureFolders(Consumer<String> msg){
 		for(Folder f : Folder.values()){
 			File name = f.folder();
 			if( !name.exists() ){
@@ -30,7 +34,7 @@ public class RepeatedPhrasesApp {
      * @param args command-line arguments
      * @param msg
      */
-    public static void isolateChaptersAndLink(String[] args, Consumer<String> msg) {
+    public void isolateChaptersAndLink(String[] args, Consumer<String> msg) {
     	validateArgs(args, msg);
     	
         ensureFolders(msg);
@@ -96,7 +100,7 @@ public class RepeatedPhrasesApp {
         }
     }
     
-    public static void linksAndTrail(String[] args, Consumer<String> msg) {
+    public void linksAndTrail(String[] args, Consumer<String> msg) {
     	
         int limit = validateArgs(args, msg);
         String[] trailArgs = new String[]{ args[0] };

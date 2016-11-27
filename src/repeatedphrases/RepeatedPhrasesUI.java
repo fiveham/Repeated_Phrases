@@ -43,10 +43,13 @@ public class RepeatedPhrasesUI extends JFrame {
      */
 	private static final long serialVersionUID = -5770990784488877775L;
 	
+	private final RepeatedPhrasesApp app;
+	
     /**
      * <p>Creates new form RepeatedPhrasesUI</p>
      */
     public RepeatedPhrasesUI() {
+        this.app = new RepeatedPhrasesApp();
         initComponents();
         this.setTitle("Repeated Phrase Analyser");
     }
@@ -283,7 +286,7 @@ public class RepeatedPhrasesUI extends JFrame {
         buttonPress(createFoldersButton, 
         		"Creating needed folders", 
         		"Done: Put html books in "+Folder.HTML_BOOKS.folderName(), 
-        		() -> RepeatedPhrasesApp.ensureFolders(statusLabelMsg));
+        		() -> app.ensureFolders(statusLabelMsg));
     }
     
     /**
@@ -295,7 +298,7 @@ public class RepeatedPhrasesUI extends JFrame {
         buttonPress(chapterizeLinkButton, 
         		"Doing all the work ("+ trailAndLimit[0] +", "+ trailAndLimit[1] +")", 
         		"Done: Chapters ready: "+Folder.READABLE.folderName(), 
-        		() -> RepeatedPhrasesApp.isolateChaptersAndLink(trailAndLimit, statusLabelMsg));
+        		() -> app.isolateChaptersAndLink(trailAndLimit, statusLabelMsg));
     }
     
     /**
@@ -307,7 +310,7 @@ public class RepeatedPhrasesUI extends JFrame {
         buttonPress(changeOrderButton, 
         		"Changing chapter order ("+ trailAndLimit[0] +", "+ trailAndLimit[1] +")", 
         		"Done: Chapter order changed", 
-        		() -> RepeatedPhrasesApp.linksAndTrail(trailAndLimit, statusLabelMsg));
+        		() -> app.linksAndTrail(trailAndLimit, statusLabelMsg));
     }
     
     /**
