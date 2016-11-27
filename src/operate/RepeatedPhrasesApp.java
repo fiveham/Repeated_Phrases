@@ -35,7 +35,7 @@ public class RepeatedPhrasesApp {
      * @param msg
      */
     public void isolateChaptersAndLink(String[] args, Consumer<String> msg) {
-    	validateArgs(args, msg);
+    	int limit = validateArgs(args, msg);
     	
         ensureFolders(msg);
         
@@ -66,7 +66,7 @@ public class RepeatedPhrasesApp {
         msg.accept("Ignoring unique independent instances");
         Operation.REMOVE_UNIQUE_INDEPENDENTS.operate(null, msg);
         
-        linksAndTrail(args, msg);
+        linksAndTrail(limit, trailArgs(args), msg);
     }
     
     /**
@@ -103,8 +103,16 @@ public class RepeatedPhrasesApp {
     public void linksAndTrail(String[] args, Consumer<String> msg) {
     	
         int limit = validateArgs(args, msg);
-        String[] trailArgs = new String[]{ args[0] };
+        String[] trailArgs = trailArgs(args);//new String[]{ args[0] };
         
+        linksAndTrail(limit, trailArgs, msg);
+    }
+    
+    private String[] trailArgs(String[] args){
+        return new String[]{ args[0] };
+    }
+    
+    private void linksAndTrail(int limit, String[] trailArgs, Consumer<String> msg){
         msg.accept("Determining links to add to phrases");
         Operation.DETERMINE_ANCHORS.operate(trailArgs, msg);
         
