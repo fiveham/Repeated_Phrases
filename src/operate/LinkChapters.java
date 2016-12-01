@@ -20,7 +20,7 @@ import text.Location;
  * corresponding file in {@link #READ_DECORATION READ_DECORATION} is added to the html file and the
  * result is saved to {@link #WRITE_TO WRITE_TO}.</p>
  */
-public class LinkChapters{ //TODO find out where/how this class writes stuff out
+public class LinkChapters{
 	
     /**
      * <p>For each corresponding pair of files from {@code READ_SUBSTANCE} and
@@ -48,10 +48,10 @@ public class LinkChapters{ //TODO find out where/how this class writes stuff out
         
         msg.accept("Got "+fileDataPairs.size()+" FileDataPairs");
         
-        for(FileDataPair pair : fileDataPairs){
+        fileDataPairs.forEach((pair) -> {
             msg.accept("Adding links to "+pair.toString());
-            combineFiles( pair.htmlFile, pair.anchFile, threshold );
-        }
+            combineFiles(pair.htmlFile, pair.anchFile, threshold);
+        });
     }
     
     /**
@@ -89,14 +89,10 @@ public class LinkChapters{ //TODO find out where/how this class writes stuff out
             throw new RuntimeException(IO.ERROR_EXIT_MSG + htmlFileName + " for reading.");
         }
         
-        List<AnchorInfo> anchorInfo = anchorInfo(new File(anchorFile));
-        anchorInfo.sort(null);
-        
-        for(AnchorInfo a : anchorInfo){
-            if(a.phraseSize() >= threshold){
-                htmlFile.addAnchor(a);
-            }
-        }
+        anchorInfo(new File(anchorFile)).stream()
+                .filter((a) -> a.phraseSize() >= threshold)
+                .sorted()
+                .forEach(htmlFile::addAnchor);
         
         htmlFile.print(linkedChapterName(htmlFileName));
     }
@@ -121,7 +117,7 @@ public class LinkChapters{ //TODO find out where/how this class writes stuff out
         String chapter = f.getName();
         chapter = IO.stripExtension(chapter) + IO.TXT_EXT;
         
-        while(s.hasNextLine() && s.hasNext()){
+        while(IO.scannerHasNonEmptyNextLine(s)){
         	//This line is made of a phrase, tab, an int, tab, and the toString() of a Location
             String line = s.nextLine();	
             String[] elements = line.split(IO.LOCATION_DELIM);
@@ -129,10 +125,12 @@ public class LinkChapters{ //TODO find out where/how this class writes stuff out
             String phrase = elements[0];
             int rawIndex = Integer.parseInt(elements[1]);
             
-            String[] location = elements[2].split(Location.ELEMENT_DELIM);
-            Location loc = new Location(Integer.parseInt(location[1]), location[0]);
+            String[] location = elements[2].split(Location.ELEMENT_DELIM); //MAGIC
+            Location loc = new Location(Integer.parseInt(
+                    location[1]), //MAGIC
+                    location[0]); //MAGIC
             
-            result.add( new AnchorInfo(phrase, new Location(rawIndex, chapter), loc) );
+            result.add(new AnchorInfo(phrase, new Location(rawIndex, chapter), loc));
         }
         
         s.close();
