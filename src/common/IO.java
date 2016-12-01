@@ -286,7 +286,7 @@ public class IO {
      * in the file specified by {@code name}, where a single space (" ") is present between any two
      * sequential words.
      */
-    public static String fileAsString(File f){ //TODO move into Chapter 
+    public static String fileAsString(File f){
         StringBuilder sb = new StringBuilder();
         
         Scanner s = null;
