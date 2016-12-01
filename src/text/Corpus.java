@@ -90,7 +90,7 @@ public class Corpus implements Iterator<Quote>{
 		updateBuffer();
 		return currentBuffer.hasNext();
 	}
-
+	
 	@Override
     /**
      * <p>Returns the next {@code size}-word phrase and stores that phrase's Location in
