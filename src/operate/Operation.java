@@ -2,38 +2,42 @@ package operate;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.Scanner;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import common.IO;
 import html.HTMLFile;
+import text.Location;
 
 public enum Operation{
     NEWLINE_P(
             null, 
             Folder.HTML_BOOKS, 
             Folder.HTML_BOOKS_NEWLINE, 
-            (o,args,msg) -> NewlineP.newlineP(msg)), 
+            NewlineP::newlineP), 
     CLEAR_EXCESS_STRUCTURE(
             null, 
             Folder.HTML_BOOKS_NEWLINE, 
             Folder.HTML_BOOKS_UNSTRUCTURED, 
-            (o,args,msg) -> ClearExcessStructure.clearXSStruct(msg)), 
+            ClearExcessStructure::clearXSStruct), 
     CLEAR_FRONT_AND_BACK_MATTER(
             null, 
             Folder.HTML_BOOKS_UNSTRUCTURED, 
             Folder.HTML_BOOKS_CHAPTER_CORE, 
-            (o,args,msg) -> ClearFrontAndBackMatter.clearFrontBack(msg)), 
+            ClearFrontAndBackMatter::clearFrontBack), 
     SWAP_APOSTROPHES(
             null, 
             Folder.HTML_BOOKS_CHAPTER_CORE, 
             Folder.HTML_BOOKS_CORRECT_APOSTROPHES, 
-            (o,args,msg) -> SwapApostrophes.swapApostrophes(msg)), 
+            SwapApostrophes::swapApostrophes), 
     SPLIT_CHAPTERS(
             null, 
             Folder.HTML_BOOKS_CORRECT_APOSTROPHES, 
             Folder.HTML_CHAPTERS, 
-            (o,args,msg) -> SplitChapters.splitChapters(msg)), 
+            SplitChapters::splitChapters), 
     HTML_TO_TEXT(
             null, 
             Folder.HTML_CHAPTERS, 
@@ -43,32 +47,32 @@ public enum Operation{
             null, 
             Folder.CORPUS, 
             Folder.REPEATS, 
-            (o,args,msg) -> FindRepeatedPhrases.findRepPhrases(msg)),
+            FindRepeatedPhrases::findRepPhrases),
     REMOVE_DEPENDENT_PHRASES(
             null, 
             Folder.REPEATS, 
             Folder.INDEPENDENT_INSTANCES, 
-            (o,args,msg) -> RemoveDependentPhrases.rmDepPhrases(msg)), 
+            RemoveDependentPhrases::rmDepPhrases), 
     REMOVE_UNIQUE_INDEPENDENTS(
             null, 
             Folder.INDEPENDENT_INSTANCES, 
             Folder.DUPLICATE_INDEPENDENTS, 
-            (o,args,msg) -> RemoveUniqueIndependents.rmUniqIndeps(msg)),
+            Operation::rmUniqIndeps),
     DETERMINE_ANCHORS(
             null, 
             Folder.DUPLICATE_INDEPENDENTS, 
             Folder.ANCHORS, 
-            (o,args,msg) -> DetermineAnchors.determineAnchors(args, msg)), 
+            DetermineAnchors::determineAnchors), 
     LINK_CHAPTERS(
             Folder.ANCHORS, 
             Folder.HTML_CHAPTERS, 
             Folder.LINKED_CHAPTERS, 
-            (o,args,msg) -> LinkChapters.linkChapters(args, msg)), 
+            LinkChapters::linkChapters), 
     SET_TRAIL(
             null, 
             Folder.LINKED_CHAPTERS, 
             Folder.READABLE, 
-            (o,args,msg) -> SetTrail.setTrail(args, msg));
+            SetTrail::setTrail);
     
     private final Folder readDecoration;
     private final Folder readFrom;
@@ -110,7 +114,9 @@ public enum Operation{
     /**
      * <p>Detects all the .html files in {@code READ_FROM}, reads them as HTMLFiles, and prints them
      * as .txt files in {@code WRITE_TO}.</p>
-     * @param args command-line arguments (unused)
+     * @param op the Operation whose folders will be used
+     * @param args command-line args (not used)
+     * @param msg receives and handles messages output by arbitrary parts of this operation
      */
     private static void htmlToText(Operation op, String[] args, Consumer<String> msg) {
         File[] readUs = op.readFrom().folder().listFiles(IO::isHtml);
@@ -125,6 +131,37 @@ public enum Operation{
             } catch(FileNotFoundException e){
                 throw new RuntimeException(IO.ERROR_EXIT_MSG + f.getName() + " for reading");
             }
+        }
+    }
+    
+    /**
+     * <p>Reads each file from {@code READ_FROM} and prints only the lines of each file that have
+     * more than one Location to a corresponding file in {@code WRITE_TO}.</p>
+     * @param op the Operation whose folders will be used
+     * @param args command-line args (not used)
+     * @param msg receives and handles messages output by arbitrary parts of this operation
+     */
+    public static void rmUniqIndeps(Operation op, String[] args, Consumer<String> msg) {
+
+        for(int i=FindRepeatedPhrases.MIN_PHRASE_SIZE; i<FindRepeatedPhrases.MAX_PHRASE_SIZE; i++){
+            try(Scanner scan = new Scanner(new File(op.readFrom().filename(i)), IO.ENCODING); 
+                        OutputStreamWriter out  = IO.newOutputStreamWriter(
+                                op.writeTo().filename(i), 
+                                scan)){
+                while(scan.hasNextLine() && scan.hasNext()){
+                    String line = scan.nextLine();
+                    if(line.indexOf(
+                            Location.ELEMENT_DELIM) != line.lastIndexOf(Location.ELEMENT_DELIM)){
+                        //then there's multiple Locations on that line
+                        
+                        //the case of -1 == -1 can be ignored because a phrase 
+                        //with no Locations will not have been printed to file.
+                        out.write(line + IO.NEW_LINE);
+                    }
+                }
+                scan.close();
+                out.close();
+            } catch(IOException e){}
         }
     }
     

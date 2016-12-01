@@ -22,8 +22,6 @@ import text.Quote;
  */
 public class RemoveDependentPhrases {
     
-    public static final Operation OPERATION = Operation.REMOVE_DEPENDENT_PHRASES;
-    
     /**
      * <p>The largest number of words in any repeated phrase in the corpus: {@value}</p>
      */
@@ -45,9 +43,11 @@ public class RemoveDependentPhrases {
      * the smaller phrase size specified in the current loop that are independent of the larger
      * quotes in the current group of larger phrases. If a problem occurs while reading a file,
      * System.exit is called, ending the program.</p>
+     * @param op the Operation whose folders will be used
+     * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void rmDepPhrases(Consumer<String> msg) {
+    public static void rmDepPhrases(Operation op, String[] args, Consumer<String> msg) {
         
         FileBox smallerPhrases = null; //inter-loop storage
         
@@ -56,17 +56,17 @@ public class RemoveDependentPhrases {
             try{
                 FileBox largerPhrases = (smallerPhrases != null)
                         ? smallerPhrases
-                        : new FileBox(new File(OPERATION.readFrom().filename(lowSize+1)));
-                smallerPhrases = new FileBox(new File(OPERATION.readFrom().filename(lowSize)));
+                        : new FileBox(new File(op.readFrom().filename(lowSize+1)));
+                smallerPhrases = new FileBox(new File(op.readFrom().filename(lowSize)));
                 
                 phrasesIndependentOf(smallerPhrases, largerPhrases)
-                        .printPhrasesWithLocations(OPERATION.writeTo().filename(lowSize));
+                        .printPhrasesWithLocations(op.writeTo().filename(lowSize));
             } catch(FileNotFoundException e){
             	throw new RuntimeException(
             			IO.ERROR_EXIT_MSG 
-            			+ OPERATION.readFrom().filename(lowSize) 
+            			+ op.readFrom().filename(lowSize) 
             			+ " or " 
-            			+ OPERATION.readFrom().filename(lowSize+1));
+            			+ op.readFrom().filename(lowSize+1));
             }
         }
     }

@@ -24,21 +24,21 @@ import java.util.function.Predicate;
  */
 public class SplitChapters {
 	
-    public static final Operation OPERATION = Operation.SPLIT_CHAPTERS;
-    
     /**
      * <p>Detects all html novel files in {@code READ_FROM}, reads them, and saves individual files
      * for each chapter to {@code WRITE_TO}.</p>
+     * @param op the Operation whose folders will be used
+     * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void splitChapters(Consumer<String> msg) {
-        handleNovels(msg);
-        handleNovellas(msg);
-        handlePQ(msg);
+    public static void splitChapters(Operation op, String[] args, Consumer<String> msg) {
+        handleNovels(op, msg);
+        handleNovellas(op, msg);
+        handlePQ(op, msg);
     }
     
-    private static void handleNovels(Consumer<String> msg){
-        File[] readUs = OPERATION.readFrom().folder().listFiles(IO::isNovel);
+    private static void handleNovels(Operation op, Consumer<String> msg){
+        File[] readUs = op.readFrom().folder().listFiles(IO::isNovel);
         
         for(File f : readUs){
             try{
@@ -60,7 +60,7 @@ public class SplitChapters {
                         
                         chapterName = extractChapterTitle(paragraph);
                         buffer = new ArrayList<>();
-                        out = IO.newOutputStreamWriter(OPERATION.writeTo().folderName() 
+                        out = IO.newOutputStreamWriter(op.writeTo().folderName() 
                                 + File.separator 
                                 + chapterFileName(f.getName(), writeCount, chapterName));
                         writeCount++;
@@ -90,19 +90,19 @@ public class SplitChapters {
 		"DE_2.html",
 		"RP.html");
     
-    private static void handleNovellas(Consumer<String> msg){
+    private static void handleNovellas(Operation op, Consumer<String> msg){
         
-        String[] extantEasyNovellas = OPERATION.readFrom().folder()
+        String[] extantEasyNovellas = op.readFrom().folder()
         		.list((dir,name) -> allEasyNovellaNames.contains(name));
         
         for(String novella : extantEasyNovellas){
             try(OutputStreamWriter out = IO.newOutputStreamWriter(
-            		OPERATION.writeTo().folderName() 
+            		op.writeTo().folderName() 
             		+ File.separator 
             		+ novellaOut(novella))){
                 
                 HTMLFile file = new HTMLFile(
-                		new File(OPERATION.readFrom().folderName() + File.separator + novella));
+                		new File(op.readFrom().folderName() + File.separator + novella));
                 List<HTMLEntity> pseudoBuffer = file.section(0);
                 
                 String title = novellaTitle(novella);
@@ -118,11 +118,11 @@ public class SplitChapters {
         }
     }
     
-    private static void handlePQ(Consumer<String> msg){
+    private static void handlePQ(Operation op, Consumer<String> msg){
         String novella = "PQ.html";
         
         try{
-            HTMLFile pq = new HTMLFile(new File(OPERATION.readFrom().folderName() + File.separator + novella));
+            HTMLFile pq = new HTMLFile(new File(op.readFrom().folderName() + File.separator + novella));
             
             int footnoteIndex = pq.adjacentElement(
             		(i) -> pq.hasLiteralAt("Footnote",i), Direction.PREV, pq.elementCount());
@@ -164,7 +164,7 @@ public class SplitChapters {
                 
                 //save the file
                 OutputStreamWriter out = IO.newOutputStreamWriter(
-                		OPERATION.writeTo().folderName() 
+                		op.writeTo().folderName() 
                 		+ File.separator 
                 		+ file.getName());
                 writeBuffer(file.section(0), out, file.chapterName(), msg);

@@ -18,8 +18,6 @@ import text.Quote;
  */
 public class FindRepeatedPhrases {
 	
-    public static final Operation OPERATION = Operation.FIND_REPEATED_PHRASES;
-	
     /**
      * <p>Number of locations in the corpus at which a unique phrase occurs, by definition.</p>
      */
@@ -44,11 +42,13 @@ public class FindRepeatedPhrases {
      * prints them to files named for the phrase size according to
      * {@code WRITE_TO.filename(size)}.</p> <p>"Phrase size" is the number of words in a given
      * phrase.</p>
+     * @param op the Operation whose folders will be used
+     * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-	public static void findRepPhrases(Consumer<String> msg) {
+	public static void findRepPhrases(Operation op, String[] args, Consumer<String> msg) {
 		
-		File[] readUs = OPERATION.readFrom().folder().listFiles(IO::isTxt);
+		File[] readUs = op.readFrom().folder().listFiles(IO::isTxt);
 		final List<Chapter> chapters = getChapters(readUs);
 		PhraseBox repeatedPhrasesFromPrevLoop = new PhraseBox();
 		repeatedPhrasesFromPrevLoop.add(ZERO_WORD_PHRASE, null);
@@ -67,7 +67,7 @@ public class FindRepeatedPhrases {
 			words.removeUniques(msg);
 			
 			//print repeated phrases and all their locations in the corpus to a file
-			words.printPhrasesWithLocations(OPERATION.writeTo().filename(phraseSize));
+			words.printPhrasesWithLocations(op.writeTo().filename(phraseSize));
 			
 			//Store the current list of repeated phrases for the next loop
 			repeatedPhrasesFromPrevLoop = words;

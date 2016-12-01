@@ -16,8 +16,6 @@ import common.IO;
  */
 public class NewlineP{
 	
-    public static final Operation OPERATION = Operation.NEWLINE_P;
-    
     /**
      * <p>The first characters of an opening paragraph tag.</p>
      */
@@ -28,16 +26,18 @@ public class NewlineP{
      * a Scanner's {@linkplain java.util.Scanner#useDelimiter(String) delimiter}, and accumulates
      * the content returned by that Scanner, including a {@linkplain IO#NEW_LINE newline} and the
      * value of {@code BEGIN_P} before each element after the first one produced by the Scanner.</p>
+     * @param op the Operation whose folders will be used
+     * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void newlineP(Consumer<String> msg){
+    public static void newlineP(Operation op, String[] args, Consumer<String> msg){
         
-        String[] readUs = OPERATION.readFrom().folder().list(IO::isHtml);
+        String[] readUs = op.readFrom().folder().list(IO::isHtml);
         
         for(String filename : readUs){
             
-            String inName = getInOutName(filename, OPERATION.readFrom());
-            String outName = getInOutName(filename, OPERATION.writeTo());
+            String inName = getInOutName(filename, op.readFrom());
+            String outName = getInOutName(filename, op.writeTo());
             
             try(
                     Scanner scan = new Scanner(new File(inName), IO.ENCODING);

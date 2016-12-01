@@ -19,8 +19,6 @@ import text.PhraseProducer;
  */
 public class SwapApostrophes{
     
-    public static final Operation OPERATION = Operation.SWAP_APOSTROPHES;
-    
     /**
      * <p>The apostrophe character ({@value}), used in
      * {@link #ApoPattern apostrophe-replacement context codes} and as the literal apostrophe to
@@ -39,16 +37,18 @@ public class SwapApostrophes{
      * <p>Detects all the ASOIAF novel files in {@link #READ_FROM READ_FROM}, reads them line by
      * line, finds all the right single quotes, and replaces those that fit any
      * {@link #PATTERNS replacement pattern} with an {@link #APOSTROPHE apostrophe}.</p>
+     * @param op the Operation whose folders will be used
+     * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void swapApostrophes(Consumer<String> msg){
-        File[] readUs = OPERATION.readFrom().folder().listFiles(IO::isHtml);
+    public static void swapApostrophes(Operation op, String[] args, Consumer<String> msg){
+        File[] readUs = op.readFrom().folder().listFiles(IO::isHtml);
 
         for(File srcFile : readUs){
             msg.accept("Normalizing apostrophes: "+srcFile.getName());
 
             try(OutputStreamWriter out = IO.newOutputStreamWriter(
-            		OPERATION.writeTo().folderName() 
+            		op.writeTo().folderName() 
             		+ File.separator 
             		+ srcFile.getName())){
             	

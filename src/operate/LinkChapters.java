@@ -22,17 +22,16 @@ import text.Location;
  */
 public class LinkChapters{ //TODO find out where/how this class writes stuff out
 	
-    public static final Operation OPERATION = Operation.LINK_CHAPTERS;
-    
     /**
      * <p>For each corresponding pair of files from {@code READ_SUBSTANCE} and
      * {@code READ_DECORATION}, adds anchors based on the latter to the former and saves the result
      * to {@code WRITE_TO}.</p> <p>Only anchors of phrases with at least a certain number of words
      * specified in the command-line arguments will be applied.</p>
+     * @param op the Operation whose folders will be used
      * @param args command-line args
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void linkChapters(String[] args, Consumer<String> msg) {
+    public static void linkChapters(Operation op, String[] args, Consumer<String> msg) {
         
         int threshold = getPhraseSizeThreshold(args);
         
@@ -41,9 +40,10 @@ public class LinkChapters{ //TODO find out where/how this class writes stuff out
         msg.accept("Getting HTML-anchor-data pairs.");
         
         List<FileDataPair> fileDataPairs = 
-                getFileDataPairs( 
-                        OPERATION.readFrom().folder().list(IO::isHtml), 
-                        OPERATION.readDecoration().folder()
+                getFileDataPairs(
+                        op, 
+                        op.readFrom().folder().list(IO::isHtml), 
+                        op.readDecoration().folder()
                         		.list((dir,name) -> name.endsWith(DetermineAnchors.ANCHOR_EXT)));
         
         msg.accept("Got "+fileDataPairs.size()+" FileDataPairs");
@@ -150,7 +150,11 @@ public class LinkChapters{ //TODO find out where/how this class writes stuff out
      * {@code READ_SUBSTANCE} with the anchor-definition files from the folder
      * {@value Folder#READ_DECORATION}.
      */
-    private static List<FileDataPair> getFileDataPairs(String[] htmlFiles, String[] anchFiles){
+    private static List<FileDataPair> getFileDataPairs(
+            Operation op, 
+            String[] htmlFiles, 
+            String[] anchFiles){
+        
         List<FileDataPair> result = new ArrayList<>();
         
         List<String> hList = new ArrayList<>(Arrays.asList(htmlFiles));
@@ -163,8 +167,8 @@ public class LinkChapters{ //TODO find out where/how this class writes stuff out
         	if(aMatch.isPresent()){
         	    String a = aMatch.get();
         	    result.add( new FileDataPair( 
-        	            OPERATION.readFrom().folderName()  + File.separator + h, 
-        	            OPERATION.readDecoration().folderName() + File.separator + a));
+        	            op.readFrom().folderName()  + File.separator + h, 
+        	            op.readDecoration().folderName() + File.separator + a));
         	    aList.remove(a);
         	}
         }

@@ -23,10 +23,9 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
-
 import operate.Folder;
+import operate.Operation;
 import operate.RepeatedPhrasesApp;
-import operate.SetTrail;
 
 /**
  * <p>The GUI for this application. Creates a small window that displays its current working
@@ -323,7 +322,7 @@ public class RepeatedPhrasesUI extends JFrame {
         buttonPress(changeTrailButton, 
         		"Changing trail sequence (" + trail + ")", 
         		() -> "Done: Trail changed to " + trail, 
-        		() -> SetTrail.setTrail(new String[]{trail}, statusLabelMsg));
+        		() -> Operation.SET_TRAIL.operate(new String[]{trail}, statusLabelMsg));
     }
     
     /**

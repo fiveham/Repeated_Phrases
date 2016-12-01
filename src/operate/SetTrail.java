@@ -31,8 +31,6 @@ import java.util.function.Predicate;
  */
 public class SetTrail {
 	
-    public static final Operation OPERATION = Operation.SET_TRAIL;
-    
     /**
      * <p>The string that names the "id" attribute of an html tag.</p>
      */
@@ -59,10 +57,11 @@ public class SetTrail {
      * <p>Reads the html chapter files from {@code READ_FROM} and writes modified versions of them
      * with links to previous and next chapters added according to the data in the trail file named
      * by the first command-line argument to the folder {@code WRITE_TO}.</p>
+     * @param op the Operation whose folders will be used
      * @param args command-line args
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void setTrail(String[] args, Consumer<String> msg) {
+    public static void setTrail(Operation op, String[] args, Consumer<String> msg) {
         if(args.length < 1){
             throw new IllegalArgumentException("SetTrail: I need a trial file.");
         }
@@ -75,7 +74,7 @@ public class SetTrail {
             msg.accept("Trail-linking "+node.focus());
             
             File fileToModify = 
-                    new File(OPERATION.readFrom().folderName() + File.separator + node.focus());
+                    new File(op.readFrom().folderName() + File.separator + node.focus());
             
             if(fileToModify.exists()){
                 HTMLFile file = null;
@@ -84,7 +83,7 @@ public class SetTrail {
                 } catch( FileNotFoundException e){
                 	throw new RuntimeException(
                 			IO.ERROR_EXIT_MSG 
-                			+ OPERATION.readFrom().folderName() 
+                			+ op.readFrom().folderName() 
                 			+ File.separator 
                 			+ node.focus() 
                 			+ " for reading");
@@ -94,19 +93,20 @@ public class SetTrail {
                 		file, 
                 		PREV_CHAPTER, 
                 		ID_ATTRIB, 
-                		availableConnected(elements, i, TrailElement::prev));
+                		availableConnected(op, elements, i, TrailElement::prev));
                 setAdjacentChapterLinks(
                 		file, 
                 		NEXT_CHAPTER, 
                 		ID_ATTRIB, 
-                		availableConnected(elements, i, TrailElement::next));
+                		availableConnected(op, elements, i, TrailElement::next));
                 
-                file.print(OPERATION.writeTo().folderName() + File.separator + node.focus());
+                file.print(op.writeTo().folderName() + File.separator + node.focus());
             }
         }
     }
     
     private static String availableConnected(
+            Operation op, 
     		List<TrailElement> elements, 
     		int index, 
     		Function<TrailElement,String> connection){
@@ -117,7 +117,7 @@ public class SetTrail {
     	
     	String name = null;
     	while(!new File(
-    	        OPERATION.readFrom().folderName() 
+    	        op.readFrom().folderName() 
     	        + File.separator 
     	        + (name = connection.apply(node)))
     			.exists() 

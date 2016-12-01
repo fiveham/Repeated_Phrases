@@ -30,8 +30,6 @@ import text.PhraseBox;
  */
 public class DetermineAnchors {
 	
-    public static final Operation OPERATION = Operation.DETERMINE_ANCHORS;
-	
     /**
      * <p>Detects all the .txt files in {@code READ_FROM}, reads them all, and organizes the
      * extracted data by chapter name and by phrase. Saves files to {@code WRITE_TO} for each
@@ -40,14 +38,15 @@ public class DetermineAnchors {
      * of the specified phrase on which the link is applied, and the
      * {@link text.Location#toString() string representation} of the Location of the instance of the
      * phrase to which the link leads.</p>
+     * @param op the Operation whose folders will be used
      * @param args command-line arguments. args[0], if present, names a file to be used in
      * sequencing the chapters
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-	public static void determineAnchors(String[] args, Consumer<String> msg) {
+	public static void determineAnchors(Operation op, String[] args, Consumer<String> msg) {
 		msg.accept("Rendering phrase data as filebox and phrasebox.");
 		
-		String allAnchorablePhraseInstances = getDupPhraseData(msg);
+		String allAnchorablePhraseInstances = getDupPhraseData(op, msg);
 		msg.accept("Got anchorable phrase data.");
 		
 		msg.accept("Generating phrase-first data structure.");
@@ -155,14 +154,15 @@ public class DetermineAnchors {
     /**
      * <p>Returns a string containing all the lines of all the files containing non-unique
      * independent repeated phrase information from {@value Folder#READ_FROM.foldername}.</p>
+     * @param op the Operation whose folders will be used
      * @return a string containing all the lines of all the files containing non-unique independent
      * repeated phrase information from {@value Folder#READ_FROM.foldername}
      */
-	private static String getDupPhraseData(Consumer<String> msg){
+	private static String getDupPhraseData(Operation op, Consumer<String> msg){
 		StringBuilder sb = new StringBuilder();
 		
 		IntStream.range(FindRepeatedPhrases.MIN_PHRASE_SIZE, FindRepeatedPhrases.MAX_PHRASE_SIZE)
-		        .mapToObj(OPERATION.readFrom()::filename)
+		        .mapToObj(op.readFrom()::filename)
 		        .forEach((name) -> {
 		            msg.accept("Reading anchorable phrase data from "+IO.stripFolder(name));
 		            try{
@@ -277,6 +277,7 @@ public class DetermineAnchors {
 	
     /**
      * <p>The file extension for anchor-data files: {@value}</p>
+     * @see IO#TXT_EXT
      */
 	public static final String ANCHOR_EXT = ".anchordata" + IO.TXT_EXT;
 }

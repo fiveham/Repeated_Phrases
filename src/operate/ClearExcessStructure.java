@@ -27,22 +27,22 @@ import java.util.function.Consumer;
  */
 public class ClearExcessStructure{
 	
-    public static final Operation OPERATION = Operation.CLEAR_EXCESS_STRUCTURE;
-    
     /**
      * <p>Detects the html files in the directory {@code READ_FROM}, reads each of them, removes
      * divs, blockquotes, imgs, non-breaking spaces, and empty paragraphs from them, and saves them
      * to {@code WRITE_TO}.</p>
+     * @param op the Operation whose folders will be used
+     * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-	public static void clearXSStruct(Consumer<String> msg){
-		File[] readUs = OPERATION.readFrom().folder().listFiles(IO::isHtml);
+	public static void clearXSStruct(Operation op, String[] args, Consumer<String> msg){
+		File[] readUs = op.readFrom().folder().listFiles(IO::isHtml);
 		for(File f : readUs){
 			
 			msg.accept("Removing structure from "+f.getName());
 			
 			try(OutputStreamWriter out = IO.newOutputStreamWriter(
-			        OPERATION.writeTo().folderName() 
+			        op.writeTo().folderName() 
 					+ File.separator 
 					+ f.getName())){
 				HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
