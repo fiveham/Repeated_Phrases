@@ -376,7 +376,7 @@ public class HTMLFile {
 	public boolean hasLiteralAt(String literal, int index){
 		for(int i=0; i<literal.length(); i++){
 			char c = literal.charAt(i);
-			if( !match(c, content.get(index)) ){
+			if(!content.get(index).match(c)){
 				return false;
 			}
 			index = adjacentElement(index, HTMLFile::isCharacter, Direction.NEXT);
@@ -400,25 +400,6 @@ public class HTMLFile {
 			}
 		}
 		return false;
-	}
-	
-    /**
-     * <p>Returns true if the {@code c} matches {@code h}, false otherwise. Generally, this means
-     * that {@code c} is the literal character wrapped by  }h} because  }h} is a
-     * {@link CharLiteral Ch}. A {@code Tag} never matches. A {@code Code} matches {@code c} if it
-     * {@link CharCode#isEquivalent(char) is equivalent} to that {@code char}.</p>
-     * @param c a literal {@code char} to be compared against {@code h}
-     * @param h an HTMLEntity to be compared against {@code c}.
-     * @return true if the {@code c} matches {@code h}, false otherwise
-     */
-	private boolean match(char c, HTMLEntity h){ //TODO move into HTMLEntity classes
-		if( CharLiteral.class.isInstance(h) ){
-			return ((CharLiteral)h).c == c;
-		} else if(CharCode.class.isInstance(h)){
-			return ((CharCode)h).isEquivalent(c);
-		} else{
-			return false;
-		}
 	}
 	
     /**

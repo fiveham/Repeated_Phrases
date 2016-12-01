@@ -110,4 +110,9 @@ public class CharCode extends HTMLEntity {
 	public boolean isVisible(){
 		return !NBSP.equals(code);
 	}
+	
+	@Override
+	public boolean match(char c){
+	    return isEquivalent(c);
+	}
 }

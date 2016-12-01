@@ -64,4 +64,9 @@ public class CharLiteral extends HTMLEntity {
 	public boolean isVisible(){
 		return PhraseProducer.isPhraseChar(c);
 	}
+	
+	@Override
+	public boolean match(char c){
+	    return c == this.c;
+	}
 }

@@ -335,4 +335,9 @@ public class Tag extends HTMLEntity {
 	public boolean isVisible(){
 		return false;
 	}
+	
+	@Override
+	public boolean match(char c){
+	    return false;
+	}
 }
