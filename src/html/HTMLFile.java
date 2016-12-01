@@ -496,36 +496,31 @@ public class HTMLFile {
 		return getWordCache.applyAsInt(wordIndex);
 	}
 	
-	//TODO split into a new class
-    /**
-     * <p>Does the work for {@link #getWord(int) getWord()} and stores its most recent input and
-     * output to more quickly return a result.</p>
-     */
-	private final IntUnaryOperator getWordCache = new IntUnaryOperator(){
-		
+	private class GetWordCache implements IntUnaryOperator{
+        
         /**
          * <p>When this record of how many times this HTMLFile has been modified is different from
          * the {@link HTMLFile#modCount value} stored in this HTMLFile itself, a result is
          * determined under worst-case scenario conditions, with the search beginning from the start
          * of the file.</p>
          */
-		private int modCount = HTMLFile.this.modCount;
-		
+        private int modCount = HTMLFile.this.modCount;
+        
         /**
          * <p>The value that was last returned by {@code applyAsInt(int)}. Initialized to
          * Integer.MAX_VALUE. If {@code applyAsInt(int)} throws an exception, the output is not
          * stored.</p>
          */
-		private int storedWordIndex = Integer.MAX_VALUE;
-		
+        private int storedWordIndex = Integer.MAX_VALUE;
+        
         /**
          * <p>The value sent as input to {@code applyAsInt(int)} for which {@code applyAsInt(int)}
          * last returned a result. Initialized to Integer.MAX_VALUE. If {@code applyAsInt(int)}
          * throws an exception, the input is not stored.</p>
          */
-		private int storedWordStart = Integer.MAX_VALUE;
-		
-		@Override
+        private int storedWordStart = Integer.MAX_VALUE;
+        
+        @Override
         /**
          * <p>If {@code wordIndex} is the same as {@link #storedWordIndex the stored input}, then
          * the stored output is returned. Otherwise, crawls the underlying list from a starting
@@ -546,46 +541,52 @@ public class HTMLFile {
          * @throws IllegalStateException if {@code wordIndex} is too high such that there aren't
          * enough words in this HTMLFile to count that high
          */
-		public int applyAsInt(int wordIndex){
-			if(wordIndex < baseWordIndex){
-				throw new IllegalArgumentException(
-						"wordIndex " + wordIndex 
-						+ " less than baseWordIndex (" + baseWordIndex 
-						+ ") is not allowable.");
-			} else if(this.modCount == HTMLFile.this.modCount && wordIndex==storedWordIndex){
-				return storedWordStart;
-			} else{
-				int previousWordIndex = baseWordIndex-1;
-				int init_i = 0;
-				
-				if(this.modCount == HTMLFile.this.modCount){
-					if(wordIndex > storedWordIndex){
-						init_i = storedWordStart;
-						previousWordIndex = storedWordIndex-1;
-					}
-				} else{
-					this.modCount = HTMLFile.this.modCount;
-				}
-				
-				int i;
-				for(i=init_i; i<content.size(); i++){
-					if( isWordStart(i) ){
-						previousWordIndex++;
-					}
-					if(previousWordIndex==wordIndex){
-						storedWordIndex = wordIndex;
-						return storedWordStart = i;
-					}
-				}
-				
-				String msg = "The specified wordIndex (" + wordIndex 
-						+ ") is too high (max value of " + previousWordIndex 
-						+ ").";
-				
-				throw new IllegalStateException(msg);
-			}
-		}
-	};
+        public int applyAsInt(int wordIndex){
+            if(wordIndex < baseWordIndex){
+                throw new IllegalArgumentException(
+                        "wordIndex " + wordIndex 
+                        + " less than baseWordIndex (" + baseWordIndex 
+                        + ") is not allowable.");
+            } else if(this.modCount == HTMLFile.this.modCount && wordIndex == storedWordIndex){
+                return storedWordStart;
+            } else{
+                int previousWordIndex = baseWordIndex - 1;
+                int init_i = 0;
+                
+                if(this.modCount == HTMLFile.this.modCount){
+                    if(wordIndex > storedWordIndex){
+                        init_i = storedWordStart;
+                        previousWordIndex = storedWordIndex-1;
+                    }
+                } else{
+                    this.modCount = HTMLFile.this.modCount;
+                }
+                
+                int i;
+                for(i=init_i; i<content.size(); i++){
+                    if( isWordStart(i) ){
+                        previousWordIndex++;
+                    }
+                    if(previousWordIndex==wordIndex){
+                        storedWordIndex = wordIndex;
+                        return storedWordStart = i;
+                    }
+                }
+                
+                String msg = "The specified wordIndex (" + wordIndex 
+                        + ") is too high (max value of " + previousWordIndex 
+                        + ").";
+                
+                throw new IllegalStateException(msg);
+            }
+        }
+    }
+	
+    /**
+     * <p>Does the work for {@link #getWord(int) getWord()} and stores its most recent input and
+     * output to more quickly return a result.</p>
+     */
+	private final IntUnaryOperator getWordCache = new GetWordCache();
 	
     /**
      * <p>Returns the position in the underlying list of the last character of the
