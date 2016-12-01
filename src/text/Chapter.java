@@ -44,4 +44,8 @@ public class Chapter {
 	public String getBody(){
 		return body;
 	}
+	
+	public static boolean isChapter(File dir, String name){
+	    return IO.isTxt(dir,name); //TODO add other necessary stipulations
+	}
 }

@@ -36,8 +36,7 @@ public class RepeatedPhrasesApp {
         }
         
         return FindRepeatedPhrases.getChapters(
-                //TODO create a FilenameFilter: Chapter.isChapter(File,String)
-                Operation.FIND_REPEATED_PHRASES.readFrom().folder().listFiles(IO::isTxt));
+                Operation.FIND_REPEATED_PHRASES.readFrom().folder().listFiles(Chapter::isChapter));
     }
     
     private static void genChapters(Consumer<String> msg){
