@@ -48,7 +48,7 @@ public class Tag extends HTMLEntity {
 	
 	public static final int MAX_HEADER_SCALE = 6;
     
-    public static final List<String> HEADERS = IntStream.range(MIN_HEADER_SCALE, MAX_HEADER_SCALE)
+    public static final List<String> HEADERS = IntStream.rangeClosed(MIN_HEADER_SCALE, MAX_HEADER_SCALE)
             .mapToObj((i) -> "h"+i)
             .collect(Collectors.toList());
     
