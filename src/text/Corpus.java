@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+//TODO remove references in comments to 'chapters' and 'chapterpointer'
 /**
  * <p>Iterates over a list of chapters, and extracts as many phrases of the specified
  * {@link #size size} as possible from each chapter.</p>
@@ -14,11 +15,6 @@ public class Corpus implements Iterator<Quote>{
      * <p>The number of words in the phrases this object produces.</p>
      */
 	private final int size;
-	
-    /**
-     * <p>The current position in the list of {@link #chapters chapters}.</p>
-     */
-	//private int chapterPointer;
 	
 	private final Iterator<Chapter> chIter;
 	
