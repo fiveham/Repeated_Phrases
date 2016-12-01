@@ -108,7 +108,7 @@ public class HTMLFile {
 	public HTMLFile(File f) throws FileNotFoundException{
 		this(f.getName(), 
 				new Scanner(
-						readFile( new Scanner(f, IO.ENCODING) )
+						readFile(new Scanner(f, IO.ENCODING))
 						.toString()));
 	}
 	
@@ -126,7 +126,7 @@ public class HTMLFile {
 		
 		filename = name;
 		
-		int p = filename.indexOf( IO.FILENAME_ELEMENT_DELIM );
+		int p = filename.indexOf(IO.FILENAME_ELEMENT_DELIM);
 		extensionlessName = p>=0 ? filename.substring(0,p) : filename;
 		
 		String[] split = extensionlessName
@@ -152,7 +152,7 @@ public class HTMLFile {
 		
 		filename = name;
 		
-		int p = filename.indexOf( IO.FILENAME_ELEMENT_DELIM );
+		int p = filename.indexOf(IO.FILENAME_ELEMENT_DELIM);
 		extensionlessName = p>=0 ? filename.substring(0,p) : filename;
 		
 		String[] split = extensionlessName
@@ -206,16 +206,16 @@ public class HTMLFile {
 		validateWordWithIndex(firstWord(a.phrase()), wordIndex);
 		
 		List<Integer> insertPoints = anchorInsertionPoints(wordIndex);
-		insertPoints.sort( (i1,i2) -> i2.compareTo(i1) ); //sort into reverse order
+		insertPoints.sort((i1,i2) -> i2.compareTo(i1)); //sort into reverse order
 		
-		Tag open = new Tag( a.openingTagText() );
-		Tag close = new Tag( a.closingTagText() );
+		Tag open = new Tag(a.openingTagText());
+		Tag close = new Tag(a.closingTagText());
 		//add close tag on even indices (e.g. rightmost insert position) 
 		//and add open tag on odd indices.
 		Function<Integer,Tag> nextTag = (i) -> i%2==0 ? close : open; 
 		
 		for(int i=0; i<insertPoints.size(); i++){
-			content.add( insertPoints.get(i), nextTag.apply(i) );
+			content.add(insertPoints.get(i), nextTag.apply(i));
 			modCount++;
 		}
 	}
@@ -231,8 +231,8 @@ public class HTMLFile {
      * {@code word}
      */
  	private void validateWordWithIndex(String word, int wordIndex){
-		String wordThere = wordAt( wordIndex);
-		if( !word.equals( wordThere )){
+		String wordThere = wordAt(wordIndex);
+		if(!word.equals(wordThere)){
 			throw new IllegalStateException(
 					"Sought word (" + word 
 					+ ") is not equal to the word (" + wordThere 
@@ -307,8 +307,8 @@ public class HTMLFile {
 		
 		for(int i=bounds[0]; i<bounds[1]; i++){
 			HTMLEntity item = content.get(i);
-			if( CharLiteral.class.isInstance(item) ){
-				result.append( ((CharLiteral)item).c );
+			if(CharLiteral.class.isInstance(item)){
+				result.append(((CharLiteral)item).c);
 			}
 		}
 		
@@ -343,7 +343,7 @@ public class HTMLFile {
 		
 		result.add(lo);
 		for(int i=lo+1; i<hi; i++){
-			if( is(i, 
+			if(is(i, 
 					HTMLFile::isCharacter, 
 					Direction.PREV, 
 					Tag.class::isInstance) //htmlFile.get(i) is a character preceded by a tag.
@@ -425,8 +425,8 @@ public class HTMLFile {
 			Direction dir, 
 			Predicate<HTMLEntity> test2){
 		
-		HTMLEntity item = content.get( position );
-		HTMLEntity prevOrNext = content.get( dir.apply(position) );
+		HTMLEntity item = content.get(position);
+		HTMLEntity prevOrNext = content.get(dir.apply(position));
 		return test1.test(item) && test2.test(prevOrNext);
 	}
 	
@@ -448,7 +448,7 @@ public class HTMLFile {
 		try(OutputStreamWriter out = IO.newOutputStreamWriter(name);){
 			print(out);
 			out.close();
-		} catch( IOException e){
+		} catch(IOException e){
 			throw new RuntimeException(IO.ERROR_EXIT_MSG + name + " for writing.");
 		}
 	}
@@ -564,7 +564,7 @@ public class HTMLFile {
                 
                 int i;
                 for(i=init_i; i<content.size(); i++){
-                    if( isWordStart(i) ){
+                    if(isWordStart(i)){
                         previousWordIndex++;
                     }
                     if(previousWordIndex==wordIndex){
@@ -613,7 +613,7 @@ public class HTMLFile {
 	private int getLastCharacter(int wordIndex, int startPoint){
 		for(int i=startPoint; i<content.size(); i++){
 			
-			if( !isWord( adjacentElement(i, Direction.NEXT, HTMLFile::isCharacter) ) ){
+			if(!isWord(adjacentElement(i, Direction.NEXT, HTMLFile::isCharacter))){
 				return i;
 			}
 		}
@@ -643,7 +643,7 @@ public class HTMLFile {
      */
 	public boolean isWordStart(int index){
 		return isWord(content.get(index)) 
-				&& !isWord( adjacentElement(index, Direction.PREV, HTMLFile::isCharacter) );
+				&& !isWord(adjacentElement(index, Direction.PREV, HTMLFile::isCharacter));
 	}
 	
     /**
@@ -656,7 +656,7 @@ public class HTMLFile {
      */
 	public boolean isWordEnd(int index){
 		return isWord(content.get(index))
-				&& !isWord( adjacentElement(index, Direction.NEXT, HTMLFile::isCharacter) );
+				&& !isWord(adjacentElement(index, Direction.NEXT, HTMLFile::isCharacter));
 	}
 	
     /**
@@ -667,7 +667,7 @@ public class HTMLFile {
      */
 	private static boolean isWord(HTMLEntity elem){
 		return CharLiteral.class.isInstance(elem) 
-				&& PhraseProducer.isPhraseChar( ((CharLiteral)elem).c );
+				&& PhraseProducer.isPhraseChar(((CharLiteral)elem).c);
 	}
 	
     /**
@@ -773,7 +773,7 @@ public class HTMLFile {
      * @param start the inclusive lower bound of the region of the underlying list to be removed
      */
 	public void removeAll(int start){
-		content = new ArrayList<>( content.subList(0,start) );
+		content = new ArrayList<>(content.subList(0,start));
 		modCount++;
 	}
 	
@@ -785,7 +785,7 @@ public class HTMLFile {
      */
  	public void removeAll(Predicate<HTMLEntity> test){
  		for(int i=content.size()-1; i>=0; i--){
- 			if( test.test(content.get(i)) ){
+ 			if(test.test(content.get(i))){
  				content.remove(i);
  				modCount++;
  			}
@@ -822,7 +822,9 @@ public class HTMLFile {
 		for(int depth=1; depth > 0 && 0<= tagIndex && tagIndex < content.size()-1;){
 			tagIndex = adjacentElement(tagIndex, isTagOfType, Direction.NEXT);
 			Tag someTag = (Tag) content.get(tagIndex);
-			depth += ( someTag.isOpening() ? 1 : -1 );
+			depth += (someTag.isOpening() 
+			        ? 1 
+			        : -1);
 		}
 		return tagIndex;
 	}
@@ -877,7 +879,7 @@ public class HTMLFile {
         		
         		//if the current character c isn't an opening angle bracket or ampersand.
         		if(counterpart==null){
-        			result.add( new CharLiteral(c) );
+        			result.add(new CharLiteral(c));
         		} else{
         			//c is a special character and we need to take special action.
         			//store the counterpart of c so we know what to look for later to end this 
@@ -893,7 +895,7 @@ public class HTMLFile {
     			HTMLEntity newEntry = mate==Tag.END 
     					? new Tag(tagCode.toString()) 
     					: new CharCode(tagCode.toString());
-    			result.add( newEntry);
+    			result.add(newEntry);
     			mate = null;
     			tagCode = null;
     		} else{ //we're still in the middle of the current special HTML structure
