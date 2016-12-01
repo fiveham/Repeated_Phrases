@@ -1,15 +1,13 @@
 package operate;
 
+import common.IO;
+import html.HTMLFile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Scanner;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-
-import common.IO;
-import html.HTMLFile;
 import text.Location;
 
 public enum Operation{
@@ -66,7 +64,7 @@ public enum Operation{
     LINK_CHAPTERS(
             Folder.ANCHORS, 
             Folder.HTML_CHAPTERS, 
-            Folder.LINKED_CHAPTERS, 
+            Folder.LINKED_CHAPTERS, //FIXME linkChapters actually outputs into HTML_CHAPTERS
             LinkChapters::linkChapters), 
     SET_TRAIL(
             null, 
@@ -107,10 +105,6 @@ public enum Operation{
         operation.accept(this, args, msg);
     }
     
-    public BiConsumer<String[], ? super Consumer<String>> operation(){
-        return this::operate;
-    }
-    
     /**
      * <p>Detects all the .html files in {@code READ_FROM}, reads them as HTMLFiles, and prints them
      * as .txt files in {@code WRITE_TO}.</p>
@@ -142,13 +136,17 @@ public enum Operation{
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
     public static void rmUniqIndeps(Operation op, String[] args, Consumer<String> msg) {
-
-        for(int i=FindRepeatedPhrases.MIN_PHRASE_SIZE; i<FindRepeatedPhrases.MAX_PHRASE_SIZE; i++){
-            try(Scanner scan = new Scanner(new File(op.readFrom().filename(i)), IO.ENCODING); 
-                        OutputStreamWriter out  = IO.newOutputStreamWriter(
+        
+        for(int i = FindRepeatedPhrases.MIN_PHRASE_SIZE; 
+                i < FindRepeatedPhrases.MAX_PHRASE_SIZE; 
+                i++){
+            try(
+                    Scanner scan = new Scanner(new File(op.readFrom().filename(i)), IO.ENCODING); 
+                    OutputStreamWriter out  = IO.newOutputStreamWriter(
                                 op.writeTo().filename(i), 
                                 scan)){
-                while(scan.hasNextLine() && scan.hasNext()){
+                
+                while(IO.scannerHasNonEmptyNextLine(scan)){
                     String line = scan.nextLine();
                     if(line.indexOf(
                             Location.ELEMENT_DELIM) != line.lastIndexOf(Location.ELEMENT_DELIM)){
@@ -161,7 +159,8 @@ public enum Operation{
                 }
                 scan.close();
                 out.close();
-            } catch(IOException e){}
+            } catch(IOException e){
+            }
         }
     }
     
