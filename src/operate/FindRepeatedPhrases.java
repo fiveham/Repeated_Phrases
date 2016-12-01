@@ -2,9 +2,7 @@ package operate;
 
 import common.IO;
 import java.util.List;
-import java.util.Scanner;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -88,50 +86,8 @@ public class FindRepeatedPhrases {
      */
 	public static List<Chapter> getChapters(File[] filesToRead){
 	    return Stream.of(filesToRead)
-	            //TODO create Chapter constructor that accepts File and does this work itself
-        	    .map((f) -> new Chapter(f.getName(), fileAsString(f))) 
+        	    .map(Chapter::new ) 
         	    .collect(Collectors.toList());
-	}
-	
-    /**
-     * <p>Regex delimiter for Scanner for isolating words from plaintext corpus files, permitting
-     * only alphanumerics, hyphen, apostrophe ({@code \u2023}), e-acute, and e-circumflex as the
-     * characters of words.</p> <p>Numerics are allowed as word characters because there are a few
-     * dates given in ASOIAF as simple numbers, such as "111 AC".</p> <p>e-acute and e-circumflex
-     * are allowed because starting in ASOS, "melee" is spelled using those characters and it
-     * appears many times.</p>
-     */
-	public static final String NON_WORD_CHARACTERS = "[^a-zA-Z0-9-'éê]+";
-	
-    /**
-     * <p>Returns a {@code String} containing all the words (as defined by
-     * {@code NON_WORD_CHARACTERS}) in the file specified by {@code name}, where a single space ("
-     * ") is present between any two sequential words.</p>
-     * @param name the name of the file to be read
-     * @return a {@code String} containing all the words (as defined by {@code NON_WORD_CHARACTERS})
-     * in the file specified by {@code name}, where a single space (" ") is present between any two
-     * sequential words.
-     */
-	public static String fileAsString(File f){ //TODO move into Chapter 
-		StringBuilder sb = new StringBuilder();
-		
-		Scanner s = null;
-		try{
-			s = new Scanner( f, IO.ENCODING);
-		} catch(FileNotFoundException e){
-			throw new RuntimeException(IO.ERROR_EXIT_MSG + f.getName() + " for reading.");
-		}
-		s.useDelimiter(NON_WORD_CHARACTERS);
-		
-		if(s.hasNext()){
-			sb.append(s.next());
-		}
-		while(s.hasNext()){
-			sb.append(PhraseProducer.WORD_SEPARATOR).append(s.next());
-		}
-		s.close();
-		
-		return sb.toString();
 	}
 	
     /**

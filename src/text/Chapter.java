@@ -1,5 +1,9 @@
 package text;
 
+import java.io.File;
+
+import common.IO;
+
 /**
  * <p>Represents a chapter of a book in the body of text being analysed. Pairs the name of the file
  * from which content is read with the contents of the file as supplied to the constructor.</p>
@@ -17,13 +21,12 @@ public class Chapter {
 	private final String body;
 	
     /**
-     * <p>Constructs a Chapter with the specified filename and file contents.</p>
-     * @param filename the name of the file for this chapter
-     * @param body the content of this chapter's file
+     * <p>Constructs a Chapter based on the specified file.</p>
+     * @param file the file for this Chapter
      */
-	public Chapter(String filename, String body) {
-		this.filename = filename;
-		this.body = body;
+	public Chapter(File file){
+	    this.filename = file.getName();
+	    this.body = IO.fileAsString(file);
 	}
 	
     /**
