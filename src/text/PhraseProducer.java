@@ -114,8 +114,8 @@ public class PhraseProducer implements Iterator<Quote>{
      * @return true if the character at index {@code i} in
      */
 	private boolean hasPhraseCharAt(int i){
-		return 0<=i 
-				&& i<chapter.getBody().length() 
+		return 0 <= i 
+				&& i < chapter.getBody().length() 
 				&& isPhraseChar(chapter.getBody().charAt(i));
 	}
 	
@@ -128,13 +128,13 @@ public class PhraseProducer implements Iterator<Quote>{
      */
 	public static boolean isPhraseChar(Character c){
 		return c != null 
-				&& (('a'<=c && c<='z') 
-						|| ('A'<=c && c<='Z') 
-						|| c=='\'' 
-						|| c=='-' 
-						|| ('0'<=c && c<='9') 
-						|| c==E_ACUTE 
-						|| c==E_CIRCUMFLEX);
+				&& (('a' <= c && c <= 'z') 
+						|| ('A' <= c && c <= 'Z') 
+						|| c == '\'' 
+						|| c == '-' 
+						|| ('0' <= c && c <= '9') 
+						|| c == E_ACUTE 
+						|| c == E_CIRCUMFLEX);
 	}
 	
 	public static final char E_ACUTE = '\u00E9';
