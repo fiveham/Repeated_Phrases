@@ -1,17 +1,52 @@
 package operate;
 
-import java.io.File;
-import java.util.function.Consumer;
-
 import common.IO;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.function.Consumer;
+import text.Chapter;
 
-//TODO use references to elements of Operations once they are properly defined
+//TODO use the following structure:
+//stage 1: ensure folders exist
+//stage 2: ensure chapters are available
+//stage 3: construct a graph linking chapters with quotes with locations and phrases ... etc.
+//stage 4: reduce the graph, leaving each Location with a single Quote
+//stage 5: link quotes and add links to html files
 public class RepeatedPhrasesApp {
+    
+    private Collection<Chapter> chapters = null;
     
     public RepeatedPhrasesApp(){
         
     }
+    
+    public Collection<Chapter> getChapters(boolean generate){
+        if(chapters == null){
+            chapters = readChapters(generate);
+        }
+        return chapters;
+    }
 	
+    private static Collection<Chapter> readChapters(boolean generate){
+        if(generate){
+            genChapters(System.out::println); //TODO allow user to specify msg
+        }
+        
+        return FindRepeatedPhrases.getChapters(
+                //TODO create a FilenameFilter: Chapter.isChapter(File,String)
+                Operation.FIND_REPEATED_PHRASES.readFrom().folder().listFiles(IO::isTxt));
+    }
+    
+    private static void genChapters(Consumer<String> msg){
+        List<Operation> ops = new ArrayList<>(
+                EnumSet.range(Operation.NEWLINE_P, Operation.HTML_TO_TEXT));
+        ops.sort(null);
+        ops.forEach((op) -> op.operate(null, msg));
+    }
+    
     /**
      * <p>Ensures that the working directory has the folders specified in
      * {@link Folders Folders}.</p>
@@ -79,22 +114,22 @@ public class RepeatedPhrasesApp {
      * int, {@value #IO.PHRASE_SIZE_FOR_ANCHOR} otherwise.
      */
     static int validateArgs(String[] args, Consumer<String> msg){
-        if( args.length < 1 ){
+        if(args.length < 1){ //MAGIC
         	throw new IllegalArgumentException("I need a trail file.");
         }
         
-        String trail = args[0];
+        String trail = args[0]; //MAGIC
         
         if(!(new File(trail)).exists()){
             throw new IllegalArgumentException("I can't find that trail-file: \""+trail+"\".");
         }
         
-        if(args.length < 2){
+        if(args.length < 2){ //MAGIC
             return IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR;
         }
         
         try{
-            return Integer.parseInt(args[1]);
+            return Integer.parseInt(args[1]); //MAGIC
         } catch(NumberFormatException e){
             return IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR;
         }
