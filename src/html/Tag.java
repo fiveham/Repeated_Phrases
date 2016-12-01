@@ -171,11 +171,10 @@ public class Tag extends HTMLEntity {
 		return Tag.class.isInstance(h) && SUP.equals(((Tag)h).getType());
 	}
 	
-	//TODO move former-predicate methods to appropriate places in class file
 	public static boolean isHeader(HTMLEntity h){
 		return Tag.class.isInstance(h) && HEADERS.contains(((Tag)h).getType());
 	}
-			
+		
 	public static boolean isHeaderOpen(HTMLEntity h){
 		return isHeader(h) && isOpen(h);
 	}
@@ -183,7 +182,7 @@ public class Tag extends HTMLEntity {
     /**
      * <p>The literal text of this tag inside its opening and closing angle brackets.</p>
      */
-	public final String content;
+	private final String content;
 	
     /**
      * <p>Constructs a Tag with the specified {@code content}.</p>
@@ -200,9 +199,9 @@ public class Tag extends HTMLEntity {
      * @return the value of the specified attribute if this tag has that attribute, null otherwise.
      */
 	public String valueOfAttribute(String attribute){
-		String seek = attribute+"=\"";
+		String seek = attribute + "=\"";
 		int index = content.indexOf(seek);
-		if( index >= 0 ){
+		if(index >= 0){
 			int end = content.indexOf("\"", index+seek.length());
 			return content.substring(index+seek.length(), end);
 		} else{
@@ -228,8 +227,8 @@ public class Tag extends HTMLEntity {
 					? this.content.substring(1,this.content.length()) 
 					: this.content;
 			
-			for(int i=0; i<meaningfulContent.length(); i++){
-				if( !isTagNameChar(meaningfulContent.charAt(i)) ){
+			for(int i = 0; i < meaningfulContent.length(); i++){
+				if(!isTagNameChar(meaningfulContent.charAt(i))){
 					return type = meaningfulContent.substring(0,i);
 				}
 			}
@@ -255,7 +254,7 @@ public class Tag extends HTMLEntity {
      * @return true if {@code c} is a valid char for the type of a Tag, false otherwise.
      */
 	public boolean isTagNameChar(char c){
-		return 'a'<=c && c<='z';
+		return 'a' <= c && c <= 'z';
 	}
 	
 	@Override
@@ -266,7 +265,7 @@ public class Tag extends HTMLEntity {
      * angle bracket followed by {@code content} followed by a closing angle bracket.
      */
 	public String toString(){
-		return START+content+END;
+		return START + content + END;
 	}
 	
     /**
@@ -303,12 +302,13 @@ public class Tag extends HTMLEntity {
 	}
 	
     /**
-     * <p>ReturnsC A tag is clopen if it does not start with a {@code CLOSE} and ends with a
+     * <p>Returns true if this Tag is a clopen tag, false otherwise.</p>
+     * <p>A tag is clopen if it does not start with a {@code CLOSE} and ends with a 
      * {@code CLOSE}.</p>
-     * @return true if this Tag is an opening tag, false otherwise.
+     * @return true if this Tag is a clopen tag, false otherwise.
      */
 	public boolean isClopen(){
-		return content.charAt(content.length()-1) == CLOSE;
+		return content.charAt(content.length() - 1) == CLOSE;
 	}
 	
 	@Override
