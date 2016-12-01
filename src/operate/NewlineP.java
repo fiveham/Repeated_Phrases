@@ -28,9 +28,9 @@ public class NewlineP{
      * a Scanner's {@linkplain java.util.Scanner#useDelimiter(String) delimiter}, and accumulates
      * the content returned by that Scanner, including a {@linkplain IO#NEW_LINE newline} and the
      * value of {@code BEGIN_P} before each element after the first one produced by the Scanner.</p>
-     * @param msg
+     * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void newlineP(String[] args, Consumer<String> msg){
+    public static void newlineP(Consumer<String> msg){
         
         String[] readUs = OPERATION.readFrom().folder().list(IO::isHtml);
         

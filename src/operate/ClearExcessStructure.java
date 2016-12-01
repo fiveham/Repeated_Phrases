@@ -33,9 +33,9 @@ public class ClearExcessStructure{
      * <p>Detects the html files in the directory {@code READ_FROM}, reads each of them, removes
      * divs, blockquotes, imgs, non-breaking spaces, and empty paragraphs from them, and saves them
      * to {@code WRITE_TO}.</p>
-     * @param args command-line arguments
+     * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-	public static void clearXSStruct(String[] args, Consumer<String> msg){
+	public static void clearXSStruct(Consumer<String> msg){
 		File[] readUs = OPERATION.readFrom().folder().listFiles(IO::isHtml);
 		for(File f : readUs){
 			

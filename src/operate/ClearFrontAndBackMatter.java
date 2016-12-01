@@ -27,9 +27,9 @@ public class ClearFrontAndBackMatter {
      * the paragraph containing the title of the Prologue and removes all content prior to that
      * paragraph, and detects the paragraph containing the title of the first chapter-like feature
      * after the last actual chapter and removes everything at or after that.<p/>
-     * @param args command-line arguments
+     * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-	public static void clearFrontBack(String[] args, Consumer<String> msg) {
+	public static void clearFrontBack(Consumer<String> msg) {
         handleNovels(msg);
         handleNovellas(msg);
 	}

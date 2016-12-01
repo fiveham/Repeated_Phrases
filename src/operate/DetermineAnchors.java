@@ -41,10 +41,8 @@ public class DetermineAnchors {
      * {@link text.Location#toString() string representation} of the Location of the instance of the
      * phrase to which the link leads.</p>
      * @param args command-line arguments. args[0], if present, names a file to be used in
-     * sequencing the
-     * @param msg a messenger that {@link System#out prints} to the console when this class is run
-     * from the command-line or {@link javax.swing.JLabel#setText(String) sets the text of a label}
-     * in the GUI if this class is run from the GUI.
+     * sequencing the chapters
+     * @param msg receives and handles messages output by arbitrary parts of this operation
      */
 	public static void determineAnchors(String[] args, Consumer<String> msg) {
 		msg.accept("Rendering phrase data as filebox and phrasebox.");
@@ -54,7 +52,9 @@ public class DetermineAnchors {
 		
 		msg.accept("Generating phrase-first data structure.");
 		PhraseBox phrasebox = new PhraseBox(new Scanner(allAnchorablePhraseInstances));
-        Comparator<Location> phraseSorter = getPhraseSorter(args.length > 0 ? args[0] : "");
+        Comparator<Location> phraseSorter = getPhraseSorter(args.length > 0 
+                ? args[0] //MAGIC
+                : "");
 		for(String phrase : phrasebox.phrases()){
 			phrasebox.get(phrase).sort(phraseSorter);
 		}

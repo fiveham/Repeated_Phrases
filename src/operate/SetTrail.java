@@ -59,8 +59,8 @@ public class SetTrail {
      * <p>Reads the html chapter files from {@code READ_FROM} and writes modified versions of them
      * with links to previous and next chapters added according to the data in the trail file named
      * by the first command-line argument to the folder {@code WRITE_TO}.</p>
-     * @param args command-line arguments
-     * @param msg
+     * @param args command-line args
+     * @param msg receives and handles messages output by arbitrary parts of this operation
      */
     public static void setTrail(String[] args, Consumer<String> msg) {
         if(args.length < 1){

@@ -45,9 +45,9 @@ public class RemoveDependentPhrases {
      * the smaller phrase size specified in the current loop that are independent of the larger
      * quotes in the current group of larger phrases. If a problem occurs while reading a file,
      * System.exit is called, ending the program.</p>
-     * @param args command-line arguments (unused)
+     * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void rmDepPhrases(String[] args, Consumer<String> msg) {
+    public static void rmDepPhrases(Consumer<String> msg) {
         
         FileBox smallerPhrases = null; //inter-loop storage
         

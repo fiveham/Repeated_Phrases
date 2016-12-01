@@ -8,33 +8,32 @@ import java.util.function.Consumer;
 import common.IO;
 import html.HTMLFile;
 
-//TODO update the javadoc for the methods that have had an args param added
 public enum Operation{
     NEWLINE_P(
             null, 
             Folder.HTML_BOOKS, 
             Folder.HTML_BOOKS_NEWLINE, 
-            (o,args,msg) -> NewlineP.newlineP(args, msg)), 
+            (o,args,msg) -> NewlineP.newlineP(msg)), 
     CLEAR_EXCESS_STRUCTURE(
             null, 
             Folder.HTML_BOOKS_NEWLINE, 
             Folder.HTML_BOOKS_UNSTRUCTURED, 
-            (o,args,msg) -> ClearExcessStructure.clearXSStruct(args, msg)), 
+            (o,args,msg) -> ClearExcessStructure.clearXSStruct(msg)), 
     CLEAR_FRONT_AND_BACK_MATTER(
             null, 
             Folder.HTML_BOOKS_UNSTRUCTURED, 
             Folder.HTML_BOOKS_CHAPTER_CORE, 
-            (o,args,msg) -> ClearFrontAndBackMatter.clearFrontBack(args, msg)), 
+            (o,args,msg) -> ClearFrontAndBackMatter.clearFrontBack(msg)), 
     SWAP_APOSTROPHES(
             null, 
             Folder.HTML_BOOKS_CHAPTER_CORE, 
             Folder.HTML_BOOKS_CORRECT_APOSTROPHES, 
-            (o,args,msg) -> SwapApostrophes.swapApostrophes(args, msg)), 
+            (o,args,msg) -> SwapApostrophes.swapApostrophes(msg)), 
     SPLIT_CHAPTERS(
             null, 
             Folder.HTML_BOOKS_CORRECT_APOSTROPHES, 
             Folder.HTML_CHAPTERS, 
-            (o,args,msg) -> SplitChapters.splitChapters(args, msg)), 
+            (o,args,msg) -> SplitChapters.splitChapters(msg)), 
     HTML_TO_TEXT(
             null, 
             Folder.HTML_CHAPTERS, 
@@ -44,17 +43,17 @@ public enum Operation{
             null, 
             Folder.CORPUS, 
             Folder.REPEATS, 
-            (o,args,msg) -> FindRepeatedPhrases.findRepPhrases(args, msg)),
+            (o,args,msg) -> FindRepeatedPhrases.findRepPhrases(msg)),
     REMOVE_DEPENDENT_PHRASES(
             null, 
             Folder.REPEATS, 
             Folder.INDEPENDENT_INSTANCES, 
-            (o,args,msg) -> RemoveDependentPhrases.rmDepPhrases(args, msg)), 
+            (o,args,msg) -> RemoveDependentPhrases.rmDepPhrases(msg)), 
     REMOVE_UNIQUE_INDEPENDENTS(
             null, 
             Folder.INDEPENDENT_INSTANCES, 
             Folder.DUPLICATE_INDEPENDENTS, 
-            (o,args,msg) -> RemoveUniqueIndependents.rmUniqIndeps(args, msg)),
+            (o,args,msg) -> RemoveUniqueIndependents.rmUniqIndeps(msg)),
     DETERMINE_ANCHORS(
             null, 
             Folder.DUPLICATE_INDEPENDENTS, 

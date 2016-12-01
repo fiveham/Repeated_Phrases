@@ -29,9 +29,9 @@ public class SplitChapters {
     /**
      * <p>Detects all html novel files in {@code READ_FROM}, reads them, and saves individual files
      * for each chapter to {@code WRITE_TO}.</p>
-     * @param args command-line arguments (unused)
+     * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void splitChapters(String[] args, Consumer<String> msg) {
+    public static void splitChapters(Consumer<String> msg) {
         handleNovels(msg);
         handleNovellas(msg);
         handlePQ(msg);

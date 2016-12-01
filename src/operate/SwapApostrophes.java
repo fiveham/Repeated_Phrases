@@ -39,9 +39,9 @@ public class SwapApostrophes{
      * <p>Detects all the ASOIAF novel files in {@link #READ_FROM READ_FROM}, reads them line by
      * line, finds all the right single quotes, and replaces those that fit any
      * {@link #PATTERNS replacement pattern} with an {@link #APOSTROPHE apostrophe}.</p>
-     * @param args command-line arguments (unused)
+     * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void swapApostrophes(String[] args, Consumer<String> msg){
+    public static void swapApostrophes(Consumer<String> msg){
         File[] readUs = OPERATION.readFrom().folder().listFiles(IO::isHtml);
 
         for(File srcFile : readUs){

@@ -44,9 +44,9 @@ public class FindRepeatedPhrases {
      * prints them to files named for the phrase size according to
      * {@code WRITE_TO.filename(size)}.</p> <p>"Phrase size" is the number of words in a given
      * phrase.</p>
-     * @param args Command-line arguments (unused)
+     * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-	public static void findRepPhrases(String[] args, Consumer<String> msg) {
+	public static void findRepPhrases(Consumer<String> msg) {
 		
 		File[] readUs = OPERATION.readFrom().folder().listFiles(IO::isTxt);
 		final List<Chapter> chapters = getChapters(readUs);

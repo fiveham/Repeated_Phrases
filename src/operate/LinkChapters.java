@@ -29,7 +29,8 @@ public class LinkChapters{ //TODO find out where/how this class writes stuff out
      * {@code READ_DECORATION}, adds anchors based on the latter to the former and saves the result
      * to {@code WRITE_TO}.</p> <p>Only anchors of phrases with at least a certain number of words
      * specified in the command-line arguments will be applied.</p>
-     * @param args command-line arguments
+     * @param args command-line args
+     * @param msg receives and handles messages output by arbitrary parts of this operation
      */
     public static void linkChapters(String[] args, Consumer<String> msg) {
         
