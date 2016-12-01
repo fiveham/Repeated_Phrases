@@ -1,7 +1,8 @@
 package html;
 
 import java.util.List;
-import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * <p>Represents an HTML tag.</p>
@@ -43,6 +44,14 @@ public class Tag extends HTMLEntity {
      */
 	public static final String SUP = "sup";
 	
+	public static final int MIN_HEADER_SCALE = 1;
+	
+	public static final int MAX_HEADER_SCALE = 6;
+    
+    public static final List<String> HEADERS = IntStream.range(MIN_HEADER_SCALE, MAX_HEADER_SCALE)
+            .mapToObj((i) -> "h"+i)
+            .collect(Collectors.toList());
+    
     /**
      * Evaluates to true if the HTMLEntity tested is an opening Tag.
      */
@@ -160,17 +169,6 @@ public class Tag extends HTMLEntity {
      */
 	public static boolean isSup(HTMLEntity h){
 		return Tag.class.isInstance(h) && SUP.equals(((Tag)h).getType());
-	}
-	
-	public static final List<String> HEADERS;
-	static{
-		HEADERS = new ArrayList<String>();
-		HEADERS.add("h1");
-		HEADERS.add("h2");
-		HEADERS.add("h3");
-		HEADERS.add("h4");
-		HEADERS.add("h5");
-		HEADERS.add("h6");
 	}
 	
 	//TODO move former-predicate methods to appropriate places in class file
