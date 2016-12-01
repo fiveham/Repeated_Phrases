@@ -3,7 +3,6 @@ package text;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * <p>Iterates over a list of chapters, and extracts as many phrases of the specified
@@ -17,14 +16,11 @@ public class Corpus implements Iterator<Quote>{
 	private final int size;
 	
     /**
-     * <p>The chapters to be processed.</p>
-     */
-	private final List<Chapter> chapters;
-	
-    /**
      * <p>The current position in the list of {@link #chapters chapters}.</p>
      */
-	private int chapterPointer;
+	//private int chapterPointer;
+	
+	private final Iterator<Chapter> chIter;
 	
     /**
      * <p>A {@link text.PhraseProducer PhraseProducer} that extract phrases from the
@@ -40,8 +36,7 @@ public class Corpus implements Iterator<Quote>{
      */
 	public Corpus(int size, Collection<Chapter> chapters) {
 		this.size = size;
-		this.chapters = new ArrayList<>(chapters);
-		chapterPointer = INIT_POINTER_VALUE;
+		chIter = new ArrayList<>(chapters).iterator();
 		updateBuffer();	//Sets the first buffer
 	}
 	
@@ -61,9 +56,9 @@ public class Corpus implements Iterator<Quote>{
 		//while currentBuffer doesn't have a next element 
 		//(or is null) update the buffer to a new buffer 
 		//of the next file 
-		while(!bufferHasNext() && chapterPointer < chapters.size()-1){ //TODO use Iterator<Chapter>
+		while(!bufferHasNext() && chIter.hasNext()){
 			try{
-				currentBuffer = new PhraseProducer(size, chapters.get(++chapterPointer));
+				currentBuffer = new PhraseProducer(size, chIter.next());
 			} catch(IllegalArgumentException f){
 				//specified chapter didn't have enough tokens in it
 				//cycle around to the next chapter
