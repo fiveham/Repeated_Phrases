@@ -45,6 +45,20 @@ public class Chapter {
 		return body;
 	}
 	
+	@Override
+	public boolean equals(Object o){
+	    if(o instanceof Chapter){
+	        Chapter c = (Chapter) o;
+	        return c.body.equals(this.body) && c.filename.equals(this.filename);
+	    }
+	    return false;
+	}
+	
+	@Override
+	public int hashCode(){
+	    return filename.hashCode() * 31 + body.hashCode();
+	}
+	
 	public static boolean isChapter(File dir, String name){
 	    return IO.isTxt(dir,name); //TODO add other necessary stipulations
 	}
