@@ -1,12 +1,13 @@
 package operate;
 
 import common.IO;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import text.Chapter;
 import text.Corpus;
 import text.PhraseBox;
@@ -50,14 +51,14 @@ public class FindRepeatedPhrases {
 	public static void findRepPhrases(String[] args, Consumer<String> msg) {
 		
 		File[] readUs = OPERATION.readFrom().folder().listFiles(IO::isTxt);
-		final List<Chapter> chapters = getChapters( readUs );
+		final List<Chapter> chapters = getChapters(readUs);
 		PhraseBox repeatedPhrasesFromPrevLoop = new PhraseBox();
 		repeatedPhrasesFromPrevLoop.add(ZERO_WORD_PHRASE, null);
 		
 		//find phrases of ever greater size and record them in files
 		for(int phraseSize = MIN_PHRASE_SIZE; 
 				phraseSize <= MAX_PHRASE_SIZE; 
-				phraseSize++ ){
+				phraseSize++){
 			
 			msg.accept("Begin process for phrase size "+phraseSize);
 			
@@ -86,13 +87,10 @@ public class FindRepeatedPhrases {
      * {@link #fileAsString() fileAsString()}
      */
 	public static List<Chapter> getChapters(File[] filesToRead){
-		List<Chapter> retList = new ArrayList<>( filesToRead.length );
-		
-		for(File chapterFile : filesToRead){
-			retList.add( new Chapter(chapterFile.getName(), fileAsString(chapterFile) ) );
-		}
-		
-		return retList;
+	    return Stream.of(filesToRead)
+	            //TODO create Chapter constructor that accepts File and does this work itself
+        	    .map((f) -> new Chapter(f.getName(), fileAsString(f))) 
+        	    .collect(Collectors.toList());
 	}
 	
     /**
@@ -114,7 +112,7 @@ public class FindRepeatedPhrases {
      * in the file specified by {@code name}, where a single space (" ") is present between any two
      * sequential words.
      */
-	public static String fileAsString(File f){
+	public static String fileAsString(File f){ //TODO move into Chapter 
 		StringBuilder sb = new StringBuilder();
 		
 		Scanner s = null;
