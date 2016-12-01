@@ -19,9 +19,9 @@ public enum Folder {
     HTML_BOOKS_CORRECT_APOSTROPHES("04_html_books_correct_apostrophes", null),
     HTML_CHAPTERS				  ("05_html_chapters",                  null),
     CORPUS						  ("06_corpus",                         null),
-    REPEATS						  ("07_repeats",                        "repeats" ),
-    INDEPENDENT_INSTANCES		  ("08_independent_instances",          "independent_instances" ),
-    DUPLICATE_INDEPENDENTS		  ("09_duplicate_independents",         "duplicate_independents" ),
+    REPEATS						  ("07_repeats",                        "repeats"),
+    INDEPENDENT_INSTANCES		  ("08_independent_instances",          "independent_instances"),
+    DUPLICATE_INDEPENDENTS		  ("09_duplicate_independents",         "duplicate_independents"),
     ANCHORS						  ("10_anchors",                        null),
     LINKED_CHAPTERS				  ("11_linked_chapters",                null),
     READABLE					  ("12_readable",                       null);
