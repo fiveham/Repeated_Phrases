@@ -15,10 +15,7 @@ public class Location implements Comparable<Location>{
      */
 	public static final String ELEMENT_DELIM = ";";
 	
-    /**
-     * <p>The file in which is located the quote to which this Location pertains.</p>
-     */
-	private String filename;
+	private Chapter chapter;
 	
     /**
      * <p>The word-index of first word of this Location's pertinent phrase in the file.</p> <p>A
@@ -32,9 +29,9 @@ public class Location implements Comparable<Location>{
      * @param index the index for this Location
      * @param file the filename for this Location
      */
-	public Location(int index, String file) {
+	public Location(int index, Chapter chapter) {
 		this.index = index;
-		this.filename = file;
+		this.chapter = chapter;
 	}
 	
 	//Getters
@@ -51,7 +48,7 @@ public class Location implements Comparable<Location>{
      * @return the filename portion of this Location
      */
 	public String getFilename(){
-		return filename;
+		return chapter.getName();
 	}
 	
 	//Information
@@ -65,9 +62,8 @@ public class Location implements Comparable<Location>{
 	public boolean equals(Object o){
 		if(o instanceof Location ){
 			Location loc = (Location) o;
-			return index==loc.index && loc.filename.equals(filename);
-		}
-		else{
+			return index == loc.index && loc.getFilename().equals(getFilename());
+		} else{
 			return false;
 		}
 	}
@@ -84,10 +80,10 @@ public class Location implements Comparable<Location>{
 			return 0;
 		}
 		
-		int fileComp = filename.compareTo(loc.filename);
+		int fileComp = getFilename().compareTo(loc.getFilename());
 		return fileComp != 0 
-			? fileComp 
-			: Integer.compare(index, loc.index);
+    			? fileComp 
+    			: Integer.compare(index, loc.index);
 	}
 	
 	//Tools
@@ -99,7 +95,7 @@ public class Location implements Comparable<Location>{
      * {@link #ELEMENT_DELIM ELEMENT_DELIM}, and {@link #index index}
      */
 	public String toString(){
-		return filename + ELEMENT_DELIM + index;
+		return getFilename() + ELEMENT_DELIM + index;
 	}
 	
     /**
@@ -107,7 +103,7 @@ public class Location implements Comparable<Location>{
      * mentioned in {@code filename}.</p>
      */
 	public String shortString(){
-		return IO.stripFolderExtension(filename) + ELEMENT_DELIM + index;
+		return IO.stripFolderExtension(getFilename()) + ELEMENT_DELIM + index;
 	}
 	
     /**
@@ -118,11 +114,11 @@ public class Location implements Comparable<Location>{
      * @throws IllegalArgumentException if the two Locations have different filenames
      */
 	public int minus(Location thatLocation){
-		if(filename.equals(thatLocation.filename)){
+		if(getFilename().equals(thatLocation.getFilename())){
 			return this.index - thatLocation.index;
 		} else{
 			throw new IllegalArgumentException(
-					"mismatching filenames: " + filename + " and " + thatLocation.filename);
+					"mismatching filenames: " + getFilename() + " and " + thatLocation.getFilename());
 		}
 	}
 	
@@ -134,6 +130,6 @@ public class Location implements Comparable<Location>{
      * to the sum of {@code index} and {@code indx}
      */
 	public Location add(int indx){
-		return new Location(index+indx, filename);
+		return new Location(index+indx, chapter);
 	}
 }

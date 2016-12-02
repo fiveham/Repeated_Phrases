@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import text.Chapter;
 import text.FileBox;
 import text.Location;
 import text.PhraseBox;
@@ -82,14 +84,14 @@ public class RemoveDependentPhrases {
     private static PhraseBox phrasesIndependentOf(FileBox small, FileBox large){
         PhraseBox result = new PhraseBox();
         
-        for(String filename : small.filenames()){
-            if(large.contains(filename)){
+        for(Chapter chapter : small.chapters()){
+            if(large.contains(chapter.getName())){
                 
                 Map<Integer, String> fileForLargePhrases = 
-                        large.get(filename).stream()
+                        large.get(chapter).stream()
                                 .collect(Collectors.toMap(Quote::index, Quote::text));
                 
-                for(Quote phraseHere : small.get(filename)){
+                for(Quote phraseHere : small.get(chapter)){
                     
                     String largerPhraseWithIndexOneLess = phraseHere.index() == 0 
                             ? null 
@@ -113,7 +115,7 @@ public class RemoveDependentPhrases {
                     if(lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase == null 
                             && sameIndexLargerPhraseExistsAndStartsWithSmallPhrase == null){
                         
-                        result.add(phraseHere.text(), new Location(phraseHere.index(), filename));
+                        result.add(phraseHere.text(), new Location(phraseHere.index(), chapter));
                     } else if(!((lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase  == null 
                             ||    lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase  == true) 
                             ||   (sameIndexLargerPhraseExistsAndStartsWithSmallPhrase == null 
@@ -124,17 +126,17 @@ public class RemoveDependentPhrases {
                                 + shortForm(phraseHere.text()) 
                                 + "\" is contained at the proper location in zero or one of the " 
                                 + "two larger phrases that could contain it: " 
-                                + "Phrase at some index in file " + filename + ": \"" 
+                                + "Phrase at some index in file " + chapter + ": \"" 
                                 + shortForm(largerPhraseWithIndexOneLess) 
                                 + "\" --- " 
-                                + "Phrase at some index in file " + filename + ": \"" 
+                                + "Phrase at some index in file " + chapter + ": \"" 
                                 + shortForm(largerPhraseWithSameIndex) 
                                 + "\".");
                     }
                 }
             } else{
-                small.get(filename).forEach(
-                        (lp) -> result.add(lp.text(), new Location(lp.index(), filename)));
+                small.get(chapter).forEach(
+                        (lp) -> result.add(lp.text(), new Location(lp.index(), chapter)));
             }
         }
         

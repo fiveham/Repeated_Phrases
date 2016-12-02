@@ -159,7 +159,7 @@ public class PhraseProducer implements Iterator<Quote>{
 	public Quote next(){
 		outputCount++;
 		Quote out = new Quote(
-				new Location(outputCount, chapter.getName()), //XXX may be off by 1
+				new Location(outputCount, chapter), //XXX may be off by 1
 				chapter.getBody().substring(phraseStart, phraseEnd));
 		phraseStart = nextPhraseStart();
 		phraseEnd = nextPhraseEnd();

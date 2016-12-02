@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
+
+import text.Chapter;
 import text.FileBox;
 import text.Location;
 import text.Quote;
@@ -66,7 +68,7 @@ public class DetermineAnchors {
 		//that chapter at which those quotes appear, and 
 		//references to the quotes to which those phrase-
 		//instances need to link.
-		for(String chapter : filebox.filenames()){
+		for(Chapter chapter : filebox.chapters()){
 			msg.accept("Creating anchor data for "+chapter);
 			
 			String name = anchorOutName(chapter);
@@ -234,8 +236,7 @@ public class DetermineAnchors {
      * by {@code index} and {@code chapter} respectively, or the first Location in the list if the
      * indicated Location is the last in the list.</p>
      * @param locs a list of Location from which a Location is returned
-     * @param chapter the {@link Location#getFilename() filename} of the chapter whose successor is
-     * to be returned
+     * @param chapter the chapter whose successor is to be returned
      * @param index the {@link Location#getIndex() index} of the chapter whose successor is to be
      * returned
      * @return the Location in the list {@code locs} after the Location whose
@@ -245,7 +246,7 @@ public class DetermineAnchors {
      * @throws IllegalArgumentException if the Location specified by {@code chapter} and
      * {@code index} is not present in the specified list.
      */
-	public static Location locAfter(List<Location> locs, String chapter, int index){
+	public static Location locAfter(List<Location> locs, Chapter chapter, int index){
 		Location here = new Location(index, chapter);
 		int i = locs.indexOf(here);
 		if(i<0){
@@ -269,9 +270,9 @@ public class DetermineAnchors {
      * pertains.
      * @see operate.Folder#ANCHORS
      */
-	public static String anchorOutName(String chapter){
+	public static String anchorOutName(Chapter chapter){
 		return Folder.ANCHORS.folderName() + File.separator 
-				+ IO.stripFolderExtension(chapter) 
+				+ IO.stripFolderExtension(chapter.getName()) 
 				+ ANCHOR_EXT;
 	}
 	

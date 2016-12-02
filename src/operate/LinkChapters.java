@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 import common.IO;
 import html.AnchorInfo;
 import html.HTMLFile;
+import text.Chapter;
 import text.Location;
 
 /**
@@ -114,8 +115,7 @@ public class LinkChapters{
             throw new RuntimeException(IO.ERROR_EXIT_MSG + f.getName() + " for reading.");
         }
         
-        String chapter = f.getName();
-        chapter = IO.stripExtension(chapter) + IO.TXT_EXT;
+        String chapterName = IO.stripExtension(f.getName()) + IO.TXT_EXT;
         
         while(IO.scannerHasNonEmptyNextLine(s)){
         	//This line is made of a phrase, tab, an int, tab, and the toString() of a Location
@@ -126,9 +126,10 @@ public class LinkChapters{
             int rawIndex = Integer.parseInt(elements[1]);
             
             String[] location = elements[2].split(Location.ELEMENT_DELIM); //MAGIC
-            Location loc = new Location(Integer.parseInt(
-                    location[1]), //MAGIC
-                    location[0]); //MAGIC
+            String filename = location[0]; //MAGIC
+            int index = Integer.parseInt(location[1]); //MAGIC
+            Chapter chapter = null; //FIXME get pertinent chapter for filename
+            Location loc = new Location(index, chapter);
             
             result.add(new AnchorInfo(phrase, new Location(rawIndex, chapter), loc));
         }

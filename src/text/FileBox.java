@@ -21,7 +21,7 @@ public class FileBox{
     /**
      * <p>The wrapped HashMap.</p>
      */
-	private final Map<String, List<Quote>> hashmap;
+	private final Map<Chapter, List<Quote>> hashmap;
 	
     /**
      * <p>Constructs a FileBox with no contents.</p>
@@ -58,10 +58,12 @@ public class FileBox{
 				
 				for(int i=1; i<phraseAndLocations.length; i++){
 					String[] fileAndIndex = phraseAndLocations[i].split(Location.ELEMENT_DELIM);
-					String filename = fileAndIndex[0];
+					String filename = fileAndIndex[0]; //MAGIC
+					int index = Integer.parseInt(fileAndIndex[1]); //MAGIC
+					Chapter chapter = null; //FIXME get pertinent chapter for filename
 					
 					Quote quote = new Quote(
-							new Location(Integer.parseInt(fileAndIndex[1]), filename), 
+							new Location(index, chapter), 
 							phrase);
 					
 					if(hashmap.containsKey(filename)){
@@ -69,7 +71,7 @@ public class FileBox{
 					} else{
 						List<Quote> l = new ArrayList<>();
 						l.add(quote);
-						hashmap.put(filename, l);
+						hashmap.put(chapter, l);
 					}
 				}
 			}
@@ -88,7 +90,7 @@ public class FileBox{
      * @return a {@link java.util.Set Set} of the names of the files of the chapters for which this
      * FileBox has phrase- instance data
      */
-	public Set<String> filenames(){
+	public Set<Chapter> chapters(){
 		return hashmap.keySet();
 	}
 	
