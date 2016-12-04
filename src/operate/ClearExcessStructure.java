@@ -13,6 +13,7 @@ import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * <p>Removes certain sequences from the HTML files specified as command-line arguments.</p>
@@ -37,33 +38,34 @@ public class ClearExcessStructure{
      */
 	public static void clearXSStruct(Operation op, String[] args, Consumer<String> msg){
 		File[] readUs = op.readFrom().folder().listFiles(IO::isHtml);
-		for(File f : readUs){
-			
-			msg.accept("Removing structure from "+f.getName());
-			
-			try(OutputStreamWriter out = IO.newOutputStreamWriter(
-			        op.writeTo().folderName() 
-					+ File.separator 
-					+ f.getName())){
-				HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
-				
-				file.removeAll(Tag::isDiv);
-				file.removeAll(Tag::isBlockquote);
-				file.removeAll(Tag::isImg);
-				file.removeAll(CharCode.IS_NBSP);
-				removeEmptyP(file);
-				
-				file.print(out);
-				out.close();
-				
-			} catch(FileNotFoundException e){
-				msg.accept("FileNotFoundException occured for file "+f.getName());
-			} catch(UnsupportedEncodingException e){
-				msg.accept("UnsupportedEncodingException occured for file "+f.getName());
-			} catch(IOException e){
-				msg.accept("IOException occured for file "+f.getName());
-			}
-		}
+		Stream.of(readUs)
+		        .parallel()
+		        .forEach((f) -> {
+		            msg.accept("Removing structure from " + f.getName());
+		            
+		            try(OutputStreamWriter out = IO.newOutputStreamWriter(
+		                    op.writeTo().folderName() 
+		                    + File.separator 
+		                    + f.getName())){
+		                HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
+		                
+		                file.removeAll(Tag::isDiv);
+		                file.removeAll(Tag::isBlockquote);
+		                file.removeAll(Tag::isImg);
+		                file.removeAll(CharCode.IS_NBSP);
+		                removeEmptyP(file);
+		                
+		                file.print(out);
+		                out.close();
+		                
+		            } catch(FileNotFoundException e){
+		                msg.accept("FileNotFoundException occured for file " + f.getName());
+		            } catch(UnsupportedEncodingException e){
+		                msg.accept("UnsupportedEncodingException occured for file " + f.getName());
+		            } catch(IOException e){
+		                msg.accept("IOException occured for file " + f.getName());
+		            }
+		        });
 	}
 	
     /**
