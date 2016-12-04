@@ -5,7 +5,6 @@ import java.util.List;
 import java.io.File;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import text.Chapter;
 import text.Corpus;
@@ -59,7 +58,7 @@ public class FindRepeatedPhrases {
 				phraseSize <= MAX_PHRASE_SIZE; 
 				phraseSize++){
 			
-			msg.accept("Begin process for phrase size "+phraseSize);
+			msg.accept("Begin process for phrase size " + phraseSize);
 			
 			//Create an index of phrases from the corpus and their locations
 			repeatedPhrasesFromPrevLoop = scanCorpus(
