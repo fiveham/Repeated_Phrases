@@ -14,6 +14,10 @@ import java.util.Set;
 import java.util.function.Consumer;
 import operate.FindRepeatedPhrases;
 
+//TODO Use Phrase objects as keys
+//TODO create Phrase class which stores lastIndexOf space (" ") data to expedite reducedPhrase time 
+//to calculate in FindRepeatedPhrases. Get the data from the Chapter.body indexOf data for spaces 
+//while creating the Chapter's phrases in the first place
 /**
  * <p>Wraps a Map linking string phrases with data structures that store multiple Locations.</p>
  * <p>{@link #printPhrasesWithLocations()} and {@link #removeUniques()} are the non-wrapper methods
