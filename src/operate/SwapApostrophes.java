@@ -7,10 +7,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 import text.PhraseProducer;
 
 /**
@@ -25,7 +28,7 @@ public class SwapApostrophes{
      * install in place of right single quote apostrophes that match a replacement pattern.</p>
      */
     public static final char APOSTROPHE = '\'';
-
+    
     /**
      * <p>The right single quote conventionally used as an apostrophe as well as as a closing quote
      * in nested quotes. To be replaced in the corpus at certain places with an
@@ -43,37 +46,36 @@ public class SwapApostrophes{
      */
     public static void swapApostrophes(Operation op, String[] args, Consumer<String> msg){
         File[] readUs = op.readFrom().folder().listFiles(IO::isHtml);
-
-        for(File srcFile : readUs){
-            msg.accept("Normalizing apostrophes: "+srcFile.getName());
-
-            try(OutputStreamWriter out = IO.newOutputStreamWriter(
-            		op.writeTo().folderName() 
-            		+ File.separator 
-            		+ srcFile.getName())){
-            	
-                List<String> lines = IO.fileContentsAsList(
-                		srcFile, 
-                		Scanner::nextLine, 
-                		Scanner::hasNextLine);
-
-                for( String l : lines ){
-                    StringBuilder line = new StringBuilder( l );
-                    List<Integer> singleQuoteIndices = singleQuoteIndices(line);
-                    for(Integer index : singleQuoteIndices){
-
-                        if( shouldChangeCharacter(line, index)){
-                            line.setCharAt(index, APOSTROPHE);
+        
+        Stream.of(readUs)
+                .parallel()
+                .forEach((srcFile) -> {
+                    msg.accept("Normalizing apostrophes: "+srcFile.getName());
+                    
+                    try(OutputStreamWriter out = IO.newOutputStreamWriter(
+                            op.writeTo().folderName() 
+                            + File.separator 
+                            + srcFile.getName())){
+                        
+                        List<String> lines = IO.fileContentsAsList(
+                                srcFile, 
+                                Scanner::nextLine, 
+                                Scanner::hasNextLine);
+                        
+                        for(String l : lines){
+                            StringBuilder line = new StringBuilder(l);
+                            singleQuoteIndices(line)
+                                    .filter((index) -> shouldChangeCharacter(line, index))
+                                    .forEach((index) -> line.setCharAt(index, APOSTROPHE));
+                            out.write(line.toString() + IO.NEW_LINE);
                         }
+                        
+                        out.close();
+                    } catch(IOException e){
                     }
-                    out.write(line.toString() + IO.NEW_LINE);
-                }
-                
-                out.close();
-            } catch(IOException e){}
-        }
+                });
     }
-
+    
     /**
      * <p>Returns true if the text at and around {@code index} in {@code line} matches any of the
      * {@link #ApoPattern patterns} in {@link #PATTERNS PATTERNS}, false otherwise.</p>
@@ -83,147 +85,147 @@ public class SwapApostrophes{
      * {@link #ApoPattern patterns} in {@link #PATTERNS PATTERNS}, false otherwise
      */
     private static boolean shouldChangeCharacter(StringBuilder line, int index){
-        for( ApoPattern pattern : PATTERNS){
+        for(ApoPattern pattern : PATTERNS){
             if(pattern.match(line, index)){
                 return true;
             }
         }
         return false;
     }
-
+    
     /**
      * <p>All the conditions according to which a right single quote may be changed to an
      * apostrophe.</p> </p>The vast majority of these are plural possessives quoted from the text of
      * ASOIAF.</p>
      */
-    private static final List<ApoPattern> PATTERNS = Arrays.asList(
-        new ApoPattern("@'@"),	//everything from I'm to shouldn't've
-        new ApoPattern("&o'&"),	//of
-        new ApoPattern("&t'&"),	//to
+    private static final List<ApoPattern> PATTERNS = Stream.of(
+        "@'@",	//everything from I'm to shouldn't've
+        "&o'&",	//of
+        "&t'&",	//to
         
-        //'Yaya, the 'bite, 'bout, 'cat (shadowcat), 'tis, 'twas, 'twixt, 'prentice, 'em, 'ud
-        new ApoPattern("&'*"),	
-        new ApoPattern("&ha'&"),	//have, usually "gods have mercy"
-        new ApoPattern("&f'&"),	//for
-        new ApoPattern("&a'&"),	//at, as pronounced by some wildlings
-        new ApoPattern("traitors' graves"),
-        new ApoPattern("traitors' collars"),
-        new ApoPattern("traitors' heads"),	//"@@@ traitors' @@@@@"
-        new ApoPattern("wolves' work"),
-        new ApoPattern("wolves' heads"),	//"@@@ wolves' @@@@"
-        new ApoPattern("rams' heads"),
-        new ApoPattern("lions' heads"),
-        new ApoPattern("lions' paws"),
-        new ApoPattern("lions' tails"),
-        new ApoPattern("&the alchemists' guild&"),
-        new ApoPattern("&the alchemists' vile&"),	//"&the alchemists' @@@@"
-        new ApoPattern("pyromancers' piss"),
-        new ApoPattern("@@@s' own&"),
-        new ApoPattern("&the @o@s' @@@@"),
-        new ApoPattern("&the boys' grandfather&"),
-        new ApoPattern("&the boys' heads&"),	//"@@@ the boys' @@@@@"
-        new ApoPattern("&merchants' sons&"),
-        new ApoPattern("&merchants' stalls&"),	//"&merchants' s@@@"
-        new ApoPattern("merchants' carts"),
-        new ApoPattern("the merchants' row"),
-        new ApoPattern("the merchants' wagons"),
-        new ApoPattern("&their mothers' @@@"),	//"&their mothers' @@@@@"
-        new ApoPattern("whores' skirts"),
-        new ApoPattern("&your brothers' @@@@"),
-        new ApoPattern("&my brothers' ghosts&"),	//"@@ brothers' @@@@"
-        new ApoPattern("&his brothers' @@@@"),
-        new ApoPattern("@@@@s' nest"),
-        new ApoPattern("horses' hooves"),
-        new ApoPattern("be keepin'&"),
-        new ApoPattern("is carryin'&"),	//"@@@@in' @@@"
-        new ApoPattern("@@@@ts' respite"),
-        new ApoPattern("years' remission"),
-        new ApoPattern("pigs' feet"),
-        new ApoPattern("calves' brains"),
-        new ApoPattern("servants' steps"),
-        new ApoPattern("servants' time"),
-        new ApoPattern("servants' corridor"),
-        new ApoPattern("lords' bannermen"),
-        new ApoPattern("lords' entrance"),
-        new ApoPattern("were lords' sons"),
-        new ApoPattern("&goats' milk&"),
-        new ApoPattern("&slavers' filth&"),
-        new ApoPattern("&slavers' pyramid&"),
-        new ApoPattern("&sailors' stor@"),
-        new ApoPattern("&sailors' temple&"),
-        new ApoPattern("&smugglers' cove&"),
-        new ApoPattern("&smugglers' stars&"),
-        new ApoPattern("&days' ride&"),
-        new ApoPattern("&days' food&"),
-        new ApoPattern("&days' sail&"),
-        new ApoPattern("&hours' ride&"),
-        new ApoPattern("&hours' sail&"),
-        new ApoPattern("bakers'&"),
-        new ApoPattern("@ mummers' @@@@"),
-        new ApoPattern("with strangers' eyes"),
-        new ApoPattern("their masters' business"),
-        new ApoPattern("the challengers' paddock"),
-        new ApoPattern("stoops' wife"),
-        new ApoPattern("&or one of the lannisters'&"),
-        new ApoPattern("ladies' cats"),
-        new ApoPattern("bastards' names"),
-        new ApoPattern("the rangers' search"),
-        new ApoPattern("their fathers' rusted swords"),
-        new ApoPattern("his cousins' eyes"),
-        new ApoPattern("maidens' judgments"),
-        new ApoPattern("a singers' tourney"),
-        new ApoPattern("a fools' joust"),
-        new ApoPattern("an outlaws' lair"),
-        new ApoPattern("rats' eyes"),
-        new ApoPattern("the wildlings' herds"),
-        new ApoPattern("dead friends' father"),
-        new ApoPattern("archers' stakes"),
-        new ApoPattern("heralds' trumpets"),
-        new ApoPattern("the climbers' rope"),
-        new ApoPattern("griffins' men"),
-        new ApoPattern("their masters' possessions"),
-        new ApoPattern("their neighbors' daughters"),
-        new ApoPattern("the musicians' gallery"),
-        new ApoPattern("kings' blood"),
-        new ApoPattern("the besiegers' cheers"),
-        new ApoPattern("gulls' eggs"),
-        new ApoPattern("the defenders' shouts"),
-        new ApoPattern("priests' song"),
-        new ApoPattern("heroes' tombs"),
-        new ApoPattern("some robbers' den"),
-        new ApoPattern("babies' bottoms"),
-        new ApoPattern("sound of lovers' footsteps"),
-        new ApoPattern("the murderers' secret"),
-        new ApoPattern("abandoned crofters' village"),
-        new ApoPattern("the diggers' eyes were"),
-        new ApoPattern("my sons' things"),
-        new ApoPattern("&lil'&"));
-
+        //'Yaya, the 'bite, 'bout, 'cat (shadowcat, 'tis, 'twas, 'twixt, 'prentice, 'em, 'ud
+        "&'*",	
+        "&ha'&",	//have, usually "gods have mercy"
+        "&f'&",	//for
+        "&a'&",	//at, as pronounced by some wildlings
+        "traitors' graves",
+        "traitors' collars",
+        "traitors' heads",	//"@@@ traitors' @@@@@"
+        "wolves' work",
+        "wolves' heads",	//"@@@ wolves' @@@@"
+        "rams' heads",
+        "lions' heads",
+        "lions' paws",
+        "lions' tails",
+        "&the alchemists' guild&",
+        "&the alchemists' vile&",	//"&the alchemists' @@@@"
+        "pyromancers' piss",
+        "@@@s' own&",
+        "&the @o@s' @@@@",
+        "&the boys' grandfather&",
+        "&the boys' heads&",	//"@@@ the boys' @@@@@"
+        "&merchants' sons&",
+        "&merchants' stalls&",	//"&merchants' s@@@"
+        "merchants' carts",
+        "the merchants' row",
+        "the merchants' wagons",
+        "&their mothers' @@@",	//"&their mothers' @@@@@"
+        "whores' skirts",
+        "&your brothers' @@@@",
+        "&my brothers' ghosts&",	//"@@ brothers' @@@@"
+        "&his brothers' @@@@",
+        "@@@@s' nest",
+        "horses' hooves",
+        "be keepin'&",
+        "is carryin'&",	//"@@@@in' @@@"
+        "@@@@ts' respite",
+        "years' remission",
+        "pigs' feet",
+        "calves' brains",
+        "servants' steps",
+        "servants' time",
+        "servants' corridor",
+        "lords' bannermen",
+        "lords' entrance",
+        "were lords' sons",
+        "&goats' milk&",
+        "&slavers' filth&",
+        "&slavers' pyramid&",
+        "&sailors' stor@",
+        "&sailors' temple&",
+        "&smugglers' cove&",
+        "&smugglers' stars&",
+        "&days' ride&",
+        "&days' food&",
+        "&days' sail&",
+        "&hours' ride&",
+        "&hours' sail&",
+        "bakers'&",
+        "@ mummers' @@@@",
+        "with strangers' eyes",
+        "their masters' business",
+        "the challengers' paddock",
+        "stoops' wife",
+        "&or one of the lannisters'&",
+        "ladies' cats",
+        "bastards' names",
+        "the rangers' search",
+        "their fathers' rusted swords",
+        "his cousins' eyes",
+        "maidens' judgments",
+        "a singers' tourney",
+        "a fools' joust",
+        "an outlaws' lair",
+        "rats' eyes",
+        "the wildlings' herds",
+        "dead friends' father",
+        "archers' stakes",
+        "heralds' trumpets",
+        "the climbers' rope",
+        "griffins' men",
+        "their masters' possessions",
+        "their neighbors' daughters",
+        "the musicians' gallery",
+        "kings' blood",
+        "the besiegers' cheers",
+        "gulls' eggs",
+        "the defenders' shouts",
+        "priests' song",
+        "heroes' tombs",
+        "some robbers' den",
+        "babies' bottoms",
+        "sound of lovers' footsteps",
+        "the murderers' secret",
+        "abandoned crofters' village",
+        "the diggers' eyes were",
+        "my sons' things",
+        "&lil'&").map(ApoPattern::new).collect(Collectors.toList());
+    
     /**
      * <p>Represents a pattern of characters around an apostrophe, meant for use in determining
      * which instances of a right single quote in the text of ASOIAF should be ordinary apostrophes
      * instead.</p>
      */
-    public static class ApoPattern{
-
+    private static class ApoPattern{
+        
         /**
          * <p>Used in a string sent to ApoPattern's constructor, this represents any
          * {@link #isWordChar(Character) word character}. It is an asterisk: {@value}</p>
          */
         public static final char WORD_CHAR = '*';
-
+        
         /**
          * <p>Used in a string sent to ApoPattern's constructor, this represents any
          * {@link #isWordChar(Character) non-word character}. It is an ampersand: {@value}</p>
          */
         public static final char NON_WORD_CHAR = '&';
-
+        
         /**
          * <p>Used in a string sent to ApoPattern's constructor, this represents any
          * {@link #isAlphabetical(Character) alphabetic character}. It is an at sign: {@value}</p>
          */
         public static final char ALPHA_CHAR = '@';
-
+        
         /**
          * <p>A list of the characters from the string used to construct this ApoPatern prior to the
          * apostrophe, in reverse order. For example, sending "ab'cd" to the constructor makes
@@ -231,7 +233,7 @@ public class SwapApostrophes{
          * {@code before = new ArrayList<>(); before.add(new Character('b')); before.add(new Character('a'));}</p>
          */
         private List<Character> before;
-
+        
         /**
          * <p>A list of the characters from the string used to construct this ApoPatern after to the
          * apostrophe. For example, sending "ab'cd" to the constructor makes {@code before}
@@ -239,25 +241,25 @@ public class SwapApostrophes{
          * {@code after = new ArrayList<>(); after.add(new Character('c')); after.add(new Character('d'));}</p>
          */
         private List<Character> after;
-
+        
         /**
          * <p>Constructs an ApoPattern based on the specified string.</p>
          * @param s a string containing an apostrophe used to specify characters around an
          * apostrophe
          */
-        public ApoPattern(String s){
+        private ApoPattern(String s){
             s = s.toLowerCase();
             int index = s.indexOf(APOSTROPHE);
             before = new ArrayList<>();
             after = new ArrayList<>();
-            for(int i=index-1; i>=0; i--){
-                before.add( s.charAt(i) );
+            for(int i = index - 1; i >= 0; i--){
+                before.add(s.charAt(i));
             }
             for(int i=index+1; i<s.length(); i++){
-                after.add( s.charAt(i) );
+                after.add(s.charAt(i));
             }
         }
-
+        
         /**
          * <p>Returns true if the content of {@code line} around position {@code index} matches this
          * ApoPattern, false otherwise.</p>
@@ -268,7 +270,7 @@ public class SwapApostrophes{
          */
         public boolean match(StringBuilder line, int index){
         	
-            if( !isPossibleApostrophe(line.charAt(index)) ){
+            if(!isPossibleApostrophe(line.charAt(index))){
                 return false;
             }
             List<IntChar> cleanLine = cleanLine(line);
@@ -290,7 +292,7 @@ public class SwapApostrophes{
             }
             return true;
         }
-
+        
         /**
          * <p>Returns the character at the specified {@code index} in {@code list} if {@code index}
          * is within the bounds of {@code list}, null otherwise.</p>
@@ -303,7 +305,7 @@ public class SwapApostrophes{
                     ? list.get(index).c
                     : null;
         }
-
+        
         /**
          * <p>Returns the index in {@code cleanLine} at which the {@link IntChar#i index} of the
          * element there equals {@code soughtIndex}.</p>
@@ -340,15 +342,15 @@ public class SwapApostrophes{
             //stores '>' or ';' while iterating through an HTML tag or character code so we know 
             //when to stop skipping characters.
             Character mate = null;
-            for(int i=0; i<line.length(); i++){
+            for(int i = 0; i < line.length(); i++){
                 char c = line.charAt(i);
                 
-                if(mate==null){ //we're not looking for a closing angle bracket or a semicolon.
+                if(mate == null){ //we're not looking for a closing angle bracket or a semicolon.
                     Character counterpart = HTMLFile.risingCounterpart(c);
                     
-                    if(counterpart==null){
+                    if(counterpart == null){
                     	//the current character c isn't an opening angle bracket or ampersand.
-                        result.add( new IntChar(i,c) );
+                        result.add(new IntChar(i,c));
                     } else{
                         //c is a special character and we need to take special action.
                         //store the counterpart of c so we know what to look for later to end this 
@@ -356,7 +358,7 @@ public class SwapApostrophes{
                         mate = counterpart;
                         //do not add c to the list.
                     }
-                } else if( mate.equals(c) ){
+                } else if(mate.equals(c)){
                     //then we can stop looking for that mate
                     mate = null;
                 } //else, we need to keep looking for that mate
@@ -406,9 +408,9 @@ public class SwapApostrophes{
          */
         private static boolean isAlphabetical(Character c){
             return c != null 
-                    && !( c==APOSTROPHE 
-                            || c=='-' 
-                            || ('0'<=c && c<='9')) 
+                    && !(c == APOSTROPHE 
+                            || c == '-' 
+                            || ('0' <= c && c <= '9')) 
                     && PhraseProducer.isPhraseChar(c);
         }
     }
@@ -418,16 +420,11 @@ public class SwapApostrophes{
      * @param line a string to be analysed to find the locations of all right single quotes in it
      * @return a list of indices in {@code line} at which right single quotes are located
      */
-    private static List<Integer> singleQuoteIndices(StringBuilder line){
-        List<Integer> result = new ArrayList<>();
-        for(int i=0; i<line.length(); i++){
-            if( isPossibleApostrophe(line.charAt(i)) ){
-                result.add(i);
-            }
-        }
-        return result;
+    private static IntStream singleQuoteIndices(StringBuilder line){
+        return IntStream.range(0, line.length())
+                .filter((i) -> isPossibleApostrophe(line.charAt(i)));
     }
-
+    
     /**
      * <p>Returns true if {@code c} cannot need to be changed to an apostrophe.</p>
      * @param c a character whose candidacy for needing to be replaced by an apostrophe is
