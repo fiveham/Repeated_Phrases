@@ -11,6 +11,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 import java.util.function.Consumer;
 import java.util.HashMap;
 
@@ -36,69 +37,71 @@ public class ClearFrontAndBackMatter {
 	
 	private static void handleNovellas(Operation op, Consumer<String> msg){
             File[] novellaFiles = op.readFrom().folder().listFiles(IO::isNovella);
+            Stream.of(novellaFiles)
+                    .parallel()
+                    .forEach((f) -> {
+                        msg.accept("Removing front/back matter: "+f.getName());
 
-            for(File f : novellaFiles){
+                        try(OutputStreamWriter out = IO.newOutputStreamWriter(
+                                op.writeTo().folderName() 
+                                + File.separator 
+                                + f.getName())){
+                            HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
 
-                msg.accept("Removing front/back matter: "+f.getName());
+                            int pWhereFirstWords = firstWordsP(file, f);
+                            file.removeAll(0,pWhereFirstWords);
 
-                try(OutputStreamWriter out = IO.newOutputStreamWriter(
-                		op.writeTo().folderName() 
-                		+ File.separator 
-                		+ f.getName())){
-                    HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
+                            int pWhereLastWords = lastWordsP(file, f);
+                            file.removeAll( pWhereLastWords + 1 );
+                            
+                            file.print(out);
+                            out.close();
 
-                    int pWhereFirstWords = firstWordsP(file, f);
-                    file.removeAll(0,pWhereFirstWords);
-
-                    int pWhereLastWords = lastWordsP(file, f);
-                    file.removeAll( pWhereLastWords + 1 );
-                    
-                    file.print(out);
-                    out.close();
-
-                } catch(FileNotFoundException e){
-                    msg.accept(
-                    		"FileNotFoundException occured for file " + f.getName() 
-                    		+ ": " + e.getMessage());
-                } catch(UnsupportedEncodingException e){
-                    msg.accept(
-                    		"UnsupportedEncodingException occured for file " + f.getName() 
-                    		+ ": " + e.getMessage());
-                } catch(IOException e){
-                    msg.accept(
-                    		"IOException occured for file " + f.getName() + ": " + e.getMessage());
-                }
-            }
+                        } catch(FileNotFoundException e){
+                            msg.accept(
+                                    "FileNotFoundException occured for file " + f.getName() 
+                                    + ": " + e.getMessage());
+                        } catch(UnsupportedEncodingException e){
+                            msg.accept(
+                                    "UnsupportedEncodingException occured for file " + f.getName() 
+                                    + ": " + e.getMessage());
+                        } catch(IOException e){
+                            msg.accept(
+                                    "IOException occured for file " + f.getName() 
+                                    + ": " + e.getMessage());
+                        }
+                    });
 	}
 	
 	private static void handleNovels(Operation op, Consumer<String> msg){
         File[] novelFiles = op.readFrom().folder().listFiles(IO::isNovel);
-        for(File f : novelFiles){
-
-            msg.accept("Removing front/back matter: "+f.getName());
-
-            try(OutputStreamWriter out = IO.newOutputStreamWriter(
-                    op.writeTo().folderName() 
-            		+ File.separator 
-            		+ f.getName())){
-                HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
-                
-                int pWherePrologueTitle = prologueTitleBlock(file, f.getName());
-                file.removeAll(0,pWherePrologueTitle);
-                
-                int pWhereBackMatterStart = backMatterStart(file);
-                file.removeAll(pWhereBackMatterStart);
-                
-                file.print(out);
-                out.close();
-            } catch(FileNotFoundException e){
-                msg.accept("FileNotFoundException for file " + f.getName());
-            } catch(UnsupportedEncodingException e){
-                msg.accept("UnsupportedEncodingException  for file " + f.getName());
-            } catch(IOException e){
-                msg.accept("IOException for file " + f.getName());
-            }
-        }
+        Stream.of(novelFiles)
+                .parallel()
+                .forEach((f) -> {
+                    msg.accept("Removing front/back matter: "+f.getName());
+                    
+                    try(OutputStreamWriter out = IO.newOutputStreamWriter(
+                            op.writeTo().folderName() 
+                            + File.separator 
+                            + f.getName())){
+                        HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
+                        
+                        int pWherePrologueTitle = prologueTitleBlock(file, f.getName());
+                        file.removeAll(0,pWherePrologueTitle);
+                        
+                        int pWhereBackMatterStart = backMatterStart(file);
+                        file.removeAll(pWhereBackMatterStart);
+                        
+                        file.print(out);
+                        out.close();
+                    } catch(FileNotFoundException e){
+                        msg.accept("FileNotFoundException for file " + f.getName());
+                    } catch(UnsupportedEncodingException e){
+                        msg.accept("UnsupportedEncodingException  for file " + f.getName());
+                    } catch(IOException e){
+                        msg.accept("IOException for file " + f.getName());
+                    }
+                });
 	}
 	
     /**
@@ -115,13 +118,14 @@ public class ClearFrontAndBackMatter {
         
         int chapterStartIndex = file.adjacentElement(hasFirstWordsAt, Direction.NEXT, -1);
         
-        Predicate<Integer> isPrologueBlock = (i) -> HTMLFile.isParagraphishOpen(file.get(i)) 
-        		&& file.hasLiteralBetween("PROLOGUE",i,file.closingMatch(i));
+        Predicate<Integer> isPrologueBlock = 
+                (i) -> HTMLFile.isParagraphishOpen(file.get(i)) 
+        		        && file.hasLiteralBetween("PROLOGUE", i, file.closingMatch(i));
         int pLocation = file.adjacentElement(isPrologueBlock, Direction.PREV, chapterStartIndex);
         
-        return pLocation-1;
+        return pLocation - 1;
 	}
-
+	
 	public static final char RIGHT_DOUBLE_QUOTE = '\u201D';
 	public static final char RIGHT_SINGLE_QUOTE = '\u2019';
 	
