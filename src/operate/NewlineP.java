@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import common.IO;
 
@@ -22,10 +23,9 @@ public class NewlineP{
     public static final String BEGIN_P = "<p ";
     
     /**
-     * <p>Detects the html files in {@code READ_FROM}, reads them using {@link #BEGIN_P BEGIN_P} as
-     * a Scanner's {@linkplain java.util.Scanner#useDelimiter(String) delimiter}, and accumulates
-     * the content returned by that Scanner, including a {@linkplain IO#NEW_LINE newline} and the
-     * value of {@code BEGIN_P} before each element after the first one produced by the Scanner.</p>
+     * <p>Reads the {@code .html} files from {@code Folder.HTML_CHAPTERS} and prints out those 
+     * files' literal text into new files such that each opening paragraph tag in the original html 
+     * files is preceded by a newline character.</p>
      * @param op the Operation whose folders will be used
      * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
@@ -34,29 +34,30 @@ public class NewlineP{
         
         String[] readUs = op.readFrom().folder().list(IO::isHtml);
         
-        for(String filename : readUs){
-            
-            String inName = getInOutName(filename, op.readFrom());
-            String outName = getInOutName(filename, op.writeTo());
-            
-            try(
-                    Scanner scan = new Scanner(new File(inName), IO.ENCODING);
-            		OutputStreamWriter out = IO.newOutputStreamWriter(outName)){
-                
-                scan.useDelimiter(BEGIN_P);
-                String content = getContent(scan);
-                scan.close();
-                
-                out.write(content);
-                out.close();
-            } catch(FileNotFoundException e){
-                msg.accept("FileNotFoundException occured for file "+filename);
-            } catch(UnsupportedEncodingException e){
-                msg.accept("UnsupportedEncodingException occured for file "+filename);
-            } catch(IOException e){
-                msg.accept("IOException occured for file "+filename);
-            }
-        }
+        Stream.of(readUs)
+                .parallel()
+                .forEach((filename) -> {
+                    String inName = getInOutName(filename, op.readFrom());
+                    String outName = getInOutName(filename, op.writeTo());
+                    
+                    try(
+                            Scanner scan = new Scanner(new File(inName), IO.ENCODING);
+                            OutputStreamWriter out = IO.newOutputStreamWriter(outName)){
+                        
+                        scan.useDelimiter(BEGIN_P);
+                        String content = getContent(scan);
+                        scan.close();
+                        
+                        out.write(content);
+                        out.close();
+                    } catch(FileNotFoundException e){
+                        msg.accept("FileNotFoundException occured for file "+filename);
+                    } catch(UnsupportedEncodingException e){
+                        msg.accept("UnsupportedEncodingException occured for file "+filename);
+                    } catch(IOException e){
+                        msg.accept("IOException occured for file "+filename);
+                    }
+                });
         
         msg.accept("Done");
     }
