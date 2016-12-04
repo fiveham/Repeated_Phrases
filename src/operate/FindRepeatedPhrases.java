@@ -86,7 +86,7 @@ public class FindRepeatedPhrases {
      */
 	public static List<Chapter> getChapters(File[] filesToRead){
 	    return Stream.of(filesToRead)
-        	    .map(Chapter::new ) 
+        	    .map(Chapter::new) 
         	    .collect(Collectors.toList());
 	}
 	
