@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * <p>Splits an ASOIAF main series novel HTML file into files for its individual chapters.</p>
@@ -40,48 +41,50 @@ public class SplitChapters {
     private static void handleNovels(Operation op, Consumer<String> msg){
         File[] readUs = op.readFrom().folder().listFiles(IO::isNovel);
         
-        for(File f : readUs){
-            try{
-                HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
-                
-                HTMLFile.ParagraphIterator piter = file.paragraphIterator();
-                List<HTMLEntity> buffer = new ArrayList<>();
-                OutputStreamWriter out = null;
-                int writeCount = 0;
-                String chapterName = null;
-                
-                while(piter.hasNext()){
-                    int[] paragraphBounds = piter.next();
-                    
-                    List<HTMLEntity> paragraph = file.section(paragraphBounds);
-                    
-                    if( isTitleParagraph(paragraph) ){
+        Stream.of(readUs)
+                .parallel()
+                .forEach((f) -> {
+                    try{
+                        HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
+                        
+                        HTMLFile.ParagraphIterator piter = file.paragraphIterator();
+                        List<HTMLEntity> buffer = new ArrayList<>();
+                        OutputStreamWriter out = null;
+                        int writeCount = 0;
+                        String chapterName = null;
+                        
+                        while(piter.hasNext()){
+                            int[] paragraphBounds = piter.next();
+                            
+                            List<HTMLEntity> paragraph = file.section(paragraphBounds);
+                            
+                            if(isTitleParagraph(paragraph)){
+                                writeBuffer(buffer, out, chapterName, msg);
+                                
+                                chapterName = extractChapterTitle(paragraph);
+                                buffer = new ArrayList<>();
+                                out = IO.newOutputStreamWriter(op.writeTo().folderName() 
+                                        + File.separator 
+                                        + chapterFileName(f.getName(), writeCount, chapterName));
+                                writeCount++;
+                            } else{
+                                buffer.addAll(paragraph);
+                                buffer.add(new CharLiteral('\n'));
+                            }
+                        }
+                        
+                        //reached end of file
+                        //dump the buffer to a file
                         writeBuffer(buffer, out, chapterName, msg);
                         
-                        chapterName = extractChapterTitle(paragraph);
-                        buffer = new ArrayList<>();
-                        out = IO.newOutputStreamWriter(op.writeTo().folderName() 
-                                + File.separator 
-                                + chapterFileName(f.getName(), writeCount, chapterName));
-                        writeCount++;
-                    } else{
-                        buffer.addAll(paragraph);
-                        buffer.add(new CharLiteral('\n'));
+                    } catch(FileNotFoundException e){
+                        msg.accept("FileNotFoundException occured for file "+f.getName());
+                    } catch(UnsupportedEncodingException e){
+                        msg.accept("UnsupportedEncodingException occured for file "+f.getName());
+                    } catch(IOException e){
+                        msg.accept("IOException occured for file "+f.getName());
                     }
-                }
-                
-                //reached end of file
-                //dump the buffer to a file
-                writeBuffer(buffer, out, chapterName, msg);
-                
-            } catch(FileNotFoundException e){
-                msg.accept("FileNotFoundException occured for file "+f.getName());
-            } catch(UnsupportedEncodingException e){
-                msg.accept("UnsupportedEncodingException occured for file "+f.getName());
-            } catch(IOException e){
-                msg.accept("IOException occured for file "+f.getName());
-            }
-        }
+                });
     }
     
     private static List<String> allEasyNovellaNames = Arrays.asList(
@@ -95,27 +98,29 @@ public class SplitChapters {
         String[] extantEasyNovellas = op.readFrom().folder()
         		.list((dir,name) -> allEasyNovellaNames.contains(name));
         
-        for(String novella : extantEasyNovellas){
-            try(OutputStreamWriter out = IO.newOutputStreamWriter(
-            		op.writeTo().folderName() 
-            		+ File.separator 
-            		+ novellaOut(novella))){
-                
-                HTMLFile file = new HTMLFile(
-                		new File(op.readFrom().folderName() + File.separator + novella));
-                List<HTMLEntity> pseudoBuffer = file.section(0);
-                
-                String title = novellaTitle(novella);
-                writeBuffer(pseudoBuffer,out,title, msg);
-                
-            } catch(FileNotFoundException e){
-                msg.accept(novella + " not found.");
-            } catch(UnsupportedEncodingException e){
-                msg.accept("UnsupportedEncodingException occured for file "+novella);
-            } catch(IOException e){
-                msg.accept("IOException occured for file "+novella);
-            }
-        }
+        Stream.of(extantEasyNovellas)
+                .parallel()
+                .forEach((novella) -> {
+                    try(OutputStreamWriter out = IO.newOutputStreamWriter(
+                            op.writeTo().folderName() 
+                            + File.separator 
+                            + novellaOut(novella))){
+                        
+                        HTMLFile file = new HTMLFile(
+                                new File(op.readFrom().folderName() + File.separator + novella));
+                        List<HTMLEntity> pseudoBuffer = file.section(0);
+                        
+                        String title = novellaTitle(novella);
+                        writeBuffer(pseudoBuffer,out,title, msg);
+                        
+                    } catch(FileNotFoundException e){
+                        msg.accept(novella + " not found.");
+                    } catch(UnsupportedEncodingException e){
+                        msg.accept("UnsupportedEncodingException occured for file "+novella);
+                    } catch(IOException e){
+                        msg.accept("IOException occured for file "+novella);
+                    }
+                });
     }
     
     private static void handlePQ(Operation op, Consumer<String> msg){
@@ -187,7 +192,7 @@ public class SplitChapters {
     private static String novellaOut(String novellaName){
         StringBuilder result = new StringBuilder(IO.stripExtension(novellaName));
         
-        if( "RP.html".equals(novellaName) ){
+        if("RP.html".equals(novellaName)){
             result.append("_0");
         }
         result.append(IO.FILENAME_COMPONENT_SEPARATOR_CHAR)
@@ -220,10 +225,10 @@ public class SplitChapters {
         int titleCharCount = 0;
         
         for(HTMLEntity h : paragraph){
-            if( CharCode.class.isInstance(h)){
+            if(CharCode.class.isInstance(h)){
                 return false;
-            } else if( CharLiteral.class.isInstance(h) ){
-                if( isLegalChapterTitleCharacter( ((CharLiteral)h).c ) ){
+            } else if(CharLiteral.class.isInstance(h)){
+                if(isLegalChapterTitleCharacter(((CharLiteral)h).c)){
                     titleCharCount++;
                 } else{
                     return false;
@@ -302,7 +307,7 @@ public class SplitChapters {
 
         for(HTMLEntity h : paragraph){
             if(CharLiteral.class.isInstance(h)){
-                result.append( ((CharLiteral)h).c );
+                result.append(((CharLiteral)h).c);
             }
         }
 
@@ -400,6 +405,8 @@ public class SplitChapters {
      * @return true if the specified char is legal for a chapter title, false otherwise
      */
     public static boolean isTitle(char c){
-        return ('A' <= c && c <= 'Z') || c == ' ' || c == '\'';
+        return ('A' <= c && c <= 'Z') 
+                || c == ' ' 
+                || c == '\'';
     }
 }
