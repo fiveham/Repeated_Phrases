@@ -147,12 +147,13 @@ public class PhraseBox{
      * <p>Removes from this PhraseBox all the quote data for phrases that have only one associated
      * Location.</p>
      */
-	public void removeUniques(Consumer<String> msg){
+	public PhraseBox removeUniques(Consumer<String> msg){
 		final int initSize = size();
 		map.entrySet().removeIf(
 				(e) -> map.get(e.getKey()).size() 
 						<= FindRepeatedPhrases.UNIQUE_PHRASE_LOCATION_COUNT);
 		msg.accept("Removed "+ (initSize - size()) +" non-repeated terms");
+		return this;
 	}
 	
     /**
@@ -161,7 +162,7 @@ public class PhraseBox{
      * @param phraseInstanceFile an OutputStreamWriter by way of which the quote data in this
      * PhraseBox is written to a file
      */
-	public void printPhrasesWithLocations(String phraseInstFileName){
+	public PhraseBox printPhrasesWithLocations(String phraseInstFileName){
 		try(OutputStreamWriter phraseInstanceFile = IO.newOutputStreamWriter(phraseInstFileName)){
 			for(String phrase : map.keySet()){
 				phraseInstanceFile.write(phrase);
@@ -174,6 +175,7 @@ public class PhraseBox{
 			}
 			
 			phraseInstanceFile.close();
+			return this;
 		} catch(IOException e){
 			throw new RuntimeException(IO.ERROR_EXIT_MSG + phraseInstFileName+" for writing");
 		}
