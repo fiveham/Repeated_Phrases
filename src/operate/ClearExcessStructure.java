@@ -52,7 +52,7 @@ public class ClearExcessStructure{
 		                file.removeAll(Tag::isDiv);
 		                file.removeAll(Tag::isBlockquote);
 		                file.removeAll(Tag::isImg);
-		                file.removeAll(CharCode.IS_NBSP);
+		                file.removeAll(CharCode::isNbsp);
 		                removeEmptyP(file);
 		                
 		                file.print(out);

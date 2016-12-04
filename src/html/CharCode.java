@@ -1,7 +1,5 @@
 package html;
 
-import java.util.function.Predicate;
-
 /**
  * <p>Represents an HTML character code starting with an ampersand and ending with a semicolon.</p>
  */
@@ -14,11 +12,15 @@ public class CharCode extends HTMLEntity {
 	public static final String NBSP = "nbsp";
 	
     /**
-     * <p>Evaluates to true if the specified HTMLEntity is a {@code Code} and represents a
-     * non-breaking space as determined by {@code NBSP}.</p>
-     */
-	public static final Predicate<HTMLEntity> IS_NBSP = 
-			(h) -> CharCode.class.isInstance(h) && NBSP.equals(((CharCode)h).code);
+     * <p>Returns true if the specified HTMLEntity is a {@code CharCode} and represents a
+     * {@link #NBSP non-breaking space}, false otherwise.</p>
+     * @param h an HTMLEntity
+     * @return true if the specified HTMLEntity is a {@code CharCode} and represents a
+     * {@link #NBSP non-breaking space}, false otherwise
+     */	
+	public static boolean isNbsp(HTMLEntity h){
+	    return CharCode.class.isInstance(h) && NBSP.equals(((CharCode)h).code);
+	}
 	
     /**
      * <p>The text of this HTML character code between the ampersand that begins it and the
