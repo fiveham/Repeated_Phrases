@@ -5,6 +5,7 @@ import java.util.List;
 import java.io.File;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import text.Chapter;
 import text.Corpus;
@@ -39,9 +40,9 @@ public class FindRepeatedPhrases {
      * <p>Gets a list of the files to be analysed via
      * {@code READ_FROM.folder().listFiles(IO.IS_TXT)}, loops from {@code MIN_PHRASE_SIZE} to
      * {@code MAX_PHRASE_SIZE}, finding all the phrases of each size repeated in the corpus, and
-     * prints them to files named for the phrase size according to
-     * {@code WRITE_TO.filename(size)}.</p> <p>"Phrase size" is the number of words in a given
-     * phrase.</p>
+     * prints them to files named for the phrase size according to 
+     * {@code WRITE_TO.filename(size)}.</p> 
+     * <p>"Phrase size" is the number of words in a given phrase.</p>
      * @param op the Operation whose folders will be used
      * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
@@ -61,16 +62,16 @@ public class FindRepeatedPhrases {
 			msg.accept("Begin process for phrase size "+phraseSize);
 			
 			//Create an index of phrases from the corpus and their locations
-			PhraseBox words = scanCorpus(phraseSize, chapters, repeatedPhrasesFromPrevLoop, msg);
-			
-			//remove non-repeated phrases
-			words.removeUniques(msg);
-			
-			//print repeated phrases and all their locations in the corpus to a file
-			words.printPhrasesWithLocations(op.writeTo().filename(phraseSize));
-			
+			repeatedPhrasesFromPrevLoop = scanCorpus(
+			        phraseSize, 
+			        chapters, 
+			        repeatedPhrasesFromPrevLoop, 
+			        msg)
+        			//remove non-repeated phrases
+        			.removeUniques(msg)
+        			//print repeated phrases and all their locations in the corpus to a file
+        			.printPhrasesWithLocations(op.writeTo().filename(phraseSize));
 			//Store the current list of repeated phrases for the next loop
-			repeatedPhrasesFromPrevLoop = words;
 		}
 	}
 	
@@ -107,7 +108,7 @@ public class FindRepeatedPhrases {
 			PhraseBox repeatPhrasesForPrevSize, 
 			Consumer<String> msg){
 		
-		msg.accept("Finding "+phraseSize+"-word phrases");
+		msg.accept("Finding " + phraseSize + "-word phrases");
 		
 		Corpus corpus = new Corpus(phraseSize, chapters);
 		PhraseBox corpusAsStructure = new PhraseBox();
@@ -132,7 +133,9 @@ public class FindRepeatedPhrases {
      */
 	public static String reducedPhrase(String s){
 		int index = s.lastIndexOf(PhraseProducer.WORD_SEPARATOR);
-		return index < 0 ? ZERO_WORD_PHRASE : s.substring(0,index);
+		return index < 0 
+		        ? ZERO_WORD_PHRASE 
+		        : s.substring(0, index);
 	}
 	
     /**
