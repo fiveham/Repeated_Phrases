@@ -1,6 +1,8 @@
 package operate;
 
 import common.IO;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
 import java.util.function.Consumer;
@@ -46,18 +48,23 @@ public class FindRepeatedPhrases {
      * @param op the Operation whose folders will be used
      * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
+     * @return a list of the PhraseBoxes produced in this method. The {@code n}th element of the 
+     * list pertains to phrases of size {@code n}.
      */
-	public static void findRepPhrases(Operation op, String[] args, Consumer<String> msg) {
+	public static List<PhraseBox> findRepPhrases(Operation op, String[] args, Consumer<String> msg) {
 		
 		File[] readUs = op.readFrom().folder().listFiles(IO::isTxt);
 		final List<Chapter> chapters = getChapters(readUs);
 		PhraseBox repeatedPhrasesFromPrevLoop = new PhraseBox();
 		repeatedPhrasesFromPrevLoop.add(Phrase.ZERO_WORD_PHRASE, null);
 		
+		List<PhraseBox> result = new ArrayList<>(MAX_PHRASE_SIZE - MIN_PHRASE_SIZE + 1);
+		result.add(repeatedPhrasesFromPrevLoop);
+		
 		//find phrases of ever greater size and record them in files
 		for(int phraseSize = MIN_PHRASE_SIZE; 
 				phraseSize <= MAX_PHRASE_SIZE; 
-				phraseSize++){
+				phraseSize++, result.add(repeatedPhrasesFromPrevLoop)){
 			
 			msg.accept("Begin process for phrase size " + phraseSize);
 			
@@ -73,6 +80,8 @@ public class FindRepeatedPhrases {
         			.printPhrasesWithLocations(op.writeTo().filename(phraseSize));
 			//Store the current list of repeated phrases for the next loop
 		}
+		
+		return result;
 	}
 	
     /**
