@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import text.Chapter;
 import text.Corpus;
+import text.Phrase;
 import text.PhraseBox;
 import text.PhraseProducer;
 import text.Quote;
@@ -51,7 +52,7 @@ public class FindRepeatedPhrases {
 		File[] readUs = op.readFrom().folder().listFiles(IO::isTxt);
 		final List<Chapter> chapters = getChapters(readUs);
 		PhraseBox repeatedPhrasesFromPrevLoop = new PhraseBox();
-		repeatedPhrasesFromPrevLoop.add(ZERO_WORD_PHRASE, null);
+		repeatedPhrasesFromPrevLoop.add(Phrase.ZERO_WORD_PHRASE, null);
 		
 		//find phrases of ever greater size and record them in files
 		for(int phraseSize = MIN_PHRASE_SIZE; 
@@ -133,17 +134,7 @@ public class FindRepeatedPhrases {
 	public static String reducedPhrase(String s){
 		int index = s.lastIndexOf(PhraseProducer.WORD_SEPARATOR);
 		return index < 0 
-		        ? ZERO_WORD_PHRASE 
+		        ? Phrase.ZERO_WORD_PHRASE 
 		        : s.substring(0, index);
 	}
-	
-    /**
-     * <p>An empty string. Returned by {@link #reducedPhrase(String) reducedPhrase()} when it is
-     * sent a phrase with only one word. Added to the initial {@code PhraseBox} assigned to
-     * {@code repeatedPhrasesFromPrevLoop} in {@code main()} so that every single-word phrase's
-     * corresponding reduced phrase is contained by that object, ensuring that every phrase of size
-     * {@code 1} passes the preliminary test for inclusion in the PhraseBox returned from
-     * {@link #scanCorpus scanCorpus()}.</p>
-     */
-	public static final String ZERO_WORD_PHRASE = "";
 }
