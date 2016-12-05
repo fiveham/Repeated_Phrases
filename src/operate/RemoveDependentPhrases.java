@@ -93,40 +93,40 @@ public class RemoveDependentPhrases {
     }
     
     private static void thing(PhraseBox result, FileBox small, FileBox large, Chapter chapter){
-
+        
         Map<Integer, String> fileForLargePhrases = 
                 large.get(chapter).stream()
                         .collect(Collectors.toMap(Quote::index, Quote::text));
         
         for(Quote phraseHere : small.get(chapter)){
             
-            SB lowerIndex = atIndexLargerPhraseExistsWithSmallPhraseAtCorrectEnd(
+            SB largerPhraseAtLowerIndex = largerPhraseAtIndex(
                     0, 
                     phraseHere, 
                     phraseHere.index() - 1, 
                     String::endsWith, 
                     fileForLargePhrases);
             
-            SB sameIndex = atIndexLargerPhraseExistsWithSmallPhraseAtCorrectEnd(
+            SB largerPhraseAtSameIndex = largerPhraseAtIndex(
                     fileForLargePhrases.size(), 
                     phraseHere, 
                     phraseHere.index(), 
                     String::startsWith, 
                     fileForLargePhrases);
             
-            if(!lowerIndex.hasLargerPhrase() && !sameIndex.hasLargerPhrase()){
+            if(!largerPhraseAtLowerIndex.hasLargerPhrase() && !largerPhraseAtSameIndex.hasLargerPhrase()){
                 result.add(phraseHere.text(), new Location(phraseHere.index(), chapter));
-            } else if(lowerIndex.isFalse() && sameIndex.isFalse()){
+            } else if(largerPhraseAtLowerIndex.isFalse() && largerPhraseAtSameIndex.isFalse()){
                 throw new IllegalStateException(
                         "The smaller phrase \"" 
                         + shortForm(phraseHere.text()) 
                         + "\" is contained at the proper location in zero or one of the " 
                         + "two larger phrases that could contain it: " 
                         + "Phrase at some index in file " + chapter + ": \"" 
-                        + shortForm(lowerIndex.s()) 
+                        + shortForm(largerPhraseAtLowerIndex.s()) 
                         + "\" --- " 
                         + "Phrase at some index in file " + chapter + ": \"" 
-                        + shortForm(sameIndex.s()) 
+                        + shortForm(largerPhraseAtSameIndex.s()) 
                         + "\".");
             }
         }
@@ -180,9 +180,9 @@ public class RemoveDependentPhrases {
      * {@code key}{@code )} and {@code phraseHere}{@code .text()}. This should be either 
      * {@link String#startsWith(String)} or {@link String#endsWith(String)}.
      * @param fileForLargePhrases
-     * @return
+     * @return 
      */
-    private static SB atIndexLargerPhraseExistsWithSmallPhraseAtCorrectEnd(
+    private static SB largerPhraseAtIndex(
             int index, 
             Quote phraseHere, 
             int key, 
