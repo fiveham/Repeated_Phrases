@@ -4,9 +4,9 @@ import common.IO;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Map;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
 import text.Chapter;
 import text.FileBox;
 import text.Location;
@@ -41,26 +41,22 @@ public class RemoveDependentPhrases {
      * each phrase-size considered, the repeated-phrase data for that size and for that size plus 1
      * are loaded into memory from the pertinent pre- existing files created by FindRepeatedPhrases,
      * except that the data for the previous size is carried over from one loop to the next and
-     * reused as the data for the plus-one size in the next loop. Prints to file all those quotes of
-     * the smaller phrase size specified in the current loop that are independent of the larger
-     * quotes in the current group of larger phrases. If a problem occurs while reading a file,
-     * System.exit is called, ending the program.</p>
+     * reused as the data for the plus-one size in the next loop.</p>
+     * <p>Prints to file all those quotes of the smaller phrase size specified in the current loop 
+     * that are independent of the larger quotes in the current group of larger phrases. If a 
+     * problem occurs while reading a file, System.exit is called, ending the program.</p>
      * @param op the Operation whose folders will be used
      * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
     public static void rmDepPhrases(Operation op, String[] args, Consumer<String> msg) {
-        
         FileBox smallerPhrases = null; //inter-loop storage
-        
-        for(int lowSize=INIT_LOW_SIZE; lowSize>LOW_SIZE_EXCLUSIVE_LOWER_BOUND; lowSize--){
-            
+        for(int lowSize = INIT_LOW_SIZE; lowSize > LOW_SIZE_EXCLUSIVE_LOWER_BOUND; lowSize--){
             try{
                 FileBox largerPhrases = (smallerPhrases != null)
                         ? smallerPhrases
-                        : new FileBox(new File(op.readFrom().filename(lowSize+1)));
+                        : new FileBox(new File(op.readFrom().filename(lowSize + 1)));
                 smallerPhrases = new FileBox(new File(op.readFrom().filename(lowSize)));
-                
                 phrasesIndependentOf(smallerPhrases, largerPhrases)
                         .printPhrasesWithLocations(op.writeTo().filename(lowSize));
             } catch(FileNotFoundException e){
@@ -68,7 +64,7 @@ public class RemoveDependentPhrases {
             			IO.ERROR_EXIT_MSG 
             			+ op.readFrom().filename(lowSize) 
             			+ " or " 
-            			+ op.readFrom().filename(lowSize+1));
+            			+ op.readFrom().filename(lowSize + 1));
             }
         }
     }
@@ -86,54 +82,7 @@ public class RemoveDependentPhrases {
         
         for(Chapter chapter : small.chapters()){
             if(large.contains(chapter.getName())){
-                
-                Map<Integer, String> fileForLargePhrases = 
-                        large.get(chapter).stream()
-                                .collect(Collectors.toMap(Quote::index, Quote::text));
-                
-                for(Quote phraseHere : small.get(chapter)){
-                    
-                    String largerPhraseWithIndexOneLess = phraseHere.index() == 0 
-                            ? null 
-                            : fileForLargePhrases.get(phraseHere.index()-1);
-                    
-                    String largerPhraseWithSameIndex = 
-                            fileForLargePhrases.size() == phraseHere.index() 
-                                    ? null
-                                    : fileForLargePhrases.get(phraseHere.index());
-                    
-                    Boolean lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase = 
-                            largerPhraseWithIndexOneLess == null
-                                    ? null
-                                    : largerPhraseWithIndexOneLess.endsWith(phraseHere.text());
-                    
-                    Boolean sameIndexLargerPhraseExistsAndStartsWithSmallPhrase = 
-                            largerPhraseWithSameIndex == null
-                                    ? null
-                                    : largerPhraseWithSameIndex.startsWith(phraseHere.text());
-                    
-                    if(lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase == null 
-                            && sameIndexLargerPhraseExistsAndStartsWithSmallPhrase == null){
-                        
-                        result.add(phraseHere.text(), new Location(phraseHere.index(), chapter));
-                    } else if(!((lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase  == null 
-                            ||    lowerIndexLargerPhraseExistsAndEndsWithSmallPhrase  == true) 
-                            ||   (sameIndexLargerPhraseExistsAndStartsWithSmallPhrase == null 
-                            ||    sameIndexLargerPhraseExistsAndStartsWithSmallPhrase == true))){
-                        
-                        throw new IllegalStateException(
-                                "The smaller phrase \"" 
-                                + shortForm(phraseHere.text()) 
-                                + "\" is contained at the proper location in zero or one of the " 
-                                + "two larger phrases that could contain it: " 
-                                + "Phrase at some index in file " + chapter + ": \"" 
-                                + shortForm(largerPhraseWithIndexOneLess) 
-                                + "\" --- " 
-                                + "Phrase at some index in file " + chapter + ": \"" 
-                                + shortForm(largerPhraseWithSameIndex) 
-                                + "\".");
-                    }
-                }
+                thing(result, small, large, chapter);
             } else{
                 small.get(chapter).forEach(
                         (lp) -> result.add(lp.text(), new Location(lp.index(), chapter)));
@@ -143,16 +92,128 @@ public class RemoveDependentPhrases {
         return result;
     }
     
+    private static void thing(PhraseBox result, FileBox small, FileBox large, Chapter chapter){
+
+        Map<Integer, String> fileForLargePhrases = 
+                large.get(chapter).stream()
+                        .collect(Collectors.toMap(Quote::index, Quote::text));
+        
+        for(Quote phraseHere : small.get(chapter)){
+            
+            SB lowerIndex = atIndexLargerPhraseExistsWithSmallPhraseAtCorrectEnd(
+                    0, 
+                    phraseHere, 
+                    phraseHere.index() - 1, 
+                    String::endsWith, 
+                    fileForLargePhrases);
+            
+            SB sameIndex = atIndexLargerPhraseExistsWithSmallPhraseAtCorrectEnd(
+                    fileForLargePhrases.size(), 
+                    phraseHere, 
+                    phraseHere.index(), 
+                    String::startsWith, 
+                    fileForLargePhrases);
+            
+            if(!lowerIndex.hasLargerPhrase() && !sameIndex.hasLargerPhrase()){
+                result.add(phraseHere.text(), new Location(phraseHere.index(), chapter));
+            } else if(lowerIndex.isFalse() && sameIndex.isFalse()){
+                throw new IllegalStateException(
+                        "The smaller phrase \"" 
+                        + shortForm(phraseHere.text()) 
+                        + "\" is contained at the proper location in zero or one of the " 
+                        + "two larger phrases that could contain it: " 
+                        + "Phrase at some index in file " + chapter + ": \"" 
+                        + shortForm(lowerIndex.s()) 
+                        + "\" --- " 
+                        + "Phrase at some index in file " + chapter + ": \"" 
+                        + shortForm(sameIndex.s()) 
+                        + "\".");
+            }
+        }
+    }
+    
+    /**
+     * <p>A pair of a String and a Boolean.</p>
+     * @author fiveham
+     *
+     */
+    private static class SB{
+        private final String s;
+        private final Boolean b;
+        
+        SB(String s, Boolean b){
+            this.s = s;
+            this.b = b;
+        }
+        
+        String s(){
+            return s;
+        }
+        
+        /**
+         * <p>Returns true if the Boolean value of this pair is false (requiring that it not be 
+         * null), otherwise returns false.</p>
+         * @return true if the Boolean value of this pair is false (requiring that it not be null), 
+         * otherwise returns false
+         */
+        boolean isFalse(){
+            return hasLargerPhrase() && !b;
+        }
+        
+        /**
+         * <p>Returns true if the Boolean value of this pair is not null, which encodes the fact 
+         * that the larger phrase to which this pair's String pertains exists in the text of the 
+         * ASOIAF books and occurs multiple times in the books.</p>
+         * @return true if the Boolean value of this pair is not null, false otherwise
+         */
+        boolean hasLargerPhrase(){
+            return b != null;
+        }
+    }
+    
+    /**
+     * 
+     * @param index a value tested for equality with {@code phraseHere}{@code .index()}
+     * @param phraseHere a Quote whose index and text are used
+     * @param key 
+     * @param whichEnd a function specifying how to test {@code fileForLargePhrases}{@code .get(}
+     * {@code key}{@code )} and {@code phraseHere}{@code .text()}. This should be either 
+     * {@link String#startsWith(String)} or {@link String#endsWith(String)}.
+     * @param fileForLargePhrases
+     * @return
+     */
+    private static SB atIndexLargerPhraseExistsWithSmallPhraseAtCorrectEnd(
+            int index, 
+            Quote phraseHere, 
+            int key, 
+            BiPredicate<String,String> whichEnd, 
+            Map<Integer, String> fileForLargePhrases){
+        
+        String s;
+        if(phraseHere.index() == index && null != (s = fileForLargePhrases.get(key))){
+            Boolean b = whichEnd.test(s, phraseHere.text());
+            return new SB(s,b);
+        } else{
+            return new SB(null, null);
+        }
+    }
+    
+    public static final String ELLIPSIS = " ... ";
+    public static final int SHORT_FORM_HALF_FOR_ELIDED_MIDDLE = 25;
+    public static final int SHORT_FORM_LENGTH = 
+            SHORT_FORM_HALF_FOR_ELIDED_MIDDLE * 2 + ELLIPSIS.length();
+    
     /**
      * <p>Returns a shortened form of the specified String.</p>
      * @param phrase the phrase of which a shortened form will be returned
      * @return the first 25 characters of phrase + " ... " + the last 25 characters if the phrase
-     * has 60 or more characters, otherwise the entire phrase.
+     * has 55 or more characters, otherwise the entire phrase.
      */
     private static String shortForm(String phrase){
-        if(phrase.length() < 60){
-            return phrase;
-        }
-        return phrase.substring(0, 25) + " ... " + phrase.substring(phrase.length()-26);
+        return phrase.length() < SHORT_FORM_LENGTH
+                ? phrase 
+                : phrase.substring(0, SHORT_FORM_HALF_FOR_ELIDED_MIDDLE) 
+                    + ELLIPSIS 
+                    + phrase.substring(phrase.length() - 1 - SHORT_FORM_HALF_FOR_ELIDED_MIDDLE);
     }
 }
