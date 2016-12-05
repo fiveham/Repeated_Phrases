@@ -94,6 +94,7 @@ public class PhraseBox{
 		return map.keySet();
 	}
 	
+	//TODO synchronize and access parallelly in RemoveDependentPhrases
     /**
      * <p>Adds {@code location} to the {@literal List<Location>} mapped to {@code phrase} in the
      * underlying hashmap.</p>
