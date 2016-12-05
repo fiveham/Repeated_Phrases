@@ -93,17 +93,21 @@ public class RemoveDependentPhrases {
         
         for(Chapter chapter : small.chapters()){
             if(large.contains(chapter.getName())){
-                thing(result, small, large, chapter);
+                addSelectively(result, small, large, chapter);
             } else{
-                small.get(chapter).forEach(
-                        (quote) -> result.add(quote.text(), new Location(quote.index(), chapter)));
+                addAll(result, small, chapter);
             }
         }
         
         return result;
     }
     
-    private static void thing(PhraseBox result, FileBox small, FileBox large, Chapter chapter){
+    private static void addAll(PhraseBox result, FileBox small, Chapter chapter){
+        small.get(chapter).forEach(
+                (quote) -> result.add(quote.text(), new Location(quote.index(), chapter)));
+    }
+    
+    private static void addSelectively(PhraseBox result, FileBox small, FileBox large, Chapter chapter){
         
         Map<Integer, String> fileForLargePhrases = 
                 large.get(chapter).stream()
