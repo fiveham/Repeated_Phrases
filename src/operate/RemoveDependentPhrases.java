@@ -50,7 +50,11 @@ public class RemoveDependentPhrases {
      * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static Map<Integer,PhraseBox> rmDepPhrases(Operation op, String[] args, Consumer<String> msg) {
+    public static Map<Integer,PhraseBox> rmDepPhrases(
+            Operation op, 
+            String[] args, 
+            Consumer<String> msg){
+        
         FileBox smallerPhrases = null; //inter-loop storage
         Map<Integer,PhraseBox> result = new HashMap<>();
         
@@ -121,7 +125,9 @@ public class RemoveDependentPhrases {
                     String::startsWith, 
                     fileForLargePhrases);
             
-            if(!largerPhraseAtLowerIndex.hasLargerPhrase() && !largerPhraseAtSameIndex.hasLargerPhrase()){
+            if(!largerPhraseAtLowerIndex.hasLargerPhrase() 
+                    && !largerPhraseAtSameIndex.hasLargerPhrase()){
+                
                 result.add(phraseHere.text(), new Location(phraseHere.index(), chapter));
             } else if(largerPhraseAtLowerIndex.isFalse() && largerPhraseAtSameIndex.isFalse()){
                 throw new IllegalStateException(
