@@ -3,6 +3,7 @@ package operate;
 import common.IO;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -49,16 +50,20 @@ public class RemoveDependentPhrases {
      * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void rmDepPhrases(Operation op, String[] args, Consumer<String> msg) {
+    public static Map<Integer,PhraseBox> rmDepPhrases(Operation op, String[] args, Consumer<String> msg) {
         FileBox smallerPhrases = null; //inter-loop storage
+        Map<Integer,PhraseBox> result = new HashMap<>();
+        
         for(int lowSize = INIT_LOW_SIZE; lowSize > LOW_SIZE_EXCLUSIVE_LOWER_BOUND; lowSize--){
             try{
                 FileBox largerPhrases = (smallerPhrases != null)
                         ? smallerPhrases
                         : new FileBox(new File(op.readFrom().filename(lowSize + 1)));
                 smallerPhrases = new FileBox(new File(op.readFrom().filename(lowSize)));
-                phrasesIndependentOf(smallerPhrases, largerPhrases)
-                        .printPhrasesWithLocations(op.writeTo().filename(lowSize));
+                result.put(
+                        lowSize, 
+                        phrasesIndependentOf(smallerPhrases, largerPhrases)
+                                .printPhrasesWithLocations(op.writeTo().filename(lowSize)));
             } catch(FileNotFoundException e){
             	throw new RuntimeException(
             			IO.ERROR_EXIT_MSG 
@@ -67,6 +72,8 @@ public class RemoveDependentPhrases {
             			+ op.readFrom().filename(lowSize + 1));
             }
         }
+        
+        return result;
     }
     
     /**
