@@ -107,46 +107,53 @@ public class RemoveDependentPhrases {
                 (quote) -> result.add(quote.text(), new Location(quote.index(), chapter)));
     }
     
-    private static void addSelectively(PhraseBox result, FileBox small, FileBox large, Chapter chapter){
+    private static void addSelectively(
+            PhraseBox result, 
+            FileBox small, 
+            FileBox large, 
+            Chapter chapter){
         
         Map<Integer, String> fileForLargePhrases = 
                 large.get(chapter).stream()
                         .collect(Collectors.toMap(Quote::index, Quote::text));
         
-        for(Quote phraseHere : small.get(chapter)){
-            
-            SB largerPhraseAtLowerIndex = largerPhraseAtIndex(
-                    0, 
-                    phraseHere, 
-                    phraseHere.index() - 1, 
-                    String::endsWith, 
-                    fileForLargePhrases);
-            
-            SB largerPhraseAtSameIndex = largerPhraseAtIndex(
-                    fileForLargePhrases.size(), 
-                    phraseHere, 
-                    phraseHere.index(), 
-                    String::startsWith, 
-                    fileForLargePhrases);
-            
-            if(!largerPhraseAtLowerIndex.hasLargerPhrase() 
-                    && !largerPhraseAtSameIndex.hasLargerPhrase()){
-                
-                result.add(phraseHere.text(), new Location(phraseHere.index(), chapter));
-            } else if(largerPhraseAtLowerIndex.isFalse() && largerPhraseAtSameIndex.isFalse()){
-                throw new IllegalStateException(
-                        "The smaller phrase \"" 
-                        + shortForm(phraseHere.text()) 
-                        + "\" is contained at the proper location in zero or one of the " 
-                        + "two larger phrases that could contain it: " 
-                        + "Phrase at some index in file " + chapter + ": \"" 
-                        + shortForm(largerPhraseAtLowerIndex.s()) 
-                        + "\" --- " 
-                        + "Phrase at some index in file " + chapter + ": \"" 
-                        + shortForm(largerPhraseAtSameIndex.s()) 
-                        + "\".");
-            }
-        }
+        small.get(chapter).stream()
+                .parallel()
+                .forEach((phraseHere) -> {
+                    SB largerPhraseAtLowerIndex = largerPhraseAtIndex(
+                            0, 
+                            phraseHere, 
+                            phraseHere.index() - 1, 
+                            String::endsWith, 
+                            fileForLargePhrases);
+                    
+                    SB largerPhraseAtSameIndex = largerPhraseAtIndex(
+                            fileForLargePhrases.size(), 
+                            phraseHere, 
+                            phraseHere.index(), 
+                            String::startsWith, 
+                            fileForLargePhrases);
+                    
+                    if(!largerPhraseAtLowerIndex.hasLargerPhrase() 
+                            && !largerPhraseAtSameIndex.hasLargerPhrase()){
+                        
+                        result.add(phraseHere.text(), new Location(phraseHere.index(), chapter));
+                    } else if(largerPhraseAtLowerIndex.isFalse() 
+                            && largerPhraseAtSameIndex.isFalse()){
+                        
+                        throw new IllegalStateException(
+                                "The smaller phrase \"" 
+                                + shortForm(phraseHere.text()) 
+                                + "\" is contained at the proper location in zero or one of the " 
+                                + "two larger phrases that could contain it: " 
+                                + "Phrase at some index in file " + chapter + ": \"" 
+                                + shortForm(largerPhraseAtLowerIndex.s()) 
+                                + "\" --- " 
+                                + "Phrase at some index in file " + chapter + ": \"" 
+                                + shortForm(largerPhraseAtSameIndex.s()) 
+                                + "\".");
+                    }
+                });
     }
     
     /**

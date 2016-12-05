@@ -94,14 +94,13 @@ public class PhraseBox{
 		return map.keySet();
 	}
 	
-	//TODO synchronize and access parallelly in RemoveDependentPhrases
     /**
      * <p>Adds {@code location} to the {@literal List<Location>} mapped to {@code phrase} in the
      * underlying hashmap.</p>
      * @param phrase the phrase being given another Location
      * @param location a location at which {@code phrase} occurs
      */
-	public void add(String phrase, Location location){
+	public synchronized void add(String phrase, Location location){
 		if(map.containsKey(phrase)){
 			map.get(phrase).add(location);
 		} else{
