@@ -85,7 +85,7 @@ public class RemoveDependentPhrases {
                 thing(result, small, large, chapter);
             } else{
                 small.get(chapter).forEach(
-                        (lp) -> result.add(lp.text(), new Location(lp.index(), chapter)));
+                        (quote) -> result.add(quote.text(), new Location(quote.index(), chapter)));
             }
         }
         
