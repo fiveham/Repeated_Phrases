@@ -19,7 +19,7 @@ import java.util.HashMap;
  * <p>This class reads html files of the ASOIAF novels and saves copies of them from which the
  * content before the Prologue and the content after the last chapter have been removed.</p>
  */
-public class ClearFrontAndBackMatter {
+class ClearFrontAndBackMatter {
 	
     /**
      * <p>Detects all the html files for the ASOIAF novels in {@code READ_FROM}, reads them, detects
@@ -30,7 +30,7 @@ public class ClearFrontAndBackMatter {
      * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-	public static void clearFrontBack(Operation op, String[] args, Consumer<String> msg) {
+	static void clearFrontBack(Operation op, String[] args, Consumer<String> msg) {
         handleNovels(op, msg);
         handleNovellas(op, msg);
 	}

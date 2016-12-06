@@ -19,12 +19,7 @@ import text.Quote;
  * <p>Finds phrases that are repeated in the corpus and prints them to files accompanied by a list
  * of the {@code Location}s in the corpus at which those phrases occur.</p>
  */
-public class FindRepeatedPhrases {
-	
-    /**
-     * <p>Number of locations in the corpus at which a unique phrase occurs, by definition.</p>
-     */
-	public static final int UNIQUE_PHRASE_LOCATION_COUNT = 1;
+class FindRepeatedPhrases {
 	
     /**
      * <p>Minimum size of repeated phrases to be found.</p>
@@ -51,7 +46,7 @@ public class FindRepeatedPhrases {
      * @return a list of the PhraseBoxes produced in this method. The {@code n}th element of the 
      * list pertains to phrases of size {@code n}.
      */
-	public static List<PhraseBox> findRepPhrases(Operation op, String[] args, Consumer<String> msg) {
+	static List<PhraseBox> findRepPhrases(Operation op, String[] args, Consumer<String> msg) {
 		
 		File[] readUs = op.readFrom().folder().listFiles(IO::isTxt);
 		final List<Chapter> chapters = getChapters(readUs);

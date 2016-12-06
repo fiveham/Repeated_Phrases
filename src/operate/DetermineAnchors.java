@@ -29,7 +29,7 @@ import text.PhraseBox;
  * FindRepeatedPhrases-style word-index of that quote in its original file, and the Location to
  * which this quote, once its anchor tags are applied, needs to link.</p>
  */
-public class DetermineAnchors {
+class DetermineAnchors {
 	
     /**
      * <p>Detects all the .txt files in {@code READ_FROM}, reads them all, and organizes the
@@ -44,7 +44,7 @@ public class DetermineAnchors {
      * sequencing the chapters
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-	public static void determineAnchors(Operation op, String[] args, Consumer<String> msg) {
+	static void determineAnchors(Operation op, String[] args, Consumer<String> msg) {
 		msg.accept("Rendering phrase data as filebox and phrasebox.");
 		
 		String allAnchorablePhraseInstances = getDupPhraseData(op, msg);

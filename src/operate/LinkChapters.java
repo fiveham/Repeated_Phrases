@@ -21,7 +21,7 @@ import text.Location;
  * corresponding file in {@link #READ_DECORATION READ_DECORATION} is added to the html file and the
  * result is saved to {@link #WRITE_TO WRITE_TO}.</p>
  */
-public class LinkChapters{
+class LinkChapters{
 	
     /**
      * <p>For each corresponding pair of files from {@code READ_SUBSTANCE} and
@@ -32,7 +32,7 @@ public class LinkChapters{
      * @param args command-line args
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void linkChapters(Operation op, String[] args, Consumer<String> msg) {
+    static void linkChapters(Operation op, String[] args, Consumer<String> msg) {
         
         int threshold = getPhraseSizeThreshold(args);
         

@@ -26,7 +26,7 @@ import java.util.stream.Stream;
  *  <li>paragraphs with no visible content</li>
  * </ul></p>
  */
-public class ClearExcessStructure{
+class ClearExcessStructure{
 	
     /**
      * <p>Detects the html files in the directory {@code READ_FROM}, reads each of them, removes
@@ -36,7 +36,7 @@ public class ClearExcessStructure{
      * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-	public static void clearXSStruct(Operation op, String[] args, Consumer<String> msg){
+	static void clearXSStruct(Operation op, String[] args, Consumer<String> msg){
 		File[] readUs = op.readFrom().folder().listFiles(IO::isHtml);
 		Stream.of(readUs)
 		        .parallel()

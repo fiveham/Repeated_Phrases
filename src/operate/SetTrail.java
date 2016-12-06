@@ -32,7 +32,7 @@ import java.util.stream.IntStream;
  * address so they go nowhere.</p> <p>These trail files are also used to determine the sorting order
  * of chapters; so, they must have an entry for each existing chapter.</p>
  */
-public class SetTrail {
+class SetTrail {
 	
     /**
      * <p>The string that names the "id" attribute of an html tag.</p>
@@ -64,7 +64,7 @@ public class SetTrail {
      * @param args command-line args
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void setTrail(Operation op, String[] args, Consumer<String> msg) {
+    static void setTrail(Operation op, String[] args, Consumer<String> msg) {
         if(args.length < 1){
             throw new IllegalArgumentException("SetTrail: I need a trial file.");
         }

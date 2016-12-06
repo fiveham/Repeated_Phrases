@@ -287,7 +287,7 @@ public enum Operation{
      * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void rmUniqIndeps(Operation op, String[] args, Consumer<String> msg) {
+    private static void rmUniqIndeps(Operation op, String[] args, Consumer<String> msg) {
         IntStream.range(FindRepeatedPhrases.MIN_PHRASE_SIZE, FindRepeatedPhrases.MAX_PHRASE_SIZE)
                 .parallel()
                 .forEach((i) -> {

@@ -23,7 +23,7 @@ import text.Quote;
  * only the independent quotes.</p> <p>The files for independent quotes are organized according to
  * the number of words in their phrases.</p>
  */
-public class RemoveDependentPhrases {
+class RemoveDependentPhrases {
     
     /**
      * <p>The largest number of words in any repeated phrase in the corpus: {@value}</p>
@@ -50,7 +50,7 @@ public class RemoveDependentPhrases {
      * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static Map<Integer,PhraseBox> rmDepPhrases(
+    static Map<Integer,PhraseBox> rmDepPhrases(
             Operation op, 
             String[] args, 
             Consumer<String> msg){

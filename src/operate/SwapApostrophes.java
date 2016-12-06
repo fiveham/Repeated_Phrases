@@ -20,7 +20,7 @@ import text.PhraseProducer;
  * Scans each specified file looking for single-quote characters, and replaces them with proper
  * apostrophes ("\'") if the characters around the single-quote match any of several PATTERNS.
  */
-public class SwapApostrophes{
+class SwapApostrophes{
     
     /**
      * <p>The apostrophe character ({@value}), used in
@@ -44,13 +44,13 @@ public class SwapApostrophes{
      * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void swapApostrophes(Operation op, String[] args, Consumer<String> msg){
+    static void swapApostrophes(Operation op, String[] args, Consumer<String> msg){
         File[] readUs = op.readFrom().folder().listFiles(IO::isHtml);
         
         Stream.of(readUs)
                 .parallel()
                 .forEach((srcFile) -> {
-                    msg.accept("Normalizing apostrophes: "+srcFile.getName());
+                    msg.accept("Normalizing apostrophes: " + srcFile.getName());
                     
                     try(OutputStreamWriter out = IO.newOutputStreamWriter(
                             op.writeTo().folderName() 
@@ -251,12 +251,11 @@ public class SwapApostrophes{
             s = s.toLowerCase();
             int index = s.indexOf(APOSTROPHE);
             before = new ArrayList<>();
-            after = new ArrayList<>();
+            after = IntStream.range(index + 1, s.length())
+                    .mapToObj(s::charAt)
+                    .collect(Collectors.toList());
             for(int i = index - 1; i >= 0; i--){
                 before.add(s.charAt(i));
-            }
-            for(int i=index+1; i<s.length(); i++){
-                after.add(s.charAt(i));
             }
         }
         

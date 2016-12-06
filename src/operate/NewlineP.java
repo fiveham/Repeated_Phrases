@@ -15,7 +15,7 @@ import common.IO;
  * <p>Adds system-dependent newlines/linebreaks before opening html paragraph tags in html book
  * files from {@code READ_FROM} to increase the human-readability of those files.</p>
  */
-public class NewlineP{
+class NewlineP{
 	
     /**
      * <p>The first characters of an opening paragraph tag.</p>
@@ -30,7 +30,7 @@ public class NewlineP{
      * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void newlineP(Operation op, String[] args, Consumer<String> msg){
+    static void newlineP(Operation op, String[] args, Consumer<String> msg){
         
         String[] readUs = op.readFrom().folder().list(IO::isHtml);
         

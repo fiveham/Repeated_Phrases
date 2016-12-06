@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 /**
  * <p>Splits an ASOIAF main series novel HTML file into files for its individual chapters.</p>
  */
-public class SplitChapters {
+class SplitChapters {
 	
     /**
      * <p>Detects all html novel files in {@code READ_FROM}, reads them, and saves individual files
@@ -32,7 +32,7 @@ public class SplitChapters {
      * @param args command-line args (not used)
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void splitChapters(Operation op, String[] args, Consumer<String> msg) {
+    static void splitChapters(Operation op, String[] args, Consumer<String> msg) {
         handleNovels(op, msg);
         handleNovellas(op, msg);
         handlePQ(op, msg);
