@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
-
 import text.Chapter;
 import text.FileBox;
 import text.Location;
@@ -164,23 +163,22 @@ public class DetermineAnchors {
 		StringBuilder sb = new StringBuilder();
 		
 		IntStream.range(FindRepeatedPhrases.MIN_PHRASE_SIZE, FindRepeatedPhrases.MAX_PHRASE_SIZE)
+		        .parallel()
 		        .mapToObj(op.readFrom()::filename)
 		        .forEach((name) -> {
 		            msg.accept("Reading anchorable phrase data from "+IO.stripFolder(name));
 		            try{
 		                List<String> lines = IO.fileContentsAsList( 
-		                        new Scanner(new File( name ), IO.ENCODING), 
+		                        new Scanner(new File(name), IO.ENCODING), 
 		                        Scanner::nextLine, 
 		                        Scanner::hasNextLine);
-		                for(String line : lines){
-		                    sb.append(line).append("\n");
-		                }
+		                lines.forEach((line) -> sb.append(line).append("\n"));
 		            } catch(FileNotFoundException e){
 		                throw new RuntimeException(IO.ERROR_EXIT_MSG + name + " for reading.");
 		            }
 		        });
 		
-		return sb.delete(sb.length()-1, sb.length()).toString();
+		return sb.delete(sb.length() - 1, sb.length()).toString();
 	}
 	
     /**
@@ -213,21 +211,10 @@ public class DetermineAnchors {
 		String book2 = split2[0];
 		String chapterNumber2 = split2[1];
 		
-		int comp = bookList.get(book1) - bookList.get(book2);
+		int comp = Book.valueOf(book1).ordinal() - Book.valueOf(book2).ordinal();
 		return comp != 0 
 				? comp 
 				: Integer.parseInt(chapterNumber1) - Integer.parseInt(chapterNumber2);
-	}
-	
-    /**
-     * <p>The default order of the books of ASOIAF.</p>
-     */
-	public static final Map<String,Integer> bookList;
-	static{
-	    bookList = new HashMap<>();
-	    for(Book b : Book.values()){
-	        bookList.put(b.name(), b.ordinal());
-	    }
 	}
 	
     /**
@@ -249,12 +236,14 @@ public class DetermineAnchors {
 	public static Location locAfter(List<Location> locs, Chapter chapter, int index){
 		Location here = new Location(index, chapter);
 		int i = locs.indexOf(here);
-		if(i<0){
+		if(i < 0){
 			throw new IllegalArgumentException(
 					"The Location "+here.toString() + " is not present in the specified list.");
 		} else{
 			i++;
-			int nextInCycle = i==locs.size() ? 0 : i;
+			int nextInCycle = (i == locs.size()) 
+			        ? 0 
+			        : i;
 			return locs.get(nextInCycle);
 		}
 	}
@@ -271,7 +260,8 @@ public class DetermineAnchors {
      * @see operate.Folder#ANCHORS
      */
 	public static String anchorOutName(Chapter chapter){
-		return Folder.ANCHORS.folderName() + File.separator 
+		return Folder.ANCHORS.folderName() 
+		        + File.separator 
 				+ IO.stripFolderExtension(chapter.getName()) 
 				+ ANCHOR_EXT;
 	}
