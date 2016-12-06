@@ -10,10 +10,13 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * <p>Opens the file specified as a command-line argument and assigns the files named in the second
@@ -67,42 +70,44 @@ public class SetTrail {
         }
         String trailSource = args[0];
         msg.accept("Getting trail data from " + trailSource );
-        List<TrailElement> elements = getTrailElements( trailSource );
+        List<TrailElement> elements = getTrailElements(trailSource);
         
-        for(int i=0; i<elements.size(); i++){
-        	TrailElement node = elements.get(i);
-            msg.accept("Trail-linking "+node.focus());
-            
-            File fileToModify = 
-                    new File(op.readFrom().folderName() + File.separator + node.focus());
-            
-            if(fileToModify.exists()){
-                HTMLFile file = null;
-                try{
-                    file = new HTMLFile(fileToModify);
-                } catch( FileNotFoundException e){
-                	throw new RuntimeException(
-                			IO.ERROR_EXIT_MSG 
-                			+ op.readFrom().folderName() 
-                			+ File.separator 
-                			+ node.focus() 
-                			+ " for reading");
-                }
-                
-                setAdjacentChapterLinks(
-                		file, 
-                		PREV_CHAPTER, 
-                		ID_ATTRIB, 
-                		availableConnected(op, elements, i, TrailElement::prev));
-                setAdjacentChapterLinks(
-                		file, 
-                		NEXT_CHAPTER, 
-                		ID_ATTRIB, 
-                		availableConnected(op, elements, i, TrailElement::next));
-                
-                file.print(op.writeTo().folderName() + File.separator + node.focus());
-            }
-        }
+        IntStream.range(0, elements.size())
+                .parallel()
+                .forEach((i) -> {
+                    TrailElement node = elements.get(i);
+                    msg.accept("Trail-linking " + node.focus());
+                    
+                    File fileToModify = 
+                            new File(op.readFrom().folderName() + File.separator + node.focus());
+                    
+                    if(fileToModify.exists()){
+                        HTMLFile file = null;
+                        try{
+                            file = new HTMLFile(fileToModify);
+                        } catch(FileNotFoundException e){
+                            throw new RuntimeException(
+                                    IO.ERROR_EXIT_MSG 
+                                    + op.readFrom().folderName() 
+                                    + File.separator 
+                                    + node.focus() 
+                                    + " for reading");
+                        }
+                        
+                        setAdjacentChapterLinks(
+                                file, 
+                                PREV_CHAPTER, 
+                                ID_ATTRIB, 
+                                availableConnected(op, elements, i, TrailElement::prev));
+                        setAdjacentChapterLinks(
+                                file, 
+                                NEXT_CHAPTER, 
+                                ID_ATTRIB, 
+                                availableConnected(op, elements, i, TrailElement::next));
+                        
+                        file.print(op.writeTo().folderName() + File.separator + node.focus());
+                    }
+                });
     }
     
     private static String availableConnected(
@@ -127,16 +132,21 @@ public class SetTrail {
     		node = getTrailElementWithFocus(elements, name);
     	}
     	
-    	return visited.contains(name) ? "" : connection.apply(node);
+    	return visited.contains(name) 
+    	        ? "" 
+    	        : connection.apply(node);
     }
     
     private static TrailElement getTrailElementWithFocus(List<TrailElement> elements, String focus){
-    	for(int i=0; i<elements.size(); i++){
-    		if( elements.get(i).focus().equals(focus) ){
-    			return elements.get(i);
-    		}
-    	}
-    	throw new NoSuchElementException("No entry for file \""+focus+"\" in the trail file.");
+        Optional<TrailElement> result = IntStream.range(0, elements.size())
+                .mapToObj(elements::get)
+                .filter((e) -> e.focus().equals(focus))
+                .findFirst();
+        if(result.isPresent()){
+            return result.get();
+        } else{
+            throw new NoSuchElementException("No entry for file \""+focus+"\" in the trail file.");
+        }
     }
     
     /**
@@ -158,8 +168,9 @@ public class SetTrail {
     	
         Predicate<HTMLEntity> isAnchorWithMatchID = 
         		(h) -> isAnchorWithMatchID(h, idValue, idAttrib);
-        int pointer = -1;
-        while( -1 != (pointer=file.adjacentElement(pointer, isAnchorWithMatchID, Direction.NEXT))){
+        int pointer = INIT_POINTER;
+        while(INIT_POINTER 
+                != (pointer = file.adjacentElement(pointer, isAnchorWithMatchID, Direction.NEXT))){
             
             String tag = file.get(pointer).toString();
             tag = tag.substring(1,tag.length()-1);
@@ -167,6 +178,8 @@ public class SetTrail {
             file.set(pointer, new Tag( anchor(tag, address)));
         }
     }
+    
+    private static final int INIT_POINTER = -1;
     
     private static boolean isAnchorWithMatchID(HTMLEntity h, String idValue, String idAttrib){
     	if(Tag.class.isInstance(h)){
@@ -199,7 +212,9 @@ public class SetTrail {
      */
     private static String anchor(String tag, String address){
         return replaceValueOfAttribute(
-        		replaceValueOfAttribute(tag, HREF_START, address), TITLE_START, title(address));
+        		replaceValueOfAttribute(tag, HREF_START, address), 
+        		TITLE_START, 
+        		title(address));
     }
     
     /**
@@ -250,7 +265,7 @@ public class SetTrail {
      * column exists.</p>
      */
     public static final int COLUMN_COUNT = 4;
-
+    
     /**
      * <p>Returns a list of {@code TrailElement}s describing each chapter's predecessor and
      * successor.</p>
@@ -258,40 +273,42 @@ public class SetTrail {
      * @return a list of {@code TrailElement}s describing each chapter's predecessor and successor
      */
     public static List<TrailElement> getTrailElements(String trailFilename){
-        List<String> lines = IO.fileContentsAsList(
+        return IO.fileContentsAsList(
         		new File(trailFilename), 
         		Scanner::nextLine, 
-        		IO::scannerHasNonEmptyNextLine);
-        List<TrailElement> result = new ArrayList<>();
-        for(String line : lines){
-            String[] s = line.split("\t", COLUMN_COUNT);
-            result.add( new TrailElement( s[0], s[1], s[2] ) );
-        }
-        return result;
+        		IO::scannerHasNonEmptyNextLine)
+                .stream()
+                .map((line) -> line.split("\t", COLUMN_COUNT))
+                .map(TrailElement::new)
+                .collect(Collectors.toList());
     }
-
+    
     /**
      * <p>Represents an element of a chapter trail, a sequence of backward and forward links between
      * chapters.</p>
      */
-    public static class TrailElement implements Comparable<TrailElement>{
+    static class TrailElement implements Comparable<TrailElement>{
     	
         /**
          * <p>The chapter to be linked as the preceding chapter in the trail.</p>
          */
         private final String prev;
-
+        
         /**
          * <p>The chapter for which links to the specified preceding and succeeding chapters are to
          * be installed.</p>
          */
         private final String focus;
-
+        
         /**
          * <p>The chapter to be linked as the succeeding chapter in the trail.</p>
          */
         private final String next;
-
+        
+        TrailElement(String[] strings){
+            this(strings[0], strings[1], strings[2]); //MAGIC
+        }
+        
         /**
          * <p>Constructs a TrailElement indicating that the chapter named by {@code focus} has the
          * chapter named by {@code next} as its successor.</p>
@@ -300,12 +317,12 @@ public class SetTrail {
          * installed
          * @param next the chapter after {@code focus} in sequence
          */
-        public TrailElement(String prev, String focus, String next){
+        TrailElement(String prev, String focus, String next){
             this.prev = prev;
             this.focus = focus;
             this.next = next;
         }
-
+        
         /**
          * <p>Compares two TrailElements, first by their {@code focus}, then by their {@code prev},
          * and last by their {@code next}.</p>
@@ -315,7 +332,7 @@ public class SetTrail {
         @Override
         public int compareTo(TrailElement t){
             int comp = focus.compareTo(t.focus);
-            if(comp!=0){
+            if(comp != 0){
                 return comp;
             } else if(0 != (comp = prev.compareTo(t.prev))){
                 return comp;
@@ -323,7 +340,7 @@ public class SetTrail {
                 return next.compareTo(t.next);
             }
         }
-
+        
         /**
          * <p>Returns {@link #prev prev}.</p>
          * @return {@link #prev prev}
@@ -331,7 +348,7 @@ public class SetTrail {
         public String prev(){
             return prev;
         }
-
+        
         /**
          * <p>Returns {@link #focus focus}.</p>
          * @return {@link #focus focus}
@@ -339,7 +356,7 @@ public class SetTrail {
         public String focus(){
             return focus;
         }
-
+        
         /**
          * <p>Returns {@link #next next}.</p>
          * @return {@link #next next}
