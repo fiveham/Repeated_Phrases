@@ -24,7 +24,7 @@ import java.util.function.Consumer;
  * for consistent access to standards.</p>
  */
 public class IO {
-	
+    
 	public static final String ERROR_EXIT_MSG = "I can't open the file ";
 	
 	/**

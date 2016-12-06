@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.function.Consumer;
-import operate.FindRepeatedPhrases;
 
 //TODO Use Phrase objects as keys
 //TODO create Phrase class which stores lastIndexOf space (" ") data to expedite reducedPhrase time 
@@ -148,14 +147,18 @@ public class PhraseBox{
 	}
 	
     /**
+     * <p>Defines the number of locations in the corpus at which a unique phrase occurs.</p>
+     */
+    public static final int UNIQUE_PHRASE_LOCATION_COUNT = 1;
+	
+    /**
      * <p>Removes from this PhraseBox all the quote data for phrases that have only one associated
      * Location.</p>
      */
 	public PhraseBox removeUniques(Consumer<String> msg){
 		final int initSize = size();
 		map.entrySet().removeIf(
-				(e) -> map.get(e.getKey()).size() 
-						<= FindRepeatedPhrases.UNIQUE_PHRASE_LOCATION_COUNT);
+				(e) -> map.get(e.getKey()).size() <= UNIQUE_PHRASE_LOCATION_COUNT);
 		msg.accept("Removed "+ (initSize - size()) +" non-repeated terms");
 		return this;
 	}
