@@ -20,6 +20,10 @@ public enum Operation{
     /**
      * <p>Reads the html novel files and ensures that each opening paragraph tag is preceded by at 
      * least one {@link IO#NEW_LINE newline character}.</p>
+     * 
+     * Input: Html novel files on disk
+     * 
+     * Output: Html novels with each paragraph preceded by a newline
      */
     NEWLINE_P(
             null, 
@@ -37,6 +41,11 @@ public enum Operation{
      * <li>empty paragraphs ({@code <p></p>}</li>
      * </ul>
      * </p>
+     * 
+     * Input: Html novels with each paragraph preceded by a newline
+     * 
+     * Output: Html novels with each paragraph preceded by a newline and without any divs, 
+     * blockquotes, imgs, nbsps, or empty paragraphs
      */
     CLEAR_EXCESS_STRUCTURE(
             null, 
@@ -51,6 +60,13 @@ public enum Operation{
      * <li>the text following the final paragraph of the last chapter.</li>
      * </ul>
      * </p>
+     * 
+     * Input: Html novels with each paragraph preceded by a newline and without any divs, 
+     * blockquotes, imgs, nbsps, or empty paragraphs
+     * 
+     * Output: Html novels with each paragraph preceded by a newline, without any divs, 
+     * blockquotes, imgs, nbsps, or empty paragraphs, and without any matter before or after the 
+     * first chapter's title or the last line of the last chapter respectively
      */
     CLEAR_FRONT_AND_BACK_MATTER(
             null, 
@@ -61,6 +77,15 @@ public enum Operation{
     /**
      * <p>Replaces apostrophes represented by right single quotes in novel html files with ordinary 
      * apostrophe characters.</p>
+     * 
+     * Input: Html novels with each paragraph preceded by a newline, without any divs, 
+     * blockquotes, imgs, nbsps, or empty paragraphs, and without any matter before or after the 
+     * first chapter's title or the last line of the last chapter respectively
+     * 
+     * Output: Html novels with each paragraph preceded by a newline, without any divs, 
+     * blockquotes, imgs, nbsps, or empty paragraphs, without any matter before or after the first 
+     * chapter's title or the last line of the last chapter respectively, and with all right single 
+     * quotes to function as apostrophes replaced by actual apostrophe characters
      */
     SWAP_APOSTROPHES(
             null, 
@@ -70,6 +95,15 @@ public enum Operation{
     
     /**
      * <p>Identifies chapters by splitting html novel files.</p>
+     * 
+     * Input: Html novels with each paragraph preceded by a newline, without any divs, 
+     * blockquotes, imgs, nbsps, or empty paragraphs, without any matter before or after the first 
+     * chapter's title or the last line of the last chapter respectively, and with all right single 
+     * quotes to function as apostrophes replaced by actual apostrophe characters
+     * 
+     * Output: Html chapters with each paragraph preceded by a newline, without any divs, 
+     * blockquotes, imgs, nbsps, or empty paragraphs, and with all right single quotes that 
+     * function as apostrophes replaced by actual apostrophe characters
      */
     SPLIT_CHAPTERS(
             null, 
@@ -80,6 +114,14 @@ public enum Operation{
     /**
      * <p>Reads the html chapter files and saves them to another folder after stripping out all 
      * html elements.</p>
+     * 
+     * Input: Html chapters with each paragraph preceded by a newline, without any divs, 
+     * blockquotes, imgs, nbsps, or empty paragraphs, and with all right single quotes that 
+     * function as apostrophes replaced by actual apostrophe characters
+     * 
+     * Output: Text chapters with each paragraph preceded by a newline, without any divs, 
+     * blockquotes, imgs, nbsps, or empty paragraphs, and with all right single quotes that 
+     * function as apostrophes replaced by actual apostrophe characters
      */
     HTML_TO_TEXT(
             null, 
@@ -89,6 +131,12 @@ public enum Operation{
     
     /**
      * <p>Reads the text chapters and determines which phrases at each size are repeated.</p>
+     * 
+     * Input: Text chapters with each paragraph preceded by a newline, without any divs, 
+     * blockquotes, imgs, nbsps, or empty paragraphs, and with all right single quotes that 
+     * function as apostrophes replaced by actual apostrophe characters
+     * 
+     * Output: An index of phrases that occur multiple times in the overall corpus
      */
     FIND_REPEATED_PHRASES(
             null, 
@@ -98,6 +146,11 @@ public enum Operation{
     
     /**
      * <p>Isolates those repeated Phrases that are not subsumed by a larger repeated Phrase.</p>
+     * 
+     * Input: An index of phrases that occur multiple times in the overall corpus
+     * 
+     * Output: An index of phrases that occur multiple times in the overall corpus and which are 
+     * not subsumed by some larger phrase that also occurs multiple times in the corpus
      */
     REMOVE_DEPENDENT_PHRASES(
             null, 
@@ -108,6 +161,12 @@ public enum Operation{
     /**
      * <p>Filters out the repeated Phrases which have only one instance that isn't subsumed by a 
      * larger phrase.</p>
+     * 
+     * Input: An index of phrases that occur multiple times in the overall corpus and which are 
+     * not subsumed by some larger phrase that also occurs multiple times in the corpus
+     * 
+     * Output: An index of phrases from the overall corpus which occur at multiple non-subsumed 
+     * locations
      */
     REMOVE_UNIQUE_INDEPENDENTS(
             null, 
@@ -117,6 +176,12 @@ public enum Operation{
     
     /**
      * <p>Creates anchor data for each phrase that has passed all the phrase filters.</p>
+     * 
+     * Input: An index of phrases from the overall corpus which occur at multiple non-subsumed 
+     * locations
+     * 
+     * Output: An index of anchors connecting each of the phrases from the overall corpus which 
+     * occur at multiple non-subsumed locations to the corresponding phrase that comes after it
      */
     DETERMINE_ANCHORS(
             null, 
@@ -126,6 +191,13 @@ public enum Operation{
     
     /**
      * <p>Creates html chapters from existing html chapters and anchor data.</p>
+     * 
+     * Input: An index of anchors connecting each of the phrases from the overall corpus which 
+     * occur at multiple non-subsumed locations to the corresponding phrase that comes after it and 
+     * html chapters of the ASOIAF books
+     * 
+     * Output: Html chapters where each of the phrases from the overall corpus which occur at 
+     * multiple non-subsumed locations is linked to its successor
      */
     LINK_CHAPTERS(
             Folder.ANCHORS, 
@@ -135,6 +207,13 @@ public enum Operation{
     
     /**
      * <p>Adds trail info to anchored html chapters.</p>
+     * 
+     * Input: Html chapters where each of the phrases from the overall corpus which occur at 
+     * multiple non-subsumed locations is linked to its successor
+     * 
+     * Output: Html chapters where each of the phrases from the overall corpus which occur at 
+     * multiple non-subsumed locations is linked to its successor and which is each linked to its 
+     * preceding and succeeding html chapter
      */
     SET_TRAIL(
             null, 
