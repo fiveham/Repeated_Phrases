@@ -137,6 +137,7 @@ public class RemoveDependentPhrases {
                     if(!largerPhraseAtLowerIndex.hasLargerPhrase() 
                             && !largerPhraseAtSameIndex.hasLargerPhrase()){
                         
+                        //only independent (non-subsumed) phrases are added to result
                         result.add(phraseHere.text(), new Location(phraseHere.index(), chapter));
                     } else if(largerPhraseAtLowerIndex.isFalse() 
                             && largerPhraseAtSameIndex.isFalse()){
