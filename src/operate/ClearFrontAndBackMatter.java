@@ -78,7 +78,7 @@ class ClearFrontAndBackMatter {
         Stream.of(novelFiles)
                 .parallel()
                 .forEach((f) -> {
-                    msg.accept("Removing front/back matter: "+f.getName());
+                    msg.accept("Removing front/back matter: " + f.getName());
                     
                     try(OutputStreamWriter out = IO.newOutputStreamWriter(
                             op.writeTo().folderName() 
@@ -125,9 +125,9 @@ class ClearFrontAndBackMatter {
         
         return pLocation - 1;
 	}
-	
-	public static final char RIGHT_DOUBLE_QUOTE = '\u201D';
-	public static final char RIGHT_SINGLE_QUOTE = '\u2019';
+    
+    public static final char RIGHT_DOUBLE_QUOTE = '\u201D';
+    public static final char RIGHT_SINGLE_QUOTE = '\u2019';
 	
 	private static HashMap<String,String> FIRST_WORDS;
 	static{
@@ -135,7 +135,7 @@ class ClearFrontAndBackMatter {
 		FIRST_WORDS.put("AGOT.html", "We should start");
 		FIRST_WORDS.put("ACOK.html", "The comet"+RIGHT_SINGLE_QUOTE+"s tail");
 		FIRST_WORDS.put("ASOS.html", "The day was");
-		FIRST_WORDS.put("AFFC.html", "Dragons,â€� said Mollander");
+		FIRST_WORDS.put("AFFC.html", "Dragons,"+RIGHT_SINGLE_QUOTE+" said Mollander");
 		FIRST_WORDS.put("ADWD.html", "The night was");
 	}
 	
