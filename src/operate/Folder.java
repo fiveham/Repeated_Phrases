@@ -3,6 +3,7 @@ package operate;
 import java.io.File;
 
 import common.IO;
+import html.HTMLFile;
 
 /**
  * <p>Represents the folders that play significant roles in this project: Five folders for entire 
@@ -88,5 +89,9 @@ public enum Folder {
 	 */
 	public String namebase(){
 		return namebase;
+	}
+	
+	public void save(HTMLFile h){
+	    //TODO implement
 	}
 }
