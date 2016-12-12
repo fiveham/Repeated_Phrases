@@ -31,7 +31,6 @@ class NewlineP{
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
     static void newlineP(Operation op, String[] args, Consumer<String> msg){
-        
         String[] readUs = op.readFrom().folder().list(IO::isHtml);
         
         Stream.of(readUs)
