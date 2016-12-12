@@ -41,22 +41,23 @@ class ClearFrontAndBackMatter {
                     .parallel()
                     .forEach((f) -> {
                         msg.accept("Removing front/back matter: "+f.getName());
-
+                        
                         try(OutputStreamWriter out = IO.newOutputStreamWriter(
                                 op.writeTo().folderName() 
                                 + File.separator 
                                 + f.getName())){
+                            
                             HTMLFile file = new HTMLFile(f.getName(), new Scanner(f, IO.ENCODING));
-
+                            
                             int pWhereFirstWords = firstWordsP(file, f);
                             file.removeAll(0,pWhereFirstWords);
-
+                            
                             int pWhereLastWords = lastWordsP(file, f);
                             file.removeAll( pWhereLastWords + 1 );
                             
                             file.print(out);
                             out.close();
-
+                            
                         } catch(FileNotFoundException e){
                             msg.accept(
                                     "FileNotFoundException occured for file " + f.getName() 
@@ -205,9 +206,9 @@ class ClearFrontAndBackMatter {
 	private static int lastWordsP(HTMLFile file, File novella){
         String lastWords = lastWords(novella.getName());
         Predicate<Integer> predicate = (i) -> file.hasLiteralAt(lastWords, i);
-
+        
         int literalIndex = file.adjacentElement(predicate, Direction.PREV, file.elementCount());
-
+        
         return file.adjacentElement(literalIndex, Tag::isPClose, Direction.NEXT);
 	}
 	
@@ -221,9 +222,9 @@ class ClearFrontAndBackMatter {
 	private static int firstWordsP(HTMLFile file, File novella){
         String firstWords = firstWords(novella.getName());
         Predicate<Integer> predicate = (i) -> file.hasLiteralAt(firstWords, i);
-
+        
         int literalIndex = file.adjacentElement(predicate, Direction.NEXT, -1);
-
+        
         return file.adjacentElement(literalIndex, Tag::isPOpen, Direction.PREV);
 	}
 }
