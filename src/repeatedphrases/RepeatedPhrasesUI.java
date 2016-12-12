@@ -49,7 +49,7 @@ public class RepeatedPhrasesUI extends JFrame {
      * <p>Creates new form RepeatedPhrasesUI</p>
      */
     public RepeatedPhrasesUI() {
-        this.app = new RepeatedPhrasesApp(System.out::println);
+        this.app = new RepeatedPhrasesApp(System.out::println, false, false);
         initComponents();
         this.setTitle("Repeated Phrase Analyser");
     }
