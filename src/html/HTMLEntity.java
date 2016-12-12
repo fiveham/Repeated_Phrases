@@ -25,13 +25,21 @@ public abstract class HTMLEntity {
      * @param c a literal {@code char} to be compared against {@code h}
      * @return true if the {@code c} matches {@code h}, false otherwise
      */
-    public abstract boolean match(char c);//{
-    //    if(CharLiteral.class.isInstance(h)){
-    //        return ((CharLiteral)h).c == c;
-    //    } else if(CharCode.class.isInstance(h)){
-    //        return ((CharCode)h).isEquivalent(c);
-    //    } else{
-    //        return false;
-    //    }
-    //}
+    public abstract boolean match(char c);
+    
+    boolean notDiv(){
+        return !Tag.isDiv(this);
+    }
+    
+    boolean notBlockquote(){
+        return !Tag.isBlockquote(this);
+    }
+    
+    boolean notImg(){
+        return !Tag.isImg(this);
+    }
+    
+    boolean notNbsp(){
+        return !CharCode.isNbsp(this);
+    }
 }
