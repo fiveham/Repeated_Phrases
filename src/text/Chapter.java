@@ -3,6 +3,7 @@ package text;
 import java.io.File;
 
 import common.IO;
+import html.HTMLFile;
 
 /**
  * <p>Represents a chapter of a book in the body of text being analysed. Pairs the name of the file
@@ -27,6 +28,11 @@ public class Chapter {
 	public Chapter(File file){
 	    this.filename = file.getName();
 	    this.body = IO.fileAsString(file);
+	}
+	
+	public Chapter(HTMLFile h){
+	    //TODO see whether that name has exactly the needed folder info.
+	    this(new File(h.getName()));
 	}
 	
     /**
