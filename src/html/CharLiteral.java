@@ -8,6 +8,9 @@ import text.PhraseProducer;
  * {@link CharCode character codes}.</p>
  */
 public class CharLiteral extends HTMLEntity {
+    
+    public static final CharLiteral RIGHT_SINGLE_QUOTE = new CharLiteral(HTMLFile.RIGHT_SINGLE_QUOTE);
+    public static final CharLiteral APOSTROPHE = new CharLiteral('\'');
 	
     /**
      * <p>The literal character this object wraps.</p>
