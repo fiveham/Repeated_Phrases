@@ -6,6 +6,7 @@ import html.CharLiteral;
 import html.Direction;
 import html.HTMLEntity;
 import html.HTMLFile;
+import html.HTMLFile.BookData;
 import html.Tag;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,11 +14,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -69,6 +69,9 @@ class SplitChapters {
                                 writeCount++;
                             } else{
                                 buffer.addAll(paragraph);
+                                
+                                //TODO add a constant somewhere to use here. 
+                                //Only need 1 instance in memory
                                 buffer.add(new CharLiteral('\n'));
                             }
                         }
@@ -87,16 +90,15 @@ class SplitChapters {
                 });
     }
     
-    private static List<String> allEasyNovellaNames = Arrays.asList(
-		"DE_0.html",
-		"DE_1.html",
-		"DE_2.html",
-		"RP.html");
+    private static final List<String> EASY_NOVELLA_NAMES = Stream.of(BookData.values())
+            .filter(BookData::isNovella)
+            .filter((b) -> b != BookData.PQ)
+            .map(BookData::filename)
+            .collect(Collectors.toList());
     
     private static void handleNovellas(Operation op, Consumer<String> msg){
-        
         String[] extantEasyNovellas = op.readFrom().folder()
-        		.list((dir,name) -> allEasyNovellaNames.contains(name));
+        		.list((dir, name) -> EASY_NOVELLA_NAMES.contains(name));
         
         Stream.of(extantEasyNovellas)
                 .parallel()
@@ -108,17 +110,15 @@ class SplitChapters {
                         
                         HTMLFile file = new HTMLFile(
                                 new File(op.readFrom().folderName() + File.separator + novella));
-                        List<HTMLEntity> pseudoBuffer = file.section(0);
                         
                         String title = novellaTitle(novella);
-                        writeBuffer(pseudoBuffer,out,title, msg);
-                        
+                        writeBuffer(file, out, title, msg);
                     } catch(FileNotFoundException e){
                         msg.accept(novella + " not found.");
                     } catch(UnsupportedEncodingException e){
-                        msg.accept("UnsupportedEncodingException occured for file "+novella);
+                        msg.accept("UnsupportedEncodingException occured for file " + novella);
                     } catch(IOException e){
-                        msg.accept("IOException occured for file "+novella);
+                        msg.accept("IOException occured for file " + novella);
                     }
                 });
     }
@@ -132,8 +132,8 @@ class SplitChapters {
             int footnoteIndex = pq.adjacentElement(
             		(i) -> pq.hasLiteralAt("Footnote",i), Direction.PREV, pq.elementCount());
             
-            int bodyEndIndex = pq.adjacentElement( footnoteIndex, Tag::isPOpen, Direction.PREV);
-            List<HTMLEntity> bodySection = pq.section(0,bodyEndIndex);
+            int bodyEndIndex = pq.adjacentElement(footnoteIndex, Tag::isPOpen, Direction.PREV);
+            List<HTMLEntity> bodySection = pq.section(0, bodyEndIndex);
             
             int footnoteStart = pq.adjacentElement(
             		pq.elementCount(), 
@@ -144,20 +144,17 @@ class SplitChapters {
             HTMLFile body = new HTMLFile("PQ_0_THE_PRINCESS_AND_THE_QUEEN.html", bodySection);
             HTMLFile footnote = new HTMLFile("PQ_1_FOOTNOTE.html", footnoteSection);
             
-            Predicate<HTMLEntity> isSuperscript1 = 
-            		(h) -> CharLiteral.class.isInstance(h) && ((CharLiteral)h).c == '1';
-            		
             String[] hrefs = {
             		"PQ_1_FOOTNOTE.html#FOOTNOTE", 
             		"PQ_0_THE_PRINCESS_AND_THE_QUEEN.html#FOOTNOTE"
             };
             HTMLFile[] files = {body, footnote};
-            for(int i=0; i<hrefs.length; i++){
+            for(int i = 0; i < hrefs.length; i++){
                 HTMLFile file = files[i];
                 
                 //replace superscript 1 with asterisk
                 int noteIndex = file.adjacentElement(-1, Tag::isSup, Direction.NEXT);
-                noteIndex = file.adjacentElement(noteIndex, isSuperscript1, Direction.NEXT);
+                noteIndex = file.adjacentElement(noteIndex, CharLiteral::is1, Direction.NEXT);
                 file.set(noteIndex, new CharLiteral('*'));
                 
                 //replace internal link with external link
@@ -172,7 +169,7 @@ class SplitChapters {
                 		op.writeTo().folderName() 
                 		+ File.separator 
                 		+ file.getName());
-                writeBuffer(file.section(0), out, file.chapterName(), msg);
+                writeBuffer(file, out, chapterName(file), msg);
             }
         } catch(FileNotFoundException e){
             msg.accept(novella + " not found by SplitChapters");
@@ -181,6 +178,17 @@ class SplitChapters {
         } catch(IOException e){
             msg.accept("IOException occured for file "+novella);
         }
+    }
+    
+    private static String chapterName(HTMLFile file){
+        String filename = file.getName();
+        filename = IO.stripFolderExtension(filename);
+        
+        int a = filename.indexOf(IO.FILENAME_COMPONENT_SEPARATOR);
+        int b = filename.indexOf(IO.FILENAME_COMPONENT_SEPARATOR, a + 1);
+        
+        String result = filename.substring(b + 1);
+        return result;
     }
     
     /**
@@ -248,6 +256,15 @@ class SplitChapters {
 		return ('A'<=c && c<='Z') || c==' ' || c=='\'';
 	}
 	
+	private static void writeBuffer(
+	        HTMLFile file, 
+	        OutputStreamWriter out, 
+	        String chaptername, 
+	        Consumer<String> msg) throws IOException{
+
+        writeBuffer(file.section(0), out, chaptername, msg);
+	}
+	
     /**
      * <p>Writes the contents of {@code buffer} to a file via {@code out}, prepended with
      * {@link #writeHeader(String,OutputStreamWriter) a header} and appended with
@@ -269,8 +286,8 @@ class SplitChapters {
         if(out != null){
             msg.accept("Saving a chapter titled " + chapterName);
             writeHeader(chapterName, out);
-            for(HTMLEntity h : buffer){
-                out.write(h.toString());
+            for(HTMLEntity e : buffer){
+                out.write(e.toString());
             }
             writeFooter(chapterName, out);
             out.close();
@@ -337,20 +354,8 @@ class SplitChapters {
             + "<a id=\"next_chapter\" href=\"nowhere\" title=\"nothing\" style=\"change_chapter\">"
             + "&gt;&gt;</a></p></td></tr></table></div><div class=\"chapter_body\">";
     
-    /**
-     * <p>Adds a header to the specified file consisting of an opening html tag, opening head tag,
-     * charset and stylesheet specifications, closing head tag, opening body tag, opening div tag
-     * for the overall chapter, opening div tag for the chapter-navigation table before the chapter
-     * body, chapter-navigation table before the chapter body with the chapter's name included,
-     * closing div for the header table, and an opening div for the body of the chapter.</p>
-     * @param chapterName the name of the chapter to which this header will be applied by being
-     * added to the central cell of the header chapter-navigation table
-     * @param out specifies the file to which the header is written
-     * @throws IOException if an I/O error occurs while writing to the file
-     */
-    public static void writeHeader(String chapterName, OutputStreamWriter out) throws IOException{
-        String header = HEADER_FRONT + chapterName + HEADER_BACK + IO.NEW_LINE;
-        out.write(header);
+    public static String header(String chapterName){
+        return HEADER_FRONT + chapterName + HEADER_BACK + IO.NEW_LINE;
     }
     
     /**
@@ -374,6 +379,25 @@ class SplitChapters {
             + "<a id=\"next_chapter\" href=\"nowhere\" title=\"nothing\" style=\"change_chapter\">"
             + "&gt;&gt;</a></p></td></tr></table></div></div></body></html>";
     
+    public static String footer(String chapterName){
+        return FOOTER_FRONT + chapterName + FOOTER_BACK;
+    }
+    
+    /**
+     * <p>Adds a header to the specified file consisting of an opening html tag, opening head tag,
+     * charset and stylesheet specifications, closing head tag, opening body tag, opening div tag
+     * for the overall chapter, opening div tag for the chapter-navigation table before the chapter
+     * body, chapter-navigation table before the chapter body with the chapter's name included,
+     * closing div for the header table, and an opening div for the body of the chapter.</p>
+     * @param chapterName the name of the chapter to which this header will be applied by being
+     * added to the central cell of the header chapter-navigation table
+     * @param out specifies the file to which the header is written
+     * @throws IOException if an I/O error occurs while writing to the file
+     */
+    public static void writeHeader(String chapterName, OutputStreamWriter out) throws IOException{
+        out.write(header(chapterName));
+    }
+    
     /**
      * <p>Adds a footer to the specified file consisting of a closing div for the chapter body, a
      * chapter-navigation table containing the chapter's title, in its own div, a closing div tag
@@ -383,8 +407,7 @@ class SplitChapters {
      * @throws IOException if an I/O error occurs while writing the file
      */
     public static void writeFooter(String chapterName, OutputStreamWriter out) throws IOException{
-        String footer = FOOTER_FRONT + chapterName + FOOTER_BACK;
-        out.write(footer);
+        out.write(footer(chapterName));
     }
     
     /**
