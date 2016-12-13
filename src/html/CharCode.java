@@ -11,6 +11,9 @@ public class CharCode extends HTMLEntity {
      */
 	public static final String NBSP = "nbsp";
 	
+	public static final CharCode LT = new CharCode("lt");
+	public static final CharCode GT = new CharCode("gt");
+	
     /**
      * <p>Returns true if the specified HTMLEntity is a {@code CharCode} and represents a
      * {@link #NBSP non-breaking space}, false otherwise.</p>
