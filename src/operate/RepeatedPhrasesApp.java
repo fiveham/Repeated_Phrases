@@ -1,12 +1,17 @@
 package operate;
 
 import common.IO;
+import html.HTMLFile;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import text.Chapter;
 
 //TODO use the following structure:
@@ -18,9 +23,18 @@ import text.Chapter;
 public class RepeatedPhrasesApp {
     
     private Collection<Chapter> chapters = null;
+    private final Consumer<String> msg;
+    private final boolean recordHtmlChapters;
+    private final boolean recordTextChapters;
     
-    public RepeatedPhrasesApp(){
+    public RepeatedPhrasesApp(
+            Consumer<String> msg, 
+            boolean recordHtmlChapters, 
+            boolean recordTextChapters){
         
+        this.msg = msg;
+        this.recordHtmlChapters = recordHtmlChapters;
+        this.recordTextChapters = recordTextChapters;
     }
     
     public Collection<Chapter> getChapters(boolean generate){
@@ -36,7 +50,7 @@ public class RepeatedPhrasesApp {
         }
         
         return FindRepeatedPhrases.getChapters(
-                Operation.FIND_REPEATED_PHRASES.readFrom().folder().listFiles(Chapter::isChapter));
+                Folder.CORPUS.folder().listFiles(Chapter::isChapter));
     }
     
     private static void genChapters(Consumer<String> msg){
@@ -53,7 +67,7 @@ public class RepeatedPhrasesApp {
 	public void ensureFolders(Consumer<String> msg){
 		for(Folder f : Folder.values()){
 			File name = f.folder();
-			if( !name.exists() ){
+			if(!name.exists()){
 				msg.accept("Creating "+name.getName());
 				name.mkdir();
 			}
@@ -69,7 +83,7 @@ public class RepeatedPhrasesApp {
      * @param msg
      */
     public void isolateChaptersAndLink(String[] args, Consumer<String> msg) {
-    	int limit = validateArgs(args, msg);
+    	int limit = validateArgs(args);
     	
         ensureFolders(msg);
         
@@ -100,7 +114,7 @@ public class RepeatedPhrasesApp {
         msg.accept("Ignoring unique independent instances");
         Operation.REMOVE_UNIQUE_INDEPENDENTS.operate(null, msg);
         
-        linksAndTrail(limit, trailArgs(args), msg);
+        linksAndTrail(limit, trailArgs(args));
     }
     
     /**
@@ -112,7 +126,7 @@ public class RepeatedPhrasesApp {
      * @return the int value of the second command-line argument, if it is present and parses as an
      * int, {@value #IO.PHRASE_SIZE_FOR_ANCHOR} otherwise.
      */
-    static int validateArgs(String[] args, Consumer<String> msg){
+    static int validateArgs(String[] args){
         if(args.length < 1){ //MAGIC
         	throw new IllegalArgumentException("I need a trail file.");
         }
@@ -134,19 +148,19 @@ public class RepeatedPhrasesApp {
         }
     }
     
-    public void linksAndTrail(String[] args, Consumer<String> msg) {
+    public void linksAndTrail(String[] args) {
     	
-        int limit = validateArgs(args, msg);
-        String[] trailArgs = trailArgs(args);//new String[]{ args[0] };
+        int limit = validateArgs(args);
+        String[] trailArgs = trailArgs(args);
         
-        linksAndTrail(limit, trailArgs, msg);
+        linksAndTrail(limit, trailArgs);
     }
     
     private String[] trailArgs(String[] args){
         return new String[]{ args[0] };
     }
     
-    private void linksAndTrail(int limit, String[] trailArgs, Consumer<String> msg){
+    private void linksAndTrail(int limit, String[] trailArgs){
         msg.accept("Determining links to add to phrases");
         Operation.DETERMINE_ANCHORS.operate(trailArgs, msg);
         
@@ -155,5 +169,61 @@ public class RepeatedPhrasesApp {
         
         msg.accept("Adding prev- and next-chapter links");
         Operation.SET_TRAIL.operate(trailArgs, msg);
+    }
+    
+    public Consumer<String> getMsg(){
+        return this.msg;
+    }
+    
+    //TODO decide what set of methods in this class will be the API or style of use
+    //There's three different could-be APIs represented here currently
+    /**
+     * <p></p>
+     * @param save
+     * @return
+     */
+    public Collection<Chapter> novelsToChapters(){
+        
+        //XXX do these String names include the pertinent folders or not?
+        //TODO use an "is book" test against BookData elements
+        String[] htmlBooks = Folder.HTML_BOOKS.folder().list(IO::isHtml);
+        
+        Collection<HTMLFile> htmlChapters = Stream.of(htmlBooks)
+                .parallel()
+                .map(File::new)
+                .map(this::newHTMLFile)
+                .filter(Objects::nonNull)
+                .map(HTMLFile::cleanAndSplit)
+                .reduce((c1,c2) -> {
+                    c1.addAll(c2); 
+                    return c1;
+                })
+                .get();
+        
+        Stream<HTMLFile> htmlChapterStream = htmlChapters.stream();
+        
+        //TODO ensure that runtime copies of html chapters are retained
+        if(recordHtmlChapters){
+            htmlChapterStream.peek(Folder.HTML_CHAPTERS::save);
+        }
+        
+        if(recordTextChapters){
+            htmlChapterStream.peek(Folder.CORPUS::save);
+        }
+        
+        chapters = htmlChapterStream
+                .map(Chapter::new)
+                .collect(Collectors.toList());
+        
+        return chapters;
+    }
+    
+    private HTMLFile newHTMLFile(File f){
+        try{
+            return new HTMLFile(f);
+        } catch(FileNotFoundException e){
+            getMsg().accept(e.getMessage());
+            return null;
+        }
     }
 }
