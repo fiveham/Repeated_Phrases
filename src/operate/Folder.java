@@ -6,6 +6,7 @@ import html.HTMLFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.function.Function;
 
 /**
  * <p>Represents the folders that play significant roles in this project: Five folders for entire 
@@ -15,41 +16,83 @@ import java.io.OutputStreamWriter;
  */
 public enum Folder {
     
-    HTML_BOOKS					  ("00_html_books",	                    null),
-    HTML_BOOKS_NEWLINE			  ("01_html_books_newline",	            null),
-    HTML_BOOKS_UNSTRUCTURED		  ("02_html_books_unstructured",        null),
-    HTML_BOOKS_CHAPTER_CORE		  ("03_html_books_chapter_core",        null),
-    HTML_BOOKS_CORRECT_APOSTROPHES("04_html_books_correct_apostrophes", null),
-    HTML_CHAPTERS				  ("05_html_chapters",                  null),
-    CORPUS						  ("06_corpus",                         null),
-    REPEATS						  ("07_repeats",                        "repeats"),
-    INDEPENDENT_INSTANCES		  ("08_independent_instances",          "independent_instances"),
-    DUPLICATE_INDEPENDENTS		  ("09_duplicate_independents",         "duplicate_independents"),
-    ANCHORS						  ("10_anchors",                        null),
-    LINKED_CHAPTERS				  ("11_linked_chapters",                null),
-    READABLE					  ("12_readable",                       null);
+    HTML_BOOKS(
+            "00_html_books", 
+            null, 
+            null),
+    HTML_BOOKS_NEWLINE(
+            "01_html_books_newline", 
+            null, 
+            null),
+    HTML_BOOKS_UNSTRUCTURED(
+            "02_html_books_unstructured", 
+            null, 
+            null),
+    HTML_BOOKS_CHAPTER_CORE(
+            "03_html_books_chapter_core", 
+            null, 
+            null),
+    HTML_BOOKS_CORRECT_APOSTROPHES(
+            "04_html_books_correct_apostrophes", 
+            null, 
+            null),
+    HTML_CHAPTERS(
+            "05_html_chapters", 
+            null, 
+            Object::toString),
+    CORPUS(
+            "06_corpus", 
+            null, 
+            HTMLEntity::txtString),
+    REPEATS(
+            "07_repeats", 
+            "repeats", 
+            null),
+    INDEPENDENT_INSTANCES(
+            "08_independent_instances", 
+            "independent_instances", 
+            null),
+    DUPLICATE_INDEPENDENTS(
+            "09_duplicate_independents", 
+            "duplicate_independents", 
+            null),
+    ANCHORS(
+            "10_anchors", 
+            null, 
+            null),
+    LINKED_CHAPTERS(
+            "11_linked_chapters", 
+            null, 
+            null),
+    READABLE(
+            "12_readable", 
+            null, 
+            null);
     
 	/**
 	 * <p>The actual directory</p>
 	 */
-	private File folder;
+	private final File folder;
 	
 	/**
 	 * <p>The name of the directory, used in creating {@code folder}.</p>
 	 */
-	private String folderName;
+	private final String folderName;
 	
 	/**
 	 * <p>The base of the name of files to be saved in or read from this directory. This is 
 	 * non-null only for those directories whose contents pertain to phrases of certain sizes 
 	 * rather than chapters or entire books.</p>
 	 */
-	private String namebase;
+	private final String namebase;
 	
-	private Folder(String name, String base ){
-		folder = new File(name);
-		folderName = name;
-		namebase = base;
+	private final Function<HTMLEntity, String> func;
+	
+	private Folder(String name, String base, Function<HTMLEntity, String> func){
+	    this.folder = new File(name);
+		this.folderName = name;
+		this.namebase = base;
+		this.func = func;
 	}
 	
 	/**
@@ -97,7 +140,7 @@ public enum Folder {
 	    try(OutputStreamWriter out = 
 	            IO.newOutputStreamWriter(folder + File.separator + h.getName())){
 	        for(HTMLEntity e : h){
-	            out.write(e.toString());
+	            out.write(func.apply(e));
 	        }
 	    } catch(IOException e){
 	        //TODO implement the content of this block
