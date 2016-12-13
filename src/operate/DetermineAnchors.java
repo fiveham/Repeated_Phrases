@@ -1,6 +1,5 @@
 package operate;
 
-import common.Book;
 import common.IO;
 import html.HTMLFile;
 import java.util.Comparator;
@@ -136,7 +135,7 @@ class DetermineAnchors {
         private AdHocComparator(String trailFile){
             List<TrailElement> elems = RepeatedPhrasesApp.getTrailElements(trailFile);
             chapterIndices = new HashMap<>();
-            for(int i=0; i<elems.size(); i++){
+            for(int i = 0; i < elems.size(); i++){
                 chapterIndices.put(IO.stripFolderExtension(elems.get(i).focus()), i);
             }
         }
@@ -218,6 +217,17 @@ class DetermineAnchors {
 		return comp != 0 
 				? comp 
 				: Integer.parseInt(chapterNumber1) - Integer.parseInt(chapterNumber2);
+	}
+	
+	private static enum Book {
+	    AGOT, 
+	    ACOK, 
+	    ASOS, 
+	    AFFC, 
+	    ADWD, 
+	    DE, 
+	    PQ, 
+	    RP;
 	}
 	
     /**
