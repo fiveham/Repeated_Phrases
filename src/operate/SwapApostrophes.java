@@ -296,7 +296,7 @@ class SwapApostrophes{
          * @return
          */
         private Character characterAt(int index, List<IntChar> list){
-            return 0<=index && index < list.size()
+            return 0 <= index && index < list.size()
                     ? list.get(index).c
                     : null;
         }
@@ -316,13 +316,15 @@ class SwapApostrophes{
          * represented in the HTML-free {@code cleanLine}.
          */
         private int cleanPointer(List<IntChar> cleanLine, int soughtIndex){
-            OptionalInt result = IntStream.range(0, cleanLine.size()).filter((i) -> cleanLine.get(i).i == soughtIndex).findFirst();
-            if(result.isPresent()){
-                return result.getAsInt();
-            } else{
-                return -1; //MAGIC
-            }
+            OptionalInt result = IntStream.range(0, cleanLine.size())
+                    .filter((i) -> cleanLine.get(i).i == soughtIndex)
+                    .findFirst();
+            return result.isPresent()
+                    ? result.getAsInt() 
+                    : NO_SUCH_INDEX;
         }
+        
+        private static final int NO_SUCH_INDEX = -1;
         
         /**
          * <p>Creates a representation of a literal {@code line} from an HTML file such that
