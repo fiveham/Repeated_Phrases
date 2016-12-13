@@ -236,7 +236,7 @@ public class RepeatedPhrasesApp {
      * @param args command-line args
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    static void setTrail(Operation unused, String[] args, Consumer<String> msg) {
+    public static void setTrail(Operation unused, String[] args, Consumer<String> msg) {
         if(args.length < 1){
             throw new IllegalArgumentException("SetTrail: I need a trial file.");
         }
