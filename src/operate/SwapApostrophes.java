@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -85,12 +86,8 @@ class SwapApostrophes{
      * {@link #ApoPattern patterns} in {@link #PATTERNS PATTERNS}, false otherwise
      */
     private static boolean shouldChangeCharacter(StringBuilder line, int index){
-        for(ApoPattern pattern : PATTERNS){
-            if(pattern.match(line, index)){
-                return true;
-            }
-        }
-        return false;
+        return PATTERNS.parallelStream()
+                .anyMatch((pattern) -> pattern.match(line, index));
     }
     
     /**
@@ -268,7 +265,6 @@ class SwapApostrophes{
          * ApoPattern, false otherwise
          */
         public boolean match(StringBuilder line, int index){
-        	
             if(!isPossibleApostrophe(line.charAt(index))){
                 return false;
             }
@@ -320,12 +316,12 @@ class SwapApostrophes{
          * represented in the HTML-free {@code cleanLine}.
          */
         private int cleanPointer(List<IntChar> cleanLine, int soughtIndex){
-            for(int i=0; i<cleanLine.size(); i++){
-                if(cleanLine.get(i).i==soughtIndex){
-                    return i;
-                }
+            OptionalInt result = IntStream.range(0, cleanLine.size()).filter((i) -> cleanLine.get(i).i == soughtIndex).findFirst();
+            if(result.isPresent()){
+                return result.getAsInt();
+            } else{
+                return -1; //MAGIC
             }
-            return -1;
         }
         
         /**
