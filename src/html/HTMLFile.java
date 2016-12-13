@@ -1,19 +1,28 @@
 package html;
 
+import common.BookData;
+import common.IO;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.Iterator;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
-
-import common.IO;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import text.Location;
 import text.PhraseProducer;
 
@@ -21,7 +30,7 @@ import text.PhraseProducer;
  * <p>Represents an HTML file and provides some convenience methods for working with an HTML
  * file.</p>
  */
-public class HTMLFile {
+public class HTMLFile implements Iterable<HTMLEntity>{
 	
     /**
      * <p>The index of the chapter's book's name in the array resulting from calling
@@ -65,36 +74,13 @@ public class HTMLFile {
     /**
      * <p>The underlying list.</p>
      */
-	private ArrayList<HTMLEntity> content;
+	private List<HTMLEntity> content;
 	
     /**
      * <p>The literal filename of the file to which the content of this HTMLFile belongs. Contains
      * an extension and possibly a folder reference.</p>
      */
 	private final String filename;
-	
-    /**
-     * <p>The name of the file from which this HTMLFile was derived, without any file extension at
-     * the end.</p>
-     */
-	private final String extensionlessName;
-	
-    /**
-     * <p>The name of the chapter that the HTML file from which this HTMLFile was derived. The
-     * underscores present in the portion of the filename that contained this information have been
-     * replaced with spaces.</p>
-     */
-	private final String chapterName;
-	
-    /**
-     * <p>The effective word-index of the first word of the chapter's title, given that the first
-     * word of the real text of the chapter, which comes after the title, has word-index 0. None of
-     * the processes of this project add words to in-memory representations of HTML chapters; so, no
-     * matter what changes are made to the structure of the file in memory, this value remains
-     * invariant and can thus be relied on as a consistent and simple starting point for finding
-     * words based on their word-index.</p>
-     */
-	private final int baseWordIndex;
 	
 	private int modCount = 0;
 	
@@ -121,24 +107,8 @@ public class HTMLFile {
      * @param scan the Scanner used to obtain literal text to parse into HTMLEntitys
      */
 	public HTMLFile(String name, Scanner scan) {
-		
 		content = getHTMLFileContent(scan);
-		
-		filename = name;
-		
-		int p = filename.indexOf(IO.FILENAME_ELEMENT_DELIM);
-		extensionlessName = p>=0 ? filename.substring(0,p) : filename;
-		
-		String[] split = extensionlessName
-				.split(IO.FILENAME_COMPONENT_SEPARATOR, FILENAME_ELEMENT_COUNT);
-		chapterName = FILENAME_CHAPTERNAME_INDEX < split.length 
-				? split[FILENAME_CHAPTERNAME_INDEX]
-						.replace(IO.FILENAME_COMPONENT_SEPARATOR_CHAR, ' ') 
-				: null;
-		
-		baseWordIndex = chapterName!=null 
-				? -chapterName.split(" ").length 
-				: 0;
+		filename = IO.stripFolder(name);
 	}
 	
     /**
@@ -149,30 +119,7 @@ public class HTMLFile {
      */
 	public HTMLFile(String name, List<HTMLEntity> content){
 		this.content = new ArrayList<>(content);
-		
-		filename = name;
-		
-		int p = filename.indexOf(IO.FILENAME_ELEMENT_DELIM);
-		extensionlessName = p>=0 ? filename.substring(0,p) : filename;
-		
-		String[] split = extensionlessName
-				.split(IO.FILENAME_COMPONENT_SEPARATOR, FILENAME_ELEMENT_COUNT);
-		chapterName = FILENAME_CHAPTERNAME_INDEX < split.length 
-				? split[FILENAME_CHAPTERNAME_INDEX]
-						.replace(IO.FILENAME_COMPONENT_SEPARATOR_CHAR,' ') 
-				: null;
-		
-		baseWordIndex = chapterName!=null 
-				? -chapterName.split(" ").length 
-				: 0;
-	}
-	
-    /**
-     * <p>Returns {@link #chapterName chapterName}.</p>
-     * @return {@link #chapterName chapterName}
-     */
-	public String chapterName(){
-		return chapterName;
+		filename = IO.stripFolder(name);
 	}
 	
     /**
@@ -181,14 +128,6 @@ public class HTMLFile {
      */
 	public String getName(){
 		return filename;
-	}
-	
-    /**
-     * <p>Returns {@link #extensionlessName extensionlessName}.</p>
-     * @return {@link #extensionlessName extensionlessName}
-     */
-	public String getExtensionlessName(){
-		return extensionlessName;
 	}
 	
     /**
@@ -437,7 +376,9 @@ public class HTMLFile {
      */
 	public static final String firstWord(String phrase){
 		int index = phrase.indexOf(PhraseProducer.WORD_SEPARATOR);
-		return index<0 ? phrase : phrase.substring(0,index);
+		return index < 0 
+		        ? phrase 
+		        : phrase.substring(0, index);
 	}
 	
     /**
@@ -518,7 +459,7 @@ public class HTMLFile {
          * last returned a result. Initialized to Integer.MAX_VALUE. If {@code applyAsInt(int)}
          * throws an exception, the input is not stored.</p>
          */
-        private int storedWordStart = Integer.MAX_VALUE;
+        private int storedWordPointer = Integer.MAX_VALUE;
         
         @Override
         /**
@@ -542,20 +483,18 @@ public class HTMLFile {
          * enough words in this HTMLFile to count that high
          */
         public int applyAsInt(int wordIndex){
-            if(wordIndex < baseWordIndex){
+            if(wordIndex < 0){
                 throw new IllegalArgumentException(
-                        "wordIndex " + wordIndex 
-                        + " less than baseWordIndex (" + baseWordIndex 
-                        + ") is not allowable.");
+                        "wordIndex " + wordIndex + " < 0");
             } else if(this.modCount == HTMLFile.this.modCount && wordIndex == storedWordIndex){
-                return storedWordStart;
+                return storedWordPointer;
             } else{
-                int previousWordIndex = baseWordIndex - 1;
+                int previousWordIndex = -1;
                 int init_i = 0;
                 
                 if(this.modCount == HTMLFile.this.modCount){
                     if(wordIndex > storedWordIndex){
-                        init_i = storedWordStart;
+                        init_i = storedWordPointer;
                         previousWordIndex = storedWordIndex-1;
                     }
                 } else{
@@ -563,21 +502,20 @@ public class HTMLFile {
                 }
                 
                 int i;
-                for(i=init_i; i<content.size(); i++){
+                for(i = init_i; i < content.size(); i++){
                     if(isWordStart(i)){
                         previousWordIndex++;
                     }
                     if(previousWordIndex==wordIndex){
                         storedWordIndex = wordIndex;
-                        return storedWordStart = i;
+                        return storedWordPointer = i;
                     }
                 }
                 
-                String msg = "The specified wordIndex (" + wordIndex 
+                throw new IllegalStateException(
+                        "The specified wordIndex (" + wordIndex 
                         + ") is too high (max value of " + previousWordIndex 
-                        + ").";
-                
-                throw new IllegalStateException(msg);
+                        + ").");
             }
         }
     }
@@ -784,12 +722,15 @@ public class HTMLFile {
      * list.
      */
  	public void removeAll(Predicate<HTMLEntity> test){
- 		for(int i=content.size()-1; i>=0; i--){
- 			if(test.test(content.get(i))){
- 				content.remove(i);
- 				modCount++;
- 			}
+ 		List<HTMLEntity> newContent = content.stream()
+ 		        .filter(test.negate())
+ 		        .collect(Collectors.toList());
+ 		
+ 		if(newContent.size() != content.size()){
+ 		    modCount++;
  		}
+ 		
+ 		content = newContent;
  	}
  	
      /**
@@ -1050,5 +991,828 @@ public class HTMLFile {
      */
 	public static boolean isTitle(char c){
 		return ('A' <= c && c <= 'Z') || c == ' ' || c == '\'';
+	}
+	
+	public Collection<HTMLFile> cleanAndSplit(){
+	    newlineP();
+	    clearExcessStructure();
+	    clearFrontAndBackMatter();
+	    swapApostrophes();
+	    return splitChapters();
+	}
+    
+    private void newlineP(){
+        List<HTMLEntity> newContent = new ArrayList<>(content.size());
+        for(HTMLEntity h : content){
+            if(Tag.isPOpen(h)){
+                newContent.addAll(NEW_LINE);
+            }
+            newContent.add(h);
+        }
+        content = newContent;
+    }
+    
+    private void clearExcessStructure(){
+        emptyPs().stream().forEach((i) -> {
+            content.set(i, null);
+            content.set(i + 1, null);
+        });
+        content = content.stream()
+                .filter(Objects::nonNull)
+                .filter(HTMLEntity::notDiv)
+                .filter(HTMLEntity::notBlockquote)
+                .filter(HTMLEntity::notImg)
+                .filter(HTMLEntity::notNbsp)
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * returns a list of the indices in this HTMLFile of the opening paragraph tag of an empty 
+     * paragraph
+     * @return
+     */
+    private List<Integer> emptyPs(){
+        return IntStream.range(0, content.size() - 1)
+                .filter((i) -> Tag.isPOpen(content.get(i)))
+                .filter((i) -> Tag.isPClose(content.get(i + 1)))
+                .mapToObj(Integer::new)
+                .collect(Collectors.toList());
+    }
+	
+	private void clearFrontAndBackMatter(){
+	    handleNovels();
+	    handleNovellas();
+	}
+	
+	private void handleNovels(){
+	    int pWherePrologueTitle = prologueTitleBlock();
+        removeAll(0, pWherePrologueTitle);
+        
+        int pWhereBackMatterStart = backMatterStart();
+        removeAll(pWhereBackMatterStart);
+	}
+	
+	private int prologueTitleBlock(){
+	    String firstWords = NOVEL_FIRST_WORDS.get(filename);
+        Predicate<Integer> hasFirstWordsAt = (i) -> hasLiteralAt(firstWords, i);
+        
+        int chapterStartIndex = adjacentElement(hasFirstWordsAt, Direction.NEXT, -1);
+        
+        Predicate<Integer> isPrologueBlock = 
+                (i) -> isParagraphishOpen(get(i)) 
+                        && hasLiteralBetween("PROLOGUE", i, closingMatch(i));
+        int pLocation = adjacentElement(isPrologueBlock, Direction.PREV, chapterStartIndex);
+        
+        return pLocation - 1;
+	}
+	
+	private int backMatterStart(){
+        String lastWords = NOVEL_LAST_WORDS.get(filename);
+        
+        Predicate<Integer> hasLastWordsAt = (i) -> hasLiteralAt(lastWords, i);
+        
+        int textIndex = adjacentElement(hasLastWordsAt, Direction.PREV, elementCount());
+        int pIndex = adjacentElement(textIndex, HTMLFile::isParagraphishOpen, Direction.NEXT);
+        
+        return pIndex;
+	}
+	
+	private void handleNovellas(){
+	    int pWhereFirstWords = firstWordsP();
+        removeAll(0, pWhereFirstWords);
+
+        int pWhereLastWords = lastWordsP();
+        removeAll( pWhereLastWords + 1 );
+	}
+    
+    /**
+     * <p>Returns the index in {@code file} of the opening "p" tag of the first paragraph that
+     * starts with the {@link #FIRST_WORDS(String) first words} of the specified ASOIAF novella.</p>
+     * @param file
+     * @param novella
+     * @return
+     */
+    private int firstWordsP(){
+        String firstWords = NOVELLA_FIRST_WORDS.get(filename);
+        Predicate<Integer> predicate = (i) -> hasLiteralAt(firstWords, i);
+        
+        int literalIndex = adjacentElement(predicate, Direction.NEXT, -1); //MAGIC
+        
+        return adjacentElement(literalIndex, Tag::isPOpen, Direction.PREV);
+    }
+    
+    /**
+     * <p>Returns the index in {@code file} of the closing "p" tag of the last paragraph that ends
+     * with the {@link #lastWords(String) last words} of the specified ASOIAF novella.</p>
+     * @param file
+     * @param novella
+     * @return
+     */
+    private int lastWordsP(){
+        String lastWords = NOVELLA_LAST_WORDS.get(filename);
+        Predicate<Integer> predicate = (i) -> hasLiteralAt(lastWords, i);
+        
+        int literalIndex = adjacentElement(predicate, Direction.PREV, elementCount());
+        
+        return adjacentElement(literalIndex, Tag::isPClose, Direction.NEXT);
+    }
+    
+    private void swapApostrophes(){
+        IntStream.range(0, content.size())
+                .filter((i) -> CharLiteral.RIGHT_SINGLE_QUOTE.equals(content.get(i)))
+                .filter((i) -> shouldChangeCharacter(i))
+                .forEach((i) -> content.set(i, CharLiteral.APOSTROPHE));
+    }
+    
+    private boolean shouldChangeCharacter(int i){
+        return PATTERNS.parallelStream()
+                .anyMatch((pattern) -> pattern.match(this, i));
+    }
+    
+    private static final List<ApoPattern> PATTERNS = Stream.of(
+            "@'@",  //everything from I'm to shouldn't've
+            "&o'&", //of
+            "&t'&", //to
+            
+            //'Yaya, the 'bite, 'bout, 'cat (shadowcat, 'tis, 'twas, 'twixt, 'prentice, 'em, 'ud
+            "&'*",  
+            "&ha'&",    //have, usually "gods have mercy"
+            "&f'&", //for
+            "&a'&", //at, as pronounced by some wildlings
+            "traitors' graves",
+            "traitors' collars",
+            "traitors' heads",  //"@@@ traitors' @@@@@"
+            "wolves' work",
+            "wolves' heads",    //"@@@ wolves' @@@@"
+            "rams' heads",
+            "lions' heads",
+            "lions' paws",
+            "lions' tails",
+            "&the alchemists' guild&",
+            "&the alchemists' vile&",   //"&the alchemists' @@@@"
+            "pyromancers' piss",
+            "@@@s' own&",
+            "&the @o@s' @@@@",
+            "&the boys' grandfather&",
+            "&the boys' heads&",    //"@@@ the boys' @@@@@"
+            "&merchants' sons&",
+            "&merchants' stalls&",  //"&merchants' s@@@"
+            "merchants' carts",
+            "the merchants' row",
+            "the merchants' wagons",
+            "&their mothers' @@@",  //"&their mothers' @@@@@"
+            "whores' skirts",
+            "&your brothers' @@@@",
+            "&my brothers' ghosts&",    //"@@ brothers' @@@@"
+            "&his brothers' @@@@",
+            "@@@@s' nest",
+            "horses' hooves",
+            "be keepin'&",
+            "is carryin'&", //"@@@@in' @@@"
+            "@@@@ts' respite",
+            "years' remission",
+            "pigs' feet",
+            "calves' brains",
+            "servants' steps",
+            "servants' time",
+            "servants' corridor",
+            "lords' bannermen",
+            "lords' entrance",
+            "were lords' sons",
+            "&goats' milk&",
+            "&slavers' filth&",
+            "&slavers' pyramid&",
+            "&sailors' stor@",
+            "&sailors' temple&",
+            "&smugglers' cove&",
+            "&smugglers' stars&",
+            "&days' ride&",
+            "&days' food&",
+            "&days' sail&",
+            "&hours' ride&",
+            "&hours' sail&",
+            "bakers'&",
+            "@ mummers' @@@@",
+            "with strangers' eyes",
+            "their masters' business",
+            "the challengers' paddock",
+            "stoops' wife",
+            "&or one of the lannisters'&",
+            "ladies' cats",
+            "bastards' names",
+            "the rangers' search",
+            "their fathers' rusted swords",
+            "his cousins' eyes",
+            "maidens' judgments",
+            "a singers' tourney",
+            "a fools' joust",
+            "an outlaws' lair",
+            "rats' eyes",
+            "the wildlings' herds",
+            "dead friends' father",
+            "archers' stakes",
+            "heralds' trumpets",
+            "the climbers' rope",
+            "griffins' men",
+            "their masters' possessions",
+            "their neighbors' daughters",
+            "the musicians' gallery",
+            "kings' blood",
+            "the besiegers' cheers",
+            "gulls' eggs",
+            "the defenders' shouts",
+            "priests' song",
+            "heroes' tombs",
+            "some robbers' den",
+            "babies' bottoms",
+            "sound of lovers' footsteps",
+            "the murderers' secret",
+            "abandoned crofters' village",
+            "the diggers' eyes were",
+            "my sons' things",
+            "&lil'&")
+            .map(ApoPattern::new)
+            .collect(Collectors.toList());
+    
+    /**
+     * <p>Represents a pattern of characters around an apostrophe, meant for use in determining
+     * which instances of a right single quote in the text of ASOIAF should be ordinary apostrophes
+     * instead.</p>
+     */
+    private static class ApoPattern{
+        
+        /**
+         * <p>Used in a string sent to ApoPattern's constructor, this represents any
+         * {@link #isWordChar(Character) word character}. It is an asterisk: {@value}</p>
+         */
+        public static final char WORD_CHAR = '*';
+        
+        /**
+         * <p>Used in a string sent to ApoPattern's constructor, this represents any
+         * {@link #isWordChar(Character) non-word character}. It is an ampersand: {@value}</p>
+         */
+        public static final char NON_WORD_CHAR = '&';
+        
+        /**
+         * <p>Used in a string sent to ApoPattern's constructor, this represents any
+         * {@link #isAlphabetical(Character) alphabetic character}. It is an at sign: {@value}</p>
+         */
+        public static final char ALPHA_CHAR = '@';
+        
+        /**
+         * <p>A list of the characters from the string used to construct this ApoPatern prior to the
+         * apostrophe, in reverse order. For example, sending "ab'cd" to the constructor makes
+         * {@code before} equivalent to
+         * {@code before = new ArrayList<>(); before.add(new Character('b')); before.add(new Character('a'));}</p>
+         */
+        private List<Character> before;
+        
+        /**
+         * <p>A list of the characters from the string used to construct this ApoPatern after to the
+         * apostrophe. For example, sending "ab'cd" to the constructor makes {@code before}
+         * equivalent to
+         * {@code after = new ArrayList<>(); after.add(new Character('c')); after.add(new Character('d'));}</p>
+         */
+        private List<Character> after;
+        
+        /**
+         * <p>Constructs an ApoPattern based on the specified string.</p>
+         * @param s a string containing an apostrophe used to specify characters around an
+         * apostrophe
+         */
+        private ApoPattern(String s){
+            s = s.toLowerCase();
+            int index = s.indexOf(CharLiteral.APOSTROPHE.c);
+            before = new ArrayList<>();
+            after = IntStream.range(index + 1, s.length())
+                    .mapToObj(s::charAt)
+                    .collect(Collectors.toList());
+            for(int i = index - 1; i >= 0; i--){
+                before.add(s.charAt(i));
+            }
+        }
+        
+        public boolean match(HTMLFile h, int index){
+            return CharLiteral.RIGHT_SINGLE_QUOTE.equals(h.get(index)) 
+                    ? Stream.of(Side.values())
+                            .allMatch((side) -> side.match(ApoPattern.this, h, index))
+                    : false;
+        }
+        
+        private static enum Side{
+            BEFORE((ap) -> ap.before, (i) -> i - 1), 
+            AFTER ((ap) -> ap.after,  (i) -> i + 1);
+            
+            private final Function<ApoPattern, List<Character>> listFunc;
+            private final IntUnaryOperator nextInt;
+            
+            private Side(Function<ApoPattern, List<Character>> listFunc, IntUnaryOperator nextInt){
+                this.listFunc = listFunc;
+                this.nextInt = nextInt;
+            }
+            
+            boolean match(ApoPattern pattern, HTMLFile h, int a){
+                for(char c : listFunc.apply(pattern)){
+                    a = nextInt(a, h);
+                    if(!ApoPattern.match(c, characterAt(a, h))){
+                        return false;
+                    }
+                }
+                return true;
+            }
+            
+            private int nextInt(int a, HTMLFile h){
+                do{
+                    a = nextInt.applyAsInt(a);
+                    
+                    //the while test will throw an exception if a is not in range, but a is tested 
+                    //for range in Side.match() before being sent to this method; so, that problem 
+                    //should never occur
+                } while(!(h.get(a) instanceof CharLiteral));
+                return a;
+            }
+        }
+        
+        /**
+         * If the thing in {@code h} at the specified {@code index} is an actual character, then 
+         * return that character, otherwise return null.
+         * @param index
+         * @param h
+         * @return the literal character in {@code h} at the specified {@code index} if one exists 
+         * there, otherwise {@code null}
+         */
+        private static Character characterAt(int index, HTMLFile h){
+            if(0 <= index && index < h.elementCount()){
+                HTMLEntity ent = h.get(index);
+                if(ent instanceof CharLiteral){
+                    CharLiteral cl = (CharLiteral) ent;
+                    return cl.c;
+                }
+            }
+            return null;
+        }
+        
+        /**
+         * <p>Returns true if the character from a line of an HTML file matches the corresponding
+         * character from the string used to construct this ApoPattern, false otherwise.</p> <p>The
+         * special characters {@link #WORD_CHAR WORD_CHAR}, {@link #NON_WORD_CHAR NON_WORD_CHAR},
+         * and {@link #ALPHA_CHAR ALPHA_CHAR} in this instance's code initiate specific tests; all
+         * other characters are tested literally against the {@code fromFile} character.</p>
+         * @param fromInstanceCode a character from the string used to construct this ApoPattern
+         * @param fromFile a character from a line from an HTML file
+         * @return true if the character from a line of an HTML file matches the corresponding
+         * character from the string used to construct this ApoPattern, false otherwise
+         */
+        private static boolean match(Character fromInstanceCode, Character fromFile){
+            switch(fromInstanceCode){
+            case WORD_CHAR     : return PhraseProducer.isPhraseChar(fromFile);
+            case NON_WORD_CHAR : return !PhraseProducer.isPhraseChar(fromFile);
+            case ALPHA_CHAR    : return isAlphabetical(fromFile);
+            default            : return fromFile != null 
+                    && fromInstanceCode.equals(Character.toLowerCase(fromFile)); 
+            }
+        }
+        
+        /**
+         * <p>Returns true if {@code c} is an alphabetical character, false otherwise.</p>
+         * @param c a character to be evaluated as alphabetical or not
+         * @return true if {@code c} is an alphabetical character, false otherwise
+         */
+        private static boolean isAlphabetical(Character c){
+            return c != null 
+                    && !(c == CharLiteral.APOSTROPHE.c 
+                            || c == '-' 
+                            || ('0' <= c && c <= '9')) 
+                    && PhraseProducer.isPhraseChar(c);
+        }
+    }
+    
+    private static final Map<String,String> NOVEL_FIRST_WORDS = 
+            BookData.words(BookData::isNovel, BookData::firstWords);
+    
+    private static final Map<String,String> NOVEL_LAST_WORDS = 
+            BookData.words(BookData::isNovel, BookData::lastWords);
+    
+    private static final Map<String,String> NOVELLA_FIRST_WORDS = 
+            BookData.words(BookData::isNovella, BookData::firstWords);
+    
+    private static final Map<String,String> NOVELLA_LAST_WORDS = 
+            BookData.words(BookData::isNovella, BookData::lastWords);
+	
+	private Collection<HTMLFile> splitChapters(){
+	    if(isNovel()){
+	        return handleNovel();
+	    } else if(isPQ()){
+            return handlePQ();
+        } else{
+            return handleNovella();
+        }
+	}
+	
+	private boolean isNovel(){
+	    return BookData
+	            .valueOf(
+	                    BookData.class, 
+	                    filename.substring(0, filename.length() - IO.HTML_EXT.length()))
+	            .isNovel();
+	}
+	
+	private boolean isPQ(){
+	    return BookData.PQ.filename().equals(this.filename);
+	}
+	
+	private Collection<HTMLFile> handleNovel(){
+	    List<HTMLFile> result = new ArrayList<>();
+	    
+        HTMLFile.ParagraphIterator piter = paragraphIterator();
+        List<HTMLEntity> buffer = new ArrayList<>();
+        int writeCount = 0;
+        String chapterName = null;
+        
+        while(piter.hasNext()){
+            int[] paragraphBounds = piter.next();
+            
+            List<HTMLEntity> paragraph = section(paragraphBounds);
+            
+            if(isTitleParagraph(paragraph)){
+                if(chapterName != null){
+                    //dump the buffer
+                    result.add(saveChapterFile(buffer, chapterName, writeCount));
+                    writeCount++;
+                }
+                
+                //new buffer
+                chapterName = extractChapterTitle(paragraph);
+                buffer = new ArrayList<>();
+            } else{
+                buffer.addAll(paragraph);
+                
+                //TODO add a constant somewhere to use here. 
+                //Only need 1 instance in memory
+                buffer.add(new CharLiteral('\n'));
+            }
+        }
+        
+        //reached end of file
+        //dump the buffer to a file
+        result.add(saveChapterFile(buffer, chapterName, writeCount));
+	    
+	    return result;
+	}
+    
+    /**
+     * <p>Returns the name of the file to which a chapter's content will be written.</p>
+     * @param bookFile the source file from {@code READ_FROM} from which the chapter's content was
+     * extracted
+     * @param chapterIndex the chapter's number in its book (zero-based)
+     * @param chapterName the name of the chapter as extracted from the text of its source html
+     * novel file, including spaces
+     * @return the name of the file to which a chapter's content will be written
+     */
+    private static String chapterFileName(HTMLFile file, int chapterIndex, String chapterName){
+        String bookName = IO.stripExtension(file.filename);
+        return bookName 
+                + IO.FILENAME_COMPONENT_SEPARATOR_CHAR 
+                + chapterIndex 
+                + IO.FILENAME_COMPONENT_SEPARATOR_CHAR 
+                + chapterName.replace(' ', IO.FILENAME_COMPONENT_SEPARATOR_CHAR) 
+                + IO.HTML_EXT;
+    }
+	
+	private HTMLFile saveChapterFile(
+	        List<HTMLEntity> buffer, 
+	        String chapterName, 
+	        int saveCount){
+	    
+	    HTMLFile result = new HTMLFile(buffer, chapterFileName(this, saveCount, chapterName));
+	    result.addHeaderFooter();
+	    return result;
+	}
+	
+	private HTMLFile(List<HTMLEntity> buffer, String fileName){
+	    this.content = new ArrayList<>(buffer);
+	    this.filename = IO.stripFolder(fileName);
+	}
+    
+    /**
+     * <p>Returns true if the {@code paragraph}'s only character-type contents are characters that
+     * can appear in chapter titles, false otherwise.</p>
+     * @param paragraph a list of HTMLEntity, a piece of an HTMLFile
+     * @return true if the {@code paragraph}'s only character-type contents are characters that can
+     * appear in chapter titles, false otherwise
+     */
+    private static boolean isTitleParagraph(List<HTMLEntity> paragraph){
+        boolean titleCharFound = false;
+        
+        for(HTMLEntity h : paragraph){
+            if(CharCode.class.isInstance(h)){
+                return false;
+            } else if(CharLiteral.class.isInstance(h)){
+                if(isLegalChapterTitleCharacter(((CharLiteral)h).c)){
+                    titleCharFound = true;
+                } else{
+                    return false;
+                }
+            }
+        }
+
+        return titleCharFound;
+    }
+    
+    /**
+     * <p>Returns true if {@code c} occurs in chapters' titles, false otherwise.</p>
+     * @param c a char to be tested for status as a character that occurs in chapters' titles
+     * @return true if {@code c} is an uppercase letter, space, or apostrophe
+     */
+    public static boolean isLegalChapterTitleCharacter(char c){
+        return ('A'<=c && c<='Z') || c==' ' || c=='\'';
+    }
+    
+    /**
+     * <p>Extracts a chapter's title from a {@code paragraph}
+     * {@link #isTitleParagraph(List<HTMLEntity>) containing a chapter title}.</p>
+     * @param paragraph the paragraph whose contained chapter title is extracted and returned
+     * @return the chapter title that's the sole visible content of the specified {@code paragraph}
+     */
+    private static String extractChapterTitle(List<HTMLEntity> paragraph){
+        StringBuilder result = new StringBuilder(paragraph.size());
+
+        for(HTMLEntity h : paragraph){
+            if(CharLiteral.class.isInstance(h)){
+                result.append(((CharLiteral)h).c);
+            }
+        }
+
+        return result.toString();
+    }
+	
+	//TODO make sure that splitChapter implementation methods can't bastardize the HTMLFile 
+	//instance to which they belong if they're called more than once.
+	//Make sure that headers, footers, newlineP changes, and other alterations can't be made 
+	//multiple times to the same HTMLFile object
+	private Collection<HTMLFile> handleNovella(){
+	    HTMLFile copy = clone();
+	    copy.addHeaderFooter();
+	    return new ArrayList<>(Arrays.asList(copy));
+	}
+	
+	@Override
+	protected HTMLFile clone(){
+	    return new HTMLFile(this);
+	}
+	
+	private HTMLFile(HTMLFile file){
+        this.filename = file.filename;
+	    this.content = new ArrayList<>(file.content);
+	}
+	
+	public void forEach(Consumer<? super HTMLEntity> action){
+	    content.forEach(action);
+	}
+	
+	private Collection<HTMLFile> handlePQ(){
+	    
+	    HTMLFile[] files;
+	    {
+	        HTMLFile body;
+	        {
+	            int footnoteIndex = adjacentElement(
+	                    (i) -> hasLiteralAt("Footnote",i), Direction.PREV, elementCount());
+	            int bodyEndIndex = adjacentElement(footnoteIndex, Tag::isPOpen, Direction.PREV);
+	            List<HTMLEntity> bodySection = section(0,bodyEndIndex);
+	            body = new HTMLFile("PQ_0_THE_PRINCESS_AND_THE_QUEEN.html", bodySection);
+	        }
+	        
+	        HTMLFile footnote;
+	        {
+	            int footnoteStart = adjacentElement(
+	                    elementCount(), 
+	                    Tag::isPOpen, 
+	                    Direction.PREV);
+	            List<HTMLEntity> footnoteSection = section(footnoteStart);
+	            footnote = new HTMLFile("PQ_1_FOOTNOTE.html", footnoteSection);
+	        }
+	        
+	        files = new HTMLFile[]{
+	                body, 
+	                footnote
+            };
+	    }
+	    
+        String[] hrefs = {
+                "PQ_1_FOOTNOTE.html#FOOTNOTE", 
+                "PQ_0_THE_PRINCESS_AND_THE_QUEEN.html#FOOTNOTE"
+        };
+        
+        IntStream.range(0, PQ_FINAL_FILE_COUNT)
+                .parallel()
+                .forEach((i) -> {
+                    HTMLFile file = files[i];
+                    String href = hrefs[i];
+                    
+                    //replace superscript 1 with asterisk
+                    int noteIndex = file.adjacentElement(-1, Tag::isSup, Direction.NEXT);
+                    noteIndex = file.adjacentElement(noteIndex, CharLiteral::is1, Direction.NEXT);
+                    file.set(noteIndex, new CharLiteral('*'));
+                    
+                    //replace internal link with external link
+                    int noteAnchorIndex = file.adjacentElement(
+                            noteIndex, 
+                            Tag::isAnchorOpen, 
+                            Direction.PREV);
+                    file.set(
+                            noteAnchorIndex, 
+                            new Tag("a id=\"FOOTNOTE\" href=\"" + href + "\"" ));
+                    
+                    file.addHeaderFooter();
+                });
+        
+        return new ArrayList<>(Arrays.asList(files));
+	}
+	
+	private void addHeaderFooter(){
+	    List<HTMLEntity> head = header();
+	    List<HTMLEntity> foot = footer();
+	    List<HTMLEntity> newContent = new ArrayList<>(head.size() + content.size() + foot.size());
+	    newContent.addAll(head);
+	    newContent.addAll(content);
+	    newContent.addAll(foot);
+	    
+	    content = newContent;
+	}
+    
+    private static final List<HTMLEntity> HEADER_FRONT_HTML = new ArrayList<>();
+    static{
+        Stream.of(
+                "html", 
+                "head", 
+                "meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" /", 
+                "link href=\"style.css\" rel=\"stylesheet\" type=\"text/css\" /", 
+                "/head", 
+                "body", 
+                "div class=\"chapter\"", 
+                "div class=\"head\"", 
+                "table class=\"head\"", 
+                "tr class=\"head\"", 
+                "td class=\"prev_chapter\"", 
+                "p class=\"prev_chapter\"", 
+                "a id=\"prev_chapter\" href=\"nowhere\" title=\"nothing\" style=\"change_chapter\"")
+                .map(Tag::new)
+                .forEach(HEADER_FRONT_HTML::add);
+        
+        HEADER_FRONT_HTML.addAll(Arrays.asList(
+                "html", 
+                "head", 
+                "meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" /", 
+                "link href=\"style.css\" rel=\"stylesheet\" type=\"text/css\" /", 
+                "/head", 
+                "body", 
+                "div class=\"chapter\"", 
+                "div class=\"head\"", 
+                "table class=\"head\"", 
+                "tr class=\"head\"", 
+                "td class=\"prev_chapter\"", 
+                "p class=\"prev_chapter\"", 
+                "a id=\"prev_chapter\" href=\"nowhere\" title=\"nothing\" style=\"change_chapter\"")
+                .stream()
+                .map(Tag::new)
+                .collect(Collectors.toList()));
+        
+        Collections.addAll(
+                HEADER_FRONT_HTML, 
+                CharCode.LT, 
+                CharCode.LT);
+        
+        Stream.of(
+                "/a", 
+                "/p", 
+                "/td", 
+                "td class=\"chapter_title\"", 
+                "p class=\"chapter_title\"")
+                .map(Tag::new)
+                .forEach(HEADER_FRONT_HTML::add);
+    }
+    
+    public static final List<HTMLEntity> HEADER_BACK_HTML = new ArrayList<>();
+    static{
+        Stream.of(
+                "/p", 
+                "/td", 
+                "td class=\"next_chapter\"", 
+                "p class=\"next_chapter\"", 
+                "a id=\"next_chapter\" href=\"nowhere\" title=\"nothing\" style=\"change_chapter\"")
+                .map(Tag::new)
+                .forEach(HEADER_BACK_HTML::add);
+        
+        Collections.addAll(
+                HEADER_BACK_HTML, 
+                CharCode.GT, 
+                CharCode.GT);
+        
+        Stream.of(
+                "/a", 
+                "/p", 
+                "/td", 
+                "/tr", 
+                "/table", 
+                "/div", 
+                "div class=\"chapter_body\"")
+                .map(Tag::new)
+                .forEach(HEADER_BACK_HTML::add);
+        
+        //TODO unify this use with the other list-of-characters representation in this project
+        HEADER_BACK_HTML.addAll(CharLiteral.NEW_LINE_LITERAL);
+    }
+    
+    public List<HTMLEntity> header(){
+        List<CharLiteral> name = CharLiteral.asList(IO.stripFolderExtension(filename));
+        List<HTMLEntity> result = new ArrayList<>(
+                HEADER_FRONT_HTML.size() + name.size() + HEADER_BACK_HTML.size());
+        result.addAll(HEADER_FRONT_HTML);
+        result.addAll(name);
+        result.addAll(HEADER_BACK_HTML);
+        return result;
+    }
+    
+    public static final List<HTMLEntity> FOOTER_FRONT_HTML = new ArrayList<>();
+    static{
+        Stream.of(
+                "/div", 
+                "div class=\"foot\"", 
+                "table class=\"foot\"", 
+                "tr class=\"foot\"", 
+                "td class=\"prev_chapter\"", 
+                "p class=\"prev_chapter\"", 
+                "a id=\"prev_chapter\" href=\"nowhere\" title=\"nothing\" style=\"change_chapter\"")
+                .map(Tag::new)
+                .forEach(FOOTER_FRONT_HTML::add);
+        
+        Collections.addAll(FOOTER_FRONT_HTML, CharCode.LT, CharCode.LT);
+        
+        Stream.of(
+                "/a", 
+                "/p", 
+                "/td", 
+                "td class=\"chapter_title\"", 
+                "p class=\"chapter_title\"")
+                .map(Tag::new)
+                .forEach(FOOTER_FRONT_HTML::add);
+    }
+    
+    public static final List<HTMLEntity> FOOTER_BACK_HTML = new ArrayList<>();
+    static{
+        Stream.of(
+                "/p", 
+                "/td", 
+                "td class=\"next_chapter\"", 
+                "p class=\"next_chapter\"", 
+                "a id=\"next_chapter\" href=\"nowhere\" title=\"nothing\" style=\"change_chapter\"")
+                .map(Tag::new)
+                .forEach(FOOTER_BACK_HTML::add);
+        
+        Collections.addAll(FOOTER_BACK_HTML, CharCode.GT, CharCode.GT);
+        
+        Stream.of(
+                "/a", 
+                "/p", 
+                "/td", 
+                "/tr", 
+                "/table", 
+                "/div", 
+                "/div", 
+                "/body", 
+                "/html")
+                .map(Tag::new)
+                .forEach(FOOTER_BACK_HTML::add);
+    }
+    
+    public List<HTMLEntity> footer(){
+        List<CharLiteral> name = CharLiteral.asList(IO.stripFolderExtension(filename));
+        List<HTMLEntity> result = new ArrayList<>(
+                FOOTER_BACK_HTML.size() + name.size() + FOOTER_FRONT_HTML.size());
+        result.addAll(FOOTER_FRONT_HTML);
+        result.addAll(name);
+        result.addAll(FOOTER_BACK_HTML);
+        return result;
+    }
+	
+	public static final int PQ_FINAL_FILE_COUNT = 2;
+    
+    /**
+     * <p>The first characters of an opening paragraph tag.</p>
+     */
+    public static final String BEGIN_P = "<p ";
+	
+	public static final List<CharLiteral> NEW_LINE;
+	static{
+	    NEW_LINE = new ArrayList<>(IO.NEW_LINE.length());
+	    for(char c : IO.NEW_LINE.toCharArray()){
+	        NEW_LINE.add(new CharLiteral(c));
+	    }
+	}
+	
+	@Override
+	public Iterator<HTMLEntity> iterator(){
+	    return content.iterator();
 	}
 }
