@@ -306,8 +306,12 @@ class SetTrail {
         private final String next;
         
         TrailElement(String[] strings){
-            this(strings[0], strings[1], strings[2]); //MAGIC
+            this(strings[INDEX_PREV], strings[INDEX_FOCUS], strings[INDEX_NEXT]);
         }
+        
+        private static final int INDEX_PREV = 0;
+        private static final int INDEX_FOCUS = 1;
+        private static final int INDEX_NEXT = 2;
         
         /**
          * <p>Constructs a TrailElement indicating that the chapter named by {@code focus} has the
