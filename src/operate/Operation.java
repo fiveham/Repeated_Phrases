@@ -219,7 +219,7 @@ public enum Operation{
             null, 
             Folder.LINKED_CHAPTERS, 
             Folder.READABLE, 
-            SetTrail::setTrail);
+            RepeatedPhrasesApp::setTrail);
     
     private final Folder readDecoration;
     private final Folder readFrom;

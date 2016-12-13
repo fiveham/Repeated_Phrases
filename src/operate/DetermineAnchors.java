@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
+import operate.RepeatedPhrasesApp.TrailElement;
 import text.Chapter;
 import text.FileBox;
 import text.Location;
@@ -74,7 +75,7 @@ class DetermineAnchors {
 			
 			String name = anchorOutName(chapter);
 			
-			try(OutputStreamWriter out = IO.newOutputStreamWriter( name );){
+			try(OutputStreamWriter out = IO.newOutputStreamWriter(name)){
 				
 				List<Quote> quotes = filebox.get(chapter);
 				quotes.sort(null);
@@ -133,7 +134,7 @@ class DetermineAnchors {
 	    private final Map<String,Integer> chapterIndices;
 	    
         private AdHocComparator(String trailFile){
-            List<SetTrail.TrailElement> elems = SetTrail.getTrailElements(trailFile);
+            List<TrailElement> elems = RepeatedPhrasesApp.getTrailElements(trailFile);
             chapterIndices = new HashMap<>();
             for(int i=0; i<elems.size(); i++){
                 chapterIndices.put(IO.stripFolderExtension(elems.get(i).focus()), i);
