@@ -37,15 +37,6 @@ public class PhraseBox{
 	}
 	
     /**
-     * <p>Constructs a PhraseBox with the quote data contents of {@code f}.</p>
-     * @param f the file whose quote data is to be put into this PhraseBox
-     * @throws FileNotFoundException if {@code f} does not exist or cannot be read
-     */
-	public PhraseBox(File f) throws FileNotFoundException{
-		this(new Scanner(f, IO.ENCODING));
-	}
-	
-    /**
      * <p>Constructs a PhraseBox with the quote data produced by {@code scan}.
      * {@code scan.nextLine()} is called repeatedly, and each resulting line is parsed as a line
      * from a quote data file, such as those written to Folder.REPEATS,
