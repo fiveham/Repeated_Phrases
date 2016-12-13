@@ -127,12 +127,11 @@ class ClearFrontAndBackMatter {
         return pLocation - 1;
 	}
     
-    public static final char RIGHT_DOUBLE_QUOTE = '\u201D';
-    public static final char RIGHT_SINGLE_QUOTE = '\u2019';
+    private static final char RIGHT_DOUBLE_QUOTE = '\u201D';
+    private static final char RIGHT_SINGLE_QUOTE = '\u2019';
 	
-	private static HashMap<String,String> FIRST_WORDS;
+	private static final HashMap<String,String> FIRST_WORDS = new HashMap<>();
 	static{
-		FIRST_WORDS = new HashMap<>();
 		FIRST_WORDS.put("AGOT.html", "We should start");
 		FIRST_WORDS.put("ACOK.html", "The comet"+RIGHT_SINGLE_QUOTE+"s tail");
 		FIRST_WORDS.put("ASOS.html", "The day was");
@@ -151,7 +150,12 @@ class ClearFrontAndBackMatter {
      * represents.
      */
 	private static int backMatterStart(HTMLFile file){
-        String bookName = file.getExtensionlessName().substring(0,4);
+	    String name = file.getName();
+	    int j = name.lastIndexOf(IO.FILENAME_ELEMENT_DELIM);
+	    String unextended = name.substring(0, j);
+	    
+	    int k = unextended.indexOf(IO.FILENAME_ELEMENT_DELIM);
+        String bookName = unextended.substring(0, k);
         String lastWords = LAST_WORDS.get(bookName);
         
         Predicate<Integer> hasLastWordsAt = (i) -> file.hasLiteralAt(lastWords, i);
@@ -162,14 +166,13 @@ class ClearFrontAndBackMatter {
         return pIndex;
 	}
 	
-	private static final HashMap<String,String> LAST_WORDS;
+	private static final HashMap<String,String> LAST_WORDS = new HashMap<>();
 	static{
-		LAST_WORDS = new HashMap<>();
-		LAST_WORDS.put("AGOT","music of dragons.");
-		LAST_WORDS.put("ACOK","not dead either.");
-		LAST_WORDS.put("ASOS","up and up.");
-		LAST_WORDS.put("AFFC","the pig boy."+RIGHT_DOUBLE_QUOTE);
-		LAST_WORDS.put("ADWD","hands, the daggers.");
+		LAST_WORDS.put("AGOT", "music of dragons.");
+		LAST_WORDS.put("ACOK", "not dead either.");
+		LAST_WORDS.put("ASOS", "up and up.");
+		LAST_WORDS.put("AFFC", "the pig boy."+RIGHT_DOUBLE_QUOTE);
+		LAST_WORDS.put("ADWD", "hands, the daggers.");
 	}
 	
 	private static String firstWords(String novellaName){
