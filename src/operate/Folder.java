@@ -1,9 +1,11 @@
 package operate;
 
-import java.io.File;
-
 import common.IO;
+import html.HTMLEntity;
 import html.HTMLFile;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 /**
  * <p>Represents the folders that play significant roles in this project: Five folders for entire 
@@ -92,6 +94,14 @@ public enum Folder {
 	}
 	
 	public void save(HTMLFile h){
-	    //TODO implement
+	    try(OutputStreamWriter out = 
+	            IO.newOutputStreamWriter(folder + File.separator + h.getName())){
+	        for(HTMLEntity e : h){
+	            out.write(e.toString());
+	        }
+	    } catch(IOException e){
+	        //TODO implement the content of this block
+	        throw new RuntimeException("Cannot save the HTMLFile to the Folder");
+	    }
 	}
 }
