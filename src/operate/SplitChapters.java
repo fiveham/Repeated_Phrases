@@ -1,12 +1,12 @@
 package operate;
 
+import common.BookData;
 import common.IO;
 import html.CharCode;
 import html.CharLiteral;
 import html.Direction;
 import html.HTMLEntity;
 import html.HTMLFile;
-import html.HTMLFile.BookData;
 import html.Tag;
 import java.io.File;
 import java.io.FileNotFoundException;

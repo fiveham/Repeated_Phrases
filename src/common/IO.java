@@ -25,6 +25,10 @@ import java.util.function.Consumer;
  */
 public class IO {
     
+    public static final char RIGHT_SINGLE_QUOTE = '\u2019';
+    
+    public static final char RIGHT_DOUBLE_QUOTE = '\u201D';
+    
 	public static final String ERROR_EXIT_MSG = "I can't open the file ";
 	
 	/**

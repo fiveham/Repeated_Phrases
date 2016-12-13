@@ -12,7 +12,7 @@ import text.PhraseProducer;
  */
 public class CharLiteral extends HTMLEntity {
     
-    public static final CharLiteral RIGHT_SINGLE_QUOTE = new CharLiteral(HTMLFile.RIGHT_SINGLE_QUOTE);
+    public static final CharLiteral RIGHT_SINGLE_QUOTE = new CharLiteral(IO.RIGHT_SINGLE_QUOTE);
     public static final CharLiteral APOSTROPHE = new CharLiteral('\'');
     
     /**
