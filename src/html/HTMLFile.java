@@ -1096,10 +1096,12 @@ public class HTMLFile implements Iterable<HTMLEntity>{
         String firstWords = NOVELLA_FIRST_WORDS.get(filename);
         Predicate<Integer> predicate = (i) -> hasLiteralAt(firstWords, i);
         
-        int literalIndex = adjacentElement(predicate, Direction.NEXT, -1); //MAGIC
+        int literalIndex = adjacentElement(predicate, Direction.NEXT, BEFORE_BEGINNING);
         
         return adjacentElement(literalIndex, Tag::isPOpen, Direction.PREV);
     }
+    
+    private static final int BEFORE_BEGINNING = -1;
     
     /**
      * <p>Returns the index in {@code file} of the closing "p" tag of the last paragraph that ends
