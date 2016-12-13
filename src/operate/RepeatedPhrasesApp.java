@@ -236,7 +236,7 @@ public class RepeatedPhrasesApp {
      * @param args command-line args
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    static void setTrail(Operation op, String[] args, Consumer<String> msg) {
+    static void setTrail(Operation unused, String[] args, Consumer<String> msg) {
         if(args.length < 1){
             throw new IllegalArgumentException("SetTrail: I need a trial file.");
         }
@@ -251,7 +251,7 @@ public class RepeatedPhrasesApp {
                     msg.accept("Trail-linking " + node.focus());
                     
                     File fileToModify = 
-                            new File(op.readFrom().folderName() + File.separator + node.focus());
+                            new File(Folder.LINKED_CHAPTERS.folderName() + File.separator + node.focus());
                     
                     if(fileToModify.exists()){
                         HTMLFile file = null;
@@ -260,7 +260,7 @@ public class RepeatedPhrasesApp {
                         } catch(FileNotFoundException e){
                             throw new RuntimeException(
                                     IO.ERROR_EXIT_MSG 
-                                    + op.readFrom().folderName() 
+                                    + Folder.LINKED_CHAPTERS.folderName() 
                                     + File.separator 
                                     + node.focus() 
                                     + " for reading");
@@ -270,14 +270,14 @@ public class RepeatedPhrasesApp {
                                 file, 
                                 PREV_CHAPTER, 
                                 ID_ATTRIB, 
-                                availableConnected(op, elements, i, TrailElement::prev));
+                                availableConnected(elements, i, TrailElement::prev));
                         setAdjacentChapterLinks(
                                 file, 
                                 NEXT_CHAPTER, 
                                 ID_ATTRIB, 
-                                availableConnected(op, elements, i, TrailElement::next));
+                                availableConnected(elements, i, TrailElement::next));
                         
-                        file.print(op.writeTo().folderName() + File.separator + node.focus());
+                        file.print(Folder.READABLE.folderName() + File.separator + node.focus());
                     }
                 });
     }
@@ -324,7 +324,6 @@ public class RepeatedPhrasesApp {
     private static final String ID_ATTRIB = "id";
     
     private static String availableConnected(
-            Operation op, 
             List<TrailElement> elements, 
             int index, 
             Function<TrailElement,String> connection){
@@ -335,7 +334,7 @@ public class RepeatedPhrasesApp {
         
         String name = null;
         while(!new File(
-                op.readFrom().folderName() 
+                Folder.LINKED_CHAPTERS.folderName() 
                 + File.separator 
                 + (name = connection.apply(node)))
                 .exists() 
