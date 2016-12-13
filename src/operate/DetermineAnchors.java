@@ -30,6 +30,8 @@ import text.PhraseBox;
  * which this quote, once its anchor tags are applied, needs to link.</p>
  */
 class DetermineAnchors {
+    
+    private static final int TRAIL_FILE_ARG_INDEX = 0;
 	
     /**
      * <p>Detects all the .txt files in {@code READ_FROM}, reads them all, and organizes the
@@ -52,8 +54,8 @@ class DetermineAnchors {
 		
 		msg.accept("Generating phrase-first data structure.");
 		PhraseBox phrasebox = new PhraseBox(new Scanner(allAnchorablePhraseInstances));
-        Comparator<Location> phraseSorter = getPhraseSorter(args.length > 0 
-                ? args[0] //MAGIC
+        Comparator<Location> phraseSorter = getPhraseSorter(args.length > TRAIL_FILE_ARG_INDEX 
+                ? args[TRAIL_FILE_ARG_INDEX] 
                 : "");
 		for(String phrase : phrasebox.phrases()){
 			phrasebox.get(phrase).sort(phraseSorter);
