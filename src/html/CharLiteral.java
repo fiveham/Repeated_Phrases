@@ -50,7 +50,9 @@ public class CharLiteral extends HTMLEntity {
      * system-dependent newline if the wrapped character is '\n'.
      */
 	public String toString(){
-		return (c == NEW_LINE) ? System.getProperty("line.separator") : new String( new char[]{c} );
+		return (c == NEW_LINE) 
+		        ? System.getProperty("line.separator") 
+		        : new String(new char[]{c});
 	}
 	
 	public static List<CharLiteral> asList(String s){
