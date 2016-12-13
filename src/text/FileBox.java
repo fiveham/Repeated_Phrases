@@ -40,6 +40,9 @@ public class FileBox{
 		this(new Scanner(f, IO.ENCODING));
 	}
 	
+	private static final int INDEX_OF_FILENAME = 0;
+	private static final int INDEX_OF_INDEX = 1;
+	
     /**
      * <p>Constructs a FileBox containing the quote data represented in the body that {@code scan}
      * reads.</p>
@@ -58,8 +61,8 @@ public class FileBox{
 				
 				for(int i=1; i<phraseAndLocations.length; i++){
 					String[] fileAndIndex = phraseAndLocations[i].split(Location.ELEMENT_DELIM);
-					String filename = fileAndIndex[0]; //MAGIC
-					int index = Integer.parseInt(fileAndIndex[1]); //MAGIC
+					String filename = fileAndIndex[INDEX_OF_FILENAME];
+					int index = Integer.parseInt(fileAndIndex[INDEX_OF_INDEX]);
 					Chapter chapter = null; //FIXME get pertinent chapter for filename
 					
 					Quote quote = new Quote(
