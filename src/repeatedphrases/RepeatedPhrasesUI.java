@@ -49,7 +49,7 @@ public class RepeatedPhrasesUI extends JFrame {
      * <p>Creates new form RepeatedPhrasesUI</p>
      */
     public RepeatedPhrasesUI() {
-        this.app = new RepeatedPhrasesApp(System.out::println, false, false);
+        this.app = new RepeatedPhrasesApp(statusLabelMsg, false, false);
         initComponents();
         this.setTitle("Repeated Phrase Analyser");
     }
@@ -310,7 +310,7 @@ public class RepeatedPhrasesUI extends JFrame {
         buttonPress(changeOrderButton, 
         		"Changing chapter order (" + trailAndLimit[0] + ", " + trailAndLimit[1] + ")", 
         		() -> "Done: Chapter order changed", 
-        		() -> app.linksAndTrail(trailAndLimit, statusLabelMsg));
+        		() -> app.linksAndTrail(trailAndLimit));
     }
     
     /**
