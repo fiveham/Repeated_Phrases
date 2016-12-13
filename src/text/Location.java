@@ -98,6 +98,9 @@ public class Location implements Comparable<Location>{
 		return getFilename() + ELEMENT_DELIM + index;
 	}
 	
+	public static final int FILENAME_POSITION = 0;
+	public static final int INDEX_POSITION = 1;
+	
     /**
      * <p>Returns a string representation of this Location lacking any folders or file-extensions
      * mentioned in {@code filename}.</p>

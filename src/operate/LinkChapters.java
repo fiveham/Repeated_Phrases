@@ -126,8 +126,8 @@ class LinkChapters{
             int rawIndex = Integer.parseInt(elements[1]);
             
             String[] location = elements[INDEX_OF_LOCATION].split(Location.ELEMENT_DELIM);
-            String filename = location[FILENAME_IN_LOCATION];
-            int index = Integer.parseInt(location[INDEX_IN_LOCATION]);
+            String filename = location[Location.FILENAME_POSITION];
+            int index = Integer.parseInt(location[Location.INDEX_POSITION]);
             Chapter chapter = null; //FIXME get pertinent chapter for filename
             Location loc = new Location(index, chapter);
             
@@ -139,10 +139,6 @@ class LinkChapters{
     }
     
     private static final int INDEX_OF_LOCATION = 2;
-    
-    //TODO move these constants into Location
-    private static final int FILENAME_IN_LOCATION = 0;
-    private static final int INDEX_IN_LOCATION = 1;
     
     /**
      * <p>Returns a list of {@code FileDataPair}s pairing the html files from the folder
