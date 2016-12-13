@@ -67,8 +67,8 @@ public class PhraseBox{
 				List<Location> locs = new ArrayList<>(phraseAndLocations.length-1);
 				for(int i = 1; i<phraseAndLocations.length; i++){
 					String[] fileAndIndex = phraseAndLocations[i].split(Location.ELEMENT_DELIM);
-					String filename = fileAndIndex[0]; //MAGIC
-					int index = Integer.parseInt(fileAndIndex[1]); //MAGIC
+					String filename = fileAndIndex[Location.FILENAME_POSITION];
+					int index = Integer.parseInt(fileAndIndex[Location.INDEX_POSITION]);
 					Chapter chapter = null; //FIXME get pertinent chapter for filename
 					locs.add(new Location(index, chapter));
 				}
