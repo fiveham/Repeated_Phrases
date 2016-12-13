@@ -117,6 +117,9 @@ public class RepeatedPhrasesApp {
         linksAndTrail(limit, trailArgs(args));
     }
     
+    private static final int TRAIL_FILE_ARG_INDEX = 0;
+    private static final int PHRASE_SIZE_THRESHOLD_ARG_INDEX = 1;
+    
     /**
      * <p>Checks that the command-line arguments passed to main() include an existing file to be
      * passed to SetTrail, and returns the int value of the second command-line argument, if it is
@@ -127,23 +130,18 @@ public class RepeatedPhrasesApp {
      * int, {@value #IO.PHRASE_SIZE_FOR_ANCHOR} otherwise.
      */
     static int validateArgs(String[] args){
-        if(args.length < 1){ //MAGIC
+        if(args.length <= TRAIL_FILE_ARG_INDEX){
         	throw new IllegalArgumentException("I need a trail file.");
-        }
-        
-        String trail = args[0]; //MAGIC
-        
-        if(!(new File(trail)).exists()){
-            throw new IllegalArgumentException("I can't find that trail-file: \""+trail+"\".");
-        }
-        
-        if(args.length < 2){ //MAGIC
-            return IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR;
+        } else{
+            String trail = args[TRAIL_FILE_ARG_INDEX];
+            if(!(new File(trail)).exists()){
+                throw new IllegalArgumentException("I can't find that trail-file: \""+trail+"\".");
+            }
         }
         
         try{
-            return Integer.parseInt(args[1]); //MAGIC
-        } catch(NumberFormatException e){
+            return Integer.parseInt(args[PHRASE_SIZE_THRESHOLD_ARG_INDEX]);
+        } catch(ArrayIndexOutOfBoundsException | NumberFormatException e){
             return IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR;
         }
     }
