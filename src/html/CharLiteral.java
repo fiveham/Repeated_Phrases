@@ -1,5 +1,8 @@
 package html;
 
+import common.IO;
+import java.util.ArrayList;
+import java.util.List;
 import text.PhraseProducer;
 
 /**
@@ -11,6 +14,14 @@ public class CharLiteral extends HTMLEntity {
     
     public static final CharLiteral RIGHT_SINGLE_QUOTE = new CharLiteral(HTMLFile.RIGHT_SINGLE_QUOTE);
     public static final CharLiteral APOSTROPHE = new CharLiteral('\'');
+    
+    /**
+     * <p>The newline character '\n'.</p>
+     */
+    public static final char NEW_LINE = '\n';
+    
+    //TODO unify this use with the other list-of-characters representation in this project
+    public static final List<CharLiteral> NEW_LINE_LITERAL = asList(IO.NEW_LINE);
 	
     /**
      * <p>The literal character this object wraps.</p>
@@ -25,6 +36,10 @@ public class CharLiteral extends HTMLEntity {
 		this.c = c;
 	}
 	
+    public static boolean is1(HTMLEntity h){
+        return CharLiteral.class.isInstance(h) && ((CharLiteral)h).c == '1';
+    }
+    
 	@Override
     /**
      * <p>Returns a string representation of this Ch. If the wrapped literal character is a newline
@@ -35,13 +50,16 @@ public class CharLiteral extends HTMLEntity {
      * system-dependent newline if the wrapped character is '\n'.
      */
 	public String toString(){
-		return (c==NEW_LINE) ? System.getProperty("line.separator") : new String( new char[]{c} );
+		return (c == NEW_LINE) ? System.getProperty("line.separator") : new String( new char[]{c} );
 	}
 	
-    /**
-     * <p>The newline character '\n'.</p>
-     */
-	public static final char NEW_LINE = '\n';
+	public static List<CharLiteral> asList(String s){
+	    List<CharLiteral> result = new ArrayList<>(s.length());
+	    for(int i = 0; i < s.length(); i++){
+	        result.add(new CharLiteral(s.charAt(i)));
+	    }
+	    return result;
+	}
 	
 	@Override
     /**
