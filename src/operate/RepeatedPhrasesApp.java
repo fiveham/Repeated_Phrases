@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -35,38 +34,37 @@ public class RepeatedPhrasesApp {
     private final Consumer<String> msg;
     private final boolean recordHtmlChapters;
     private final boolean recordTextChapters;
+    private final boolean generateChapters;
     
     public RepeatedPhrasesApp(
             Consumer<String> msg, 
             boolean recordHtmlChapters, 
-            boolean recordTextChapters){
+            boolean recordTextChapters, 
+            boolean generateChapters){
         
         this.msg = msg;
         this.recordHtmlChapters = recordHtmlChapters;
         this.recordTextChapters = recordTextChapters;
+        this.generateChapters = generateChapters;
     }
     
-    public Collection<Chapter> getChapters(boolean generate){
+    public Collection<Chapter> getChapters(){
         if(chapters == null){
-            chapters = readChapters(generate);
+            chapters = initChapters();
         }
         return chapters;
     }
-	
-    private static Collection<Chapter> readChapters(boolean generate){
-        if(generate){
-            genChapters(System.out::println); //TODO allow user to specify msg
-        }
-        
-        return FindRepeatedPhrases.getChapters(
-                Folder.CORPUS.folder().listFiles(Chapter::isChapter));
-    }
     
-    private static void genChapters(Consumer<String> msg){
-        List<Operation> ops = new ArrayList<>(
-                EnumSet.range(Operation.NEWLINE_P, Operation.HTML_TO_TEXT));
-        ops.sort(null);
-        ops.forEach((op) -> op.operate(null, msg));
+    private Collection<Chapter> initChapters(){
+        return generateChapters
+                ? novelsToChapters() 
+                : readChapters();
+    }
+	
+    private static Collection<Chapter> readChapters(){
+        return Stream.of(Folder.CORPUS.folder().listFiles(Chapter::isChapter))
+                .map(Chapter::new)
+                .collect(Collectors.toList());
     }
     
     /**
@@ -182,14 +180,12 @@ public class RepeatedPhrasesApp {
         return this.msg;
     }
     
-    //TODO decide what set of methods in this class will be the API or style of use
-    //There's three different could-be APIs represented here currently
     /**
      * <p></p>
      * @param save
      * @return
      */
-    public Collection<Chapter> novelsToChapters(){
+    private Collection<Chapter> novelsToChapters(){
         //XXX do these String names include the pertinent folders or not?
         //TODO use an "is book" test against BookData elements
         String[] htmlBooks = Folder.HTML_BOOKS.folder().list(IO::isHtml);
@@ -208,7 +204,6 @@ public class RepeatedPhrasesApp {
         
         Stream<HTMLFile> htmlChapterStream = htmlChapters.stream();
         
-        //TODO ensure that runtime copies of html chapters are retained
         if(recordHtmlChapters){
             htmlChapterStream.peek(Folder.HTML_CHAPTERS::save);
         }

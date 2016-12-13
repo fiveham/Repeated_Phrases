@@ -49,7 +49,8 @@ public class RepeatedPhrasesUI extends JFrame {
      * <p>Creates new form RepeatedPhrasesUI</p>
      */
     public RepeatedPhrasesUI() {
-        this.app = new RepeatedPhrasesApp(statusLabelMsg, false, false);
+        //TODO use meaningful boolean params
+        this.app = new RepeatedPhrasesApp(statusLabelMsg, false, false, false);
         initComponents();
         this.setTitle("Repeated Phrase Analyser");
     }
