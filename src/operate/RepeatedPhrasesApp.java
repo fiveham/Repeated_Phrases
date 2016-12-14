@@ -94,23 +94,8 @@ public class RepeatedPhrasesApp {
     	
         ensureFolders(msg);
         
-        msg.accept("Newlining parargraphs");
-        Operation.NEWLINE_P.operate(null, msg);
-        
-        msg.accept("Removing inconsistent divs etc");
-        Operation.CLEAR_EXCESS_STRUCTURE.operate(null, msg);
-        
-        msg.accept("Removing non-chapter matter");
-        Operation.CLEAR_FRONT_AND_BACK_MATTER.operate(null, msg);
-        
-        msg.accept("Normalizing apostrophes");
-        Operation.SWAP_APOSTROPHES.operate(null, msg);
-        
-        msg.accept("Splitting books into chapters");
-        Operation.SPLIT_CHAPTERS.operate(null, msg);
-        
-        msg.accept("Creating plaintext corpus");
-        Operation.HTML_TO_TEXT.operate(null, msg);
+        msg.accept("Cleaning and splitting html books");
+        Operation.CLEAN_AND_SPLIT.operate(null, msg);
         
         msg.accept("Finding repeat phrases in corpus");
         Operation.FIND_REPEATED_PHRASES.operate(null, msg);
