@@ -462,6 +462,8 @@ public class RepeatedPhrasesApp {
      */
     private static final String TITLE_START = "title=\"";
     
+    //TODO can uses of List<TrailElement> be replaced with uses of a LinkedList?
+    //...using the nodes of the LinkedList to implicitly contain info about prev and next
     /**
      * <p>Represents an element of a chapter trail, a sequence of backward and forward links between
      * chapters.</p>
