@@ -17,55 +17,39 @@ import java.util.function.Function;
 public enum Folder {
     
     HTML_BOOKS(
-            "00_html_books", 
-            null, 
-            null),
-    HTML_BOOKS_NEWLINE(
-            "01_html_books_newline", 
-            null, 
-            null),
-    HTML_BOOKS_UNSTRUCTURED(
-            "02_html_books_unstructured", 
-            null, 
-            null),
-    HTML_BOOKS_CHAPTER_CORE(
-            "03_html_books_chapter_core", 
-            null, 
-            null),
-    HTML_BOOKS_CORRECT_APOSTROPHES(
-            "04_html_books_correct_apostrophes", 
+            "0_html_books", 
             null, 
             null),
     HTML_CHAPTERS(
-            "05_html_chapters", 
+            "1_html_chapters", 
             null, 
             Object::toString),
     CORPUS(
-            "06_corpus", 
+            "2_corpus", 
             null, 
             HTMLEntity::txtString),
     REPEATS(
-            "07_repeats", 
+            "3_repeats", 
             "repeats", 
             null),
     INDEPENDENT_INSTANCES(
-            "08_independent_instances", 
+            "4_independent_instances", 
             "independent_instances", 
             null),
     DUPLICATE_INDEPENDENTS(
-            "09_duplicate_independents", 
+            "5_duplicate_independents", 
             "duplicate_independents", 
             null),
     ANCHORS(
-            "10_anchors", 
+            "6_anchors", 
             null, 
             null),
     LINKED_CHAPTERS(
-            "11_linked_chapters", 
+            "7_linked_chapters", 
             null, 
             null),
     READABLE(
-            "12_readable", 
+            "8_readable", 
             null, 
             null);
     

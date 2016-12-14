@@ -1,27 +1,27 @@
 package operate;
 
 import common.IO;
-import html.HTMLFile;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Scanner;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
 import text.Location;
 
 //TODO describe what the inputs and outputs are for each Operation
 //in preparation to integrate the operations
 public enum Operation{
     
+    //TODO let CLEAN_AND_SPLIT acknowledge that it writes to both CORPUS and HTML_CHAPTERS
     CLEAN_AND_SPLIT(
             null, 
             Folder.HTML_BOOKS, 
             Folder.CORPUS, 
-            Operation::htmlToText), 
+            null), //TODO put a meaningful expression in place of this null
+    
+    //TODO combine FIND_REPEATED_PHRASES, REMOVE_DEPENDENT_PHRASES, and REMOVE_UNIQUE_INDEPENDENTS 
+    //into one operation.  Other operations might be able to be rolled in, as well.
     
     /**
      * <p>Reads the text chapters and determines which phrases at each size are repeated.</p>
@@ -146,32 +146,6 @@ public enum Operation{
     
     public void operate(String[] args, Consumer<String> msg){
         operation.accept(this, args, msg);
-    }
-    
-    /**
-     * <p>Detects all the .html files in {@code READ_FROM}, reads them as HTMLFiles, and prints them
-     * as .txt files in {@code WRITE_TO}.</p>
-     * @param op the Operation whose folders will be used
-     * @param args command-line args (not used)
-     * @param msg receives and handles messages output by arbitrary parts of this operation
-     */
-    private static void htmlToText(Operation op, String[] args, Consumer<String> msg) {
-        File[] readUs = op.readFrom().folder().listFiles(IO::isHtml);
-        Stream.of(readUs)
-                .parallel()
-                .forEach((f) -> {
-                    try{
-                        msg.accept("Saving as text " + f.getName());
-                        new HTMLFile(f).printAsText(
-                                op.writeTo().folderName() 
-                                + File.separator 
-                                + IO.stripExtension(f.getName()) 
-                                + IO.TXT_EXT);
-                    } catch(FileNotFoundException e){
-                        throw new RuntimeException(
-                                IO.ERROR_EXIT_MSG + f.getName() + " for reading");
-                    }
-                });
     }
     
     /**

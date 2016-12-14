@@ -127,7 +127,8 @@ public class RepeatedPhrasesApp {
         } else{
             String trail = args[TRAIL_FILE_ARG_INDEX];
             if(!(new File(trail)).exists()){
-                throw new IllegalArgumentException("I can't find that trail-file: \""+trail+"\".");
+                throw new IllegalArgumentException(
+                        "I can't find that trail-file: \"" + trail + "\".");
             }
         }
         
@@ -147,7 +148,7 @@ public class RepeatedPhrasesApp {
     }
     
     private String[] trailArgs(String[] args){
-        return new String[]{ args[0] };
+        return new String[]{args[0]}; //MAGIC
     }
     
     private void linksAndTrail(int limit, String[] trailArgs){
@@ -175,7 +176,7 @@ public class RepeatedPhrasesApp {
         //TODO use an "is book" test against BookData elements
         String[] htmlBooks = Folder.HTML_BOOKS.folder().list(IO::isHtml);
         
-        Collection<HTMLFile> htmlChapters = Stream.of(htmlBooks)
+        Stream<HTMLFile> htmlChapterStream = Stream.of(htmlBooks)
                 .parallel()
                 .map(File::new)
                 .map(this::newHTMLFile)
@@ -185,9 +186,8 @@ public class RepeatedPhrasesApp {
                     c1.addAll(c2); 
                     return c1;
                 })
-                .get();
-        
-        Stream<HTMLFile> htmlChapterStream = htmlChapters.stream();
+                .get()
+                .stream();
         
         if(recordHtmlChapters){
             htmlChapterStream.peek(Folder.HTML_CHAPTERS::save);
@@ -197,11 +197,9 @@ public class RepeatedPhrasesApp {
             htmlChapterStream.peek(Folder.CORPUS::save);
         }
         
-        chapters = htmlChapterStream
+        return htmlChapterStream
                 .map(Chapter::new)
                 .collect(Collectors.toList());
-        
-        return chapters;
     }
     
     private HTMLFile newHTMLFile(File f){
