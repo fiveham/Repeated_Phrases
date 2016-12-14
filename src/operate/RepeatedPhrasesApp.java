@@ -562,4 +562,6 @@ public class RepeatedPhrasesApp {
             return next;
         }
     }
+    
+    //TODO create a command-line interface capable of the same stuff as the GUI
 }
