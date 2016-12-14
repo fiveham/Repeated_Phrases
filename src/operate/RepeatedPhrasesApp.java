@@ -31,6 +31,7 @@ import text.Chapter;
 public class RepeatedPhrasesApp {
     
     private Collection<Chapter> chapters = null;
+    private Collection<HTMLFile> htmlChapters = null;
     private final Consumer<String> msg;
     private final boolean recordHtmlChapters;
     private final boolean recordTextChapters;
@@ -192,7 +193,9 @@ public class RepeatedPhrasesApp {
         if(recordHtmlChapters){
             htmlChapterStream.peek(Folder.HTML_CHAPTERS::save);
         }
+        htmlChapters = htmlChapterStream.collect(Collectors.toList());
         
+        htmlChapterStream = htmlChapters.stream();
         if(recordTextChapters){
             htmlChapterStream.peek(Folder.CORPUS::save);
         }
