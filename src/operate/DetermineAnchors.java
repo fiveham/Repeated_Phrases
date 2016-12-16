@@ -1,7 +1,10 @@
 package operate;
 
 import common.IO;
+import html.AnchorInfo;
 import html.HTMLFile;
+
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +49,9 @@ class DetermineAnchors {
      * sequencing the chapters
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-	static void determineAnchors(Operation op, String[] args, Consumer<String> msg) {
+	static List<AnchorInfo> determineAnchors(Operation op, String[] args, Consumer<String> msg) {
+	    List<AnchorInfo> result = new ArrayList<>();
+	    
 		msg.accept("Rendering phrase data as filebox and phrasebox.");
 		
 		String allAnchorablePhraseInstances = getDupPhraseData(op, msg);
@@ -96,7 +101,7 @@ class DetermineAnchors {
 				}
 				
 				out.close();
-			} catch( IOException e){
+			} catch(IOException e){
 				throw new RuntimeException(IO.ERROR_EXIT_MSG + name + " for writing.");
 			}
 		}
@@ -165,10 +170,9 @@ class DetermineAnchors {
 		StringBuilder sb = new StringBuilder();
 		
 		IntStream.range(FindRepeatedPhrases.MIN_PHRASE_SIZE, FindRepeatedPhrases.MAX_PHRASE_SIZE)
-		        .parallel()
 		        .mapToObj(op.readFrom()::filename)
 		        .forEach((name) -> {
-		            msg.accept("Reading anchorable phrase data from "+IO.stripFolder(name));
+		            msg.accept("Reading anchorable phrase data from " + IO.stripFolder(name));
 		            try{
 		                List<String> lines = IO.fileContentsAsList( 
 		                        new Scanner(new File(name), IO.ENCODING), 
@@ -180,7 +184,8 @@ class DetermineAnchors {
 		            }
 		        });
 		
-		return sb.delete(sb.length() - 1, sb.length()).toString();
+		//delete the final newline
+		return sb.substring(0, sb.length() - 1);
 	}
 	
     /**
