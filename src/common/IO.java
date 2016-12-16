@@ -25,6 +25,13 @@ import java.util.function.Consumer;
  */
 public class IO {
     
+    public static final String SPACE = " ";
+    
+    /**
+     * <p>The average number of letters per word.</p>
+     */
+    public static final int AVG_WORD_SIZE = 5;
+    
     public static final char RIGHT_SINGLE_QUOTE = '\u2019';
     
     public static final char RIGHT_DOUBLE_QUOTE = '\u201D';
