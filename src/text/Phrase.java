@@ -21,15 +21,21 @@ public class Phrase {
     
     private final String text;
     private final int lastSpace;
+    private final int wordCount;
     
     /**
      * <p>Constructs a Phrase for the specified piece of {@code text}
      * @param text the actual phrase from the text of a book
      * @param lastSpace the {@link String#lastIndexOf(String) last index of} a space in {@code text}
      */
-    Phrase(String text, int lastSpace){
+    Phrase(String text, int lastSpace, int wordCount){
         this.text = text;
         this.lastSpace = lastSpace;
+        this.wordCount = wordCount;
+    }
+    
+    public int getWordCount(){
+        return wordCount;
     }
     
     /**
