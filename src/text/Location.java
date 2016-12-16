@@ -33,8 +33,12 @@ public class Location implements Comparable<Location>{
 		this.index = index;
 		this.chapter = chapter;
 	}
+
+    //Getters
+	public Chapter getChapter(){
+	    return chapter;
+	}
 	
-	//Getters
     /**
      * <p>Returns the index portion of this Location</p>
      * @return the index portion of this Location
@@ -134,5 +138,13 @@ public class Location implements Comparable<Location>{
      */
 	public Location add(int indx){
 		return new Location(index+indx, chapter);
+	}
+	
+	public boolean hasPredecessor(){
+	    return index != 0;
+	}
+	
+	public Location getPredecessor(){
+	    return chapter.getLocations().get(index - 1);
 	}
 }
