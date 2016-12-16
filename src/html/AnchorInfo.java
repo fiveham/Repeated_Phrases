@@ -164,4 +164,15 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 			return linkTo.compareTo(a.linkTo);
 		}
 	}
+	
+	@Override
+	public String toString(){
+	    return new StringBuilder(phrase)
+	            .append(IO.LOCATION_DELIM)
+	            .append(position)
+	            .append(IO.LOCATION_DELIM)
+	            .append(linkTo)
+	            .append(IO.NEW_LINE)
+	            .toString();
+	}
 }
