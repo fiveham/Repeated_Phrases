@@ -140,7 +140,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * in this HTMLFile to the same repeated phrase in another HTMLFile chapter.
      */
 	public void addAnchor(AnchorInfo a){
-		int wordIndex = a.rawIndex();
+		int wordIndex = a.position().getIndex();
 		
 		validateWordWithIndex(firstWord(a.phrase()), wordIndex);
 		
