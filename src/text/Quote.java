@@ -64,4 +64,15 @@ public class Quote implements Comparable<Quote>{
 		}
 		return text.compareTo(otherQuote.text);
 	}
+	
+	public boolean isIndependent(){
+	    return !isDependent();
+	}
+	
+	private boolean isDependent(){
+        Chapter c = location.getChapter();
+        return c.hasLargerPhraseAt(location, text) 
+                || (location.hasPredecessor() 
+                        && c.hasLargerPhraseAt(location.getPredecessor(), text));
+	}
 }
