@@ -1,18 +1,16 @@
 package operate;
 
+import common.IO;
+import html.AnchorInfo;
+import html.HTMLFile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-//import java.util.Iterator;
 import java.util.Scanner;
 import java.util.function.Consumer;
-
-import common.IO;
-import html.AnchorInfo;
-import html.HTMLFile;
 import text.Chapter;
 import text.Location;
 
