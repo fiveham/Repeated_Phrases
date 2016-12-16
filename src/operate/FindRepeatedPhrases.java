@@ -47,9 +47,9 @@ class FindRepeatedPhrases {
      * list pertains to phrases of size {@code n}.
      */
 	static List<PhraseBox> findRepPhrases(Operation op, String[] args, Consumer<String> msg) {
-		
 		File[] readUs = op.readFrom().folder().listFiles(IO::isTxt);
 		final List<Chapter> chapters = getChapters(readUs);
+		
 		PhraseBox repeatedPhrasesFromPrevLoop = new PhraseBox();
 		repeatedPhrasesFromPrevLoop.add(Phrase.ZERO_WORD_PHRASE, null);
 		
