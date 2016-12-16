@@ -9,11 +9,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -21,6 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import text.Chapter;
+import text.Quote;
 
 //TODO use the following structure:
 //stage 1: ensure folders exist
@@ -552,4 +557,65 @@ public class RepeatedPhrasesApp {
     }
     
     //TODO create a command-line interface capable of the same stuff as the GUI
+    
+    //TODO incorporate unique independent repeated phrases into anchor cycles instead of discarding
+    
+    public Map<Chapter, Collection<Quote>> phraseAnalysis(){
+        Collection<Chapter> chapters = getChapters();
+        
+        Map<Chapter, Collection<Quote>> allQuotes = Collections.synchronizedMap(new HashMap<>());
+        chapters.parallelStream().forEach(
+                (c) -> allQuotes.put(c, c.getAllQuotes(IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR, 218)));
+        
+        Set<String> repeatedPhrases = repeatedPhrases(allQuotes);
+        
+        Map<Chapter, Collection<Quote>> repeatedQuotes = 
+                Collections.synchronizedMap(new HashMap<>());
+        chapters.parallelStream().forEach((c) -> {
+            List<Quote> rep = allQuotes.get(c).stream()
+                    .filter(repeatedPhrases::contains)
+                    .collect(Collectors.toList());
+            repeatedQuotes.put(c, rep);
+        });
+        
+        //remove dependent phrases
+        
+        repeatedQuotes.entrySet().parallelStream()
+                .forEach((e) -> e.getKey().setRepeatedQuotes(e.getValue()));
+        
+        Map<Chapter, Collection<Quote>> independent = Collections.synchronizedMap(new HashMap<>());
+        chapters.parallelStream().forEach((c) -> {
+            Collection<Quote> indep = repeatedQuotes.get(c).parallelStream()
+                    .filter(Quote::isIndependent)
+                    .collect(Collectors.toSet());
+            independent.put(c, indep);
+        });
+        
+        //remove unique independent phrases
+        
+        Set<String> dupIndep = repeatedPhrases(independent);
+        
+        Map<Chapter, Collection<Quote>> diQuotes = Collections.synchronizedMap(new HashMap<>());
+        chapters.parallelStream().forEach((c) -> {
+            Collection<Quote> di = independent.get(c).stream()
+                    .filter(dupIndep::contains)
+                    .collect(Collectors.toSet());
+            diQuotes.put(c, di);
+        });
+        
+        return diQuotes;
+    }
+    
+    private static Set<String> repeatedPhrases(Map<Chapter, ? extends Collection<Quote>> map){
+        Map<String, Boolean> data = Collections.synchronizedMap(new HashMap<>());
+        
+        map.keySet().parallelStream().forEach(
+                (c) -> map.get(c).parallelStream()
+                        .map(Quote::text)
+                        .forEach((t) -> data.put(t, data.containsKey(t))));
+        
+        return data.keySet().stream()
+                .filter(data::get)
+                .collect(Collectors.toSet());
+    }
 }

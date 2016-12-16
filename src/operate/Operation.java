@@ -18,7 +18,7 @@ public enum Operation{
             null, 
             Folder.HTML_BOOKS, 
             Folder.CORPUS, 
-            null), //TODO put a meaningful expression in place of this null
+            null), //XXX put a meaningful expression in place of this null
     
     //TODO combine FIND_REPEATED_PHRASES, REMOVE_DEPENDENT_PHRASES, and REMOVE_UNIQUE_INDEPENDENTS 
     //into one operation.  Other operations might be able to be rolled in, as well.
