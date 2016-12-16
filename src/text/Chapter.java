@@ -37,6 +37,7 @@ public class Chapter {
 	    this.body = IO.fileAsString(file);
 	}
 	
+	//FIXME need to use Corpus's weird Scanner delimiter instead of blindly reading text
 	public Chapter(HTMLFile h){
 	    //TODO see whether that name has exactly the needed folder info.
 	    this(new File(h.getName()));
