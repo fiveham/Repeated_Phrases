@@ -84,20 +84,16 @@ class DetermineAnchors {
 				List<Quote> quotes = filebox.get(chapter);
 				quotes.sort(null);
 				
-				for(Quote positionedPhrase : quotes){
-					String phrase = positionedPhrase.text();
+				for(Quote quote : quotes){
+					String phrase = quote.text();
 					
 					List<Location> locs = phrasebox.get(phrase);
 					
-					Location linkTo = locAfter(locs, chapter, positionedPhrase.index());
+					Location linkTo = locAfter(locs, chapter, quote.index());
 					
-					out.write(
-							phrase 
-							+ IO.LOCATION_DELIM 
-							+ positionedPhrase.index() 
-							+ IO.LOCATION_DELIM 
-							+ linkTo.toString() 
-							+ IO.NEW_LINE);
+					AnchorInfo ai = new AnchorInfo(phrase, quote.location(), linkTo);
+					result.add(ai);
+					out.write(ai.toString());
 				}
 				
 				out.close();
@@ -105,6 +101,8 @@ class DetermineAnchors {
 				throw new RuntimeException(IO.ERROR_EXIT_MSG + name + " for writing.");
 			}
 		}
+		
+		return result;
 	}
 	
     /**
@@ -135,7 +133,7 @@ class DetermineAnchors {
 	}
 	
 	private static class AdHocComparator implements Comparator<Location>{
-	    private final Map<String,Integer> chapterIndices;
+	    private final Map<String, Integer> chapterIndices;
 	    
         private AdHocComparator(String trailFile){
             List<TrailElement> elems = RepeatedPhrasesApp.getTrailElements(trailFile);
