@@ -167,8 +167,8 @@ public enum Operation{
                         
                         while(IO.scannerHasNonEmptyNextLine(scan)){
                             String line = scan.nextLine();
-                            if(line.indexOf(
-                                    Location.ELEMENT_DELIM) != line.lastIndexOf(Location.ELEMENT_DELIM)){
+                            if(line.indexOf(Location.ELEMENT_DELIM) 
+                                    != line.lastIndexOf(Location.ELEMENT_DELIM)){
                                 //then there's multiple Locations on that line
                                 
                                 //the case of -1 == -1 can be ignored because a phrase 
