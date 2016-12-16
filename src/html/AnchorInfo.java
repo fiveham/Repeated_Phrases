@@ -48,7 +48,7 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
      * @return the number of words in this AnchorInfo's {@code phrase}.
      */
 	public int phraseSize(){
-		return phrase.split(" ").length;
+		return phrase.split(IO.SPACE).length;
 	}
 	
     /**
@@ -57,18 +57,6 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
      */
 	public String phrase(){
 		return phrase;
-	}
-	
-    /**
-     * <p>Returns the word-index of this AnchorInfo's quote in its chapter source file. This is the
-     * literal int value from the second tab-delimited column on the line of an anchordata file
-     * pertaining to this AnchorInfo.</p>
-     * @return the word-index of this AnchorInfo's quote in its chapter source file. This is the
-     * literal int value from the second tab-delimited column on the line of an anchordata file
-     * pertaining to this AnchorInfo.
-     */
-	public int rawIndex(){
-		return position.getIndex();
 	}
 	
     /**
