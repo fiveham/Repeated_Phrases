@@ -1,6 +1,7 @@
 package text;
 
 import common.IO;
+import html.HTMLFile;
 
 /**
  * <p>Represents a location in a multi-file body of text at which a phrase begins. The index is the
@@ -84,11 +85,49 @@ public class Location implements Comparable<Location>{
 			return 0;
 		}
 		
-		int fileComp = getFilename().compareTo(loc.getFilename());
+		int fileComp = compareFilenames(getFilename(), loc.getFilename());
 		return fileComp != 0 
     			? fileComp 
     			: Integer.compare(index, loc.index);
 	}
+	
+    /**
+     * <p>Compares the filenames of two {@code Location}s according to the order of the ASOIAF books
+     * given by {@link #bookList bookList}.</p>
+     * @param f1 the {@link Location#getFilename() filename} of a Location
+     * @param f2 the {@link Location#getFilename() filename} of a Location
+     * @return a negative value if {@code f1}'s book precedes that of {@code f2}, a positive value
+     * if {@code f2's} precedes {@code f1}'s, or zero if {@code f1} and {@code f2} have the same
+     * book.
+     */
+    private static int compareFilenames(String f1, String f2){
+        
+        String[] split1 = IO.stripExtension(f1)
+                .split(IO.FILENAME_COMPONENT_SEPARATOR, HTMLFile.FILENAME_ELEMENT_COUNT);
+        String book1 = split1[0];
+        String chapterNumber1 = split1[1];
+        
+        String[] split2 = IO.stripExtension(f2)
+                .split(IO.FILENAME_COMPONENT_SEPARATOR, HTMLFile.FILENAME_ELEMENT_COUNT);
+        String book2 = split2[0];
+        String chapterNumber2 = split2[1];
+        
+        int comp = Book.valueOf(book1).ordinal() - Book.valueOf(book2).ordinal();
+        return comp != 0 
+                ? comp 
+                : Integer.parseInt(chapterNumber1) - Integer.parseInt(chapterNumber2);
+    }
+    
+    private static enum Book {
+        AGOT, 
+        ACOK, 
+        ASOS, 
+        AFFC, 
+        ADWD, 
+        DE, 
+        PQ, 
+        RP;
+    }
 	
 	//Tools
 	@Override
