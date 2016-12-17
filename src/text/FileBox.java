@@ -1,33 +1,26 @@
 package text;
 
+import common.IO;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
-
-import common.IO;
 
 /**
  * <p>Wraps a Map linking chapter filenames with data structures that store pairs of String and int.
  * This is used to store quote data in a way that enables all the quotes from a given chapter to be
  * accessed easily.</p>
  */
-public class FileBox{
-	
-    /**
-     * <p>The wrapped HashMap.</p>
-     */
-	private final Map<Chapter, List<Quote>> hashmap;
+public class FileBox extends HashMap<Chapter, List<Quote>>{
 	
     /**
      * <p>Constructs a FileBox with no contents.</p>
      */
 	public FileBox() {
-		hashmap = new HashMap<>();
+		super();
 	}
 	
     /**
@@ -48,9 +41,8 @@ public class FileBox{
      * or {@link #Folder.DUPLICATE_INDEPENDENTS DUPLICATE_INDEPENDENTS}.
      */
 	public FileBox(Scanner scan){
+	    super();
 		try{
-			hashmap = new HashMap<>();
-			
 			while(IO.scannerHasNonEmptyNextLine(scan)){
 				String[] phraseAndLocations = scan.nextLine().split(IO.LOCATION_DELIM);
 				
@@ -66,12 +58,12 @@ public class FileBox{
 							new Location(index, chapter), 
 							phrase);
 					
-					if(hashmap.containsKey(filename)){
-						hashmap.get(filename).add(quote);
+					if(containsKey(filename)){
+						get(filename).add(quote);
 					} else{
 						List<Quote> l = new ArrayList<>();
 						l.add(quote);
-						hashmap.put(chapter, l);
+						put(chapter, l);
 					}
 				}
 			}
@@ -91,18 +83,7 @@ public class FileBox{
      * FileBox has phrase- instance data
      */
 	public Set<Chapter> chapters(){
-		return hashmap.keySet();
-	}
-	
-    /**
-     * <p>Returns the {@literal List<IntString>} mapped in the underlying HashMap for the key
-     * {@code o}. Returns {@code null} if there is no mapping for {@code o} in the underlying
-     * HashMap.</p>
-     * @param o the key filename whose value {@literal List<IntString>} is to be returned
-     * @return the {@literal List<IntString>} mapped in the underlying HashMap for the key {@code o}
-     */
-	public List<Quote> get(Object o){
-		return hashmap.get(o);
+		return keySet();
 	}
 	
     /**
@@ -112,6 +93,6 @@ public class FileBox{
      * @return true if there is an entry for {@code filename} in this FileBox, false otherwise.
      */
 	public boolean contains(String filename){
-		return hashmap.containsKey(filename);
+		return containsKey(filename);
 	}
 }
