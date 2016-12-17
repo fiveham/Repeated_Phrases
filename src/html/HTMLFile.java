@@ -1835,7 +1835,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	public String body(){
 	    StringBuilder sb = new StringBuilder();
 	    
-	    int startPoint = afterTitle();
+	    int startPoint = firstPClose();
 	    
 	    for(int i = startPoint; i < content.size(); i++){
 	        StringBuilder entityText = new StringBuilder(content.get(i).txtString());
@@ -1850,6 +1850,14 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	    return sb.toString();
 	}
 	
+	private int firstPClose(){
+	    return IntStream.range(0, content.size())
+	            .filter((i) -> Tag.isPClose(content.get(i)))
+	            .findFirst()
+	            .getAsInt();
+	}
+	
+	//XXX all this firstwords stuff doesn't matter for html chapters
 	private int afterTitle(){
 	    String firstWords = Stream.of(BookData.values())
 	            .filter((bd) -> bd.filename().equals(this.filename))
