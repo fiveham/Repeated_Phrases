@@ -43,6 +43,7 @@ public class Chapter {
 	    this(new File(h.getName()));
 	}
 	
+	//XXX rename getFilename, since each chapter has an actual name other than the filename
     /**
      * <p>Returns {@code filename}.</p>
      * @return {@code filename}
