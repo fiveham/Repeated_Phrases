@@ -1,6 +1,7 @@
 package operate;
 
 import common.IO;
+import html.AnchorInfo;
 import html.Direction;
 import html.HTMLEntity;
 import html.HTMLFile;
@@ -25,6 +26,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import text.Chapter;
+import text.Location;
+import text.PhraseBox;
 import text.Quote;
 
 //TODO use the following structure:
@@ -560,7 +563,7 @@ public class RepeatedPhrasesApp {
     
     //TODO incorporate unique independent repeated phrases into anchor cycles instead of discarding
     
-    public Map<Chapter, Collection<Quote>> phraseAnalysis(){
+    public List<AnchorInfo> phraseAnalysis(){
         Collection<Chapter> chapters = getChapters();
         
         Map<Chapter, Collection<Quote>> allQuotes = Collections.synchronizedMap(new HashMap<>());
@@ -595,19 +598,76 @@ public class RepeatedPhrasesApp {
         
         Set<String> dupIndep = repeatedPhrases(independent);
         
-        Map<Chapter, Collection<Quote>> diQuotes = Collections.synchronizedMap(new HashMap<>());
+        Map<Chapter, List<Quote>> diQuotes = Collections.synchronizedMap(new HashMap<>());
         chapters.parallelStream().forEach((c) -> {
-            Collection<Quote> di = independent.get(c).stream()
+            List<Quote> di = independent.get(c).stream()
                     .filter(dupIndep::contains)
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toList());
             diQuotes.put(c, di);
         });
         
-        return diQuotes;
-        
         //create anchor data
         
+        return generateAnchorInfo(diQuotes);
+    }
+    
+    private static PhraseBox phrasesToLocations(Map<Chapter, List<Quote>> diQuotes){
+        PhraseBox result = new PhraseBox();
+        diQuotes.keySet().parallelStream().forEach(
+                (c) -> diQuotes.get(c).parallelStream().forEach(
+                        (q) -> result.add(q.text(), q.location())));
+        return result;
+    }
+    
+    private static List<AnchorInfo> generateAnchorInfo(Map<Chapter, List<Quote>> diQuotes){
+        List<AnchorInfo> result = new ArrayList<>();
+
+        PhraseBox phrasebox = phrasesToLocations(diQuotes);
+        for(Chapter chapter : diQuotes.keySet()){
+            List<Quote> quotes = diQuotes.get(chapter);
+            quotes.sort(null);
+            
+            for(Quote quote : quotes){
+                String phrase = quote.text();
+                
+                //XXX get all anchors for locs at once and add to result in bulk
+                List<Location> locs = phrasebox.get(phrase);
+                
+                Location linkTo = locAfter(locs, quote.location());
+                
+                AnchorInfo ai = new AnchorInfo(phrase, quote.location(), linkTo);
+                result.add(ai);
+            }
+        }
         
+        return result;
+    }
+    
+    /**
+     * <p>Returns the Location in the list {@code locs} after the Location whose
+     * {@link Location#getIndex() index} and {@link Location#getFilename() filename} are specified
+     * by {@code index} and {@code chapter} respectively, or the first Location in the list if the
+     * indicated Location is the last in the list.</p>
+     * @param locs a list of Location from which a Location is returned
+     * @param chapter the chapter whose successor is to be returned
+     * @param index the {@link Location#getIndex() index} of the chapter whose successor is to be
+     * returned
+     * @return the Location in the list {@code locs} after the Location whose
+     * {@link Location#getIndex() index} and {@link Location#getFilename() filename} are specified
+     * by {@code index} and {@code chapter} respectively, or the first Location in the list if the
+     * indicated Location is the last in the list
+     * @throws IllegalArgumentException if the Location specified by {@code chapter} and
+     * {@code index} is not present in the specified list.
+     */
+    private static Location locAfter(List<Location> locs, Location here){
+        int i = locs.indexOf(here);
+        if(i < 0){
+            throw new IllegalArgumentException(
+                    "The Location " + here.toString() + " is not present in the specified list.");
+        } else{
+            i++;
+            return locs.get(i % locs.size());
+        }
     }
     
     private static Set<String> repeatedPhrases(Map<Chapter, ? extends Collection<Quote>> map){
