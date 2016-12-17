@@ -81,7 +81,7 @@ public enum Operation{
             null, 
             Folder.DUPLICATE_INDEPENDENTS, 
             Folder.ANCHORS, 
-            DetermineAnchors::determineAnchors), 
+            null), //XXX replace with something meaningful
     
     /**
      * <p>Creates html chapters from existing html chapters and anchor data.</p>

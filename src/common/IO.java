@@ -25,6 +25,12 @@ import java.util.function.Consumer;
  */
 public class IO {
     
+    /**
+     * <p>The file extension for anchor-data files: {@value}</p>
+     * @see IO#TXT_EXT
+     */
+    public static final String ANCHOR_EXT = ".anchordata" + IO.TXT_EXT;
+    
     public static final char SPACE_CHAR = ' ';
     
     public static final String SPACE = " ";

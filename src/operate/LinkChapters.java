@@ -43,7 +43,7 @@ class LinkChapters{
                         op, 
                         op.readFrom().folder().list(IO::isHtml), 
                         op.readDecoration().folder()
-                        		.list((dir, name) -> name.endsWith(DetermineAnchors.ANCHOR_EXT)));
+                        		.list((dir, name) -> name.endsWith(IO.ANCHOR_EXT)));
         
         msg.accept("Got "+fileDataPairs.size()+" FileDataPairs");
         
