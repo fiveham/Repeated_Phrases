@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -236,7 +237,7 @@ public class RepeatedPhrasesApp {
         }
         String trailSource = args[0];
         msg.accept("Getting trail data from " + trailSource );
-        List<TrailElement> elements = getTrailElements(trailSource);
+        List<TrailElement> elements = getTrailElements(new File(trailSource));
         
         IntStream.range(0, elements.size())
                 .parallel()
@@ -289,9 +290,9 @@ public class RepeatedPhrasesApp {
      * @param trailFilename the name of the trail-file from which trail data is extracted
      * @return a list of {@code TrailElement}s describing each chapter's predecessor and successor
      */
-    static List<TrailElement> getTrailElements(String trailFilename){
+    static List<TrailElement> getTrailElements(File trailFile){
         return IO.fileContentsAsList(
-                new File(trailFilename), 
+                trailFile, 
                 Scanner::nextLine, 
                 IO::scannerHasNonEmptyNextLine)
                 .stream()
@@ -563,7 +564,7 @@ public class RepeatedPhrasesApp {
     
     //TODO incorporate unique independent repeated phrases into anchor cycles instead of discarding
     
-    public List<AnchorInfo> phraseAnalysis(){
+    public List<AnchorInfo> phraseAnalysis(File trailFile){
         Collection<Chapter> chapters = getChapters();
         
         Map<Chapter, Collection<Quote>> allQuotes = Collections.synchronizedMap(new HashMap<>());
@@ -608,21 +609,59 @@ public class RepeatedPhrasesApp {
         
         //create anchor data
         
-        return generateAnchorInfo(diQuotes);
+        return generateAnchorInfo(diQuotes, trailFile);
     }
     
-    private static PhraseBox phrasesToLocations(Map<Chapter, List<Quote>> diQuotes){
+    private static PhraseBox phrasesToLocations(Map<Chapter, List<Quote>> diQuotes, File trailFile){
         PhraseBox result = new PhraseBox();
         diQuotes.keySet().parallelStream().forEach(
                 (c) -> diQuotes.get(c).parallelStream().forEach(
                         (q) -> result.add(q.text(), q.location())));
+        
+        //sort the anchors according to the trail file
+        Comparator<Location> phraseSorter = trailFile.exists() && trailFile.canRead() 
+                ? new AdHocComparator(trailFile) 
+                : Location::compareTo;
+        for(String phrase : result.phrases()){
+            result.get(phrase).sort(phraseSorter);
+        }
+        
         return result;
     }
     
-    private static List<AnchorInfo> generateAnchorInfo(Map<Chapter, List<Quote>> diQuotes){
+    private static class AdHocComparator implements Comparator<Location>{
+        private final Map<String, Integer> chapterIndices;
+        
+        private AdHocComparator(File trailFile){
+            List<TrailElement> elems = getTrailElements(trailFile);
+            chapterIndices = IntStream.range(0, elems.size())
+                    .mapToObj(Integer::valueOf)
+                    .collect(Collectors.toMap(
+                            (i) -> IO.stripFolderExtension(elems.get(i).focus()), 
+                            (i) -> i));
+        }
+        
+        @Override
+        public int compare(Location loc1, Location loc2){
+            String chapter1 = IO.stripFolderExtension(loc1.getFilename());
+            String chapter2 = IO.stripFolderExtension(loc2.getFilename());
+            
+            int indexInChapter1 = chapterIndices.get(chapter1);
+            int indexInChapter2 = chapterIndices.get(chapter2);
+            
+            return indexInChapter1 != indexInChapter2 
+                    ? indexInChapter1 - indexInChapter2 
+                    : loc1.getIndex() - loc2.getIndex();
+        }
+    }
+    
+    private static List<AnchorInfo> generateAnchorInfo(
+            Map<Chapter, List<Quote>> diQuotes, 
+            File trailFile){
+        
         List<AnchorInfo> result = new ArrayList<>();
 
-        PhraseBox phrasebox = phrasesToLocations(diQuotes);
+        PhraseBox phrasebox = phrasesToLocations(diQuotes, trailFile);
         for(Chapter chapter : diQuotes.keySet()){
             List<Quote> quotes = diQuotes.get(chapter);
             quotes.sort(null);
