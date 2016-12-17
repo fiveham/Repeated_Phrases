@@ -14,6 +14,7 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.OptionalInt;
 import java.util.Scanner;
 import java.util.Iterator;
 import java.util.function.Consumer;
@@ -314,7 +315,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * otherwise.
      */
 	public boolean hasLiteralAt(String literal, int index){
-		for(int i=0; i<literal.length(); i++){
+		for(int i = 0; i < literal.length(); i++){
 			char c = literal.charAt(i);
 			if(!content.get(index).match(c)){
 				return false;
@@ -322,6 +323,15 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 			index = adjacentElement(index, HTMLFile::isCharacter, Direction.NEXT);
 		}
 		return true;
+	}
+	
+	private int indexOfLiteral(String literal){
+	    OptionalInt oi = IntStream.range(0, content.size())
+	            .filter((i) -> hasLiteralAt(literal, i))
+	            .findFirst();
+	    return oi.isPresent() 
+	            ? oi.getAsInt() 
+	            : -1; //MAGIC
 	}
 	
     /**
@@ -334,12 +344,10 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * @return
      */
 	public boolean hasLiteralBetween(String literal, int start, int end){
-		for(int i=start+1; i<end-literal.length(); i++){
-			if(hasLiteralAt(literal, i)){
-				return true;
-			}
-		}
-		return false;
+	    OptionalInt oi = IntStream.range(start + 1, end - literal.length())
+	            .filter((i) -> hasLiteralAt(literal, i))
+	            .findFirst();
+	    return oi.isPresent();
 	}
 	
     /**
@@ -1843,10 +1851,11 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	}
 	
 	private int afterTitle(){
-	    return IntStream.range(0, content.size())
-                .filter((i) -> Tag.isPClose(content.get(i)))
-                .findFirst()
-                .getAsInt();
-
+	    String firstWords = Stream.of(BookData.values())
+	            .filter((bd) -> bd.filename().equals(this.filename))
+	            .map(BookData::filename)
+	            .findFirst()
+	            .get();
+	    return indexOfLiteral(firstWords);
 	}
 }
