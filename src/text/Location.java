@@ -101,7 +101,6 @@ public class Location implements Comparable<Location>{
      * book.
      */
     private static int compareFilenames(String f1, String f2){
-        
         String[] split1 = IO.stripExtension(f1)
                 .split(IO.FILENAME_COMPONENT_SEPARATOR, HTMLFile.FILENAME_ELEMENT_COUNT);
         String book1 = split1[0];
