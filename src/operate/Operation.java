@@ -50,7 +50,7 @@ public enum Operation{
             null, 
             Folder.REPEATS, 
             Folder.INDEPENDENT_INSTANCES, 
-            RemoveDependentPhrases::rmDepPhrases), 
+            null), 
     
     /**
      * <p>Filters out the repeated Phrases which have only one instance that isn't subsumed by a 
