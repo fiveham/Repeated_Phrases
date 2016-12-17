@@ -36,7 +36,7 @@ public enum Operation{
             null, 
             Folder.CORPUS, 
             Folder.REPEATS, 
-            FindRepeatedPhrases::findRepPhrases), 
+            null), 
     
     /**
      * <p>Isolates those repeated Phrases that are not subsumed by a larger repeated Phrase.</p>
@@ -156,7 +156,7 @@ public enum Operation{
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
     private static void rmUniqIndeps(Operation op, String[] args, Consumer<String> msg) {
-        IntStream.range(FindRepeatedPhrases.MIN_PHRASE_SIZE, FindRepeatedPhrases.MAX_PHRASE_SIZE)
+        IntStream.range(IO.MIN_PHRASE_SIZE, IO.MAX_PHRASE_SIZE)
                 .parallel()
                 .forEach((i) -> {
                     try(

@@ -28,7 +28,7 @@ class RemoveDependentPhrases {
     /**
      * <p>The largest number of words in any repeated phrase in the corpus: {@value}</p>
      */
-    public static final int INIT_LOW_SIZE = FindRepeatedPhrases.MAX_PHRASE_SIZE-1;
+    public static final int INIT_LOW_SIZE = IO.MAX_PHRASE_SIZE - 1;
     
     /**
      * <p>An exclusive lower bound for how small the smaller of two phrase-sizes being used at once

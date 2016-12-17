@@ -26,6 +26,18 @@ import java.util.function.Consumer;
 public class IO {
     
     /**
+     * <p>Minimum size of repeated phrases to be found.</p>
+     */
+    public static final int MIN_PHRASE_SIZE = 1;
+    
+    /**
+     * <p>Maximum size of repeated phrases to be found. The value {@value #MAX_PHRASE_SIZE} was
+     * determined empirically, and pertains to an overlap of text between AFFC Samwell I and ADWD
+     * Jon II.</p>
+     */
+    public static final int MAX_PHRASE_SIZE = 218;
+    
+    /**
      * <p>The file extension for anchor-data files: {@value}</p>
      * @see IO#TXT_EXT
      */
