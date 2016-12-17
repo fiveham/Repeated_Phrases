@@ -604,6 +604,10 @@ public class RepeatedPhrasesApp {
         });
         
         return diQuotes;
+        
+        //create anchor data
+        
+        
     }
     
     private static Set<String> repeatedPhrases(Map<Chapter, ? extends Collection<Quote>> map){
