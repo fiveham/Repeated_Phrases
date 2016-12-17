@@ -39,8 +39,8 @@ public class Chapter {
 	
 	//FIXME need to use Corpus's weird Scanner delimiter instead of blindly reading text
 	public Chapter(HTMLFile h){
-	    //TODO see whether that name has exactly the needed folder info.
-	    this(new File(h.getName()));
+	    this.filename = h.getName();
+	    this.body = h.body();
 	}
 	
 	//XXX rename getFilename, since each chapter has an actual name other than the filename
@@ -126,7 +126,8 @@ public class Chapter {
 	    return 0 <= i && i < body.length();
 	}
 	
-	private boolean isWordChar(char c){
+	//XXX move to IO as a standard
+	public static boolean isWordChar(char c){
 	    return ('a' <= c && c <= 'z') 
                 || ('A' <= c && c <= 'Z') 
                 || c == '\'' 
