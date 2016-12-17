@@ -23,6 +23,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import text.Chapter;
 import text.Location;
 import text.PhraseProducer;
 
@@ -1816,5 +1817,36 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	@Override
 	public Iterator<HTMLEntity> iterator(){
 	    return content.iterator();
+	}
+	
+	/**
+	 * <p>Generates a plaintext representation of the content of this html file other than the 
+	 * chapter title if this is an html chapter.</p>
+	 * @return
+	 */
+	public String body(){
+	    StringBuilder sb = new StringBuilder();
+	    
+	    int startPoint = afterTitle();
+	    
+	    for(int i = startPoint; i < content.size(); i++){
+	        StringBuilder entityText = new StringBuilder(content.get(i).txtString());
+	        for(int j = 0; j < entityText.length(); j++){
+	            if(!Chapter.isWordChar(entityText.charAt(j))){
+	                entityText.setCharAt(j, IO.SPACE_CHAR);
+	            }
+	        }
+	        sb.append(entityText);
+	    }
+	    
+	    return sb.toString();
+	}
+	
+	private int afterTitle(){
+	    return IntStream.range(0, content.size())
+                .filter((i) -> Tag.isPClose(content.get(i)))
+                .findFirst()
+                .getAsInt();
+
 	}
 }
