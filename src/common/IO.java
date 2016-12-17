@@ -25,6 +25,8 @@ import java.util.function.Consumer;
  */
 public class IO {
     
+    public static final char SPACE_CHAR = ' ';
+    
     public static final String SPACE = " ";
     
     /**
