@@ -2,19 +2,15 @@ package operate;
 
 import common.IO;
 import html.AnchorInfo;
-import html.HTMLFile;
-
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import operate.RepeatedPhrasesApp.TrailElement;
 import text.Chapter;
@@ -49,60 +45,52 @@ class DetermineAnchors {
      * sequencing the chapters
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-	static List<AnchorInfo> determineAnchors(Operation op, String[] args, Consumer<String> msg) {
-	    List<AnchorInfo> result = new ArrayList<>();
-	    
+	static List<AnchorInfo> determineAnchors(Operation unused, String[] args, Consumer<String> msg) {
 		msg.accept("Rendering phrase data as filebox and phrasebox.");
 		
-		String allAnchorablePhraseInstances = getDupPhraseData(op, msg);
+		String allAnchorablePhraseInstances = getDupPhraseData(msg);
 		msg.accept("Got anchorable phrase data.");
 		
 		msg.accept("Generating phrase-first data structure.");
-		PhraseBox phrasebox = new PhraseBox(new Scanner(allAnchorablePhraseInstances));
-        Comparator<Location> phraseSorter = getPhraseSorter(args.length > TRAIL_FILE_ARG_INDEX 
-                ? args[TRAIL_FILE_ARG_INDEX] 
-                : "");
-		for(String phrase : phrasebox.phrases()){
-			phrasebox.get(phrase).sort(phraseSorter);
+		PhraseBox phrasebox;
+		{
+		    phrasebox = new PhraseBox(new Scanner(allAnchorablePhraseInstances));
+	        Comparator<Location> phraseSorter = getPhraseSorter(args.length > TRAIL_FILE_ARG_INDEX 
+	                ? args[TRAIL_FILE_ARG_INDEX] 
+	                : "");
+	        for(String phrase : phrasebox.phrases()){
+	            phrasebox.get(phrase).sort(phraseSorter);
+	        }
 		}
 		
 		msg.accept("Generating chaptername-first data structure.");
 		FileBox filebox = new FileBox(new Scanner(allAnchorablePhraseInstances));
-		
-		//create a file for each chapter and fill it with phrases 
-		//that need to be tagged in that chapter, the locations in 
-		//that chapter at which those quotes appear, and 
-		//references to the quotes to which those phrase-
-		//instances need to link.
-		for(Chapter chapter : filebox.chapters()){
-			msg.accept("Creating anchor data for "+chapter);
-			
-			String name = anchorOutName(chapter);
-			
-			try(OutputStreamWriter out = IO.newOutputStreamWriter(name)){
-				
-				List<Quote> quotes = filebox.get(chapter);
-				quotes.sort(null);
-				
-				for(Quote quote : quotes){
-					String phrase = quote.text();
-					
-					List<Location> locs = phrasebox.get(phrase);
-					
-					Location linkTo = locAfter(locs, chapter, quote.index());
-					
-					AnchorInfo ai = new AnchorInfo(phrase, quote.location(), linkTo);
-					result.add(ai);
-					out.write(ai.toString());
-				}
-				
-				out.close();
-			} catch(IOException e){
-				throw new RuntimeException(IO.ERROR_EXIT_MSG + name + " for writing.");
-			}
-		}
-		
-		return result;
+		return func(filebox, phrasebox);
+	}
+	
+	private static List<AnchorInfo> func(
+	        Map<Chapter, List<Quote>> filebox, 
+	        PhraseBox phrasebox){
+	    
+	    List<AnchorInfo> result = new ArrayList<>();
+	    
+        for(Chapter chapter : filebox.keySet()){
+            List<Quote> quotes = filebox.get(chapter);
+            quotes.sort(null);
+            
+            for(Quote quote : quotes){
+                String phrase = quote.text();
+                
+                List<Location> locs = phrasebox.get(phrase);
+                
+                Location linkTo = locAfter(locs, chapter, quote.index());
+                
+                AnchorInfo ai = new AnchorInfo(phrase, quote.location(), linkTo);
+                result.add(ai);
+            }
+        }
+        
+        return result;
 	}
 	
     /**
@@ -129,18 +117,19 @@ class DetermineAnchors {
 		File f = new File(trailFile);
 		return f.exists() && f.canRead() 
 				? new AdHocComparator(trailFile) 
-				: PHRASE_SORTER;
+				: Location::compareTo;
 	}
-	
+    
 	private static class AdHocComparator implements Comparator<Location>{
 	    private final Map<String, Integer> chapterIndices;
 	    
         private AdHocComparator(String trailFile){
             List<TrailElement> elems = RepeatedPhrasesApp.getTrailElements(trailFile);
-            chapterIndices = new HashMap<>();
-            for(int i = 0; i < elems.size(); i++){
-                chapterIndices.put(IO.stripFolderExtension(elems.get(i).focus()), i);
-            }
+            chapterIndices = IntStream.range(0, elems.size())
+                    .mapToObj(Integer::valueOf)
+                    .collect(Collectors.toMap(
+                            (i) -> IO.stripFolderExtension(elems.get(i).focus()), 
+                            (i) -> i));
         }
         
         @Override
@@ -164,11 +153,11 @@ class DetermineAnchors {
      * @return a string containing all the lines of all the files containing non-unique independent
      * repeated phrase information from {@value Folder#READ_FROM.foldername}
      */
-	private static String getDupPhraseData(Operation op, Consumer<String> msg){
+	private static String getDupPhraseData(Consumer<String> msg){
 		StringBuilder sb = new StringBuilder();
 		
 		IntStream.range(FindRepeatedPhrases.MIN_PHRASE_SIZE, FindRepeatedPhrases.MAX_PHRASE_SIZE)
-		        .mapToObj(op.readFrom()::filename)
+		        .mapToObj(Folder.DUPLICATE_INDEPENDENTS::filename)
 		        .forEach((name) -> {
 		            msg.accept("Reading anchorable phrase data from " + IO.stripFolder(name));
 		            try{
@@ -184,53 +173,6 @@ class DetermineAnchors {
 		
 		//delete the final newline
 		return sb.substring(0, sb.length() - 1);
-	}
-	
-    /**
-     * <p>Sequences {@code Location}s according to the name of the book their filename starts with,
-     * in the order given by {@link #bookList bookList}. The default {@literal Comparator<Location>}
-     * returned by getPhraseSorter when it's passed an invalid filename.</p>
-     */
-	private static final Comparator<Location> PHRASE_SORTER = 
-	        Comparator.comparing(Location::getFilename, DetermineAnchors::compareFilenames)
-	                .thenComparing(Location::getIndex, Integer::compare);
-	
-    /**
-     * <p>Compares the filenames of two {@code Location}s according to the order of the ASOIAF books
-     * given by {@link #bookList bookList}.</p>
-     * @param f1 the {@link Location#getFilename() filename} of a Location
-     * @param f2 the {@link Location#getFilename() filename} of a Location
-     * @return a negative value if {@code f1}'s book precedes that of {@code f2}, a positive value
-     * if {@code f2's} precedes {@code f1}'s, or zero if {@code f1} and {@code f2} have the same
-     * book.
-     */
-	private static int compareFilenames(String f1, String f2){
-		
-		String[] split1 = IO.stripExtension(f1)
-				.split(IO.FILENAME_COMPONENT_SEPARATOR, HTMLFile.FILENAME_ELEMENT_COUNT);
-		String book1 = split1[0];
-		String chapterNumber1 = split1[1];
-		
-		String[] split2 = IO.stripExtension(f2)
-				.split(IO.FILENAME_COMPONENT_SEPARATOR, HTMLFile.FILENAME_ELEMENT_COUNT);
-		String book2 = split2[0];
-		String chapterNumber2 = split2[1];
-		
-		int comp = Book.valueOf(book1).ordinal() - Book.valueOf(book2).ordinal();
-		return comp != 0 
-				? comp 
-				: Integer.parseInt(chapterNumber1) - Integer.parseInt(chapterNumber2);
-	}
-	
-	private static enum Book {
-	    AGOT, 
-	    ACOK, 
-	    ASOS, 
-	    AFFC, 
-	    ADWD, 
-	    DE, 
-	    PQ, 
-	    RP;
 	}
 	
     /**
