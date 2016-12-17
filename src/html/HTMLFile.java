@@ -1856,14 +1856,4 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	            .findFirst()
 	            .getAsInt();
 	}
-	
-	//XXX all this firstwords stuff doesn't matter for html chapters
-	private int afterTitle(){
-	    String firstWords = Stream.of(BookData.values())
-	            .filter((bd) -> bd.filename().equals(this.filename))
-	            .map(BookData::filename)
-	            .findFirst()
-	            .get();
-	    return indexOfLiteral(firstWords);
-	}
 }
