@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Set;
@@ -32,44 +31,6 @@ public class PhraseBox{
      */
 	public PhraseBox() {
 		map = new HashMap<>();
-	}
-	
-    /**
-     * <p>Constructs a PhraseBox with the quote data produced by {@code scan}.
-     * {@code scan.nextLine()} is called repeatedly, and each resulting line is parsed as a line
-     * from a quote data file, such as those written to Folder.REPEATS,
-     * Folder.INDEPENDENT_INSTANCES, or Folder.DUPLICATE_INDEPENDENTS. The line is
-     * {@link java.lang.String#split(String) split} at every Location-delimiter
-     * ({@value IO#LOCATION_DELIM}), and the phrase at the start of the line is mapped in the
-     * underlying HashMap to a List of all the Locations represented in the rest of the line.</p>
-     * @param scan a Scanner used to obtain lines from which quote data is read
-     */
-	public PhraseBox(Scanner scan){
-		try{
-			map = new HashMap<>();
-			
-			while(IO.scannerHasNonEmptyNextLine(scan)){
-				String[] phraseAndLocations = scan.nextLine().split(IO.LOCATION_DELIM);
-				
-				String phrase = phraseAndLocations[0];
-				
-				List<Location> locs = new ArrayList<>(phraseAndLocations.length-1);
-				for(int i = 1; i<phraseAndLocations.length; i++){
-					String[] fileAndIndex = phraseAndLocations[i].split(Location.ELEMENT_DELIM);
-					String filename = fileAndIndex[Location.FILENAME_POSITION];
-					int index = Integer.parseInt(fileAndIndex[Location.INDEX_POSITION]);
-					Chapter chapter = null; //FIXME get pertinent chapter for filename
-					locs.add(new Location(index, chapter));
-				}
-				
-				map.put(phrase, locs);
-			}
-			
-			scan.close();
-		} catch(ArrayIndexOutOfBoundsException e){
-			throw new IllegalArgumentException("The content scanned by the specified Scanner is " 
-					+ "not structured like a record of phrases and locations.");
-		}
 	}
 	
     /**
