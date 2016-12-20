@@ -23,63 +23,9 @@ public enum Operation{
     //TODO combine FIND_REPEATED_PHRASES, REMOVE_DEPENDENT_PHRASES, and REMOVE_UNIQUE_INDEPENDENTS 
     //into one operation.  Other operations might be able to be rolled in, as well.
     
-    /**
-     * <p>Reads the text chapters and determines which phrases at each size are repeated.</p>
-     * 
-     * Input: Text chapters with each paragraph preceded by a newline, without any divs, 
-     * blockquotes, imgs, nbsps, or empty paragraphs, and with all right single quotes that 
-     * function as apostrophes replaced by actual apostrophe characters
-     * 
-     * Output: An index of phrases that occur multiple times in the overall corpus
-     */
-    FIND_REPEATED_PHRASES(
+    PHRASE_ANALYSIS(
             null, 
             Folder.CORPUS, 
-            Folder.REPEATS, 
-            null), 
-    
-    /**
-     * <p>Isolates those repeated Phrases that are not subsumed by a larger repeated Phrase.</p>
-     * 
-     * Input: An index of phrases that occur multiple times in the overall corpus
-     * 
-     * Output: An index of phrases that occur multiple times in the overall corpus and which are 
-     * not subsumed by some larger phrase that also occurs multiple times in the corpus
-     */
-    REMOVE_DEPENDENT_PHRASES(
-            null, 
-            Folder.REPEATS, 
-            Folder.INDEPENDENT_INSTANCES, 
-            null), 
-    
-    /**
-     * <p>Filters out the repeated Phrases which have only one instance that isn't subsumed by a 
-     * larger phrase.</p>
-     * 
-     * Input: An index of phrases that occur multiple times in the overall corpus and which are 
-     * not subsumed by some larger phrase that also occurs multiple times in the corpus
-     * 
-     * Output: An index of phrases from the overall corpus which occur at multiple non-subsumed 
-     * locations
-     */
-    REMOVE_UNIQUE_INDEPENDENTS(
-            null, 
-            Folder.INDEPENDENT_INSTANCES, 
-            Folder.DUPLICATE_INDEPENDENTS, 
-            Operation::rmUniqIndeps), 
-    
-    /**
-     * <p>Creates anchor data for each phrase that has passed all the phrase filters.</p>
-     * 
-     * Input: An index of phrases from the overall corpus which occur at multiple non-subsumed 
-     * locations
-     * 
-     * Output: An index of anchors connecting each of the phrases from the overall corpus which 
-     * occur at multiple non-subsumed locations to the corresponding phrase that comes after it
-     */
-    DETERMINE_ANCHORS(
-            null, 
-            Folder.DUPLICATE_INDEPENDENTS, 
             Folder.ANCHORS, 
             null), //XXX replace with something meaningful
     
