@@ -47,9 +47,9 @@ public class RepeatedPhrasesUI extends JFrame {
     /**
      * <p>Creates new form RepeatedPhrasesUI</p>
      */
-    public RepeatedPhrasesUI() {
+    public RepeatedPhrasesUI(File trail) {
         //TODO use meaningful boolean params
-        this.app = new RepeatedPhrasesApp(statusLabelMsg, false, false, false);
+        this.app = new RepeatedPhrasesApp(statusLabelMsg, false, false, false, trail);
         initComponents();
         this.setTitle("Repeated Phrase Analyser");
     }
@@ -385,8 +385,16 @@ public class RepeatedPhrasesUI extends JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        EventQueue.invokeLater(() -> new RepeatedPhrasesUI().setVisible(true));
+        EventQueue.invokeLater(() -> new RepeatedPhrasesUI(trailFile(args)).setVisible(true));
     }
+    
+    //TODO implement
+    private static File trailFile(String[] args){
+        return new File(args[TRAIL_FILE_ARG_INDEX]);
+    }
+    
+    //TODO store arg indices in a new static utility class Args
+    private static final int TRAIL_FILE_ARG_INDEX = 2;
     
     private JButton createFoldersButton;
     private JButton chapterizeLinkButton;
