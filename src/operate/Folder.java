@@ -16,66 +16,22 @@ import java.util.function.Function;
  */
 public enum Folder {
     
-    HTML_BOOKS(
-            "0_html_books", 
-            null, 
-            null),
-    HTML_CHAPTERS(
-            "1_html_chapters", 
-            null, 
-            Object::toString),
-    CORPUS(
-            "2_corpus", 
-            null, 
-            HTMLEntity::txtString),
-    REPEATS(
-            "3_repeats", 
-            "repeats", 
-            null),
-    INDEPENDENT_INSTANCES(
-            "4_independent_instances", 
-            "independent_instances", 
-            null),
-    DUPLICATE_INDEPENDENTS(
-            "5_duplicate_independents", 
-            "duplicate_independents", 
-            null),
-    ANCHORS(
-            "6_anchors", 
-            null, 
-            null),
-    LINKED_CHAPTERS(
-            "7_linked_chapters", 
-            null, 
-            null),
-    READABLE(
-            "8_readable", 
-            null, 
-            null);
+    HTML_BOOKS      (null),
+    HTML_CHAPTERS   (Object::toString),
+    CORPUS          (HTMLEntity::txtString),
+    ANCHORS         (null),
+    LINKED_CHAPTERS (null),
+    READABLE        (null);
     
 	/**
 	 * <p>The actual directory</p>
 	 */
 	private final File folder;
 	
-	/**
-	 * <p>The name of the directory, used in creating {@code folder}.</p>
-	 */
-	private final String folderName;
-	
-	/**
-	 * <p>The base of the name of files to be saved in or read from this directory. This is 
-	 * non-null only for those directories whose contents pertain to phrases of certain sizes 
-	 * rather than chapters or entire books.</p>
-	 */
-	private final String namebase;
-	
 	private final Function<HTMLEntity, String> func;
 	
-	private Folder(String name, String base, Function<HTMLEntity, String> func){
-	    this.folder = new File(name);
-		this.folderName = name;
-		this.namebase = base;
+	private Folder(Function<HTMLEntity, String> func){
+	    this.folder = new File(folderName());
 		this.func = func;
 	}
 	
@@ -86,12 +42,12 @@ public enum Folder {
 	 * @return the name of the file pertaining to phrases of {@code size} words in this directory.
 	 */
 	public String filename(int size){
-		return folderName 
-				+ File.separator 
-				+ namebase 
-				+ IO.FILENAME_COMPONENT_SEPARATOR_CHAR 
-				+ size 
-				+ IO.TXT_EXT;
+		return new StringBuilder(folderName())
+				.append(File.separator)
+				.append(IO.FILENAME_COMPONENT_SEPARATOR_CHAR)
+				.append(size)
+				.append(IO.TXT_EXT)
+				.toString();
 	}
 	
 	/**
@@ -107,17 +63,11 @@ public enum Folder {
 	 * @return the name of this directory.
 	 */
 	public String folderName(){
-		return folderName;
-	}
-	
-	/**
-	 * <p>Returns the string used as the base of the names of files in this directory. Returns 
-	 * {@code null} if this directory is not {@code REPEATS}, {@code INDEPENDENT_INSTANCES}, or 
-	 * {@code DUPLICATE_INDEPENDENTS}.</p>
-	 * @return the string used as the base of the names of files in this directory.
-	 */
-	public String namebase(){
-		return namebase;
+		return new StringBuilder()
+		        .append(ordinal())
+                .append(IO.FILENAME_COMPONENT_SEPARATOR)
+                .append(toString().toLowerCase())
+                .toString();
 	}
 	
 	public void save(HTMLFile h){
