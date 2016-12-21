@@ -1,6 +1,8 @@
 package common;
 
+import java.io.File;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -95,4 +97,12 @@ public enum BookData{
                 .filter(test)
                 .collect(Collectors.toMap(BookData::filename, words));
     }
+    
+    public static boolean isBook(File dir, String name){
+        return names.contains(name);
+    }
+    
+    private static Set<String> names = Stream.of(values())
+            .map((bd) -> bd.toString() + IO.HTML_EXT)
+            .collect(Collectors.toSet());
 }
