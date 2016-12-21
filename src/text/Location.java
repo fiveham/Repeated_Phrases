@@ -1,5 +1,7 @@
 package text;
 
+import java.util.List;
+
 import common.IO;
 import html.HTMLFile;
 
@@ -184,5 +186,16 @@ public class Location implements Comparable<Location>{
 	
 	public Location getPredecessor(){
 	    return chapter.getLocations().get(index - 1);
+	}
+	
+	public Location after(List<Location> locs){
+	    int i = locs.indexOf(this);
+        if(i < 0){
+            throw new IllegalArgumentException(
+                    "This Location " + toString() + " is not present in the specified list.");
+        } else{
+            i++;
+            return locs.get(i % locs.size());
+        }
 	}
 }
