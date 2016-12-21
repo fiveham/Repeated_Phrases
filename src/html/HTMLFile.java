@@ -325,15 +325,6 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 		return true;
 	}
 	
-	private int indexOfLiteral(String literal){
-	    OptionalInt oi = IntStream.range(0, content.size())
-	            .filter((i) -> hasLiteralAt(literal, i))
-	            .findFirst();
-	    return oi.isPresent() 
-	            ? oi.getAsInt() 
-	            : -1; //MAGIC
-	}
-	
     /**
      * <p>Returns true if this file contains the specified {@code literal} text starting at any
      * position after {@code start} and ending at any position before {@code end}, false
@@ -559,7 +550,6 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      */
 	private int getLastCharacter(int wordIndex, int startPoint){
 		for(int i=startPoint; i<content.size(); i++){
-			
 			if(!isWord(adjacentElement(i, Direction.NEXT, HTMLFile::isCharacter))){
 				return i;
 			}
@@ -649,9 +639,9 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * {@code condition} evaluates to true
      */
 	public int adjacentElement(int position, Predicate<HTMLEntity> condition, Direction direction){
-		for(int i=direction.apply(position); 
-				direction.crawlTest(i,content);
-				i=direction.apply(i)){
+		for(int i = direction.apply(position); 
+				direction.crawlTest(i, content);
+				i = direction.apply(i)){
 			if(condition.test(content.get(i))){
 				return i;
 			}
@@ -669,7 +659,9 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	}
 	
 	public int adjacentElement(Predicate<Integer> condition, Direction dir, int startPosition){
-		for(int i=dir.apply(startPosition); dir.crawlTest(i,content); i=dir.apply(i)){
+		for(int i = dir.apply(startPosition); 
+		        dir.crawlTest(i, content); 
+		        i = dir.apply(i)){
 			if(condition.test(i)){
 				return i;
 			}
@@ -769,7 +761,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 				(h) -> Tag.class.isInstance(h) && ((Tag)h).getType().equals(type);
 		int tagIndex = startPoint;
 		
-		for(int depth=1; depth > 0 && 0<= tagIndex && tagIndex < content.size()-1;){
+		for(int depth = 1; depth > 0 && 0 <= tagIndex && tagIndex < content.size() - 1;){
 			tagIndex = adjacentElement(tagIndex, isTagOfType, Direction.NEXT);
 			Tag someTag = (Tag) content.get(tagIndex);
 			depth += (someTag.isOpening() 
@@ -821,14 +813,14 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 		Character mate = null;
 		
         StringBuilder tagCode = null;
-		for(int i=0; i<fileBody.length(); i++){
+		for(int i = 0; i < fileBody.length(); i++){
         	char c = fileBody.charAt(i);
         	
-        	if(mate==null){ //we're not looking for a closing angle bracket or a semicolon.
+        	if(mate == null){ //we're not looking for a closing angle bracket or a semicolon.
         		Character counterpart = risingCounterpart(c);
         		
         		//if the current character c isn't an opening angle bracket or ampersand.
-        		if(counterpart==null){
+        		if(counterpart == null){
         			result.add(new CharLiteral(c));
         		} else{
         			//c is a special character and we need to take special action.
@@ -842,7 +834,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
         		}
         	} else if(mate.equals(c)){ //we are looking for a '>' or a ';' //we've found that mate
     			//then we can stop looking for that mate
-    			HTMLEntity newEntry = mate==Tag.END 
+    			HTMLEntity newEntry = (mate == Tag.END) 
     					? new Tag(tagCode.toString()) 
     					: new CharCode(tagCode.toString());
     			result.add(newEntry);
@@ -906,7 +898,6 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * @return a StringBuilder whose contents are equal to the content returned by {@code s}.
      */
 	private static StringBuilder readFile(Scanner s){
-				
 		StringBuilder result = new StringBuilder();
 		
 		if(s.hasNextLine()){
