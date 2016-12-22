@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import text.Location;
 import text.PhraseProducer;
@@ -156,7 +157,7 @@ public class IO {
 	 * extension.</p>
 	 */
 	public static boolean isNovel(File dir, String name){
-		return isHtml(dir,name) && NOVELS.contains(stripExtension(name));
+		return isHtml(dir, name) && NOVELS.contains(stripExtension(name));
 	}
 	
 	/**
@@ -164,7 +165,7 @@ public class IO {
 	 * {@link #IS_NOVEL a novel}.</p>
 	 */
 	public static boolean isNovella(File dir, String name){
-		return isHtml(dir,name) && !isNovel(dir,name);
+		return isHtml(dir, name) && !isNovel(dir, name);
 	}
 	
 	/**
@@ -186,7 +187,7 @@ public class IO {
 	public static OutputStreamWriter newOutputStreamWriter(String filename, Closeable... closeUs){
 		OutputStreamWriter retVal = null;
 		try{
-			retVal = new OutputStreamWriter( new FileOutputStream( filename ), ENCODING );
+			retVal = new OutputStreamWriter(new FileOutputStream(filename), ENCODING);
 		} catch(FileNotFoundException | UnsupportedEncodingException e){
 			closeAll(closeUs);
 			throw new RuntimeException(ERROR_EXIT_MSG + filename + " for writing.");
@@ -210,7 +211,7 @@ public class IO {
 	 */
 	public static List<String> fileContentsAsList(
 			File source, 
-			Function<Scanner,String> scannerOperation, 
+			Function<Scanner, String> scannerOperation, 
 			Predicate<Scanner> continueTest){
 		
 		List<String> retList = null;
@@ -219,10 +220,29 @@ public class IO {
 					new Scanner(source, ENCODING),
 					scannerOperation, 
 					continueTest);
-		} catch( FileNotFoundException e){
+		} catch(FileNotFoundException e){
 			throw new RuntimeException(ERROR_EXIT_MSG + source.getName());
 		}
 		return retList;
+	}
+	
+	public static Stream<String> fileContentStream(
+	        File source, 
+	        Function<Scanner, String> operation, 
+	        Predicate<Scanner> test){
+	    
+	    Scanner s = null;
+	    try{
+	        s = new Scanner(source, ENCODING);
+	    } catch(FileNotFoundException e){
+	        throw new RuntimeException(ERROR_EXIT_MSG + source.getName());
+	    }
+	    
+	    Stream.Builder<String> builder = Stream.builder();
+	    while(test.test(s)){
+	        builder.accept(operation.apply(s));
+	    }
+	    return builder.build();
 	}
 	
 	/**
@@ -238,12 +258,12 @@ public class IO {
 	 */
 	public static List<String> fileContentsAsList(
 			Scanner src, 
-			Function<Scanner,String> scannerOperation, 
+			Function<Scanner, String> scannerOperation, 
 			Predicate<Scanner> continueTest){
 		
 		List<String> result = new ArrayList<>();
 		
-		while( continueTest.test(src) ){
+		while(continueTest.test(src)){
 			result.add(scannerOperation.apply(src));
 		}
 		src.close();
@@ -258,7 +278,7 @@ public class IO {
 	 * @return the name of the specified file without any directory references or file extensions
 	 */
 	public static String stripFolderExtension(String fileAddress){
-		return stripExtension( stripFolder(fileAddress) );
+		return stripExtension(stripFolder(fileAddress));
 	}
 	
 	/**
@@ -269,7 +289,7 @@ public class IO {
 	public static String stripExtension(String nameInFolder){
 		int dot = nameInFolder.lastIndexOf(FILENAME_ELEMENT_DELIM);
 		return dot >= 0 
-				? nameInFolder.substring(0,dot) 
+				? nameInFolder.substring(0, dot) 
 				: nameInFolder;
 	}
 	
@@ -280,7 +300,7 @@ public class IO {
 	 */
 	public static String stripFolder(String fileAddress){
 		int slash = fileAddress.lastIndexOf(File.separator);
-		return fileAddress.substring(slash+1);
+		return fileAddress.substring(slash + 1);
 	}
 	
 	/**
@@ -322,7 +342,7 @@ public class IO {
         
         Scanner s = null;
         try{
-            s = new Scanner( f, IO.ENCODING);
+            s = new Scanner(f, IO.ENCODING);
         } catch(FileNotFoundException e){
             throw new RuntimeException(IO.ERROR_EXIT_MSG + f.getName() + " for reading.");
         }
