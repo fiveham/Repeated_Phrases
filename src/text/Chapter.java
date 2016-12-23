@@ -18,27 +18,15 @@ import html.HTMLFile;
  */
 public class Chapter {
 	
-    /**
-     * <p>The name of the file for this chapter.</p>
-     */
-	private final String filename;
+	private final HTMLFile source;
 	
     /**
      * <p>The content of the file for this chapter.</p>
      */
 	private final String body;
 	
-    /**
-     * <p>Constructs a Chapter based on the specified file.</p>
-     * @param file the file for this Chapter
-     */
-	public Chapter(File file){
-	    this.filename = file.getName();
-	    this.body = IO.fileAsString(file);
-	}
-	
 	public Chapter(HTMLFile h){
-	    this.filename = h.getName();
+	    this.source = h;
 	    this.body = h.body();
 	}
 	
@@ -48,7 +36,7 @@ public class Chapter {
      * @return {@code filename}
      */
 	public String getName(){
-		return filename;
+		return source.getName();
 	}
 	
     /**
@@ -59,18 +47,22 @@ public class Chapter {
 		return body;
 	}
 	
+	public HTMLFile getSource(){
+	    return source;
+	}
+	
 	@Override
 	public boolean equals(Object o){
 	    if(o instanceof Chapter){
 	        Chapter c = (Chapter) o;
-	        return c.body.equals(this.body) && c.filename.equals(this.filename);
+	        return c.body.equals(this.body) && c.getName().equals(getName());
 	    }
 	    return false;
 	}
 	
 	@Override
 	public int hashCode(){
-	    return filename.hashCode() * 31 + body.hashCode();
+	    return getName().hashCode() * 31 + body.hashCode();
 	}
 	
 	public static boolean isChapter(File dir, String name){
