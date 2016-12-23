@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import text.Chapter;
@@ -20,6 +21,8 @@ import text.Location;
 import text.PhraseBox;
 import text.Quote;
 
+//TODO use separate managers for each major runtime step rather than one for all
+//That way, encapsulation, hiding whether a member is generated or simply retrieved, is preserved
 class DataManager {
     
     private Collection<HTMLFile>   htmlChapters   = null;
@@ -28,14 +31,13 @@ class DataManager {
     private Collection<HTMLFile>   linkedChapters = null;
     
     DataManager(){
-        
     }
     
-    private <T> Collection<T> softGet(Collection<T> ref, Runnable genRef){
-        if(ref == null){
-            genRef.run();
+    private <T> Collection<T> softGet(Collection<T> member, Runnable generateMember){
+        if(member == null){
+            generateMember.run();
         }
-        return ref;
+        return member;
     }
     
     //getters
@@ -52,8 +54,8 @@ class DataManager {
         return softGet(anchorData, () -> generateAnchorData(trail));
     }
     
-    public Collection<HTMLFile> linkChapters(){
-        return softGet(linkedChapters, this::generateLinkedChapters);
+    public Collection<HTMLFile> linkChapters(int minSize, Trail trail){
+        return softGet(linkedChapters, () -> generateLinkedChapters(minSize, trail));
     }
     
     //generators
@@ -90,7 +92,9 @@ class DataManager {
         
         Map<Chapter, Collection<Quote>> allQuotes = Collections.synchronizedMap(new HashMap<>());
         chapters.parallelStream().forEach(
-                (c) -> allQuotes.put(c, c.getAllQuotes(IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR, 218))); //MAGIC
+                (c) -> allQuotes.put(
+                        c, 
+                        c.getAllQuotes(IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR, IO.MAX_PHRASE_SIZE)));
         
         Set<String> repeatedPhrases = repeatedPhrases(allQuotes);
         
@@ -151,7 +155,7 @@ class DataManager {
             Trail trail){
         
         List<AnchorInfo> result = new ArrayList<>();
-
+        
         PhraseBox phrasebox = phrasesToLocations(diQuotes, trail);
         for(Chapter chapter : diQuotes.keySet()){
             List<Quote> quotes = diQuotes.get(chapter);
@@ -187,7 +191,12 @@ class DataManager {
     }
     
     //TODO
-    private void generateLinkedChapters(){
+    private void generateLinkedChapters(int minSize, Trail trail){
+        Map<Chapter, List<AnchorInfo>> toAnchors = getAnchors(trail).stream()
+                .collect(Collectors.groupingBy((ai) -> ai.position().getChapter()));
         
+        this.linkedChapters = toAnchors.keySet().stream()
+                .map((c) -> c.getSource().clone().link(toAnchors.get(c)))
+                .collect(Collectors.toList());
     }
 }
