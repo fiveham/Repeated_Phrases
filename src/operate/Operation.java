@@ -36,7 +36,7 @@ public enum Operation{
             Folder.ANCHORS, 
             Folder.HTML_CHAPTERS, 
             Folder.LINKED_CHAPTERS, //FIXME linkChapters actually outputs into HTML_CHAPTERS
-            LinkChapters::linkChapters), 
+            null),  //XXX replace with something meaningful
     
     /**
      * <p>Adds trail info to anchored html chapters.</p>
