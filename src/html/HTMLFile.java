@@ -155,7 +155,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 		//and add open tag on odd indices.
 		Function<Integer,Tag> nextTag = (i) -> i%2==0 ? close : open; 
 		
-		for(int i=0; i<insertPoints.size(); i++){
+		for(int i = 0; i < insertPoints.size(); i++){
 			content.add(insertPoints.get(i), nextTag.apply(i));
 			modCount++;
 		}
@@ -246,7 +246,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 
 		int[] bounds = getWordBounds(wordIndex);
 		
-		for(int i=bounds[0]; i<bounds[1]; i++){
+		for(int i = bounds[0]; i < bounds[1]; i++){
 			HTMLEntity item = content.get(i);
 			if(CharLiteral.class.isInstance(item)){
 				result.append(((CharLiteral)item).c);
@@ -283,7 +283,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 		int hi = bounds[1];
 		
 		result.add(lo);
-		for(int i=lo+1; i<hi; i++){
+		for(int i = lo + 1; i < hi; i++){
 			if(is(i, 
 					HTMLFile::isCharacter, 
 					Direction.PREV, 
@@ -412,11 +412,11 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * @param name the name of the file to which to write the text equivalent of this HTMLFile
      */
 	public void printAsText(String name){
-		int afterHeader = adjacentElement(-1, Tag::isTableClose, Direction.NEXT);
+		int afterHeader = adjacentElement(-1, Tag::isTableClose, Direction.NEXT); //MAGIC
 		int beforeFooter = adjacentElement(content.size(), Tag::isTableOpen, Direction.PREV);
 		
 		try(OutputStreamWriter out = IO.newOutputStreamWriter(name);){
-			for(int i=afterHeader; i<=beforeFooter; i++){
+			for(int i = afterHeader; i <= beforeFooter; i++){
 				out.write(content.get(i).txtString());
 			}
 			out.close();
@@ -549,7 +549,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * word in the body of this chapter
      */
 	private int getLastCharacter(int wordIndex, int startPoint){
-		for(int i=startPoint; i<content.size(); i++){
+		for(int i = startPoint; i < content.size(); i++){
 			if(!isWord(adjacentElement(i, Direction.NEXT, HTMLFile::isCharacter))){
 				return i;
 			}
@@ -646,7 +646,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 				return i;
 			}
 		}
-		return -1;
+		return -1; //MAGIC
 	}
 	
 	public HTMLEntity adjacentElement(
@@ -655,7 +655,9 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 			Predicate<HTMLEntity> typeRestriction){
 		
 		int index = adjacentElement(position, typeRestriction, direction);
-		return index>=0 ? content.get(index) : null;
+		return index >= 0 
+		        ? content.get(index) 
+		        : null;
 	}
 	
 	public int adjacentElement(Predicate<Integer> condition, Direction dir, int startPosition){
@@ -666,7 +668,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 				return i;
 			}
 		}
-		return -1;
+		return -1; //MAGIC
 	}
 	
 	public ParagraphIterator paragraphIterator(){
@@ -712,7 +714,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * @param start the inclusive lower bound of the region of the underlying list to be removed
      */
 	public void removeAll(int start){
-		content = new ArrayList<>(content.subList(0,start));
+		content = new ArrayList<>(content.subList(0, start));
 		modCount++;
 	}
 	
@@ -751,8 +753,10 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	public int closingMatch(int startPoint){
 		HTMLEntity a = content.get(startPoint);
 		if(!Tag.isOpen(a)){
-			throw new IllegalArgumentException("The element at index "+startPoint+
-					" (\""+a.toString()+"\") is not an opening tag.");
+			throw new IllegalArgumentException(
+			        "The element at index " + startPoint 
+			        + " (\"" + a 
+			        + "\") is not an opening tag.");
 		}
 		Tag t = (Tag) a;
 		
@@ -765,8 +769,8 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 			tagIndex = adjacentElement(tagIndex, isTagOfType, Direction.NEXT);
 			Tag someTag = (Tag) content.get(tagIndex);
 			depth += (someTag.isOpening() 
-			        ? 1 
-			        : -1);
+			        ? 1 //MAGIC
+			        : -1); //MAGIC
 		}
 		return tagIndex;
 	}
@@ -933,7 +937,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
          * <p>Constructs a ParagraphIterator that works on {@code HTMLFile.this.content}.</p>
          */
 		private ParagraphIterator(){
-			position = -1;
+			position = -1; //MAGIC
 			modCount = HTMLFile.this.modCount;
 		}
 		
@@ -1056,7 +1060,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	    String firstWords = NOVEL_FIRST_WORDS.get(filename);
         Predicate<Integer> hasFirstWordsAt = (i) -> hasLiteralAt(firstWords, i);
         
-        int chapterStartIndex = adjacentElement(hasFirstWordsAt, Direction.NEXT, -1);
+        int chapterStartIndex = adjacentElement(hasFirstWordsAt, Direction.NEXT, -1); //MAGIC
         
         Predicate<Integer> isPrologueBlock = 
                 (i) -> isParagraphishOpen(get(i)) 
@@ -1082,7 +1086,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
         removeAll(0, pWhereFirstWords);
 
         int pWhereLastWords = lastWordsP();
-        removeAll( pWhereLastWords + 1 );
+        removeAll(pWhereLastWords + 1);
 	}
     
     /**
@@ -1131,7 +1135,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
                 .anyMatch((pattern) -> pattern.match(this, i));
     }
     
-    private static final List<ApoPattern> PATTERNS = Stream.of(
+    private static final List<ApostrophePattern> PATTERNS = Stream.of(
             "@'@",  //everything from I'm to shouldn't've
             "&o'&", //of
             "&t'&", //to
@@ -1233,7 +1237,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
             "the diggers' eyes were",
             "my sons' things",
             "&lil'&")
-            .map(ApoPattern::new)
+            .map(ApostrophePattern::new)
             .collect(Collectors.toList());
     
     /**
@@ -1241,7 +1245,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * which instances of a right single quote in the text of ASOIAF should be ordinary apostrophes
      * instead.</p>
      */
-    private static class ApoPattern{
+    private static class ApostrophePattern{
         
         /**
          * <p>Used in a string sent to ApoPattern's constructor, this represents any
@@ -1282,7 +1286,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
          * @param s a string containing an apostrophe used to specify characters around an
          * apostrophe
          */
-        private ApoPattern(String s){
+        private ApostrophePattern(String s){
             s = s.toLowerCase();
             int index = s.indexOf(CharLiteral.APOSTROPHE.c);
             before = new ArrayList<>();
@@ -1296,27 +1300,30 @@ public class HTMLFile implements Iterable<HTMLEntity>{
         
         public boolean match(HTMLFile h, int index){
             return CharLiteral.RIGHT_SINGLE_QUOTE.equals(h.get(index)) 
-                    ? Stream.of(Side.values())
-                            .allMatch((side) -> side.match(ApoPattern.this, h, index))
-                    : false;
+                    && Stream.of(Side.values())
+                            .allMatch((side) -> side.match(ApostrophePattern.this, h, index));
         }
         
         private static enum Side{
             BEFORE((ap) -> ap.before, (i) -> i - 1), 
             AFTER ((ap) -> ap.after,  (i) -> i + 1);
             
-            private final Function<ApoPattern, List<Character>> listFunc;
+            private final Function<ApostrophePattern, List<Character>> listFunc;
             private final IntUnaryOperator nextInt;
             
-            private Side(Function<ApoPattern, List<Character>> listFunc, IntUnaryOperator nextInt){
+            private Side(
+                    Function<ApostrophePattern, 
+                    List<Character>> listFunc, 
+                    IntUnaryOperator nextInt){
+                
                 this.listFunc = listFunc;
                 this.nextInt = nextInt;
             }
             
-            boolean match(ApoPattern pattern, HTMLFile h, int a){
+            boolean match(ApostrophePattern pattern, HTMLFile h, int a){
                 for(char c : listFunc.apply(pattern)){
                     a = nextInt(a, h);
-                    if(!ApoPattern.match(c, characterAt(a, h))){
+                    if(!ApostrophePattern.match(c, characterAt(a, h))){
                         return false;
                     }
                 }
@@ -1575,7 +1582,6 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	}
 	
 	private Collection<HTMLFile> handlePQ(){
-	    
 	    HTMLFile[] files;
 	    {
 	        HTMLFile body;
@@ -1663,24 +1669,6 @@ public class HTMLFile implements Iterable<HTMLEntity>{
                 "a id=\"prev_chapter\" href=\"nowhere\" title=\"nothing\" style=\"change_chapter\"")
                 .map(Tag::new)
                 .forEach(HEADER_FRONT_HTML::add);
-        
-        HEADER_FRONT_HTML.addAll(Arrays.asList(
-                "html", 
-                "head", 
-                "meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" /", 
-                "link href=\"style.css\" rel=\"stylesheet\" type=\"text/css\" /", 
-                "/head", 
-                "body", 
-                "div class=\"chapter\"", 
-                "div class=\"head\"", 
-                "table class=\"head\"", 
-                "tr class=\"head\"", 
-                "td class=\"prev_chapter\"", 
-                "p class=\"prev_chapter\"", 
-                "a id=\"prev_chapter\" href=\"nowhere\" title=\"nothing\" style=\"change_chapter\"")
-                .stream()
-                .map(Tag::new)
-                .collect(Collectors.toList()));
         
         Collections.addAll(
                 HEADER_FRONT_HTML, 
