@@ -156,9 +156,9 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
      */
 	public int compareTo(AnchorInfo a){
 		int comp = position.compareTo(a.position);
-		if(comp!=0){
+		if(comp != 0){
 			return comp;
-		} else if( (comp=phrase.compareTo(a.phrase))!=0 ){
+		} else if((comp = phrase.compareTo(a.phrase)) != 0){
 			return comp;
 		} else{
 			return linkTo.compareTo(a.linkTo);
