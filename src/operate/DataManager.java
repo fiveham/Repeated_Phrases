@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import text.Chapter;
@@ -56,6 +55,11 @@ class DataManager {
     
     public Collection<HTMLFile> linkChapters(int minSize, Trail trail){
         return softGet(linkedChapters, () -> generateLinkedChapters(minSize, trail));
+    }
+    
+    public void setTrail(int minSize, Trail trail){
+        linkChapters(minSize, trail).parallelStream()
+                .forEach(Folder.READABLE::save);
     }
     
     //generators
