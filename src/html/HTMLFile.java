@@ -1717,13 +1717,20 @@ public class HTMLFile implements Iterable<HTMLEntity>{
     }
     
     public List<HTMLEntity> header(){
-        List<CharLiteral> name = CharLiteral.asList(IO.stripFolderExtension(filename));
+        List<CharLiteral> name = CharLiteral.asList(chapterName());
         List<HTMLEntity> result = new ArrayList<>(
                 HEADER_FRONT_HTML.size() + name.size() + HEADER_BACK_HTML.size());
         result.addAll(HEADER_FRONT_HTML);
         result.addAll(name);
         result.addAll(HEADER_BACK_HTML);
         return result;
+    }
+    
+    private String chapterName(){
+        String[] splitFilename = IO.stripFolderExtension(this.filename)
+                .split(IO.FILENAME_COMPONENT_SEPARATOR, FILENAME_ELEMENT_COUNT);
+        String chapterPart = splitFilename[FILENAME_CHAPTERNAME_INDEX];
+        return chapterPart.replace(IO.FILENAME_COMPONENT_SEPARATOR, IO.SPACE).toUpperCase();
     }
     
     public static final List<HTMLEntity> FOOTER_FRONT_HTML = new ArrayList<>();
@@ -1779,7 +1786,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
     }
     
     public List<HTMLEntity> footer(){
-        List<CharLiteral> name = CharLiteral.asList(IO.stripFolderExtension(filename));
+        List<CharLiteral> name = CharLiteral.asList(chapterName());
         List<HTMLEntity> result = new ArrayList<>(
                 FOOTER_BACK_HTML.size() + name.size() + FOOTER_FRONT_HTML.size());
         result.addAll(FOOTER_FRONT_HTML);
