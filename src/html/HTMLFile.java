@@ -1486,7 +1486,9 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	        String chapterName, 
 	        int saveCount){
 	    
-	    HTMLFile result = new HTMLFile(buffer, chapterFileName(this, saveCount, chapterName));
+	    HTMLFile result = new HTMLFile(
+	            buffer, 
+	            chapterFileName(this, saveCount, chapterName));
 	    result.addHeaderFooter();
 	    return result;
 	}
@@ -1559,7 +1561,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	}
 	
 	@Override
-	protected HTMLFile clone(){
+	public HTMLFile clone(){
 	    return new HTMLFile(this);
 	}
 	
@@ -1846,5 +1848,12 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	            .filter((i) -> Tag.isPClose(content.get(i)))
 	            .findFirst()
 	            .getAsInt();
+	}
+	
+	public HTMLFile link(List<AnchorInfo> anchors){
+	    anchors.stream()
+        	    .sorted()
+        	    .forEach(this::addAnchor);
+	    return this;
 	}
 }
