@@ -8,9 +8,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.border.LineBorder;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -25,6 +27,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import operate.Folder;
 import operate.RepeatedPhrasesApp;
+import operate.Trail;
+import text.Chapter;
 
 /**
  * <p>The GUI for this application. Creates a small window that displays its current working
@@ -47,9 +51,8 @@ public class RepeatedPhrasesUI extends JFrame {
     /**
      * <p>Creates new form RepeatedPhrasesUI</p>
      */
-    public RepeatedPhrasesUI(File trail) {
-        //TODO use meaningful boolean params
-        this.app = new RepeatedPhrasesApp(statusLabelMsg, false, false, false, trail);
+    public RepeatedPhrasesUI() {
+        this.app = new RepeatedPhrasesApp(statusLabelMsg);
         initComponents();
         this.setTitle("Repeated Phrase Analyser");
     }
@@ -283,7 +286,8 @@ public class RepeatedPhrasesUI extends JFrame {
      * @param evt
      */
     private void createFoldersButtonActionPerformed(ActionEvent evt) {
-        buttonPress(createFoldersButton, 
+        buttonPress(
+                createFoldersButton, 
         		"Creating needed folders", 
         		() -> "Done: Put html books in " + Folder.HTML_BOOKS.folderName(), 
         		() -> app.ensureFolders(statusLabelMsg));
@@ -295,10 +299,32 @@ public class RepeatedPhrasesUI extends JFrame {
      */
     private void chapterizeLinkButtonActionPerformed(ActionEvent evt) {
         String[] trailAndLimit = trailAndLimit();
-        buttonPress(chapterizeLinkButton, 
+        buttonPress(
+                chapterizeLinkButton, 
         		"Doing all the work (" + trailAndLimit[0] + ", " + trailAndLimit[1] + ")", 
         		() -> "Done: Chapters ready: " + Folder.READABLE.folderName(), 
-        		() -> app.isolateChaptersAndLink(trailAndLimit, statusLabelMsg));
+        		() -> {
+        		    int limit;
+        		    try{
+        		        limit = limit();
+        		    } catch(NumberFormatException e){
+        		        statusLabelMsg.accept(
+        		                "Cannot parse specified phrase size as an int: " 
+    		                    + phraseSizeLimitField.getText());
+        		        return;
+        		    }
+        		    
+        		    Trail trail;
+        		    try{
+        		        trail = trail();
+        		    } catch(FileNotFoundException e){
+        		        statusLabelMsg.accept(
+        		                "Could not read trail from " + trailFileField.getText());
+        		        return;
+        		    }
+        		    
+        		    app.isolateChaptersAndLink(trail, limit, statusLabelMsg);
+        		});
     }
     
     /**
@@ -307,7 +333,8 @@ public class RepeatedPhrasesUI extends JFrame {
      */
     private void changeOrderButtonActionPerformed(ActionEvent evt) {
         String[] trailAndLimit = trailAndLimit();
-        buttonPress(changeOrderButton, 
+        buttonPress(
+                changeOrderButton, 
         		"Changing chapter order (" + trailAndLimit[0] + ", " + trailAndLimit[1] + ")", 
         		() -> "Done: Chapter order changed", 
         		() -> app.linksAndTrail(trailAndLimit));
@@ -319,10 +346,11 @@ public class RepeatedPhrasesUI extends JFrame {
      */
     private void changeTrailButtonActionPerformed(ActionEvent evt) {
         String trail = trailFileField.getText();
-        buttonPress(changeTrailButton, 
+        buttonPress(
+                changeTrailButton, 
         		"Changing trail sequence (" + trail + ")", 
         		() -> "Done: Trail changed to " + trail, 
-        		() -> RepeatedPhrasesApp.setTrail(null, new String[]{trail}, statusLabelMsg));
+        		() -> RepeatedPhrasesApp.setTrail(new String[]{trail}, statusLabelMsg));
     }
     
     /**
@@ -385,16 +413,10 @@ public class RepeatedPhrasesUI extends JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        EventQueue.invokeLater(() -> new RepeatedPhrasesUI(trailFile(args)).setVisible(true));
+        EventQueue.invokeLater(() -> new RepeatedPhrasesUI().setVisible(true));
     }
     
-    //TODO implement
-    private static File trailFile(String[] args){
-        return new File(args[TRAIL_FILE_ARG_INDEX]);
-    }
-    
-    //TODO store arg indices in a new static utility class Args
-    private static final int TRAIL_FILE_ARG_INDEX = 2;
+    //TODO store arg indices in a utility class Args
     
     private JButton createFoldersButton;
     private JButton chapterizeLinkButton;
@@ -420,7 +442,7 @@ public class RepeatedPhrasesUI extends JFrame {
      * <p>Displays a message on the GUI identifying an action that the current process has
      * taken.</p>
      */
-    private Consumer<String> statusLabelMsg = (s) -> statusLabel.setText(s);
+    private Consumer<String> statusLabelMsg = statusLabel::setText;
     
     /**
      * <p>Returns a string array containing the trail file specified by the user in the GUI as the
@@ -433,6 +455,23 @@ public class RepeatedPhrasesUI extends JFrame {
         String phraseSizeLimit = phraseSizeLimitField.getText();
         
         return new String[]{ trail, phraseSizeLimit };
+    }
+    
+    /**
+     * 
+     * @return
+     * @throws NumberFormatException if the content of the phrase-size text field cannot be parsed 
+     * as an int.
+     */
+    private int limit(){
+        return Integer.parseInt(phraseSizeLimitField.getText());
+    }
+    
+    private Trail trail() throws FileNotFoundException{
+        String name = trailFileField.getText();
+        File file = new File(name);
+        return Trail.getTrailElements(file, app.getChapters().stream()
+                .collect(Collectors.toMap(Chapter::getName, Function.identity())));
     }
     
     /**
@@ -479,7 +518,8 @@ public class RepeatedPhrasesUI extends JFrame {
     				PrintStream ps = new PrintStream(new File("oops_i_crashed.txt"));
     				e.printStackTrace(ps);
     				ps.close();
-    			} catch(FileNotFoundException ex){}
+    			} catch(FileNotFoundException ex){
+    			}
     		}
     		return null;
     	}
