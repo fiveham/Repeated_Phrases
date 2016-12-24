@@ -4,8 +4,6 @@ import common.BookData;
 import common.IO;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.OutputStreamWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,7 +30,7 @@ import text.Phrase;
  * file.</p>
  */
 public class HTMLFile implements Iterable<HTMLEntity>{
-	
+    
     /**
      * <p>The index of the chapter's book's name in the array resulting from calling
      * String.split(UNDERSCORE, FILENAME_ELEMENT_COUNT) on the extensionless name of this chapter's
@@ -140,7 +138,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * @param a an AnchorInfo specifying everything needed to create a link from one repeated phrase
      * in this HTMLFile to the same repeated phrase in another HTMLFile chapter.
      */
-	public void addAnchor(AnchorInfo a){
+	private void addAnchor(AnchorInfo a){
 		int wordIndex = a.position().getIndex();
 		
 		validateWordWithIndex(firstWord(a.phrase()), wordIndex);
@@ -373,55 +371,11 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * @param phrase a phrase of which the first word is returned
      * @return the first space-delimited word of {@code phrase}.
      */
-	public static final String firstWord(String phrase){
+	private static final String firstWord(String phrase){
 		int index = phrase.indexOf(Phrase.WORD_SEPARATOR);
 		return index < 0 
 		        ? phrase 
 		        : phrase.substring(0, index);
-	}
-	
-    /**
-     * <p>Prints this HTMLFile to a file named {@code name}.</p>
-     * @param name the name of the file this HTMLFile is being saved as.
-     */
-	public void print(String name){
-		try(OutputStreamWriter out = IO.newOutputStreamWriter(name);){
-			print(out);
-			out.close();
-		} catch(IOException e){
-			throw new RuntimeException(IO.ERROR_EXIT_MSG + name + " for writing.");
-		}
-	}
-	
-    /**
-     * <p>Writes this HTMLFile to a file via {@code out}.</p>
-     * @param out an OutputStreamWriter for the file that this HTMLFile is being saved as
-     * @throws IOException if an I/O error occurs
-     */
-	public void print(OutputStreamWriter out) throws IOException{
-		for(HTMLEntity item : content){
-			out.write(item.toString());
-		}
-	}
-	
-    /**
-     * <p>Writes to the file specified by {@code name} the text equivalent of the contents of this
-     * file, except for everything before the end of the first table and everything after the
-     * beginning of the last table--the head and foot tables used for this ASOIAF project.</p>
-     * @param name the name of the file to which to write the text equivalent of this HTMLFile
-     */
-	public void printAsText(String name){
-		int afterHeader = adjacentElement(-1, Tag::isTableClose, Direction.NEXT); //MAGIC
-		int beforeFooter = adjacentElement(content.size(), Tag::isTableOpen, Direction.PREV);
-		
-		try(OutputStreamWriter out = IO.newOutputStreamWriter(name);){
-			for(int i = afterHeader; i <= beforeFooter; i++){
-				out.write(content.get(i).txtString());
-			}
-			out.close();
-		} catch(IOException e){
-			throw new RuntimeException(IO.ERROR_EXIT_MSG + name + " for writing.");
-		}
 	}
 	
     /**
@@ -627,7 +581,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * <p>Returns the position in the underlying list of the element nearest to but not at
      * {@code position} in the direction (before or after) specified by {@code direction} for which
      * {@code condition} evaluates to true.</p>
-     * @param position the pre-starting position for this operation. One less than the starting
+     * @param startPosition the pre-starting position for this operation. One less than the starting
      * point if {@code direction} is {@code Direction.NEXT}, or one more if it's
      * {@code Direction.PREV}.
      * @param condition a Predicate whose evaluation to true causes this method to return its
@@ -637,15 +591,19 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * {@code position} in the direction (before or after) specified by {@code direction} for which
      * {@code condition} evaluates to true
      */
-	public int adjacentElement(int position, Predicate<HTMLEntity> condition, Direction direction){
-		for(int i = direction.apply(position); 
+	public int adjacentElement(
+	        int startPosition, 
+	        Predicate<HTMLEntity> condition, 
+	        Direction direction){
+	    
+		for(int i = direction.apply(startPosition); 
 				direction.crawlTest(i, content);
 				i = direction.apply(i)){
 			if(condition.test(content.get(i))){
 				return i;
 			}
 		}
-		return -1; //MAGIC
+		return BEFORE_BEGINNING;
 	}
 	
 	public HTMLEntity adjacentElement(
@@ -659,15 +617,19 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 		        : null;
 	}
 	
-	public int adjacentElement(Predicate<Integer> condition, Direction dir, int startPosition){
-		for(int i = dir.apply(startPosition); 
-		        dir.crawlTest(i, content); 
-		        i = dir.apply(i)){
+	public int adjacentElement(
+	        Predicate<Integer> condition, 
+	        Direction direction, 
+	        int startPosition){
+	    
+		for(int i = direction.apply(startPosition); 
+		        direction.crawlTest(i, content); 
+		        i = direction.apply(i)){
 			if(condition.test(i)){
 				return i;
 			}
 		}
-		return -1; //MAGIC
+		return BEFORE_BEGINNING;
 	}
 	
 	public ParagraphIterator paragraphIterator(){
@@ -767,12 +729,15 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 		for(int depth = 1; depth > 0 && 0 <= tagIndex && tagIndex < content.size() - 1;){
 			tagIndex = adjacentElement(tagIndex, isTagOfType, Direction.NEXT);
 			Tag someTag = (Tag) content.get(tagIndex);
-			depth += (someTag.isOpening() 
-			        ? 1 //MAGIC
-			        : -1); //MAGIC
+			depth += someTag.isOpening() 
+			        ? INCREASE_DEPTH 
+			        : DECREASE_DEPTH;
 		}
 		return tagIndex;
 	}
+	
+	private static final int INCREASE_DEPTH = 1;
+	private static final int DECREASE_DEPTH = -1;
 	
     /**
      * <p>Returns a list of all the HTMLEntitys from this file for which the specified Predicate
@@ -923,7 +888,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * <p>A utility class that crawls the list of HTMLEntity that underlies this HTMLFile and
      * locates entire paragraph blocks.</p>
      */
-	public class ParagraphIterator implements Iterator<int[]>{
+	private class ParagraphIterator implements Iterator<int[]>{
 		
 		private final int modCount;
 		
@@ -936,7 +901,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
          * <p>Constructs a ParagraphIterator that works on {@code HTMLFile.this.content}.</p>
          */
 		private ParagraphIterator(){
-			position = -1; //MAGIC
+			position = BEFORE_BEGINNING;
 			modCount = HTMLFile.this.modCount;
 		}
 		
@@ -1059,14 +1024,14 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	    String firstWords = NOVEL_FIRST_WORDS.get(filename);
         Predicate<Integer> hasFirstWordsAt = (i) -> hasLiteralAt(firstWords, i);
         
-        int chapterStartIndex = adjacentElement(hasFirstWordsAt, Direction.NEXT, -1); //MAGIC
+        int chapterStartIndex = adjacentElement(hasFirstWordsAt, Direction.NEXT, BEFORE_BEGINNING);
         
         Predicate<Integer> isPrologueBlock = 
                 (i) -> isParagraphishOpen(get(i)) 
                         && hasLiteralBetween("PROLOGUE", i, closingMatch(i));
         int pLocation = adjacentElement(isPrologueBlock, Direction.PREV, chapterStartIndex);
         
-        return pLocation - 1;
+        return pLocation - 1; //MAGIC
 	}
 	
 	private int backMatterStart(){
