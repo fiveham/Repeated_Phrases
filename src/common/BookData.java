@@ -99,10 +99,10 @@ public enum BookData{
     }
     
     public static boolean isBook(File dir, String name){
-        return names.contains(name);
+        return NAMES.contains(name);
     }
     
-    private static Set<String> names = Stream.of(values())
+    private static final Set<String> NAMES = Stream.of(values())
             .map((bd) -> bd.toString() + IO.HTML_EXT)
             .collect(Collectors.toSet());
 }
