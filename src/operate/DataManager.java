@@ -189,9 +189,9 @@ class DataManager {
                 (c) -> diQuotes.get(c).parallelStream().forEach(
                         (q) -> result.add(q.text(), q.location())));
         
-        for(String phrase : result.phrases()){
-            result.get(phrase).sort(trail);
-        }
+        result.phrases().parallelStream()
+                .map(result::get)
+                .forEach((l) -> l.sort(trail));
         
         return result;
     }
