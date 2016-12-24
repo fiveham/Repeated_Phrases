@@ -20,7 +20,6 @@ public class CharLiteral extends HTMLEntity {
      */
     public static final char NEW_LINE = '\n';
     
-    //TODO unify this use with the other list-of-characters representation in this project
     public static final List<CharLiteral> NEW_LINE_LITERAL = asList(IO.NEW_LINE);
 	
     /**

@@ -1009,7 +1009,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
         List<HTMLEntity> newContent = new ArrayList<>(content.size());
         for(HTMLEntity h : content){
             if(Tag.isPOpen(h)){
-                newContent.addAll(NEW_LINE);
+                newContent.addAll(CharLiteral.NEW_LINE_LITERAL);
             }
             newContent.add(h);
         }
@@ -1803,14 +1803,6 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * <p>The first characters of an opening paragraph tag.</p>
      */
     public static final String BEGIN_P = "<p ";
-	
-	public static final List<CharLiteral> NEW_LINE;
-	static{
-	    NEW_LINE = new ArrayList<>(IO.NEW_LINE.length());
-	    for(char c : IO.NEW_LINE.toCharArray()){
-	        NEW_LINE.add(new CharLiteral(c));
-	    }
-	}
 	
 	@Override
 	public Iterator<HTMLEntity> iterator(){
