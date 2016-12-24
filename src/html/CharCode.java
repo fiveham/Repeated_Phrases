@@ -107,7 +107,7 @@ public class CharCode extends HTMLEntity {
      * @return a plaintext string equivalent to the character that this Code renders as in a
      * browser.
      */
-	//TODO make this return meaningful results
+	//XXX make this return meaningful results
 	public String txtString(){
 		return " ";
 	}
