@@ -337,7 +337,28 @@ public class RepeatedPhrasesUI extends JFrame {
                 changeOrderButton, 
         		"Changing chapter order (" + trailAndLimit[0] + ", " + trailAndLimit[1] + ")", 
         		() -> "Done: Chapter order changed", 
-        		() -> app.linksAndTrail(trailAndLimit));
+        		() -> {
+        		    int limit;
+                    try{
+                        limit = limit();
+                    } catch(NumberFormatException e){
+                        statusLabelMsg.accept(
+                                "Cannot parse specified phrase size as an int: " 
+                                + phraseSizeLimitField.getText());
+                        return;
+                    }
+                    
+                    Trail trail;
+                    try{
+                        trail = trail();
+                    } catch(FileNotFoundException e){
+                        statusLabelMsg.accept(
+                                "Could not read trail from " + trailFileField.getText());
+                        return;
+                    }
+        		    
+        		    app.linksAndTrail(limit, trail);
+        		});
     }
     
     /**
