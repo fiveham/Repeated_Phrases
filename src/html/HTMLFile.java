@@ -29,26 +29,8 @@ import text.Phrase;
  * <p>Represents an HTML file and provides some convenience methods for working with an HTML
  * file.</p>
  */
-public class HTMLFile implements Iterable<HTMLEntity>{
+public class HTMLFile implements Iterable<HTMLEntity>, Cloneable{
     
-    /**
-     * <p>The index of the chapter's book's name in the array resulting from calling
-     * String.split(UNDERSCORE, FILENAME_ELEMENT_COUNT) on the extensionless name of this chapter's
-     * file. Chapter file names are structured as follows:
-     * "BOOKNAME_CHAPTERINDEX_MULTI_WORD_CHAPTER_TITLE.html" Splitting that String at underscores
-     * leaves the name of the chapter's book at index 0 in the resulting array.</p>
-     */
-	public static final int FILENAME_BOOKNAME_INDEX = 0;
-	
-    /**
-     * <p>The index of the chapter's index in its source book in the array resulting from calling
-     * String.split(UNDERSCORE, FILENAME_ELEMENT_COUNT) on the extensionless name of this chapter's
-     * file. Chapter file names are structured as follows:
-     * "BOOKNAME_CHAPTERINDEX_MULTI_WORD_CHAPTER_TITLE.html" Splitting that String at underscores
-     * leaves the chapter's index in its book at index 1 in the resulting array.</p>
-     */
-	public static final int FILENAME_CHAPTERNUMBER_INDEX = 1;
-	
     /**
      * <p>The index of the chapter's title in the array resulting from calling
      * String.split(UNDERSCORE, FILENAME_ELEMENT_COUNT) on the extensionless name of this chapter's
@@ -58,7 +40,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * {@link java.lang.String#split() split()} is limited in how many times it tries to split the
      * string, requiring {@link #FILENAME_ELEMENT_COUNT a limit}.</p>
      */
-	public static final int FILENAME_CHAPTERNAME_INDEX = 2;
+	private static final int FILENAME_CHAPTERNAME_INDEX = 2;
 	
     /**
      * <p>The number of meaningful components in a chapter's filename. These are the source book,
@@ -91,7 +73,8 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * @throws FileNotFoundException if {@code f} does not exist or cannot be read
      */
 	public HTMLFile(File f) throws FileNotFoundException{
-		this(f.getName(), 
+		this(
+		        f.getName(), 
 				new Scanner(
 						readFile(new Scanner(f, IO.ENCODING))
 						.toString()));
@@ -105,7 +88,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * {@link operate.SplitChapters SplitChapters}
      * @param scan the Scanner used to obtain literal text to parse into HTMLEntitys
      */
-	public HTMLFile(String name, Scanner scan) {
+	private HTMLFile(String name, Scanner scan) {
 		content = getHTMLFileContent(scan);
 		filename = IO.stripFolder(name);
 	}
@@ -116,7 +99,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * @param name the file address/name of this HTMLFile
      * @param content a list whose elements will be the elements of this HTMLFile
      */
-	public HTMLFile(String name, List<HTMLEntity> content){
+	private HTMLFile(String name, List<HTMLEntity> content){
 		this.content = new ArrayList<>(content);
 		filename = IO.stripFolder(name);
 	}
@@ -178,29 +161,6 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 					+ ") in this file");
 		}
 	}
- 	
-     /**
-      * <p>Adds the HTMLEntity {@code item} to the underlying list at index {@code position} in the
-      * list.</p>
-      * @param position the index in the underlying list at which {@code item} is inserted
-      * @param item the HTMLEntity to be added to the underlying list
-      */
- 	public void add(int position, HTMLEntity item){
- 		content.add(position, item);
- 		modCount++;
- 	}
- 	
-     /**
-      * <p>Adds all elements of {@code list} to the underlying list, starting at index
-      *  }position}.</p>
-      * @param position the index in the underlying list at which elements of {@code list} are added
-      * @param list HTMLEntitys to be added to the underlying list
-      * @return true if the underlying list was changed, false otherwise
-      */
- 	public boolean addAll(int position, List<HTMLEntity> list){
- 		modCount++;
- 		return content.addAll(position, list);
- 	}
  	
      /**
       * <p>Replaces the element in the underlying list at index {@code position} with
@@ -303,7 +263,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * characters starting at {@code index} which match the characters of {@code literal}, false
      * otherwise.
      */
-	public boolean hasLiteralAt(String literal, int index){
+	private boolean hasLiteralAt(String literal, int index){
 		for(int i = 0; i < literal.length(); i++){
 			char c = literal.charAt(i);
 			if(!content.get(index).match(c)){
@@ -323,7 +283,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * @param end exclusive upper bound
      * @return
      */
-	public boolean hasLiteralBetween(String literal, int start, int end){
+	private boolean hasLiteralBetween(String literal, int start, int end){
 	    OptionalInt oi = IntStream.range(start + 1, end - literal.length())
 	            .filter((i) -> hasLiteralAt(literal, i))
 	            .findFirst();
@@ -378,7 +338,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * @return the index in the underlying list of the {@code wordIndex}th word in the file after
      * the title
      */
-	public int getWord(int wordIndex){
+	private int getWord(int wordIndex){
 		return getWordCache.applyAsInt(wordIndex);
 	}
 	
@@ -476,18 +436,6 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * {@code wordIndex}-th word in the body of this chapter.</p>
      * @param wordIndex the number of words between the sought word in this file and the first word
      * in the body of this chapter
-     * @return the position in the underlying list of the last character of the {@code wordIndex}-th
-     * word in the body of this chapter
-     */
-	public int getLastCharacter(int wordIndex){
-		return getLastCharacter(wordIndex, getWord(wordIndex));
-	}
-	
-    /**
-     * <p>Returns the position in the underlying list of the last character of the
-     * {@code wordIndex}-th word in the body of this chapter.</p>
-     * @param wordIndex the number of words between the sought word in this file and the first word
-     * in the body of this chapter
      * @param startPoint a position in (typically at the very start of) the {@code wordIndex}-th
      * word, from which to start looking for the end of the current word
      * @return the position in the underlying list of the last character of the {@code wordIndex}-th
@@ -510,7 +458,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * @return an int array containing lower (inclusive) and upper (exclusive) bounds for the
      * {@code wordIndex}th word in this file
      */
-	public int[] getWordBounds(int wordIndex){
+	private int[] getWordBounds(int wordIndex){
 		int start = getWord(wordIndex);
 		return new int[]{start, getLastCharacter(wordIndex, start)+1};
 	}
@@ -523,22 +471,9 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * @return true if the element at index {@code index} in the underlying list is the first
      * character of a word, false otherwise
      */
-	public boolean isWordStart(int index){
+	private boolean isWordStart(int index){
 		return isWord(content.get(index)) 
 				&& !isWord(adjacentElement(index, Direction.PREV, HTMLFile::isCharacter));
-	}
-	
-    /**
-     * <p>Returns true if the element at index {@code index} in the underlying list is the last
-     * character of a word, false otherwise.</p>
-     * @param index the index in the underlying list to be tested for whether it's the last
-     * character of a word
-     * @return true if the element at index {@code index} in the underlying list is the last
-     * character of a word, false otherwise
-     */
-	public boolean isWordEnd(int index){
-		return isWord(content.get(index))
-				&& !isWord(adjacentElement(index, Direction.NEXT, HTMLFile::isCharacter));
 	}
 	
     /**
@@ -556,19 +491,10 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * <p>Evaluates to true if the specified HTMLEntity {@code h} is a character-type HTMLEntity: a
      * {@link CharLiteral Ch} or a {@link CharCode Code}.</p>
      */
-	public static boolean isCharacter(HTMLEntity h){
+	private static boolean isCharacter(HTMLEntity h){
 		return CharLiteral.class.isInstance(h) || CharCode.class.isInstance(h);
 	}
 	
-    /**
-     * <p>Evaluates to true if the specified HTMLEntity {@code h}
-     * {@link #IS_CHARACTER is character-type} and is not a
-     * {@link #isWord(HTMLEntity) legal word character}.</p>
-     */
-	public static boolean isCharacterNotWord(HTMLEntity h){
-		return isCharacter(h) && !isWord(h);
-	}
-
     /**
      * <p>Returns the position in the underlying list of the element nearest to but not at
      * {@code position} in the direction (before or after) specified by {@code direction} for which
@@ -583,7 +509,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * {@code position} in the direction (before or after) specified by {@code direction} for which
      * {@code condition} evaluates to true
      */
-	public int adjacentElement(
+	private int adjacentElement(
 	        int startPosition, 
 	        Predicate<HTMLEntity> condition, 
 	        Direction direction){
@@ -598,7 +524,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 		return BEFORE_BEGINNING;
 	}
 	
-	public HTMLEntity adjacentElement(
+	private HTMLEntity adjacentElement(
 			int position, 
 			Direction direction, 
 			Predicate<HTMLEntity> typeRestriction){
@@ -609,7 +535,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 		        : null;
 	}
 	
-	public int adjacentElement(
+	private int adjacentElement(
 	        Predicate<Integer> condition, 
 	        Direction direction, 
 	        int startPosition){
@@ -622,10 +548,6 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 			}
 		}
 		return BEFORE_BEGINNING;
-	}
-	
-	public ParagraphIterator paragraphIterator(){
-		return new ParagraphIterator();
 	}
 	
     /**
@@ -816,7 +738,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 		return result;
 	}
 	
-	public static boolean isParagraphishOpen(HTMLEntity h){
+	private static boolean isParagraphishOpen(HTMLEntity h){
 		return Tag.isPOpen(h) || Tag.isHeaderOpen(h);
 	}
 	
@@ -885,16 +807,6 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 						+ this.modCount + " != " + HTMLFile.this.modCount + ")");
 			}
 		}
-	}
-	
-    /**
-     * <p>Returns true if the specified char is legal for a chapter title, false otherwise. Returns
-     * true if {@code c} is a capital letter, space, or apostrophe, false otherwise.</p>
-     * @param c a character to be tested for whether it is a legal character in a chapter title.
-     * @return true if the specified char is legal for a chapter title, false otherwise.
-     */
-	public static boolean isTitle(char c){
-		return ('A' <= c && c <= 'Z') || c == ' ' || c == '\'';
 	}
 	
 	public Collection<HTMLFile> cleanAndSplit(){
@@ -1333,7 +1245,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	private Collection<HTMLFile> handleNovel(){
 	    List<HTMLFile> result = new ArrayList<>();
 	    
-        HTMLFile.ParagraphIterator piter = paragraphIterator();
+        HTMLFile.ParagraphIterator piter = new ParagraphIterator();
         List<HTMLEntity> buffer = new ArrayList<>();
         int writeCount = 0;
         String chapterName = null;
