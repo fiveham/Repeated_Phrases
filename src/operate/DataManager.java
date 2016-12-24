@@ -196,7 +196,6 @@ class DataManager {
         return result;
     }
     
-    //TODO
     private void generateLinkedChapters(int minSize, Trail trail){
         Map<Chapter, List<AnchorInfo>> toAnchors = getAnchors(trail).stream()
                 .collect(Collectors.groupingBy((ai) -> ai.position().getChapter()));
