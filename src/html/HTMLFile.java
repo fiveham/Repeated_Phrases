@@ -209,19 +209,11 @@ public class HTMLFile implements Iterable<HTMLEntity>{
       * @param elem the HTMLEntity put into the list at index {@code position}
       * @return the element originally at index {@code position}
       */
- 	public HTMLEntity set(int position, HTMLEntity elem){
+ 	private HTMLEntity set(int position, HTMLEntity elem){
  		modCount++;
  		return content.set(position, elem);
  	}
  	
-     /**
-      * <p>Returns the number of elements in the underlying list.</p>
-      * @return the number of elements in the underlying list
-      */
- 	public int elementCount(){
- 		return content.size();
- 	}
-	
      /**
       * <p>Returns the {@code wordIndex}-th (zero-based) word after the chapter's title in this
       * HTMLFile. The first word after the title has wordIndex 0.</p> <p>The wordIndex-th word is
@@ -637,31 +629,12 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	}
 	
     /**
-     * <p>Returns the {@code i}th element of the underlying list.</p>
-     * @param i the position in the underlying list of the HTMLEntity returned
-     * @return the {@code i}th element of the underlying list
-     */
-	public HTMLEntity get(int i){
-		return content.get(i);
-	}
-	
-    /**
-     * <p>Removes the element at the specified position from the underlying list and returns it.</p>
-     * @param position the position in the underlying list of the element that is removed
-     * @return the element at {@code position} in the underlying list before it was removed
-     */
-	public HTMLEntity remove(int position){
-		modCount++;
-		return content.remove(position);
-	}
-	
-    /**
      * <p>Removes from the underlying list all elements in the region bounded by {@code start} and
      * {@code end}.</p>
      * @param start the inclusive lower bound of the region to be removed from the underlying list
      * @param end the exclusive upper bound of the region to be removed from the underlying list
      */
-	public void removeAll(int start, int end){
+	private void removeAll(int start, int end){
 		List<HTMLEntity> front = content.subList(0,start);
 		List<HTMLEntity> back = content.subList(end, content.size());
 		front.addAll(back);
@@ -674,29 +647,11 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * works like {@link java.lang.String#substring(int) substring}, but in reverse.</p>
      * @param start the inclusive lower bound of the region of the underlying list to be removed
      */
-	public void removeAll(int start){
+	private void removeAll(int start){
 		content = new ArrayList<>(content.subList(0, start));
 		modCount++;
 	}
 	
-    /**
-     * <p>Removes from the underlying list all elements for which {@code test} evaluates to
-     * true.</p>
-     * @param test the Predicate that determines which elements are removed from the underlying
-     * list.
-     */
- 	public void removeAll(Predicate<HTMLEntity> test){
- 		List<HTMLEntity> newContent = content.stream()
- 		        .filter(test.negate())
- 		        .collect(Collectors.toList());
- 		
- 		if(newContent.size() != content.size()){
- 		    modCount++;
- 		}
- 		
- 		content = newContent;
- 	}
- 	
      /**
       * <p>Returns the position in the underlying list of the closing HTML tag corresponding to an
       * opening HTML tag located at {@code startPoint}.</p> <p>When another opening Tag of the same
@@ -711,7 +666,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
       * @throws IllegalArgumentException if the element at {@code startPoint} is not an
       * {@link Tag#isOpening() opening} Tag.
       */
-	public int closingMatch(int startPoint){
+ 	private int closingMatch(int startPoint){
 		HTMLEntity a = content.get(startPoint);
 		if(!Tag.isOpen(a)){
 			throw new IllegalArgumentException(
@@ -738,25 +693,6 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	
 	private static final int INCREASE_DEPTH = 1;
 	private static final int DECREASE_DEPTH = -1;
-	
-    /**
-     * <p>Returns a list of all the HTMLEntitys from this file for which the specified Predicate
-     * evaluates to true.</p>
-     * @param test a Predicate used to distinguish which elements of this file should be returned
-     * @return a list of all the HTMLEntitys from this file for which the specified Predicate
-     * evaluates to true
-     */
-	public List<HTMLEntity> getElementsWhere(Predicate<HTMLEntity> test){
-		List<HTMLEntity> result = new ArrayList<>();
-		
-		for(HTMLEntity item : content){
-			if(test.test(item)){
-				result.add(item);
-			}
-		}
-		
-		return result;
-	}
 	
     /**
      * <p>Returns a {@literal List<HTMLEntity>} representing the contents of the body scanned by
@@ -830,7 +766,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * character that begins an HTML tag or an HTML character code respectively; returns null
      * otherwise
      */
-	public static Character risingCounterpart(Character c){
+	private static Character risingCounterpart(Character c){
     	switch(c){
     		case Tag.START_CHAR : return Tag.END_CHAR;
     		case CharCode.START : return CharCode.END;
@@ -846,15 +782,15 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * @return a sublist of the list underlying this object, whose bounds are indicated by the first
      * and second entries in {@code bounds}
      */
-	public List<HTMLEntity> section(int[] bounds){
+	private List<HTMLEntity> section(int[] bounds){
 		return section(bounds[0], bounds[1]);
 	}
 	
-	public List<HTMLEntity> section(int lo, int hi){
+	private List<HTMLEntity> section(int lo, int hi){
 		return content.subList(lo, hi);
 	}
 	
-	public List<HTMLEntity> section(int lo){
+	private List<HTMLEntity> section(int lo){
 		return section(lo, content.size());
 	}
 	    
@@ -1027,7 +963,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
         int chapterStartIndex = adjacentElement(hasFirstWordsAt, Direction.NEXT, BEFORE_BEGINNING);
         
         Predicate<Integer> isPrologueBlock = 
-                (i) -> isParagraphishOpen(get(i)) 
+                (i) -> isParagraphishOpen(content.get(i)) 
                         && hasLiteralBetween("PROLOGUE", i, closingMatch(i));
         int pLocation = adjacentElement(isPrologueBlock, Direction.PREV, chapterStartIndex);
         
@@ -1039,7 +975,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
         
         Predicate<Integer> hasLastWordsAt = (i) -> hasLiteralAt(lastWords, i);
         
-        int textIndex = adjacentElement(hasLastWordsAt, Direction.PREV, elementCount());
+        int textIndex = adjacentElement(hasLastWordsAt, Direction.PREV, content.size());
         int pIndex = adjacentElement(textIndex, HTMLFile::isParagraphishOpen, Direction.NEXT);
         
         return pIndex;
@@ -1082,7 +1018,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
         String lastWords = NOVELLA_LAST_WORDS.get(filename);
         Predicate<Integer> predicate = (i) -> hasLiteralAt(lastWords, i);
         
-        int literalIndex = adjacentElement(predicate, Direction.PREV, elementCount());
+        int literalIndex = adjacentElement(predicate, Direction.PREV, content.size());
         
         return adjacentElement(literalIndex, Tag::isPClose, Direction.NEXT);
     }
@@ -1215,19 +1151,19 @@ public class HTMLFile implements Iterable<HTMLEntity>{
          * <p>Used in a string sent to ApoPattern's constructor, this represents any
          * {@link #isWordChar(Character) word character}. It is an asterisk: {@value}</p>
          */
-        public static final char WORD_CHAR = '*';
+        private static final char WORD_CHAR = '*';
         
         /**
          * <p>Used in a string sent to ApoPattern's constructor, this represents any
          * {@link #isWordChar(Character) non-word character}. It is an ampersand: {@value}</p>
          */
-        public static final char NON_WORD_CHAR = '&';
+        private static final char NON_WORD_CHAR = '&';
         
         /**
          * <p>Used in a string sent to ApoPattern's constructor, this represents any
          * {@link #isAlphabetical(Character) alphabetic character}. It is an at sign: {@value}</p>
          */
-        public static final char ALPHA_CHAR = '@';
+        private static final char ALPHA_CHAR = '@';
         
         /**
          * <p>A list of the characters from the string used to construct this ApoPatern prior to the
@@ -1262,8 +1198,8 @@ public class HTMLFile implements Iterable<HTMLEntity>{
             }
         }
         
-        public boolean match(HTMLFile h, int index){
-            return CharLiteral.RIGHT_SINGLE_QUOTE.equals(h.get(index)) 
+        private boolean match(HTMLFile h, int index){
+            return CharLiteral.RIGHT_SINGLE_QUOTE.equals(h.content.get(index)) 
                     && Stream.of(Side.values())
                             .allMatch((side) -> side.match(ApostrophePattern.this, h, index));
         }
@@ -1301,7 +1237,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
                     //the while test will throw an exception if a is not in range, but a is tested 
                     //for range in Side.match() before being sent to this method; so, that problem 
                     //should never occur
-                } while(!(h.get(a) instanceof CharLiteral));
+                } while(!(h.content.get(a) instanceof CharLiteral));
                 return a;
             }
         }
@@ -1315,8 +1251,8 @@ public class HTMLFile implements Iterable<HTMLEntity>{
          * there, otherwise {@code null}
          */
         private static Character characterAt(int index, HTMLFile h){
-            if(0 <= index && index < h.elementCount()){
-                HTMLEntity ent = h.get(index);
+            if(0 <= index && index < h.content.size()){
+                HTMLEntity ent = h.content.get(index);
                 if(ent instanceof CharLiteral){
                     CharLiteral cl = (CharLiteral) ent;
                     return cl.c;
@@ -1496,7 +1432,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * @param c a char to be tested for status as a character that occurs in chapters' titles
      * @return true if {@code c} is an uppercase letter, space, or apostrophe
      */
-    public static boolean isLegalChapterTitleCharacter(char c){
+    private static boolean isLegalChapterTitleCharacter(char c){
         return ('A'<=c && c<='Z') || c==' ' || c=='\'';
     }
     
@@ -1538,6 +1474,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	    this.content = new ArrayList<>(file.content);
 	}
 	
+	@Override
 	public void forEach(Consumer<? super HTMLEntity> action){
 	    content.forEach(action);
 	}
@@ -1548,7 +1485,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	        HTMLFile body;
 	        {
 	            int footnoteIndex = adjacentElement(
-	                    (i) -> hasLiteralAt("Footnote",i), Direction.PREV, elementCount());
+	                    (i) -> hasLiteralAt("Footnote",i), Direction.PREV, content.size());
 	            int bodyEndIndex = adjacentElement(footnoteIndex, Tag::isPOpen, Direction.PREV);
 	            List<HTMLEntity> bodySection = section(0,bodyEndIndex);
 	            body = new HTMLFile("PQ_0_THE_PRINCESS_AND_THE_QUEEN.html", bodySection);
@@ -1557,7 +1494,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	        HTMLFile footnote;
 	        {
 	            int footnoteStart = adjacentElement(
-	                    elementCount(), 
+	                    content.size(), 
 	                    Tag::isPOpen, 
 	                    Direction.PREV);
 	            List<HTMLEntity> footnoteSection = section(footnoteStart);
@@ -1646,7 +1583,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
                 .forEach(HEADER_FRONT_HTML::add);
     }
     
-    public static final List<HTMLEntity> HEADER_BACK_HTML = new ArrayList<>();
+    private static final List<HTMLEntity> HEADER_BACK_HTML = new ArrayList<>();
     static{
         Stream.of(
                 "/p", 
@@ -1676,7 +1613,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
         HEADER_BACK_HTML.addAll(CharLiteral.NEW_LINE_LITERAL);
     }
     
-    public List<HTMLEntity> header(){
+    private List<HTMLEntity> header(){
         List<CharLiteral> name = CharLiteral.asList(chapterName());
         List<HTMLEntity> result = new ArrayList<>(
                 HEADER_FRONT_HTML.size() + name.size() + HEADER_BACK_HTML.size());
@@ -1695,7 +1632,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
                 .toUpperCase();
     }
     
-    public static final List<HTMLEntity> FOOTER_FRONT_HTML = new ArrayList<>();
+    private static final List<HTMLEntity> FOOTER_FRONT_HTML = new ArrayList<>();
     static{
         Stream.of(
                 "/div", 
@@ -1720,7 +1657,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
                 .forEach(FOOTER_FRONT_HTML::add);
     }
     
-    public static final List<HTMLEntity> FOOTER_BACK_HTML = new ArrayList<>();
+    private static final List<HTMLEntity> FOOTER_BACK_HTML = new ArrayList<>();
     static{
         Stream.of(
                 "/p", 
@@ -1747,7 +1684,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
                 .forEach(FOOTER_BACK_HTML::add);
     }
     
-    public List<HTMLEntity> footer(){
+    private List<HTMLEntity> footer(){
         List<CharLiteral> name = CharLiteral.asList(chapterName());
         List<HTMLEntity> result = new ArrayList<>(
                 FOOTER_BACK_HTML.size() + name.size() + FOOTER_FRONT_HTML.size());
@@ -1757,13 +1694,8 @@ public class HTMLFile implements Iterable<HTMLEntity>{
         return result;
     }
 	
-	public static final int PQ_FINAL_FILE_COUNT = 2;
+    private static final int PQ_FINAL_FILE_COUNT = 2;
     
-    /**
-     * <p>The first characters of an opening paragraph tag.</p>
-     */
-    public static final String BEGIN_P = "<p ";
-	
 	@Override
 	public Iterator<HTMLEntity> iterator(){
 	    return content.iterator();
@@ -1835,7 +1767,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
         while(INIT_POINTER 
                 != (pointer = adjacentElement(pointer, isAnchorWithMatchID, Direction.NEXT))){
             
-            String tag = get(pointer).toString();
+            String tag = content.get(pointer).toString();
             tag = tag.substring(Tag.START.length(), tag.length() - Tag.END.length());
             
             set(pointer, new Tag(anchor(tag, address)));
