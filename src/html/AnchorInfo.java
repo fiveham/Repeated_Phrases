@@ -116,7 +116,7 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
      * @return the plaintext equivalent of the opening tag of the anchor represented by this object.
      */
 	public String openingTag(){
-		return Tag.START + openingTagText() + Tag.END;
+		return Tag.START_CHAR + openingTagText() + Tag.END_CHAR;
 	}
 	
     /**
@@ -135,7 +135,7 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
      * @return the plaintext equivalent of the closing tag of the anchor represented by this object
      */
 	public String closingTag(){
-		return Tag.START + closingTagText() + Tag.END;
+		return Tag.START_CHAR + closingTagText() + Tag.END_CHAR;
 	}
 	
     /**

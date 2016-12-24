@@ -837,7 +837,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
         		}
         	} else if(mate.equals(c)){ //we are looking for a '>' or a ';' //we've found that mate
     			//then we can stop looking for that mate
-    			HTMLEntity newEntry = (mate == Tag.END) 
+    			HTMLEntity newEntry = (mate == Tag.END_CHAR) 
     					? new Tag(tagCode.toString()) 
     					: new CharCode(tagCode.toString());
     			result.add(newEntry);
@@ -867,7 +867,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      */
 	public static Character risingCounterpart(Character c){
     	switch(c){
-    		case Tag.START      : return Tag.END;
+    		case Tag.START_CHAR : return Tag.END_CHAR;
     		case CharCode.START : return CharCode.END;
     		default             : return null;
         }
@@ -1871,7 +1871,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
                 != (pointer = adjacentElement(pointer, isAnchorWithMatchID, Direction.NEXT))){
             
             String tag = get(pointer).toString();
-            tag = tag.substring(1, tag.length() - 1); //MAGIC both ones are the length of the < and > for a tag
+            tag = tag.substring(Tag.START.length(), tag.length() - Tag.END.length());
             
             set(pointer, new Tag(anchor(tag, address)));
         }

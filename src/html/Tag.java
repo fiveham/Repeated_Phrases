@@ -265,20 +265,24 @@ public class Tag extends HTMLEntity {
      * angle bracket followed by {@code content} followed by a closing angle bracket.
      */
 	public String toString(){
-		return START + content + END;
+		return START_CHAR + content + END_CHAR;
 	}
 	
     /**
      * <p>The beginning of the literal plaintext version of a Tag, an opening angle bracket, the
      * less-than symbol.</p>
      */
-	public static final char START = '<';
+	public static final char START_CHAR = '<';
+	
+	public static final String START = "<";
 	
     /**
      * <p>The end of the literal plaintext version of a Tag, a closing angle bracket, the
      * greater-than symbol.</p>
      */
-	public static final char END = '>';
+	public static final char END_CHAR = '>';
+	
+	public static final String END = ">";
 	
     /**
      * <p>The slash used to begin a closing Tag or to end a clopen Tag.</p>
