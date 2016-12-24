@@ -381,7 +381,7 @@ public class RepeatedPhrasesUI extends JFrame {
         		        return;
         		    }
         		    
-        		    RepeatedPhrasesApp.setTrail(trail, statusLabelMsg);
+        		    app.setTrail(trail, statusLabelMsg);
         		});
     }
     
