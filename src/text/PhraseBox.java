@@ -1,14 +1,10 @@
 package text;
 
-import common.IO;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.function.Consumer;
 
 //TODO Use Phrase objects as keys
 //TODO create Phrase class which stores lastIndexOf space (" ") data to expedite reducedPhrase time 
@@ -69,72 +65,5 @@ public class PhraseBox{
      */
 	public List<Location> get(Object phrase){
 		return map.get(phrase);
-	}
-	
-    /**
-     * <p>Returns the number of phrases that have associate Locations in this PhraseBox.</p>
-     * @return the number of phrases that have associate Locations in this PhraseBox
-     */
-	public int size(){
-		return map.size();
-	}
-	
-    /**
-     * <p>Returns true if this PhraseBox has no quote data, false otherwise.</p>
-     * @return true if this PhraseBox has no quote data, false otherwise
-     */
-	public boolean isEmpty(){
-		return map.isEmpty();
-	}
-	
-    /**
-     * <p>Returns true if this PhraseBox has quote data for {@code phrase}, false otherwise.</p>
-     * @param phrase the phrase whose inclusion in this PhraseBox is determined
-     * @return true if this PhraseBox has quote data for {@code phrase}, false otherwise
-     */
-	public boolean contains(String phrase){
-		return map.containsKey(phrase);
-	}
-	
-    /**
-     * <p>Defines the number of locations in the corpus at which a unique phrase occurs.</p>
-     */
-    public static final int UNIQUE_PHRASE_LOCATION_COUNT = 1;
-	
-    /**
-     * <p>Removes from this PhraseBox all the quote data for phrases that have only one associated
-     * Location.</p>
-     */
-	public PhraseBox removeUniques(Consumer<String> msg){
-		final int initSize = size();
-		map.entrySet().removeIf(
-				(e) -> map.get(e.getKey()).size() <= UNIQUE_PHRASE_LOCATION_COUNT);
-		msg.accept("Removed "+ (initSize - size()) +" non-repeated terms");
-		return this;
-	}
-	
-    /**
-     * <p>Writes the quote data from this PhraseBox to a file via the OutputStreamWriter
-     * {@code phraseInstanceFile}.</p>
-     * @param phraseInstanceFile an OutputStreamWriter by way of which the quote data in this
-     * PhraseBox is written to a file
-     */
-	public PhraseBox printPhrasesWithLocations(String phraseInstFileName){
-		try(OutputStreamWriter phraseInstanceFile = IO.newOutputStreamWriter(phraseInstFileName)){
-			for(String phrase : map.keySet()){
-				phraseInstanceFile.write(phrase);
-				List<Location> list = map.get(phrase);
-				list.sort(null);
-				for(int i=0; i<list.size(); i++){
-					phraseInstanceFile.write(IO.LOCATION_DELIM + list.get(i).shortString());
-				}
-				phraseInstanceFile.write(IO.NEW_LINE);
-			}
-			
-			phraseInstanceFile.close();
-			return this;
-		} catch(IOException e){
-			throw new RuntimeException(IO.ERROR_EXIT_MSG + phraseInstFileName+" for writing");
-		}
 	}
 }
