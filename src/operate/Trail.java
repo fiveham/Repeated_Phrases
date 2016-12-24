@@ -52,7 +52,7 @@ public class Trail implements Comparator<Location>{
         return list.size();
     }
     
-    private class TrailElement{
+    public class TrailElement{
         
         private final Chapter chapter;
         private TrailElement prev;
@@ -69,6 +69,22 @@ public class Trail implements Comparator<Location>{
         void setNext(TrailElement next){
             this.next = next;
         }
+        
+        public TrailElement prev(){
+            return prev;
+        }
+        
+        public TrailElement next(){
+            return next;
+        }
+        
+        public Chapter chapter(){
+            return chapter;
+        }
+    }
+    
+    public Stream<TrailElement> trailElements(){
+        return list.stream();
     }
     
     /**
