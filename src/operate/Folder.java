@@ -21,7 +21,7 @@ public enum Folder {
     CORPUS          (HTMLEntity::txtString),
     ANCHORS         (null),
     LINKED_CHAPTERS (null),
-    READABLE        (null);
+    READABLE        (Object::toString);
     
 	/**
 	 * <p>The actual directory</p>
