@@ -2,6 +2,7 @@ package html;
 
 import common.IO;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import text.Phrase;
 
@@ -20,7 +21,8 @@ public class CharLiteral extends HTMLEntity {
      */
     public static final char NEW_LINE = '\n';
     
-    public static final List<CharLiteral> NEW_LINE_LITERAL = asList(IO.NEW_LINE);
+    public static final List<CharLiteral> NEW_LINE_LITERAL = 
+            Collections.unmodifiableList(asList(IO.NEW_LINE));
 	
     /**
      * <p>The literal character this object wraps.</p>
