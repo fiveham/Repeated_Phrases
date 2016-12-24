@@ -88,7 +88,7 @@ public class Chapter {
 	private static int wordEndIndex(List<Integer> wordIndices, int phraseStart, int phraseSize){
 	    return phraseStart + phraseSize == wordIndices.size() 
 	        ? wordIndices.size() 
-	        : wordIndices.get(phraseStart + phraseSize) - IO.SPACE.length();
+	        : wordIndices.get(phraseStart + phraseSize) - Phrase.WORD_SEPARATOR.length();
 	}
 	
 	private List<Integer> getWordIndices(int min){
@@ -171,6 +171,6 @@ public class Chapter {
 	
 	//TODO use Phrase with internally stored word-count instead of String
 	private static int wordCount(String text){
-	    return text.split(IO.SPACE).length;
+	    return text.split(Phrase.WORD_SEPARATOR).length;
 	}
 }

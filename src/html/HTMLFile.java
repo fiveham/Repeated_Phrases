@@ -1730,7 +1730,9 @@ public class HTMLFile implements Iterable<HTMLEntity>{
         String[] splitFilename = IO.stripFolderExtension(this.filename)
                 .split(IO.FILENAME_COMPONENT_SEPARATOR, FILENAME_ELEMENT_COUNT);
         String chapterPart = splitFilename[FILENAME_CHAPTERNAME_INDEX];
-        return chapterPart.replace(IO.FILENAME_COMPONENT_SEPARATOR, IO.SPACE).toUpperCase();
+        return chapterPart
+                .replace(IO.FILENAME_COMPONENT_SEPARATOR, Phrase.WORD_SEPARATOR)
+                .toUpperCase();
     }
     
     public static final List<HTMLEntity> FOOTER_FRONT_HTML = new ArrayList<>();

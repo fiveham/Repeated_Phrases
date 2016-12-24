@@ -2,6 +2,7 @@ package html;
 
 import common.IO;
 import text.Location;
+import text.Phrase;
 
 /**
  * <p>Data defining an anchor tag to be installed in an html chapter, linking one instance of a
@@ -48,7 +49,7 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
      * @return the number of words in this AnchorInfo's {@code phrase}.
      */
 	public int phraseSize(){
-		return phrase.split(IO.SPACE).length;
+		return phrase.split(Phrase.WORD_SEPARATOR).length;
 	}
 	
     /**
