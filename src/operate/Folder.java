@@ -76,6 +76,7 @@ public enum Folder {
 	        for(HTMLEntity e : h){
 	            out.write(func.apply(e));
 	        }
+	        out.close();
 	    } catch(IOException e){
 	        //TODO implement the content of this block
 	        throw new RuntimeException("Cannot save the HTMLFile to the Folder");
