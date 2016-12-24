@@ -30,7 +30,6 @@ public class Chapter {
 	    this.body = h.body();
 	}
 	
-	//XXX rename getFilename, since each chapter has an actual name other than the filename
     /**
      * <p>Returns {@code filename}.</p>
      * @return {@code filename}
