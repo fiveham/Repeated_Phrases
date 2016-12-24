@@ -110,27 +110,13 @@ public class Chapter {
 	}
 	
 	private boolean hasWordChar(int i){
-	    return hasChar(i) && isWordChar(body.charAt(i));
+	    return hasChar(i) && Phrase.isPhraseChar(body.charAt(i));
 	}
 	
 	private boolean hasChar(int i){
 	    return 0 <= i && i < body.length();
 	}
-	
-	//XXX move to IO as a standard
-	public static boolean isWordChar(char c){
-	    return ('a' <= c && c <= 'z') 
-                || ('A' <= c && c <= 'Z') 
-                || c == '\'' 
-                || c == '-' 
-                || ('0' <= c && c <= '9') 
-                || c == E_ACUTE 
-                || c == E_CIRCUMFLEX;
-	}
     
-    private static final char E_ACUTE = '\u00E9';
-    private static final char E_CIRCUMFLEX = '\u00EA';
-	
 	List<Location> getLocations(){
 	    if(locations == null){
 	        locations = IntStream.range(0, getWordIndices(0).size())

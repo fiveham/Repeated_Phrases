@@ -24,7 +24,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import text.Chapter;
 import text.Location;
 import text.Phrase;
 
@@ -1818,7 +1817,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	    for(int i = startPoint; i < content.size(); i++){
 	        StringBuilder entityText = new StringBuilder(content.get(i).txtString());
 	        for(int j = 0; j < entityText.length(); j++){
-	            if(!Chapter.isWordChar(entityText.charAt(j))){
+	            if(!Phrase.isPhraseChar(entityText.charAt(j))){
 	                entityText.setCharAt(j, Phrase.WORD_SEPARATOR_CHAR);
 	            }
 	        }
