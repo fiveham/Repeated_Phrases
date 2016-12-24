@@ -10,31 +10,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import text.Chapter;
-import text.Location;
-import text.PhraseBox;
-import text.Quote;
 
-//TODO use the following structure:
-//stage 1: ensure folders exist
-//stage 2: ensure chapters are available
-//stage 3: construct a graph linking chapters with quotes with locations and phrases ... etc.
-//stage 4: reduce the graph, leaving each Location with a single Quote
-//stage 5: link quotes and add links to html files
 public class RepeatedPhrasesApp {
     
     private final DataManager dataManager;
@@ -43,6 +29,20 @@ public class RepeatedPhrasesApp {
     public RepeatedPhrasesApp(Consumer<String> msg){
         this.dataManager = new DataManager();
         this.msg = msg;
+    }
+    
+    /**
+     * <p>Ensures that the working directory has the folders specified in
+     * {@link Folders Folders}.</p>
+     */
+    public void ensureFolders(Consumer<String> msg){
+        for(Folder f : Folder.values()){
+            File name = f.folder();
+            if(!name.exists()){
+                msg.accept("Creating "+name.getName());
+                name.mkdir();
+            }
+        }
     }
     
     public Collection<HTMLFile> getHtmlChapters(){
@@ -60,20 +60,6 @@ public class RepeatedPhrasesApp {
     public Collection<HTMLFile> getLinkedChapters(int minSize, Trail trail){
         return dataManager.linkChapters(minSize, trail);
     }
-    
-    /**
-     * <p>Ensures that the working directory has the folders specified in
-     * {@link Folders Folders}.</p>
-     */
-	public void ensureFolders(Consumer<String> msg){
-		for(Folder f : Folder.values()){
-			File name = f.folder();
-			if(!name.exists()){
-				msg.accept("Creating "+name.getName());
-				name.mkdir();
-			}
-		}
-	}
 	
     /**
      * <p>Does everything: Reads HTML novels from the hard drive, extracts Chapters from them, 
@@ -347,8 +333,6 @@ public class RepeatedPhrasesApp {
      */
     private static final String TITLE_START = "title=\"";
     
-    //TODO can uses of List<TrailElement> be replaced with uses of a LinkedList?
-    //...using the nodes of the LinkedList to implicitly contain info about prev and next
     /**
      * <p>Represents an element of a chapter trail, a sequence of backward and forward links between
      * chapters.</p>
@@ -434,140 +418,5 @@ public class RepeatedPhrasesApp {
         public String next(){
             return next;
         }
-    }
-    
-    //TODO create a command-line interface capable of the same stuff as the GUI
-    
-    //TODO incorporate unique independent repeated phrases into anchor cycles instead of discarding
-    
-    public List<AnchorInfo> phraseAnalysis(File trailFile){
-        Collection<Chapter> chapters = getChapters();
-        
-        Map<Chapter, Collection<Quote>> allQuotes = Collections.synchronizedMap(new HashMap<>());
-        chapters.parallelStream().forEach(
-                (c) -> allQuotes.put(c, c.getAllQuotes(IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR, 218)));
-        
-        Set<String> repeatedPhrases = repeatedPhrases(allQuotes);
-        
-        Map<Chapter, Collection<Quote>> repeatedQuotes = 
-                Collections.synchronizedMap(new HashMap<>());
-        chapters.parallelStream().forEach((c) -> {
-            List<Quote> rep = allQuotes.get(c).stream()
-                    .filter(repeatedPhrases::contains)
-                    .collect(Collectors.toList());
-            repeatedQuotes.put(c, rep);
-        });
-        
-        //remove dependent phrases
-        
-        repeatedQuotes.entrySet().parallelStream()
-                .forEach((e) -> e.getKey().setRepeatedQuotes(e.getValue()));
-        
-        Map<Chapter, Collection<Quote>> independent = Collections.synchronizedMap(new HashMap<>());
-        chapters.parallelStream().forEach((c) -> {
-            Collection<Quote> indep = repeatedQuotes.get(c).parallelStream()
-                    .filter(Quote::isIndependent)
-                    .collect(Collectors.toSet());
-            independent.put(c, indep);
-        });
-        
-        //remove unique independent phrases
-        
-        Set<String> dupIndep = repeatedPhrases(independent);
-        
-        Map<Chapter, List<Quote>> diQuotes = Collections.synchronizedMap(new HashMap<>());
-        chapters.parallelStream().forEach((c) -> {
-            List<Quote> di = independent.get(c).stream()
-                    .filter(dupIndep::contains)
-                    .collect(Collectors.toList());
-            diQuotes.put(c, di);
-        });
-        
-        //create anchor data
-        
-        return generateAnchorInfo(diQuotes, trailFile);
-    }
-    
-    private static PhraseBox phrasesToLocations(Map<Chapter, List<Quote>> diQuotes, File trailFile){
-        PhraseBox result = new PhraseBox();
-        diQuotes.keySet().parallelStream().forEach(
-                (c) -> diQuotes.get(c).parallelStream().forEach(
-                        (q) -> result.add(q.text(), q.location())));
-        
-        //sort the anchors according to the trail file
-        Comparator<Location> phraseSorter = trailFile.exists() && trailFile.canRead() 
-                ? new AdHocComparator(trailFile) 
-                : Location::compareTo;
-        for(String phrase : result.phrases()){
-            result.get(phrase).sort(phraseSorter);
-        }
-        
-        return result;
-    }
-    
-    private static class AdHocComparator implements Comparator<Location>{
-        private final Map<String, Integer> chapterIndices;
-        
-        private AdHocComparator(File trailFile){
-            List<TrailElement> elems = getTrailElements(trailFile);
-            chapterIndices = IntStream.range(0, elems.size())
-                    .mapToObj(Integer::valueOf)
-                    .collect(Collectors.toMap(
-                            (i) -> IO.stripFolderExtension(elems.get(i).focus()), 
-                            (i) -> i));
-        }
-        
-        @Override
-        public int compare(Location loc1, Location loc2){
-            String chapter1 = IO.stripFolderExtension(loc1.getFilename());
-            String chapter2 = IO.stripFolderExtension(loc2.getFilename());
-            
-            int indexInChapter1 = chapterIndices.get(chapter1);
-            int indexInChapter2 = chapterIndices.get(chapter2);
-            
-            return indexInChapter1 != indexInChapter2 
-                    ? indexInChapter1 - indexInChapter2 
-                    : loc1.getIndex() - loc2.getIndex();
-        }
-    }
-    
-    private static List<AnchorInfo> generateAnchorInfo(
-            Map<Chapter, List<Quote>> diQuotes, 
-            File trailFile){
-        
-        List<AnchorInfo> result = new ArrayList<>();
-
-        PhraseBox phrasebox = phrasesToLocations(diQuotes, trailFile);
-        for(Chapter chapter : diQuotes.keySet()){
-            List<Quote> quotes = diQuotes.get(chapter);
-            quotes.sort(null);
-            
-            for(Quote quote : quotes){
-                String phrase = quote.text();
-                
-                //XXX get all anchors for locs at once and add to result in bulk
-                List<Location> locs = phrasebox.get(phrase);
-                
-                Location linkTo = quote.location().after(locs);
-                
-                AnchorInfo ai = new AnchorInfo(phrase, quote.location(), linkTo);
-                result.add(ai);
-            }
-        }
-        
-        return result;
-    }
-    
-    private static Set<String> repeatedPhrases(Map<Chapter, ? extends Collection<Quote>> map){
-        Map<String, Boolean> data = Collections.synchronizedMap(new HashMap<>());
-        
-        map.keySet().parallelStream().forEach(
-                (c) -> map.get(c).parallelStream()
-                        .map(Quote::text)
-                        .forEach((t) -> data.put(t, data.containsKey(t))));
-        
-        return data.keySet().stream()
-                .filter(data::get)
-                .collect(Collectors.toSet());
     }
 }
