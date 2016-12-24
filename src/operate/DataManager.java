@@ -29,6 +29,8 @@ class DataManager {
     private Collection<AnchorInfo> anchorData     = null;
     private Collection<HTMLFile>   linkedChapters = null;
     
+    //TODO use an input-comparing cache to check whether to generate linkedChapters etc.
+    
     DataManager(){
     }
     
@@ -199,8 +201,17 @@ class DataManager {
         Map<Chapter, List<AnchorInfo>> toAnchors = getAnchors(trail).stream()
                 .collect(Collectors.groupingBy((ai) -> ai.position().getChapter()));
         
-        this.linkedChapters = toAnchors.keySet().stream()
+        //add phrase-anchors
+        List<HTMLFile> linked = toAnchors.keySet().stream()
                 .map((c) -> c.getSource().clone().link(toAnchors.get(c)))
                 .collect(Collectors.toList());
+        
+        //add links to chapter headers and footers
+        trail.trailElements().forEach(
+                (te) -> te.chapter().getSource().setTrail(
+                        te.prev().chapter().getName(), 
+                        te.next().chapter().getName()));
+        
+        this.linkedChapters = linked;
     }
 }

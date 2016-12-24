@@ -1851,4 +1851,125 @@ public class HTMLFile implements Iterable<HTMLEntity>{
         	    .forEach(this::addAnchor);
 	    return this;
 	}
+
+    /**
+     * <p>The value of the id attribute of the anchors in the head and foot tables for html chapters
+     * which link to the previous chapter.</p>
+     */
+    private static final String PREV_CHAPTER = "prev_chapter";
+    
+    /**
+     * <p>The value of the id attribute for the anchors in the head and foot tables for html
+     * chapters which link to the next chapter.</p>
+     */
+    private static final String NEXT_CHAPTER = "next_chapter";
+    
+    /**
+     * <p>The string that names the "id" attribute of an html tag.</p>
+     */
+    private static final String ID_ATTRIB = "id";
+	
+	public void setTrail(String prev, String next){
+	    setAdjacency(PREV_CHAPTER, ID_ATTRIB, prev);
+        setAdjacency(NEXT_CHAPTER, ID_ATTRIB, next);
+	}
+	
+	private void setAdjacency(String idValue, String idAttrib, String address){
+	    Predicate<HTMLEntity> isAnchorWithMatchID = 
+                (h) -> isAnchorWithMatchID(h, idValue, idAttrib);
+        int pointer = INIT_POINTER;
+        while(INIT_POINTER 
+                != (pointer = adjacentElement(pointer, isAnchorWithMatchID, Direction.NEXT))){
+            
+            String tag = get(pointer).toString();
+            tag = tag.substring(1, tag.length() - 1); //MAGIC both ones are the length of the < and > for a tag
+            
+            set(pointer, new Tag(anchor(tag, address)));
+        }
+	}
+    
+    /**
+     * <p>Returns a String based on {@code tag}, with the value of the pre-existing href attribute
+     * replaced by the parameter {@code address} and with the value of the pre-existing title
+     * attribute replaced by a chapter title extracted from {@code address} by calling
+     * {@link #title(String) title(address)}.</p> <p>For example,
+     * {@code anchor("<a href=\"no.html\" title=\"no\">", "book_0_yes_yes.html")} would return "<a
+     * href=\"book_0_yes_yes.html\" title=\"yes yes\">".</p>
+     * @param tag
+     * @param address
+     * @return
+     */
+    private static String anchor(String tag, String address){
+        return replaceValueOfAttribute(
+                replaceValueOfAttribute(tag, HREF_START, address), 
+                TITLE_START, 
+                title(address));
+    }
+    
+    /**
+     * <p>Returns the value for the title attribute of an anchor tag based on the specified address
+     * to which the anchor links.</p> <p>Returns {@code address} with its book name, chapter index,
+     * and file extension stripped away and underscores replaced with spaces.</p>
+     * @param address the address of an html file for a chapter being linked.
+     * @return {@code address} with its book name, chapter index, and file extension stripped away.
+     */
+    private static String title(String address){
+        if(address.isEmpty()){
+            return address;
+        }
+        String name = IO.stripFolderExtension(address);
+        String withoutBook = name.substring(1 + name.indexOf(IO.FILENAME_COMPONENT_SEPARATOR_CHAR));
+        String withoutIndx = withoutBook.substring(
+                1 + withoutBook.indexOf(IO.FILENAME_COMPONENT_SEPARATOR_CHAR));
+        return withoutIndx.replace(IO.FILENAME_COMPONENT_SEPARATOR_CHAR, ' ');
+    }
+    
+    /**
+     * <p>Replaces the pre-existing value of the attribute specified by {@code attributeStart} in
+     * the specified {@code body} of an html tag with {@code installValue}.</p>
+     * @param body the text of an html tag of which a modified version is returned
+     * @param attributeStart identifies the attribute whose value is to be modified. Must be the
+     * name of an attribute followed by an equals sign followed by a double quote, such as
+     * {@link #TITLE_START TITLE_START} or {@link #HREF_START HREF_START}.
+     * @param installValue the value of the attribute named by {@code attributeStart} to install in
+     * place of the pre-existing value
+     * @return the pre-existing value of the attribute specified by {@code attributeStart} in the
+     * specified {@code body} of an html tag with {@code installValue}
+     */
+    private static String replaceValueOfAttribute(
+            String body, 
+            String attributeStart, 
+            String installValue){
+        
+        int start = body.indexOf(attributeStart)+attributeStart.length();
+        int end = body.indexOf(QUOTE, start);
+        String front = body.substring(0,start);
+        String back = body.substring(end);
+        return front + installValue + back;
+    }
+    
+    /**
+     * <p>The closing quote for an html tag attribute's value.</p>
+     */
+    private static final String QUOTE = "\"";
+    
+    /**
+     * <p>The text of the html "href" attribute followed by an equals sign and a quote.</p>
+     */
+    private static final String HREF_START = "href=\"";
+    
+    /**
+     * <p>The title attribute of an html tag and the quote that begins the attribute's value.</p>
+     */
+    private static final String TITLE_START = "title=\"";
+    
+    private static final int INIT_POINTER = -1;
+    
+    private static boolean isAnchorWithMatchID(HTMLEntity h, String idValue, String idAttrib){
+        if(Tag.class.isInstance(h)){
+            Tag t = (Tag) h;
+            return t.isType(Tag.A) && idValue.equals(t.valueOfAttribute(idAttrib)); 
+        }
+        return false;
+    }
 }
