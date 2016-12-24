@@ -1709,7 +1709,6 @@ public class HTMLFile implements Iterable<HTMLEntity>{
                 .map(Tag::new)
                 .forEach(HEADER_BACK_HTML::add);
         
-        //TODO unify this use with the other list-of-characters representation in this project
         HEADER_BACK_HTML.addAll(CharLiteral.NEW_LINE_LITERAL);
     }
     
