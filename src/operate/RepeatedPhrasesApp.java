@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
@@ -25,7 +24,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 import text.Chapter;
 import text.Location;
 import text.PhraseBox;
@@ -39,42 +37,28 @@ import text.Quote;
 //stage 5: link quotes and add links to html files
 public class RepeatedPhrasesApp {
     
-    private Collection<Chapter> chapters = null;
-    private Collection<HTMLFile> htmlChapters = null;
+    private final DataManager dataManager;
     private final Consumer<String> msg;
-    private final boolean recordHtmlChapters;
-    private final boolean recordTextChapters;
-    private final boolean generateChapters;
     
-    public RepeatedPhrasesApp(
-            Consumer<String> msg, 
-            boolean recordHtmlChapters, 
-            boolean recordTextChapters, 
-            boolean generateChapters){
-        
+    public RepeatedPhrasesApp(Consumer<String> msg){
+        this.dataManager = new DataManager();
         this.msg = msg;
-        this.recordHtmlChapters = recordHtmlChapters;
-        this.recordTextChapters = recordTextChapters;
-        this.generateChapters = generateChapters;
+    }
+    
+    public Collection<HTMLFile> getHtmlChapters(){
+        return dataManager.getHtmlChapters();
     }
     
     public Collection<Chapter> getChapters(){
-        if(chapters == null){
-            chapters = initChapters();
-        }
-        return chapters;
+        return dataManager.getChapters();
     }
     
-    private Collection<Chapter> initChapters(){
-        return generateChapters
-                ? novelsToChapters() 
-                : readChapters();
+    public Collection<AnchorInfo> getAnchors(Trail trail){
+        return dataManager.getAnchors(trail);
     }
-	
-    private static Collection<Chapter> readChapters(){
-        return Stream.of(Folder.CORPUS.folder().listFiles(Chapter::isChapter))
-                .map(Chapter::new)
-                .collect(Collectors.toList());
+    
+    public Collection<HTMLFile> getLinkedChapters(int minSize, Trail trail){
+        return dataManager.linkChapters(minSize, trail);
     }
     
     /**
@@ -92,6 +76,9 @@ public class RepeatedPhrasesApp {
 	}
 	
     /**
+     * <p>Does everything: Reads HTML novels from the hard drive, extracts Chapters from them, 
+     * generates anchors, links repeated phrases in html chapters, and links html chapters 
+     * together.</p>
      * <p>Calls the main methods of HtmlToText, FindRepeatedPhrases, RemoveDependentPhrases,
      * RemoveUniqueIndependents, DetermineAnchors, LinkChapters, and SetTrail. Passes the first
      * command line argument to DetermineAnchors and SetTrail, and passes the second command-line
@@ -99,128 +86,17 @@ public class RepeatedPhrasesApp {
      * @param args command-line arguments
      * @param msg
      */
-    public void isolateChaptersAndLink(String[] args, Consumer<String> msg) {
-    	int limit = validateArgs(args);
-    	
+    public void isolateChaptersAndLink(Trail trail, int limit, Consumer<String> msg) {
         ensureFolders(msg);
-        
-        msg.accept("Cleaning and splitting html books");
-        Operation.CLEAN_AND_SPLIT.operate(null, msg);
-        
-        msg.accept("Finding repeat phrases in corpus");
-        Operation.FIND_REPEATED_PHRASES.operate(null, msg);
-        
-        msg.accept("Ignoring dependent quotes");
-        Operation.REMOVE_DEPENDENT_PHRASES.operate(null, msg);
-        
-        msg.accept("Ignoring unique independent instances");
-        Operation.REMOVE_UNIQUE_INDEPENDENTS.operate(null, msg);
-        
-        linksAndTrail(limit, trailArgs(args));
+        dataManager.setTrail(limit, trail);
     }
     
-    private static final int TRAIL_FILE_ARG_INDEX = 0;
-    private static final int PHRASE_SIZE_THRESHOLD_ARG_INDEX = 1;
-    
-    /**
-     * <p>Checks that the command-line arguments passed to main() include an existing file to be
-     * passed to SetTrail, and returns the int value of the second command-line argument, if it is
-     * present and parses as an int, for use as the phrase-size threshold passed to
-     * {@link LinkChapters#main(String[]) LinkChapters}.</p>
-     * @param args command-line arguments passed from main()
-     * @return the int value of the second command-line argument, if it is present and parses as an
-     * int, {@value #IO.PHRASE_SIZE_FOR_ANCHOR} otherwise.
-     */
-    private static int validateArgs(String[] args){
-        if(args.length <= TRAIL_FILE_ARG_INDEX){
-        	throw new IllegalArgumentException("I need a trail file.");
-        } else{
-            String trail = args[TRAIL_FILE_ARG_INDEX];
-            if(!(new File(trail)).exists()){
-                throw new IllegalArgumentException(
-                        "I can't find that trail-file: \"" + trail + "\".");
-            }
-        }
-        
-        try{
-            return Integer.parseInt(args[PHRASE_SIZE_THRESHOLD_ARG_INDEX]);
-        } catch(ArrayIndexOutOfBoundsException | NumberFormatException e){
-            return IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR;
-        }
-    }
-    
-    public void linksAndTrail(String[] args) {
-    	
-        int limit = validateArgs(args);
-        String[] trailArgs = trailArgs(args);
-        
-        linksAndTrail(limit, trailArgs);
-    }
-    
-    private String[] trailArgs(String[] args){
-        return new String[]{args[0]}; //MAGIC
-    }
-    
-    private void linksAndTrail(int limit, String[] trailArgs){
-        msg.accept("Determining links to add to phrases");
-        Operation.DETERMINE_ANCHORS.operate(trailArgs, msg);
-        
-        msg.accept("Adding links to html chapters");
-        Operation.LINK_CHAPTERS.operate(new String[]{Integer.toString(limit)}, msg);
-        
-        msg.accept("Adding prev- and next-chapter links");
-        Operation.SET_TRAIL.operate(trailArgs, msg);
+    public void linksAndTrail(int limit, Trail trail){
+        dataManager.setTrail(limit, trail);
     }
     
     public Consumer<String> getMsg(){
         return this.msg;
-    }
-    
-    /**
-     * <p></p>
-     * @param save
-     * @return
-     */
-    private Collection<Chapter> novelsToChapters(){
-        //XXX do these String names include the pertinent folders or not?
-        //TODO use an "is book" test against BookData elements
-        String[] htmlBooks = Folder.HTML_BOOKS.folder().list(IO::isHtml);
-        
-        Stream<HTMLFile> htmlChapterStream = Stream.of(htmlBooks)
-                .parallel()
-                .map(File::new)
-                .map(this::newHTMLFile)
-                .filter(Objects::nonNull)
-                .map(HTMLFile::cleanAndSplit)
-                .reduce((c1,c2) -> {
-                    c1.addAll(c2); 
-                    return c1;
-                })
-                .get()
-                .stream();
-        
-        if(recordHtmlChapters){
-            htmlChapterStream.peek(Folder.HTML_CHAPTERS::save);
-        }
-        htmlChapters = htmlChapterStream.collect(Collectors.toList());
-        
-        htmlChapterStream = htmlChapters.stream();
-        if(recordTextChapters){
-            htmlChapterStream.peek(Folder.CORPUS::save);
-        }
-        
-        return htmlChapterStream
-                .map(Chapter::new)
-                .collect(Collectors.toList());
-    }
-    
-    private HTMLFile newHTMLFile(File f){
-        try{
-            return new HTMLFile(f);
-        } catch(FileNotFoundException e){
-            getMsg().accept(e.getMessage());
-            return null;
-        }
     }
     
     /**
@@ -231,9 +107,9 @@ public class RepeatedPhrasesApp {
      * @param args command-line args
      * @param msg receives and handles messages output by arbitrary parts of this operation
      */
-    public static void setTrail(Operation unused, String[] args, Consumer<String> msg) {
+    public static void setTrail(String[] args, Consumer<String> msg) {
         if(args.length < 1){
-            throw new IllegalArgumentException("SetTrail: I need a trial file.");
+            throw new IllegalArgumentException("SetTrail: I need a trail file.");
         }
         String trailSource = args[0];
         msg.accept("Getting trail data from " + trailSource );
@@ -672,7 +548,7 @@ public class RepeatedPhrasesApp {
                 //XXX get all anchors for locs at once and add to result in bulk
                 List<Location> locs = phrasebox.get(phrase);
                 
-                Location linkTo = locAfter(locs, quote.location());
+                Location linkTo = quote.location().after(locs);
                 
                 AnchorInfo ai = new AnchorInfo(phrase, quote.location(), linkTo);
                 result.add(ai);
@@ -680,33 +556,6 @@ public class RepeatedPhrasesApp {
         }
         
         return result;
-    }
-    
-    /**
-     * <p>Returns the Location in the list {@code locs} after the Location whose
-     * {@link Location#getIndex() index} and {@link Location#getFilename() filename} are specified
-     * by {@code index} and {@code chapter} respectively, or the first Location in the list if the
-     * indicated Location is the last in the list.</p>
-     * @param locs a list of Location from which a Location is returned
-     * @param chapter the chapter whose successor is to be returned
-     * @param index the {@link Location#getIndex() index} of the chapter whose successor is to be
-     * returned
-     * @return the Location in the list {@code locs} after the Location whose
-     * {@link Location#getIndex() index} and {@link Location#getFilename() filename} are specified
-     * by {@code index} and {@code chapter} respectively, or the first Location in the list if the
-     * indicated Location is the last in the list
-     * @throws IllegalArgumentException if the Location specified by {@code chapter} and
-     * {@code index} is not present in the specified list.
-     */
-    private static Location locAfter(List<Location> locs, Location here){
-        int i = locs.indexOf(here);
-        if(i < 0){
-            throw new IllegalArgumentException(
-                    "The Location " + here.toString() + " is not present in the specified list.");
-        } else{
-            i++;
-            return locs.get(i % locs.size());
-        }
     }
     
     private static Set<String> repeatedPhrases(Map<Chapter, ? extends Collection<Quote>> map){
