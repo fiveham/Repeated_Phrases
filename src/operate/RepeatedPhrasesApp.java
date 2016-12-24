@@ -18,20 +18,6 @@ public class RepeatedPhrasesApp {
         this.msg = msg;
     }
     
-    /**
-     * <p>Ensures that the working directory has the folders specified in
-     * {@link Folders Folders}.</p>
-     */
-    public void ensureFolders(Consumer<String> msg){
-        for(Folder f : Folder.values()){
-            File name = f.folder();
-            if(!name.exists()){
-                msg.accept("Creating "+name.getName());
-                name.mkdir();
-            }
-        }
-    }
-    
     public Collection<HTMLFile> getHtmlChapters(){
         return dataManager.getHtmlChapters();
     }
@@ -46,6 +32,20 @@ public class RepeatedPhrasesApp {
     
     public Collection<HTMLFile> getLinkedChapters(int minSize, Trail trail){
         return dataManager.linkChapters(minSize, trail);
+    }
+    
+    /**
+     * <p>Ensures that the working directory has the folders specified in
+     * {@link Folders Folders}.</p>
+     */
+    public void ensureFolders(Consumer<String> msg){
+        for(Folder f : Folder.values()){
+            File name = f.folder();
+            if(!name.exists()){
+                msg.accept("Creating "+name.getName());
+                name.mkdir();
+            }
+        }
     }
 	
     /**
