@@ -366,12 +366,23 @@ public class RepeatedPhrasesUI extends JFrame {
      * @param evt
      */
     private void changeTrailButtonActionPerformed(ActionEvent evt) {
-        String trail = trailFileField.getText();
+        String trailText = trailFileField.getText();
         buttonPress(
                 changeTrailButton, 
-        		"Changing trail sequence (" + trail + ")", 
-        		() -> "Done: Trail changed to " + trail, 
-        		() -> RepeatedPhrasesApp.setTrail(new String[]{trail}, statusLabelMsg));
+        		"Changing trail sequence (" + trailText + ")", 
+        		() -> "Done: Trail changed to " + trailText, 
+        		() -> {
+        		    Trail trail;
+        		    try{
+        		        trail = trail();
+        		    } catch(FileNotFoundException e){
+        		        statusLabelMsg.accept(
+        		                "Could not read trail from " + trailFileField.getText());
+        		        return;
+        		    }
+        		    
+        		    RepeatedPhrasesApp.setTrail(trail, statusLabelMsg);
+        		});
     }
     
     /**
