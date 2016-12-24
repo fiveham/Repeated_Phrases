@@ -11,14 +11,12 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-
 import text.Location;
-import text.PhraseProducer;
-
-import java.util.function.Consumer;
+import text.Phrase;
 
 /**
  * <p>Provides convenience methods for reading and writing files.  Stores project-wide constants 
@@ -352,7 +350,7 @@ public class IO {
             sb.append(s.next());
         }
         while(s.hasNext()){
-            sb.append(PhraseProducer.WORD_SEPARATOR).append(s.next());
+            sb.append(Phrase.WORD_SEPARATOR).append(s.next());
         }
         s.close();
         

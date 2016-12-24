@@ -3,7 +3,7 @@ package html;
 import common.IO;
 import java.util.ArrayList;
 import java.util.List;
-import text.PhraseProducer;
+import text.Phrase;
 
 /**
  * <p>Represents a literal character from an HTML file.</p> <p>This class was created to allow
@@ -85,7 +85,7 @@ public class CharLiteral extends HTMLEntity {
 	
 	@Override
 	public boolean isVisible(){
-		return PhraseProducer.isPhraseChar(c);
+		return Phrase.isPhraseChar(c);
 	}
 	
 	@Override

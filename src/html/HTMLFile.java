@@ -26,7 +26,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import text.Chapter;
 import text.Location;
-import text.PhraseProducer;
+import text.Phrase;
 
 /**
  * <p>Represents an HTML file and provides some convenience methods for working with an HTML
@@ -375,7 +375,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      * @return the first space-delimited word of {@code phrase}.
      */
 	public static final String firstWord(String phrase){
-		int index = phrase.indexOf(PhraseProducer.WORD_SEPARATOR);
+		int index = phrase.indexOf(Phrase.WORD_SEPARATOR);
 		return index < 0 
 		        ? phrase 
 		        : phrase.substring(0, index);
@@ -604,7 +604,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
      */
 	private static boolean isWord(HTMLEntity elem){
 		return CharLiteral.class.isInstance(elem) 
-				&& PhraseProducer.isPhraseChar(((CharLiteral)elem).c);
+				&& Phrase.isPhraseChar(((CharLiteral)elem).c);
 	}
 	
     /**
@@ -1374,8 +1374,8 @@ public class HTMLFile implements Iterable<HTMLEntity>{
          */
         private static boolean match(Character fromInstanceCode, Character fromFile){
             switch(fromInstanceCode){
-            case WORD_CHAR     : return PhraseProducer.isPhraseChar(fromFile);
-            case NON_WORD_CHAR : return !PhraseProducer.isPhraseChar(fromFile);
+            case WORD_CHAR     : return Phrase.isPhraseChar(fromFile);
+            case NON_WORD_CHAR : return !Phrase.isPhraseChar(fromFile);
             case ALPHA_CHAR    : return isAlphabetical(fromFile);
             default            : return fromFile != null 
                     && fromInstanceCode.equals(Character.toLowerCase(fromFile)); 
@@ -1392,7 +1392,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
                     && !(c == CharLiteral.APOSTROPHE.c 
                             || c == '-' 
                             || ('0' <= c && c <= '9')) 
-                    && PhraseProducer.isPhraseChar(c);
+                    && Phrase.isPhraseChar(c);
         }
     }
     

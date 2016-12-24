@@ -9,13 +9,6 @@ import java.util.Iterator;
 public class PhraseProducer implements Iterator<Quote>{
 	
     /**
-     * <p>A space ({@value}) used to separate words in multi-word phrases. Is used as a regex sent
-     * to {@link java.lang.String#split(String) String.split()} in some parts of the
-     * application.</p>
-     */
-	public static final String WORD_SEPARATOR = " ";
-	
-    /**
      * <p>The least number of words allowable in phrases produced by a PhraseProducer.</p>
      */
 	public static final int MIN_SIZE = 1;
@@ -101,7 +94,7 @@ public class PhraseProducer implements Iterator<Quote>{
      * @throws IllegalStateException if {@link #content} doesn't contain any words
      */
 	private int initPhraseStart(){
-		for(int i=0; i<chapter.getBody().length(); i++){
+		for(int i = 0; i < chapter.getBody().length(); i++){
 			if(hasPhraseCharAt(i)){
 				return i;
 			}
@@ -116,29 +109,8 @@ public class PhraseProducer implements Iterator<Quote>{
 	private boolean hasPhraseCharAt(int i){
 		return 0 <= i 
 				&& i < chapter.getBody().length() 
-				&& isPhraseChar(chapter.getBody().charAt(i));
+				&& Phrase.isPhraseChar(chapter.getBody().charAt(i));
 	}
-	
-    /**
-     * <p>Returns true if {@code c} is a legal word-character: alphanumeric, apostrophe, hyphen,
-     * e-acute, or e-circumflex.</p>
-     * @param c a character to be tested for legality as a word-character
-     * @return true if {@code c} is a legal word-character: alphanumeric, apostrophe, hyphen,
-     * e-acute, or e-circumflex
-     */
-	public static boolean isPhraseChar(Character c){
-		return c != null 
-				&& (('a' <= c && c <= 'z') 
-						|| ('A' <= c && c <= 'Z') 
-						|| c == '\'' 
-						|| c == '-' 
-						|| ('0' <= c && c <= '9') 
-						|| c == E_ACUTE 
-						|| c == E_CIRCUMFLEX);
-	}
-	
-	public static final char E_ACUTE = '\u00E9';
-	public static final char E_CIRCUMFLEX = '\u00EA';
 	
 	@Override
     /**
@@ -172,8 +144,8 @@ public class PhraseProducer implements Iterator<Quote>{
      * @return the index in {@code content} of the next word-end after {@code phraseEnd}
      */
 	private int nextPhraseEnd(){
-		for(int i=phraseEnd+1; i<=chapter.getBody().length(); i++){
-			if(hasPhraseCharAt(i-1) && !hasPhraseCharAt(i)){
+		for(int i = phraseEnd + 1; i <= chapter.getBody().length(); i++){
+			if(hasPhraseCharAt(i - 1) && !hasPhraseCharAt(i)){
 				return i;
 			}
 		}
@@ -187,8 +159,8 @@ public class PhraseProducer implements Iterator<Quote>{
      *  }content.length()} if there is no next word
      */
 	private int nextPhraseStart(){
-		for(int i=phraseStart+1; i<chapter.getBody().length(); i++){
-			if(!hasPhraseCharAt(i-1) && hasPhraseCharAt(i)){
+		for(int i = phraseStart + 1; i < chapter.getBody().length(); i++){
+			if(!hasPhraseCharAt(i - 1) && hasPhraseCharAt(i)){
 				return i;
 			}
 		}

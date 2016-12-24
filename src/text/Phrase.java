@@ -9,6 +9,13 @@ package text;
 public class Phrase {
     
     /**
+     * <p>A space ({@value}) used to separate words in multi-word phrases. Is used as a regex sent
+     * to {@link java.lang.String#split(String) String.split()} in some parts of the
+     * application.</p>
+     */
+    public static final String WORD_SEPARATOR = " ";
+    
+    /**
      * <p>An empty string. This is the {@link #reduced() reduced} form of a phrase with only one 
      * word.</p>
      */
@@ -64,5 +71,26 @@ public class Phrase {
         return lastSpace == LAST_SPACE_INDEX_FOR_ONE_WORD_PHRASE 
                 ? ZERO_WORD_PHRASE 
                 : text.substring(0, lastSpace);
+    }
+    
+    public static final char E_ACUTE = '\u00E9';
+    public static final char E_CIRCUMFLEX = '\u00EA';
+    
+    /**
+     * <p>Returns true if {@code c} is a legal word-character: alphanumeric, apostrophe, hyphen,
+     * e-acute, or e-circumflex.</p>
+     * @param c a character to be tested for legality as a word-character
+     * @return true if {@code c} is a legal word-character: alphanumeric, apostrophe, hyphen,
+     * e-acute, or e-circumflex
+     */
+    public static boolean isPhraseChar(Character c){
+        return c != null 
+                && (('a' <= c && c <= 'z') 
+                        || ('A' <= c && c <= 'Z') 
+                        || c == '\'' 
+                        || c == '-' 
+                        || ('0' <= c && c <= '9') 
+                        || c == E_ACUTE 
+                        || c == E_CIRCUMFLEX);
     }
 }
