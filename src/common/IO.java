@@ -42,8 +42,6 @@ public class IO {
      */
     public static final String ANCHOR_EXT = ".anchordata" + IO.TXT_EXT;
     
-    public static final char SPACE_CHAR = ' ';
-    
     /**
      * <p>The average number of letters per word.</p>
      */

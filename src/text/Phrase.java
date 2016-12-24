@@ -15,6 +15,8 @@ public class Phrase {
      */
     public static final String WORD_SEPARATOR = " ";
     
+    public static final char WORD_SEPARATOR_CHAR = ' ';
+    
     /**
      * <p>An empty string. This is the {@link #reduced() reduced} form of a phrase with only one 
      * word.</p>

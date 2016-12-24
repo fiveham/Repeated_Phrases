@@ -1831,7 +1831,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
 	        StringBuilder entityText = new StringBuilder(content.get(i).txtString());
 	        for(int j = 0; j < entityText.length(); j++){
 	            if(!Chapter.isWordChar(entityText.charAt(j))){
-	                entityText.setCharAt(j, IO.SPACE_CHAR);
+	                entityText.setCharAt(j, Phrase.WORD_SEPARATOR_CHAR);
 	            }
 	        }
 	        sb.append(entityText);
