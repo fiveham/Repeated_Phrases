@@ -1458,7 +1458,7 @@ public class HTMLFile implements Iterable<HTMLEntity>{
                 
                 //TODO add a constant somewhere to use here. 
                 //Only need 1 instance in memory
-                buffer.add(new CharLiteral('\n'));
+                buffer.addAll(CharLiteral.NEW_LINE_LITERAL);
             }
         }
         
