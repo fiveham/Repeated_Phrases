@@ -17,17 +17,6 @@ public class Phrase implements Comparable<Phrase>{
     
     public static final char WORD_SEPARATOR_CHAR = ' ';
     
-    /**
-     * <p>An empty string. This is the {@link #reduced() reduced} form of a phrase with only one 
-     * word.</p>
-     */
-    public static final String ZERO_WORD_PHRASE = "";
-    
-    /**
-     * <p>The value that should be specified as {@code lastSpace} for a phrase with one word.</p>
-     */
-    public static final int LAST_SPACE_INDEX_FOR_ONE_WORD_PHRASE = -1;
-    
     private final String text;
     private final int lastSpace;
     private final int wordCount;
@@ -75,16 +64,6 @@ public class Phrase implements Comparable<Phrase>{
      */
     public String getText(){
         return text;
-    }
-    
-    /**
-     * <p>Returns this phrase without the last word.</p>
-     * @return this phrase without the last word
-     */
-    public String reduced(){
-        return lastSpace == LAST_SPACE_INDEX_FOR_ONE_WORD_PHRASE 
-                ? ZERO_WORD_PHRASE 
-                : text.substring(0, lastSpace);
     }
     
     public static final char E_ACUTE = '\u00E9';
