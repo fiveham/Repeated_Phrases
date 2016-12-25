@@ -878,8 +878,9 @@ public class HtmlBook{
         
         int writeCount = 0;
         
-        HtmlBook.ParagraphIterator piter = new ParagraphIterator();
-        while(piter.hasNext()){
+        for(
+                Iterator<int[]> piter = new ParagraphIterator(); 
+                piter.hasNext();){
             int[] paragraphBounds = piter.next();
             
             List<HTMLEntity> paragraph = section(paragraphBounds);
@@ -887,7 +888,9 @@ public class HtmlBook{
             if(isTitleParagraph(paragraph)){
                 if(!buffer.isEmpty()){
                     //dump the buffer
-                    result.add(saveChapterFile(buffer, chapterName, writeCount));
+                    result.add(HtmlChapter.fromBuffer(
+                            chapterFileName(writeCount, chapterName), 
+                            buffer));
                     writeCount++;
                 }
                 
@@ -902,7 +905,9 @@ public class HtmlBook{
         
         //reached end of file
         //dump the buffer to a file
-        result.add(saveChapterFile(buffer, chapterName, writeCount));
+        result.add(HtmlChapter.fromBuffer(
+                chapterFileName(writeCount, chapterName), 
+                buffer));
         
         return result;
     }
@@ -916,26 +921,14 @@ public class HtmlBook{
      * novel file, including spaces
      * @return the name of the file to which a chapter's content will be written
      */
-    private static String chapterFileName(HtmlBook file, int chapterIndex, String chapterName){
-        String bookName = IO.stripExtension(file.getName());
+    private String chapterFileName(int chapterIndex, String chapterName){
+        String bookName = IO.stripExtension(getName());
         return bookName 
                 + IO.FILENAME_COMPONENT_SEPARATOR_CHAR 
                 + chapterIndex 
                 + IO.FILENAME_COMPONENT_SEPARATOR_CHAR 
                 + chapterName.replace(' ', IO.FILENAME_COMPONENT_SEPARATOR_CHAR) 
                 + IO.HTML_EXT;
-    }
-    
-    private HtmlChapter saveChapterFile(
-            List<HTMLEntity> buffer, 
-            String chapterName, 
-            int saveCount){
-        
-        HtmlChapter result = new HtmlChapter(
-                chapterFileName(this, saveCount, chapterName), 
-                buffer);
-        result.addHeaderFooter();
-        return result;
     }
     
     /**
@@ -995,9 +988,11 @@ public class HtmlBook{
     //Make sure that headers, footers, newlineP changes, and other alterations can't be made 
     //multiple times to the same HtmlBook object
     private Collection<HtmlChapter> handleNovella(){
-        HtmlChapter copy = new HtmlChapter(getName(), this.content);
-        copy.addHeaderFooter();
-        return new ArrayList<>(Arrays.asList(copy));
+        return new ArrayList<>(
+                Arrays.asList(
+                        HtmlChapter.fromBuffer(
+                                getName(), 
+                                this.content)));
     }
     
     private Collection<HtmlChapter> handlePQ(){
@@ -1009,7 +1004,7 @@ public class HtmlBook{
                         (i) -> hasLiteralAt("Footnote",i), Direction.PREV, content.size());
                 int bodyEndIndex = adjacentElement(footnoteIndex, Tag::isPOpen, Direction.PREV);
                 List<HTMLEntity> bodySection = section(0,bodyEndIndex);
-                body = new HtmlChapter("PQ_0_THE_PRINCESS_AND_THE_QUEEN.html", bodySection);
+                body = HtmlChapter.fromBuffer("PQ_0_THE_PRINCESS_AND_THE_QUEEN.html", bodySection);
             }
             
             HtmlChapter footnote;
@@ -1019,7 +1014,7 @@ public class HtmlBook{
                         Tag::isPOpen, 
                         Direction.PREV);
                 List<HTMLEntity> footnoteSection = section(footnoteStart);
-                footnote = new HtmlChapter("PQ_1_FOOTNOTE.html", footnoteSection);
+                footnote = HtmlChapter.fromBuffer("PQ_1_FOOTNOTE.html", footnoteSection);
             }
             
             files = new HtmlChapter[]{
@@ -1056,8 +1051,6 @@ public class HtmlBook{
                     file.set(
                             noteAnchorIndex, 
                             new Tag("a id=\"FOOTNOTE\" href=\"" + href + "\"" ));
-                    
-                    file.addHeaderFooter();
                 });
         
         return new ArrayList<>(Arrays.asList(files));

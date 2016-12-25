@@ -90,9 +90,15 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
      * @param name the file address/name of this HtmlChapter
      * @param content a list whose elements will be the elements of this HtmlChapter
      */
-    HtmlChapter(String name, List<HTMLEntity> content){
+    private HtmlChapter(String name, List<HTMLEntity> content){
         this.content = new ArrayList<>(content);
         filename = IO.stripFolder(name);
+    }
+    
+    static HtmlChapter fromBuffer(String name, List<HTMLEntity> buffer){
+        HtmlChapter result = new HtmlChapter(name, buffer);
+        result.addHeaderFooter();
+        return result;
     }
     
     /**
@@ -593,15 +599,10 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
     
     @Override
     public HtmlChapter clone(){
-        return new HtmlChapter(this);
+        return new HtmlChapter(filename, content);
     }
     
-    private HtmlChapter(HtmlChapter file){
-        this.filename = file.filename;
-        this.content = new ArrayList<>(file.content);
-    }
-    
-    void addHeaderFooter(){
+    private void addHeaderFooter(){
         List<HTMLEntity> head = header();
         List<HTMLEntity> foot = footer();
         List<HTMLEntity> newContent = new ArrayList<>(head.size() + content.size() + foot.size());
