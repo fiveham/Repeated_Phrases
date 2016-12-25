@@ -64,10 +64,10 @@ public class Chapter {
 	}
 	
 	public static boolean isChapter(File dir, String name){
-	    return IO.isTxt(dir, name); //TODO add other necessary stipulations
+	    return IO.isTxt(dir, name); //XXX add other necessary stipulations
 	}
 	
-	public Collection<Quote> getAllQuotes(int min, int max){
+	public Collection<Quote> getAllQuotes(int min, int max, Map<String, Phrase> textToPhrase){
 	    List<Integer> wordIndices = getWordIndices(min);
 	    
 	    List<Quote> result = new ArrayList<>();
@@ -78,7 +78,7 @@ public class Chapter {
 	            String phrase = body.substring(wordIndices.get(indexInto), endIndex);
 	            result.add(new Quote(
 	                    getLocations().get(indexInto), 
-	                    phrase)); //TODO fetch the proper existing Phrase object based on the text here
+	                    textToPhrase.computeIfAbsent(phrase, Phrase::new)));
 	        }
 	    }
 	    

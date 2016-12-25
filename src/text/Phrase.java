@@ -32,6 +32,13 @@ public class Phrase implements Comparable<Phrase>{
     private final int lastSpace;
     private final int wordCount;
     
+    public Phrase(String text){
+        this.text = text;
+        String[] split = text.split(WORD_SEPARATOR);
+        this.wordCount = split.length;
+        this.lastSpace = text.length() - split[split.length - 1].length() - 1;
+    }
+    
     /**
      * <p>Constructs a Phrase for the specified piece of {@code text}
      * @param text the actual phrase from the text of a book

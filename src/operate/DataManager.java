@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import text.Chapter;
 import text.Location;
+import text.Phrase;
 import text.PhraseBox;
 import text.Quote;
 
@@ -94,6 +95,8 @@ class DataManager {
                 .collect(Collectors.toList());
     }
     
+    private final Map<String, Phrase> phraseTracker = Collections.synchronizedMap(new HashMap<>());
+    
     private void generateAnchorData(Trail trail){
         Collection<Chapter> chapters = getChapters();
         
@@ -101,7 +104,10 @@ class DataManager {
         chapters.parallelStream().forEach(
                 (c) -> allQuotes.put(
                         c, 
-                        c.getAllQuotes(IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR, IO.MAX_PHRASE_SIZE)));
+                        c.getAllQuotes(
+                                IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR, 
+                                IO.MAX_PHRASE_SIZE, 
+                                phraseTracker)));
         
         Set<String> repeatedPhrases = repeatedPhrases(allQuotes);
         
