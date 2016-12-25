@@ -2,7 +2,7 @@ package operate;
 
 import common.IO;
 import html.AnchorInfo;
-import html.HTMLFile;
+import html.HtmlChapter;
 import java.io.File;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -18,7 +18,7 @@ public class RepeatedPhrasesApp {
         this.msg = msg;
     }
     
-    public Collection<HTMLFile> getHtmlChapters(){
+    public Collection<HtmlChapter> getHtmlChapters(){
         return dataManager.getHtmlChapters();
     }
     
@@ -30,7 +30,7 @@ public class RepeatedPhrasesApp {
         return dataManager.getAnchors(trail);
     }
     
-    public Collection<HTMLFile> getLinkedChapters(int minSize, Trail trail){
+    public Collection<HtmlChapter> getLinkedChapters(int minSize, Trail trail){
         return dataManager.linkChapters(minSize, trail);
     }
     

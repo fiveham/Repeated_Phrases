@@ -1,5 +1,7 @@
 package text;
 
+import common.IO;
+import html.HtmlChapter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,23 +11,20 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import common.IO;
-import html.HTMLFile;
-
 /**
  * <p>Represents a chapter of a book in the body of text being analysed. Pairs the name of the file
  * from which content is read with the contents of the file as supplied to the constructor.</p>
  */
 public class Chapter {
 	
-	private final HTMLFile source;
+	private final HtmlChapter source;
 	
     /**
      * <p>The content of the file for this chapter.</p>
      */
 	private final String body;
 	
-	public Chapter(HTMLFile h){
+	public Chapter(HtmlChapter h){
 	    this.source = h;
 	    this.body = h.body();
 	}
@@ -46,7 +45,7 @@ public class Chapter {
 		return body;
 	}
 	
-	public HTMLFile getSource(){
+	public HtmlChapter getSource(){
 	    return source;
 	}
 	

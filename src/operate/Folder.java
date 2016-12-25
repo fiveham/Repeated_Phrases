@@ -1,8 +1,8 @@
 package operate;
 
 import common.IO;
+import html.HtmlChapter;
 import html.HtmlEntity;
-import html.HTMLFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -70,8 +70,7 @@ public enum Folder {
                 .toString();
 	}
 	
-	//XXX use HtmlChapter
-	public void save(HTMLFile h){
+	public void save(HtmlChapter h){
 	    try(OutputStreamWriter out = 
 	            IO.newOutputStreamWriter(folder + File.separator + h.getName())){
 	        for(HtmlEntity e : h){

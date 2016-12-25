@@ -1,9 +1,8 @@
 package text;
 
-import java.util.List;
-
 import common.IO;
-import html.HTMLFile;
+import html.HtmlChapter;
+import java.util.List;
 
 /**
  * <p>Represents a location in a multi-file body of text at which a phrase begins. The index is the
@@ -104,12 +103,12 @@ public class Location implements Comparable<Location>{
      */
     private static int compareFilenames(String f1, String f2){
         String[] split1 = IO.stripExtension(f1)
-                .split(IO.FILENAME_COMPONENT_SEPARATOR, HTMLFile.FILENAME_ELEMENT_COUNT);
+                .split(IO.FILENAME_COMPONENT_SEPARATOR, HtmlChapter.FILENAME_ELEMENT_COUNT);
         String book1 = split1[0];
         String chapterNumber1 = split1[1];
         
         String[] split2 = IO.stripExtension(f2)
-                .split(IO.FILENAME_COMPONENT_SEPARATOR, HTMLFile.FILENAME_ELEMENT_COUNT);
+                .split(IO.FILENAME_COMPONENT_SEPARATOR, HtmlChapter.FILENAME_ELEMENT_COUNT);
         String book2 = split2[0];
         String chapterNumber2 = split2[1];
         

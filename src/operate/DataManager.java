@@ -3,7 +3,8 @@ package operate;
 import common.BookData;
 import common.IO;
 import html.AnchorInfo;
-import html.HTMLFile;
+import html.HtmlBook;
+import html.HtmlChapter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -24,10 +25,10 @@ import text.Quote;
 //That way, encapsulation, hiding whether a member is generated or simply retrieved, is preserved
 class DataManager {
     
-    private Collection<HTMLFile>   htmlChapters   = null;
-    private Collection<Chapter>    chapters       = null;
-    private Collection<AnchorInfo> anchorData     = null;
-    private Collection<HTMLFile>   linkedChapters = null;
+    private Collection<HtmlChapter> htmlChapters   = null;
+    private Collection<Chapter>     chapters       = null;
+    private Collection<AnchorInfo>  anchorData     = null;
+    private Collection<HtmlChapter> linkedChapters = null;
     
     //TODO use an input-comparing cache to check whether to generate linkedChapters etc.
     
@@ -43,7 +44,7 @@ class DataManager {
     
     //getters
     
-    public Collection<HTMLFile> getHtmlChapters(){
+    public Collection<HtmlChapter> getHtmlChapters(){
         return softGet(htmlChapters, this::generateHtmlChapters);
     }
     
@@ -55,7 +56,7 @@ class DataManager {
         return softGet(anchorData, () -> generateAnchorData(trail));
     }
     
-    public Collection<HTMLFile> linkChapters(int minSize, Trail trail){
+    public Collection<HtmlChapter> linkChapters(int minSize, Trail trail){
         return softGet(linkedChapters, () -> generateLinkedChapters(minSize, trail));
     }
     
@@ -68,10 +69,10 @@ class DataManager {
     
     private void generateHtmlChapters(){
         Stream<File> fs = Stream.of(Folder.HTML_BOOKS.folder().listFiles(BookData::isBook));
-        Stream<HTMLFile> novels = fs
+        Stream<HtmlBook> novels = fs
                 .map(DataManager::newHTMLFile);
         this.htmlChapters = novels
-                .map(HTMLFile::cleanAndSplit)
+                .map(HtmlBook::cleanAndSplit)
                 .reduce((c1, c2) -> {
                     c1.addAll(c2);
                     return c1;
@@ -79,9 +80,9 @@ class DataManager {
                 .get();
     }
     
-    private static HTMLFile newHTMLFile(File f){
+    private static HtmlBook newHTMLFile(File f){
         try{
-            return new HTMLFile(f);
+            return new HtmlBook(f);
         } catch(FileNotFoundException e){
             throw new RuntimeException(f + " not found", e);
         }
@@ -201,7 +202,7 @@ class DataManager {
                 .collect(Collectors.groupingBy((ai) -> ai.position().getChapter()));
         
         //add phrase-anchors
-        List<HTMLFile> linked = toAnchors.keySet().stream()
+        List<HtmlChapter> linked = toAnchors.keySet().stream()
                 .map((c) -> c.getSource().clone().link(toAnchors.get(c)))
                 .collect(Collectors.toList());
         
