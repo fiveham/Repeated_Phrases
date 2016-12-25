@@ -20,7 +20,7 @@ public class PhraseBox{
     /**
      * <p>The wrapped HashMap.</p>
      */
-	private final Map<String, List<Location>> map;
+	private final Map<Phrase, List<Location>> map;
 	
     /**
      * <p>Constructs a PhraseBox with no contents.</p>
@@ -35,7 +35,7 @@ public class PhraseBox{
      * @return a {@link java.util.Set Set} of the phrases that have mapped Locations in this
      * PhraseBox.
      */
-	public Set<String> phrases(){
+	public Set<Phrase> phrases(){
 		return map.keySet();
 	}
 	
@@ -45,7 +45,7 @@ public class PhraseBox{
      * @param phrase the phrase being given another Location
      * @param location a location at which {@code phrase} occurs
      */
-	public synchronized void add(String phrase, Location location){
+	public synchronized void add(Phrase phrase, Location location){
 		if(map.containsKey(phrase)){
 			map.get(phrase).add(location);
 		} else{

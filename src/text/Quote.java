@@ -6,10 +6,7 @@ package text;
  */
 public class Quote implements Comparable<Quote>{
 	
-    /**
-     * <p>A phrase from the body of text being analysed.</p>
-     */
-	private final String text;
+	private final Phrase phrase;
 	
     /**
      * <p>{@code phrase}'s word-index in its source chapter.</p>
@@ -21,9 +18,9 @@ public class Quote implements Comparable<Quote>{
      * @param index {@code phrase}'s word-index in its source chapter
      * @param phrase a phrase from the body of text being analysed
      */
-	public Quote(Location location, String phrase) {
+	public Quote(Location location, Phrase phrase) {
 		this.location = location;
-		this.text = phrase;
+		this.phrase = phrase;
 	}
 	
 	public int index(){
@@ -35,7 +32,11 @@ public class Quote implements Comparable<Quote>{
 	}
 	
 	public String text(){
-		return text;
+		return phrase.getText();
+	}
+	
+	public Phrase phrase(){
+	    return phrase;
 	}
 	
 	@Override
@@ -48,7 +49,7 @@ public class Quote implements Comparable<Quote>{
      * {@code phrase}.
      */
 	public String toString(){
-		return index()+Location.ELEMENT_DELIM+text;
+		return index() + Location.ELEMENT_DELIM + text();
 	}
 	
     /**
@@ -59,10 +60,10 @@ public class Quote implements Comparable<Quote>{
      */
 	@Override
 	public int compareTo(Quote otherQuote){
-		if(index() != otherQuote.index()){
-			return Integer.compare(index(), otherQuote.index());
-		}
-		return text.compareTo(otherQuote.text);
+		int comp = phrase.compareTo(otherQuote.phrase);
+		return comp != 0 
+		        ? comp 
+		        : location.compareTo(otherQuote.location);
 	}
 	
 	public boolean isIndependent(){
@@ -71,8 +72,8 @@ public class Quote implements Comparable<Quote>{
 	
 	private boolean isDependent(){
         Chapter c = location.getChapter();
-        return c.hasLargerPhraseAt(location, text) 
+        return c.hasLargerPhraseAt(location, text()) 
                 || (location.hasPredecessor() 
-                        && c.hasLargerPhraseAt(location.getPredecessor(), text));
+                        && c.hasLargerPhraseAt(location.getPredecessor(), text()));
 	}
 }

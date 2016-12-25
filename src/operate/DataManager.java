@@ -188,7 +188,7 @@ class DataManager {
         PhraseBox result = new PhraseBox();
         diQuotes.keySet().parallelStream().forEach(
                 (c) -> diQuotes.get(c).parallelStream().forEach(
-                        (q) -> result.add(q.text(), q.location())));
+                        (q) -> result.add(q.phrase(), q.location())));
         
         result.phrases().parallelStream()
                 .map(result::get)

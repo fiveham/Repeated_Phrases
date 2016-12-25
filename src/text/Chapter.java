@@ -76,7 +76,9 @@ public class Chapter {
 	        for(int indexInto = 0; indexInto - size < wordIndices.size(); indexInto++){
 	            int endIndex = wordEndIndex(wordIndices, indexInto, size);
 	            String phrase = body.substring(wordIndices.get(indexInto), endIndex);
-	            result.add(new Quote(getLocations().get(indexInto), phrase));
+	            result.add(new Quote(
+	                    getLocations().get(indexInto), 
+	                    phrase)); //TODO fetch the proper existing Phrase object based on the text here
 	        }
 	    }
 	    

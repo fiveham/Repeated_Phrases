@@ -6,7 +6,7 @@ package text;
  * @author fiveham
  *
  */
-public class Phrase {
+public class Phrase implements Comparable<Phrase>{
     
     /**
      * <p>A space ({@value}) used to separate words in multi-word phrases. Is used as a regex sent
@@ -41,6 +41,11 @@ public class Phrase {
         this.text = text;
         this.lastSpace = lastSpace;
         this.wordCount = wordCount;
+    }
+    
+    @Override
+    public int compareTo(Phrase other){
+        return text.compareTo(other.text);
     }
     
     public int getWordCount(){
