@@ -836,16 +836,16 @@ public class HtmlBook{
         }
     }
     
-    private static final Map<String,String> NOVEL_FIRST_WORDS = 
+    private static final Map<String, String> NOVEL_FIRST_WORDS = 
             BookData.words(BookData::isNovel, BookData::firstWords);
     
-    private static final Map<String,String> NOVEL_LAST_WORDS = 
+    private static final Map<String, String> NOVEL_LAST_WORDS = 
             BookData.words(BookData::isNovel, BookData::lastWords);
     
-    private static final Map<String,String> NOVELLA_FIRST_WORDS = 
+    private static final Map<String, String> NOVELLA_FIRST_WORDS = 
             BookData.words(BookData::isNovella, BookData::firstWords);
     
-    private static final Map<String,String> NOVELLA_LAST_WORDS = 
+    private static final Map<String, String> NOVELLA_LAST_WORDS = 
             BookData.words(BookData::isNovella, BookData::lastWords);
     
     private Collection<HtmlChapter> splitChapters(){
