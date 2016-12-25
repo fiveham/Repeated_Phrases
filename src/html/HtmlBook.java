@@ -1082,36 +1082,6 @@ public class HtmlBook implements Iterable<HTMLEntity>{
     }
     
     /**
-     * <p>Generates a plaintext representation of the content of this html file other than the 
-     * chapter title if this is an html chapter.</p>
-     * @return
-     */
-    public String body(){
-        StringBuilder sb = new StringBuilder();
-        
-        int startPoint = firstPClose();
-        
-        for(int i = startPoint; i < content.size(); i++){
-            StringBuilder entityText = new StringBuilder(content.get(i).txtString());
-            for(int j = 0; j < entityText.length(); j++){
-                if(!Phrase.isPhraseChar(entityText.charAt(j))){
-                    entityText.setCharAt(j, Phrase.WORD_SEPARATOR_CHAR);
-                }
-            }
-            sb.append(entityText);
-        }
-        
-        return sb.toString();
-    }
-    
-    private int firstPClose(){
-        return IntStream.range(0, content.size())
-                .filter((i) -> Tag.isPClose(content.get(i)))
-                .findFirst()
-                .getAsInt();
-    }
-    
-    /**
      * <p>The value of the id attribute of the anchors in the head and foot tables for html chapters
      * which link to the previous chapter.</p>
      */
