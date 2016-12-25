@@ -21,14 +21,13 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import text.Location;
 import text.Phrase;
 
 /**
  * <p>Represents an HTML file and provides some convenience methods for working with an HTML
  * file.</p>
  */
-public class HtmlBook implements Iterable<HTMLEntity>, Cloneable{
+public class HtmlBook implements Iterable<HTMLEntity>{
     
     /**
      * <p>The number of meaningful components in a chapter's filename. These are the source book,
@@ -90,142 +89,15 @@ public class HtmlBook implements Iterable<HTMLEntity>, Cloneable{
     }
     
     /**
-     * <p>Adds a pair of anchor tags to this HtmlBook around based on the AnchorInfo {@code a}. The
-     * added Tags are placed around the {@link Location#index word-index}-th word in this HtmlBook,
-     * specified by {@code a}'s {@link AnchorInfo#position position} after the word at that position
-     * is verified as the first word of {@code a}'s {@link AnchorInfo#text phrase}. The link added
-     * via these tags links to {@code a}'s {@link AnchorInfo#linkTo destination}.</p>
-     * @param a an AnchorInfo specifying everything needed to create a link from one repeated phrase
-     * in this HtmlBook to the same repeated phrase in another HtmlBook chapter.
+     * <p>Replaces the element in the underlying list at index {@code position} with
+     * {@code elem}.</p>
+     * @param position the index in the underlying list at which {@code elem} is placed
+     * @param elem the HTMLEntity put into the list at index {@code position}
+     * @return the element originally at index {@code position}
      */
-    private void addAnchor(AnchorInfo a){
-        int wordIndex = a.position().getIndex();
-        
-        validateWordWithIndex(firstWord(a.phrase()), wordIndex);
-        
-        List<Integer> insertPoints = anchorInsertionPoints(wordIndex);
-        insertPoints.sort((i1,i2) -> i2.compareTo(i1)); //sort into reverse order
-        
-        Tag open = new Tag(a.openingTagText());
-        Tag close = new Tag(a.closingTagText());
-        //add close tag on even indices (e.g. rightmost insert position) 
-        //and add open tag on odd indices.
-        Function<Integer,Tag> nextTag = (i) -> i%2==0 ? close : open; 
-        
-        for(int i = 0; i < insertPoints.size(); i++){
-            content.add(insertPoints.get(i), nextTag.apply(i));
-            modCount++;
-        }
-    }
-    
-    /**
-     * <p>Throws an exception if the {@code wordIndex}-th word in this HtmlBook is not
-     * {@code word}.</p>
-     * @param word the word whose status as the {@code wordIndex}-th word in this HtmlBook is to be
-     * verified.
-     * @param wordIndex the number of words prior to the word in this HtmlBook compared against
-     * {@code word}, starting counting after the chapter title.
-     * @throws IllegalStateException if the {@code wordIndex}-th word in this HtmlBook is not
-     * {@code word}
-     */
-    private void validateWordWithIndex(String word, int wordIndex){
-        String wordThere = wordAt(wordIndex);
-        if(!word.equals(wordThere)){
-            throw new IllegalStateException(
-                    "Sought word (" + word 
-                    + ") is not equal to the word (" + wordThere 
-                    + ") with the specified word-index (" + wordIndex 
-                    + ") in this file");
-        }
-    }
-    
-     /**
-      * <p>Replaces the element in the underlying list at index {@code position} with
-      * {@code elem}.</p>
-      * @param position the index in the underlying list at which {@code elem} is placed
-      * @param elem the HTMLEntity put into the list at index {@code position}
-      * @return the element originally at index {@code position}
-      */
     private HTMLEntity set(int position, HTMLEntity elem){
         modCount++;
         return content.set(position, elem);
-    }
-    
-     /**
-      * <p>Returns the {@code wordIndex}-th (zero-based) word after the chapter's title in this
-      * HtmlBook. The first word after the title has wordIndex 0.</p> <p>The wordIndex-th word is
-      * determined by counting word-start points where a word character's most recent visible
-      * predecessor (any {@link CharLiteral literal character} or {@link CharCode character code} is
-      * not a word-legal character. HTML tags are not considered when finding the beginning of a
-      * word.</p> <p>The characters after the first are determined via a look- around process
-      * similar to that used to determine the location of the first character. The underlying list
-      * is crawled with increasing index, and individual characters are added to a StringBuilder as
-      * they are encountered. {@link Tag Tags} are ignored, and Codes and word-illegal literal
-      * characters cause the crawl-accumulation process to end.</p>
-      * @param wordIndex the number of words between the first word of the body of this file and the
-      * word to be retrieved
-      * @return the {@code wordIndex}-th (zero-based) word after the chapter's title in this
-      * HtmlBook
-      */
-    private String wordAt(int wordIndex){
-        StringBuilder result = new StringBuilder();
-
-        int[] bounds = getWordBounds(wordIndex);
-        
-        for(int i = bounds[0]; i < bounds[1]; i++){
-            HTMLEntity item = content.get(i);
-            if(CharLiteral.class.isInstance(item)){
-                result.append(((CharLiteral)item).c);
-            }
-        }
-        
-        return result.toString();
-    }
-    
-    /**
-     * <p>Returns a list of indices in the underlying list at which an anchor tag must be inserted
-     * in order to link the {@code wordIndex}-th word to another instance of the repeated phrase of
-     * which it is the first word.</p> <p>If there are any {@link Tag Tags} amongst the literal
-     * characters of the {@code wordIndex}-th word, blindly adding opening and closing tags around
-     * the outside of the word could result in unbalanced tags. So, this method crawls along the
-     * underlying list finding any clusters of Tags inside the word and marking the points around
-     * them where extra closing anchor tags and extra opening anchor tags are needed to ensure tags
-     * are not unbalanced by the addition of these anchor tags.</p> <p>The returned list is
-     * constructed keeping mind that the calling context will add anchor tags of the correct type
-     * (closing or opening) and do so in reverse order, starting with the last index at which a tag
-     * is to be added, allowing the indices less than that to retain their meaning without any
-     * adjustments being needed.</p>
-     * @param wordIndex the number of words between the sought word in this file and the first word
-     * in the body of this chapter
-     * @return a list of indices in the underlying list at which an anchor tag must be inserted in
-     * order to link the {@code wordIndex}-th word to another instance of the repeated phrase of
-     * which it is the first word
-     */
-    private List<Integer> anchorInsertionPoints(int wordIndex){
-        List<Integer> result = new ArrayList<>();
-        
-        int[] bounds = getWordBounds(wordIndex);
-        int lo = bounds[0];
-        int hi = bounds[1];
-        
-        result.add(lo);
-        for(int i = lo + 1; i < hi; i++){
-            if(is(i, 
-                    HtmlBook::isCharacter, 
-                    Direction.PREV, 
-                    Tag.class::isInstance) //htmlFile.get(i) is a character preceded by a tag.
-                    
-                    //htmlFile.get(i) is a Tag preceded by a character.
-                    || is(i, 
-                            Tag.class::isInstance, 
-                            Direction.PREV, 
-                            HtmlBook::isCharacter)){
-                result.add(i);
-            }
-        }
-        result.add(hi);
-        
-        return result;
     }
     
     /**
@@ -268,203 +140,6 @@ public class HtmlBook implements Iterable<HTMLEntity>, Cloneable{
     }
     
     /**
-     * <p>Returns true if the element at index {@code position} in the underlying list makes
-     * {@code test1} evaluate to true and the element in the underlying list before or after (if
-     * {@code dir} is Direction.PREV or Direction.NEXT respectively) that element makes
-     * {@code test2} evaluate to true, false otherwise.</p>
-     * @param position the position in the underlying list from which to extract an HTMLEntity to
-     * send to {@code test1}
-     * @param test1 the test to perform on the element of the underlying list at {@code position}
-     * @param dir the direction to go from {@code position} to get another HTMLEntity to send to
-     * {@code test2} for evaluation
-     * @param test2 the test to perform on the element before or after the element at
-     * {@code postion}, depending on the value of {@code dir}
-     * @return true if the element at index {@code position} in the underlying list makes
-     * {@code test1} evaluate to true and the element in the underlying list before or after (if
-     * {@code dir} is Direction.PREV or Direction.NEXT respectively) that element makes
-     * {@code test2} evaluate to true, false otherwise
-     */
-    private boolean is(
-            int position, 
-            Predicate<HTMLEntity> test1, 
-            Direction dir, 
-            Predicate<HTMLEntity> test2){
-        
-        HTMLEntity item = content.get(position);
-        HTMLEntity prevOrNext = content.get(dir.apply(position));
-        return test1.test(item) && test2.test(prevOrNext);
-    }
-    
-    /**
-     * <p>Returns the first space-delimited word of {@code phrase}.</p>
-     * @param phrase a phrase of which the first word is returned
-     * @return the first space-delimited word of {@code phrase}.
-     */
-    private static final String firstWord(String phrase){
-        int index = phrase.indexOf(Phrase.WORD_SEPARATOR);
-        return index < 0 
-                ? phrase 
-                : phrase.substring(0, index);
-    }
-    
-    /**
-     * <p>Returns the index in the underlying list of the {@code wordIndex}th word in the file after
-     * the title.</p>
-     * @param wordIndex the number of words between the sought word in this file and the first word
-     * in the body of this chapter
-     * @return the index in the underlying list of the {@code wordIndex}th word in the file after
-     * the title
-     */
-    private int getWord(int wordIndex){
-        return getWordCache.applyAsInt(wordIndex);
-    }
-    
-    private class GetWordCache implements IntUnaryOperator{
-        
-        /**
-         * <p>When this record of how many times this HtmlBook has been modified is different from
-         * the {@link HtmlBook#modCount value} stored in this HtmlBook itself, a result is
-         * determined under worst-case scenario conditions, with the search beginning from the start
-         * of the file.</p>
-         */
-        private int modCount = HtmlBook.this.modCount;
-        
-        /**
-         * <p>The value that was last returned by {@code applyAsInt(int)}. Initialized to
-         * Integer.MAX_VALUE. If {@code applyAsInt(int)} throws an exception, the output is not
-         * stored.</p>
-         */
-        private int storedWordIndex = Integer.MAX_VALUE;
-        
-        /**
-         * <p>The value sent as input to {@code applyAsInt(int)} for which {@code applyAsInt(int)}
-         * last returned a result. Initialized to Integer.MAX_VALUE. If {@code applyAsInt(int)}
-         * throws an exception, the input is not stored.</p>
-         */
-        private int storedWordPointer = Integer.MAX_VALUE;
-        
-        @Override
-        /**
-         * <p>If {@code wordIndex} is the same as {@link #storedWordIndex the stored input}, then
-         * the stored output is returned. Otherwise, crawls the underlying list from a starting
-         * point and increments a counter when a {@link #isWordStart(int) word start} is encountered
-         * until the counter reaches the input {@code wordIndex}, at which point the index in the
-         * list at which the method is operating is returned.</p> <p>If {@code wordIndex} is less
-         * than the stored input, then the start point for traversing the list is set to 0, the very
-         * beginning of the list. If {@code wordIndex} is greater than the stored input, then the
-         * start point for traversing the list is set to {@link #storedWordStart the stored output}
-         * to save the time that would otherwise be spent traversing the list from the beginning to
-         * that point.</p>
-         * @param wordIndex the number of words between the sought word in this file and the first
-         * word in the body of this chapter
-         * @return the index in this HtmlBook's underlying list of the first letter of the
-         * {@code wordIndex}th word in the body of this chapter.
-         * @throws IllegalArgumentException if {@code wordIndex} is less than
-         * {@link HtmlBook#baseWordIndex baseWordIndex}
-         * @throws IllegalStateException if {@code wordIndex} is too high such that there aren't
-         * enough words in this HtmlBook to count that high
-         */
-        public int applyAsInt(int wordIndex){
-            if(wordIndex < 0){
-                throw new IllegalArgumentException(
-                        "wordIndex " + wordIndex + " < 0");
-            } else if(this.modCount == HtmlBook.this.modCount && wordIndex == storedWordIndex){
-                return storedWordPointer;
-            } else{
-                int previousWordIndex = -1;
-                int init_i = 0;
-                
-                if(this.modCount == HtmlBook.this.modCount){
-                    if(wordIndex > storedWordIndex){
-                        init_i = storedWordPointer;
-                        previousWordIndex = storedWordIndex-1;
-                    }
-                } else{
-                    this.modCount = HtmlBook.this.modCount;
-                }
-                
-                int i;
-                for(i = init_i; i < content.size(); i++){
-                    if(isWordStart(i)){
-                        previousWordIndex++;
-                    }
-                    if(previousWordIndex==wordIndex){
-                        storedWordIndex = wordIndex;
-                        return storedWordPointer = i;
-                    }
-                }
-                
-                throw new IllegalStateException(
-                        "The specified wordIndex (" + wordIndex 
-                        + ") is too high (max value of " + previousWordIndex 
-                        + ").");
-            }
-        }
-    }
-    
-    /**
-     * <p>Does the work for {@link #getWord(int) getWord()} and stores its most recent input and
-     * output to more quickly return a result.</p>
-     */
-    private final IntUnaryOperator getWordCache = new GetWordCache();
-    
-    /**
-     * <p>Returns the position in the underlying list of the last character of the
-     * {@code wordIndex}-th word in the body of this chapter.</p>
-     * @param wordIndex the number of words between the sought word in this file and the first word
-     * in the body of this chapter
-     * @param startPoint a position in (typically at the very start of) the {@code wordIndex}-th
-     * word, from which to start looking for the end of the current word
-     * @return the position in the underlying list of the last character of the {@code wordIndex}-th
-     * word in the body of this chapter
-     */
-    private int getLastCharacter(int wordIndex, int startPoint){
-        for(int i = startPoint; i < content.size(); i++){
-            if(!isWord(adjacentElement(i, Direction.NEXT, HtmlBook::isCharacter))){
-                return i;
-            }
-        }
-        throw new IllegalStateException("Couldn't find last character of word.");
-    }
-    
-    /**
-     * <p>Returns an int array containing lower (inclusive) and upper (exclusive) bounds for the
-     * {@code wordIndex}th word in this file.</p>
-     * @param wordIndex the number of words between the sought word in this file and the first word
-     * in the body of this chapter
-     * @return an int array containing lower (inclusive) and upper (exclusive) bounds for the
-     * {@code wordIndex}th word in this file
-     */
-    private int[] getWordBounds(int wordIndex){
-        int start = getWord(wordIndex);
-        return new int[]{start, getLastCharacter(wordIndex, start)+1};
-    }
-    
-    /**
-     * <p>Returns true if the element at index {@code index} in the underlying list is the first
-     * character of a word, false otherwise.</p>
-     * @param index the index in the underlying list to be tested for whether it's the first
-     * character of a word
-     * @return true if the element at index {@code index} in the underlying list is the first
-     * character of a word, false otherwise
-     */
-    private boolean isWordStart(int index){
-        return isWord(content.get(index)) 
-                && !isWord(adjacentElement(index, Direction.PREV, HtmlBook::isCharacter));
-    }
-    
-    /**
-     * <p>Returns true if {@code elem} is character-type and is a word character, false
-     * otherwise.</p>
-     * @param elem the HTMLEntity to be assessed for legality as a word character
-     * @return true if {@code elem} is character-type and is a word character, false otherwise
-     */
-    private static boolean isWord(HTMLEntity elem){
-        return CharLiteral.class.isInstance(elem) 
-                && Phrase.isPhraseChar(((CharLiteral)elem).c);
-    }
-    
-    /**
      * <p>Evaluates to true if the specified HTMLEntity {@code h} is a character-type HTMLEntity: a
      * {@link CharLiteral Ch} or a {@link CharCode Code}.</p>
      */
@@ -499,17 +174,6 @@ public class HtmlBook implements Iterable<HTMLEntity>, Cloneable{
             }
         }
         return BEFORE_BEGINNING;
-    }
-    
-    private HTMLEntity adjacentElement(
-            int position, 
-            Direction direction, 
-            Predicate<HTMLEntity> typeRestriction){
-        
-        int index = adjacentElement(position, typeRestriction, direction);
-        return index >= 0 
-                ? content.get(index) 
-                : null;
     }
     
     private int adjacentElement(
@@ -1349,16 +1013,6 @@ public class HtmlBook implements Iterable<HTMLEntity>, Cloneable{
     }
     
     @Override
-    public HtmlBook clone(){
-        return new HtmlBook(this);
-    }
-    
-    private HtmlBook(HtmlBook file){
-        this.source = file.source;
-        this.content = new ArrayList<>(file.content);
-    }
-    
-    @Override
     public void forEach(Consumer<? super HTMLEntity> action){
         content.forEach(action);
     }
@@ -1463,13 +1117,6 @@ public class HtmlBook implements Iterable<HTMLEntity>, Cloneable{
                 .getAsInt();
     }
     
-    public HtmlBook link(List<AnchorInfo> anchors){
-        anchors.stream()
-                .sorted()
-                .forEach(this::addAnchor);
-        return this;
-    }
-
     /**
      * <p>The value of the id attribute of the anchors in the head and foot tables for html chapters
      * which link to the previous chapter.</p>
