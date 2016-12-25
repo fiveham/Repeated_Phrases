@@ -70,6 +70,7 @@ public enum Folder {
                 .toString();
 	}
 	
+	//XXX use HtmlChapter
 	public void save(HTMLFile h){
 	    try(OutputStreamWriter out = 
 	            IO.newOutputStreamWriter(folder + File.separator + h.getName())){
