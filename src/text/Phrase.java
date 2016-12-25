@@ -107,4 +107,20 @@ public class Phrase implements Comparable<Phrase>{
                         || c == E_ACUTE 
                         || c == E_CIRCUMFLEX);
     }
+    
+    @Override
+    public int hashCode(){
+        return text.hashCode();
+    }
+    
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof Phrase){
+            Phrase p = (Phrase) o;
+            return p.text == null 
+                    ? text == null 
+                    : p.text.equals(text);
+        }
+        return false;
+    }
 }
