@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Scanner;
 import java.util.Iterator;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
@@ -430,11 +431,59 @@ public class HtmlBook{
     }
     
     public Collection<HtmlChapter> cleanAndSplit(){
-        newlineP();
-        clearExcessStructure();
-        clearFrontAndBackMatter();
-        swapApostrophes();
+        for(Operation op : Operation.values()){
+            if(!op.isDone(this)){
+                op.operate(this);
+            }
+        }
         return splitChapters();
+    }
+    
+    private boolean newlinePDone = false;
+    private boolean clearExcessStructureDone = false;
+    private boolean clearFrontAndBackMatterDone = false;
+    private boolean swapApostrophesDone = false;
+    
+    private static enum Operation{
+        NEWLINE_P(
+                (h) -> h.newlinePDone, 
+                HtmlBook::newlineP, 
+                (h) -> h.newlinePDone = true), 
+        CLEAR_XS_STRUCT(
+                (h) -> h.clearExcessStructureDone, 
+                HtmlBook::clearExcessStructure, 
+                (h) -> h.clearExcessStructureDone = true), 
+        CLEAR_FRONT_BACK_MATTER(
+                (h) -> h.clearFrontAndBackMatterDone, 
+                HtmlBook::clearFrontAndBackMatter, 
+                (h) -> h.clearFrontAndBackMatterDone = true),
+        SWAP_APOSTROPHES(
+                (h) -> h.swapApostrophesDone, 
+                HtmlBook::swapApostrophes, 
+                (h) -> h.swapApostrophesDone = true);
+        
+        private final Predicate<HtmlBook> test;
+        private final Consumer<HtmlBook> operation;
+        private final Consumer<HtmlBook> setter;
+        
+        private Operation(
+                Predicate<HtmlBook> test, 
+                Consumer<HtmlBook> operation, 
+                Consumer<HtmlBook> setter){
+            
+            this.test = test;
+            this.operation = operation;
+            this.setter = setter;
+        }
+        
+        boolean isDone(HtmlBook h){
+            return test.test(h);
+        }
+        
+        void operate(HtmlBook h){
+            operation.accept(h);
+            setter.accept(h);
+        }
     }
     
     private void newlineP(){
