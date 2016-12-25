@@ -76,4 +76,21 @@ public class Quote implements Comparable<Quote>{
                 || (location.hasPredecessor() 
                         && c.hasLargerPhraseAt(location.getPredecessor(), phrase));
 	}
+	
+	@Override
+	public boolean equals(Object o){
+	    if(o == this){
+	        return true;
+	    }
+	    if(o instanceof Quote){
+	        Quote q = (Quote) o;
+	        return q.location.equals(location) && q.phrase.equals(phrase);
+	    }
+	    return false;
+	}
+	
+	@Override
+	public int hashCode(){
+	    return phrase.hashCode() * location.hashCode();
+	}
 }

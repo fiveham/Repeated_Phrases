@@ -52,6 +52,9 @@ public class Chapter {
 	
 	@Override
 	public boolean equals(Object o){
+	    if(o == this){
+	        return true;
+	    }
 	    if(o instanceof Chapter){
 	        Chapter c = (Chapter) o;
 	        return c.body.equals(this.body) && c.getName().equals(getName());

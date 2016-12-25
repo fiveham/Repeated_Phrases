@@ -115,6 +115,9 @@ public class Phrase implements Comparable<Phrase>{
     
     @Override
     public boolean equals(Object o){
+        if(o == this){
+            return true;
+        }
         if(o instanceof Phrase){
             Phrase p = (Phrase) o;
             return p.text == null 

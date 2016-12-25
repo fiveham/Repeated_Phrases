@@ -58,29 +58,31 @@ public class Location implements Comparable<Location>{
 	}
 	
 	//Information
-	@Override
     /**
      * <p>Assesses whether the specified object is equal to this Location.</p>
      * @param o object to be tested for equality against this Location.
      * @return true if {@code o} is a Location and its components are equal to those of this
      * Location, false otherwise.
      */
-	public boolean equals(Object o){
-		if(o instanceof Location ){
-			Location loc = (Location) o;
-			return index == loc.index && loc.getFilename().equals(getFilename());
-		} else{
-			return false;
-		}
-	}
-
-	@Override
+    @Override
+    public boolean equals(Object o){
+        if(o == this){
+            return true;
+        }
+        if(o instanceof Location){
+            Location l = (Location) o;
+            return l.index == index && l.chapter.equals(chapter);
+        }
+        return false;
+    }
+    
     /**
      * <p>Compares the specified Location to this one.</p>
      * @param loc a Location to be compared to this one.
      * @return an int whose sign indicates the natural ordering between this Location and
      * {@code loc}.
      */
+    @Override
 	public int compareTo(Location loc){
 		if(equals(loc)){
 			return 0;
@@ -196,5 +198,10 @@ public class Location implements Comparable<Location>{
             i++;
             return locs.get(i % locs.size());
         }
+	}
+	
+	@Override
+	public int hashCode(){
+	    return chapter.hashCode() * 31 + index;
 	}
 }
