@@ -1,8 +1,6 @@
 package text;
 
-import common.IO;
 import html.HtmlChapter;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -65,10 +63,6 @@ public class Chapter {
 	@Override
 	public int hashCode(){
 	    return getName().hashCode() * 31 + body.hashCode();
-	}
-	
-	public static boolean isChapter(File dir, String name){
-	    return IO.isTxt(dir, name); //XXX add other necessary stipulations
 	}
 	
 	public Collection<Quote> getAllQuotes(int min, int max, Map<String, Phrase> textToPhrase){
