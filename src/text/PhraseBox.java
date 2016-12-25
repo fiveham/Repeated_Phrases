@@ -62,7 +62,7 @@ public class PhraseBox{
      * @return a list of the locations at which {@code phrase} occurs if {@code phrase} is a String
      * and has been mapped in the underlying HashMap
      */
-	public List<Location> get(Object phrase){
+	public List<Location> get(Phrase phrase){
 		return map.get(phrase);
 	}
 }

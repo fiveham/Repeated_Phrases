@@ -165,14 +165,14 @@ class DataManager {
             quotes.sort(null);
             
             for(Quote quote : quotes){
-                String phrase = quote.getText();
+                Phrase phrase = quote.getPhrase();
                 
                 //XXX get all anchors for locs at once and add to result in bulk
                 List<Location> locs = phrasebox.get(phrase);
                 
                 Location linkTo = quote.getLocation().after(locs);//locAfter(locs, quote.location());
                 
-                AnchorInfo ai = new AnchorInfo(phrase, quote.getLocation(), linkTo);
+                AnchorInfo ai = new AnchorInfo(phrase.getText(), quote.getLocation(), linkTo);
                 result.add(ai);
             }
         }
