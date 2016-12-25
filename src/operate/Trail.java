@@ -100,7 +100,7 @@ public class Trail implements Comparator<Location>{
      * @param trailFilename the name of the trail-file from which trail data is extracted
      * @return a list of {@code TrailElement}s describing each chapter's predecessor and successor
      */
-    public static Trail getTrailElements(File trailFile, Map<String, Chapter> chapterNames){
+    public static Trail fromFile(File trailFile, Map<String, Chapter> chapterNames){
         
         Stream<String[]> data = IO.fileContentStream(
                 trailFile, 

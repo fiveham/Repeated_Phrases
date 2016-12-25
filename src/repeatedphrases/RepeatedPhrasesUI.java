@@ -502,7 +502,7 @@ public class RepeatedPhrasesUI extends JFrame {
     private Trail trail() throws FileNotFoundException{
         String name = trailFileField.getText();
         File file = new File(name);
-        return Trail.getTrailElements(file, app.getChapters().stream()
+        return Trail.fromFile(file, app.getChapters().stream()
                 .collect(Collectors.toMap(Chapter::getName, Function.identity())));
     }
     
