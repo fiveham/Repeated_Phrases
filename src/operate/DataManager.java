@@ -170,7 +170,7 @@ class DataManager {
                 //XXX get all anchors for locs at once and add to result in bulk
                 List<Location> locs = phrasebox.get(phrase);
                 
-                Location linkTo = quote.getLocation().after(locs);//locAfter(locs, quote.location());
+                Location linkTo = quote.getLocation().after(locs);
                 
                 AnchorInfo ai = new AnchorInfo(phrase.getText(), quote.getLocation(), linkTo);
                 result.add(ai);
