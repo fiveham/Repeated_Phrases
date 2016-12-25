@@ -41,7 +41,7 @@ public class HtmlBook{
     /**
      * <p>The underlying list.</p>
      */
-    private List<HTMLEntity> content;
+    private List<HtmlEntity> content;
     
     /**
      * <p>The literal filename of the file to which the content of this HtmlBook belongs. Contains
@@ -130,7 +130,7 @@ public class HtmlBook{
      * <p>Evaluates to true if the specified HTMLEntity {@code h} is a character-type HTMLEntity: a
      * {@link CharLiteral Ch} or a {@link CharCode Code}.</p>
      */
-    private static boolean isCharacter(HTMLEntity h){
+    private static boolean isCharacter(HtmlEntity h){
         return CharLiteral.class.isInstance(h) || CharCode.class.isInstance(h);
     }
     
@@ -150,7 +150,7 @@ public class HtmlBook{
      */
     private int adjacentElement(
             int startPosition, 
-            Predicate<HTMLEntity> condition, 
+            Predicate<HtmlEntity> condition, 
             Direction direction){
         
         for(int i = direction.apply(startPosition); 
@@ -185,8 +185,8 @@ public class HtmlBook{
      * @param end the exclusive upper bound of the region to be removed from the underlying list
      */
     private void removeAll(int start, int end){
-        List<HTMLEntity> front = content.subList(0,start);
-        List<HTMLEntity> back = content.subList(end, content.size());
+        List<HtmlEntity> front = content.subList(0,start);
+        List<HtmlEntity> back = content.subList(end, content.size());
         front.addAll(back);
         content = new ArrayList<>(front);
         modCount++;
@@ -217,7 +217,7 @@ public class HtmlBook{
       * {@link Tag#isOpening() opening} Tag.
       */
     private int closingMatch(int startPoint){
-        HTMLEntity a = content.get(startPoint);
+        HtmlEntity a = content.get(startPoint);
         if(!Tag.isOpen(a)){
             throw new IllegalArgumentException(
                     "The element at index " + startPoint 
@@ -227,7 +227,7 @@ public class HtmlBook{
         Tag t = (Tag) a;
         
         final String type = t.getType();
-        final Predicate<HTMLEntity> isTagOfType = 
+        final Predicate<HtmlEntity> isTagOfType = 
                 (h) -> Tag.class.isInstance(h) && ((Tag)h).getType().equals(type);
         int tagIndex = startPoint;
         
@@ -255,8 +255,8 @@ public class HtmlBook{
      * @return a {@literal List<HTMLEntity>} representing the contents of the body scanned by
      * {@code s}
      */
-    private static ArrayList<HTMLEntity> getHtmlBookContent(Scanner s){
-        ArrayList<HTMLEntity> result = new ArrayList<>();
+    private static ArrayList<HtmlEntity> getHtmlBookContent(Scanner s){
+        ArrayList<HtmlEntity> result = new ArrayList<>();
         
         StringBuilder fileBody = readFile(s);
         
@@ -288,7 +288,7 @@ public class HtmlBook{
                 }
             } else if(mate.equals(c)){ //we are looking for a '>' or a ';' //we've found that mate
                 //then we can stop looking for that mate
-                HTMLEntity newEntry = (mate == Tag.END_CHAR) 
+                HtmlEntity newEntry = (mate == Tag.END_CHAR) 
                         ? new Tag(tagCode.toString()) 
                         : new CharCode(tagCode.toString());
                 result.add(newEntry);
@@ -332,15 +332,15 @@ public class HtmlBook{
      * @return a sublist of the list underlying this object, whose bounds are indicated by the first
      * and second entries in {@code bounds}
      */
-    private List<HTMLEntity> section(int[] bounds){
+    private List<HtmlEntity> section(int[] bounds){
         return section(bounds[0], bounds[1]);
     }
     
-    private List<HTMLEntity> section(int lo, int hi){
+    private List<HtmlEntity> section(int lo, int hi){
         return content.subList(lo, hi);
     }
     
-    private List<HTMLEntity> section(int lo){
+    private List<HtmlEntity> section(int lo){
         return section(lo, content.size());
     }
         
@@ -366,7 +366,7 @@ public class HtmlBook{
         return result;
     }
     
-    private static boolean isParagraphishOpen(HTMLEntity h){
+    private static boolean isParagraphishOpen(HtmlEntity h){
         return Tag.isPOpen(h) || Tag.isHeaderOpen(h);
     }
     
@@ -446,8 +446,8 @@ public class HtmlBook{
     }
     
     private void newlineP(){
-        List<HTMLEntity> newContent = new ArrayList<>(content.size());
-        for(HTMLEntity h : content){
+        List<HtmlEntity> newContent = new ArrayList<>(content.size());
+        for(HtmlEntity h : content){
             if(Tag.isPOpen(h)){
                 newContent.addAll(CharLiteral.NEW_LINE_LITERAL);
             }
@@ -463,10 +463,10 @@ public class HtmlBook{
         });
         content = content.stream()
                 .filter(Objects::nonNull)
-                .filter(HTMLEntity::notDiv)
-                .filter(HTMLEntity::notBlockquote)
-                .filter(HTMLEntity::notImg)
-                .filter(HTMLEntity::notNbsp)
+                .filter(HtmlEntity::notDiv)
+                .filter(HtmlEntity::notBlockquote)
+                .filter(HtmlEntity::notImg)
+                .filter(HtmlEntity::notNbsp)
                 .collect(Collectors.toList());
     }
     
@@ -792,7 +792,7 @@ public class HtmlBook{
          */
         private static Character characterAt(int index, HtmlBook h){
             if(0 <= index && index < h.content.size()){
-                HTMLEntity ent = h.content.get(index);
+                HtmlEntity ent = h.content.get(index);
                 if(ent instanceof CharLiteral){
                     CharLiteral cl = (CharLiteral) ent;
                     return cl.c;
@@ -873,7 +873,7 @@ public class HtmlBook{
     private Collection<HtmlChapter> handleNovel(){
         List<HtmlChapter> result = new ArrayList<>();
         
-        List<HTMLEntity> buffer = new ArrayList<>();
+        List<HtmlEntity> buffer = new ArrayList<>();
         String chapterName = null;
         
         int writeCount = 0;
@@ -883,7 +883,7 @@ public class HtmlBook{
                 piter.hasNext();){
             int[] paragraphBounds = piter.next();
             
-            List<HTMLEntity> paragraph = section(paragraphBounds);
+            List<HtmlEntity> paragraph = section(paragraphBounds);
             
             if(isTitleParagraph(paragraph)){
                 if(!buffer.isEmpty()){
@@ -938,10 +938,10 @@ public class HtmlBook{
      * @return true if the {@code paragraph}'s only character-type contents are characters that can
      * appear in chapter titles, false otherwise
      */
-    private static boolean isTitleParagraph(List<HTMLEntity> paragraph){
+    private static boolean isTitleParagraph(List<HtmlEntity> paragraph){
         boolean titleCharFound = false;
         
-        for(HTMLEntity h : paragraph){
+        for(HtmlEntity h : paragraph){
             if(CharCode.class.isInstance(h)){
                 return false;
             } else if(CharLiteral.class.isInstance(h)){
@@ -971,10 +971,10 @@ public class HtmlBook{
      * @param paragraph the paragraph whose contained chapter title is extracted and returned
      * @return the chapter title that's the sole visible content of the specified {@code paragraph}
      */
-    private static String extractChapterTitle(List<HTMLEntity> paragraph){
+    private static String extractChapterTitle(List<HtmlEntity> paragraph){
         StringBuilder result = new StringBuilder(paragraph.size());
 
-        for(HTMLEntity h : paragraph){
+        for(HtmlEntity h : paragraph){
             if(CharLiteral.class.isInstance(h)){
                 result.append(((CharLiteral)h).c);
             }
@@ -1003,7 +1003,7 @@ public class HtmlBook{
                 int footnoteIndex = adjacentElement(
                         (i) -> hasLiteralAt("Footnote",i), Direction.PREV, content.size());
                 int bodyEndIndex = adjacentElement(footnoteIndex, Tag::isPOpen, Direction.PREV);
-                List<HTMLEntity> bodySection = section(0,bodyEndIndex);
+                List<HtmlEntity> bodySection = section(0,bodyEndIndex);
                 body = HtmlChapter.fromBuffer("PQ_0_THE_PRINCESS_AND_THE_QUEEN.html", bodySection);
             }
             
@@ -1013,7 +1013,7 @@ public class HtmlBook{
                         content.size(), 
                         Tag::isPOpen, 
                         Direction.PREV);
-                List<HTMLEntity> footnoteSection = section(footnoteStart);
+                List<HtmlEntity> footnoteSection = section(footnoteStart);
                 footnote = HtmlChapter.fromBuffer("PQ_1_FOOTNOTE.html", footnoteSection);
             }
             

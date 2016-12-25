@@ -3,7 +3,7 @@ package html;
 /**
  * <p>A text element of an HTML file.<p>
  */
-public abstract class HTMLEntity {
+public abstract class HtmlEntity {
 	
     /**
      * <p>Returns a plaintext interpretation of this HTMLEntity.</p>

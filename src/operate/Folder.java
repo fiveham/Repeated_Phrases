@@ -1,7 +1,7 @@
 package operate;
 
 import common.IO;
-import html.HTMLEntity;
+import html.HtmlEntity;
 import html.HTMLFile;
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,7 @@ public enum Folder {
     
     HTML_BOOKS      (null),
     HTML_CHAPTERS   (Object::toString),
-    CORPUS          (HTMLEntity::txtString),
+    CORPUS          (HtmlEntity::txtString),
     ANCHORS         (null),
     LINKED_CHAPTERS (null),
     READABLE        (Object::toString);
@@ -28,9 +28,9 @@ public enum Folder {
 	 */
 	private final File folder;
 	
-	private final Function<HTMLEntity, String> func;
+	private final Function<HtmlEntity, String> func;
 	
-	private Folder(Function<HTMLEntity, String> func){
+	private Folder(Function<HtmlEntity, String> func){
 	    this.folder = new File(folderName());
 		this.func = func;
 	}
@@ -74,7 +74,7 @@ public enum Folder {
 	public void save(HTMLFile h){
 	    try(OutputStreamWriter out = 
 	            IO.newOutputStreamWriter(folder + File.separator + h.getName())){
-	        for(HTMLEntity e : h){
+	        for(HtmlEntity e : h){
 	            out.write(func.apply(e));
 	        }
 	        out.close();

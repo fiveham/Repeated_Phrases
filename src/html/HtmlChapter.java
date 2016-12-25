@@ -20,7 +20,7 @@ import text.Phrase;
  * <p>Represents an HTML file and provides some convenience methods for working with an HTML
  * file.</p>
  */
-public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
+public class HtmlChapter implements Iterable<HtmlEntity>, Cloneable{
     
     /**
      * <p>The index of the chapter's title in the array resulting from calling
@@ -46,7 +46,7 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
     /**
      * <p>The underlying list.</p>
      */
-    private List<HTMLEntity> content;
+    private List<HtmlEntity> content;
     
     /**
      * <p>The literal filename of the file to which the content of this HtmlChapter belongs. Contains
@@ -90,12 +90,12 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
      * @param name the file address/name of this HtmlChapter
      * @param content a list whose elements will be the elements of this HtmlChapter
      */
-    private HtmlChapter(String name, List<HTMLEntity> content){
+    private HtmlChapter(String name, List<HtmlEntity> content){
         this.content = new ArrayList<>(content);
         filename = IO.stripFolder(name);
     }
     
-    static HtmlChapter fromBuffer(String name, List<HTMLEntity> buffer){
+    static HtmlChapter fromBuffer(String name, List<HtmlEntity> buffer){
         HtmlChapter result = new HtmlChapter(name, buffer);
         result.addHeaderFooter();
         return result;
@@ -166,7 +166,7 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
       * @param elem the HTMLEntity put into the list at index {@code position}
       * @return the element originally at index {@code position}
       */
-    HTMLEntity set(int position, HTMLEntity elem){
+    HtmlEntity set(int position, HtmlEntity elem){
         modCount++;
         return content.set(position, elem);
     }
@@ -193,7 +193,7 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
         int[] bounds = getWordBounds(wordIndex);
         
         for(int i = bounds[0]; i < bounds[1]; i++){
-            HTMLEntity item = content.get(i);
+            HtmlEntity item = content.get(i);
             if(CharLiteral.class.isInstance(item)){
                 result.append(((CharLiteral)item).c);
             }
@@ -267,12 +267,12 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
      */
     private boolean is(
             int position, 
-            Predicate<HTMLEntity> test1, 
+            Predicate<HtmlEntity> test1, 
             Direction dir, 
-            Predicate<HTMLEntity> test2){
+            Predicate<HtmlEntity> test2){
         
-        HTMLEntity item = content.get(position);
-        HTMLEntity prevOrNext = content.get(dir.apply(position));
+        HtmlEntity item = content.get(position);
+        HtmlEntity prevOrNext = content.get(dir.apply(position));
         return test1.test(item) && test2.test(prevOrNext);
     }
     
@@ -440,7 +440,7 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
      * @param elem the HTMLEntity to be assessed for legality as a word character
      * @return true if {@code elem} is character-type and is a word character, false otherwise
      */
-    private static boolean isWord(HTMLEntity elem){
+    private static boolean isWord(HtmlEntity elem){
         return CharLiteral.class.isInstance(elem) 
                 && Phrase.isPhraseChar(((CharLiteral)elem).c);
     }
@@ -449,7 +449,7 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
      * <p>Evaluates to true if the specified HTMLEntity {@code h} is a character-type HTMLEntity: a
      * {@link CharLiteral Ch} or a {@link CharCode Code}.</p>
      */
-    private static boolean isCharacter(HTMLEntity h){
+    private static boolean isCharacter(HtmlEntity h){
         return CharLiteral.class.isInstance(h) || CharCode.class.isInstance(h);
     }
     
@@ -469,7 +469,7 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
      */
     int adjacentElement(
             int startPosition, 
-            Predicate<HTMLEntity> condition, 
+            Predicate<HtmlEntity> condition, 
             Direction direction){
         
         for(int i = direction.apply(startPosition); 
@@ -482,10 +482,10 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
         return BEFORE_BEGINNING;
     }
     
-    private HTMLEntity adjacentElement(
+    private HtmlEntity adjacentElement(
             int position, 
             Direction direction, 
-            Predicate<HTMLEntity> typeRestriction){
+            Predicate<HtmlEntity> typeRestriction){
         
         int index = adjacentElement(position, typeRestriction, direction);
         return index >= 0 
@@ -504,8 +504,8 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
      * @return a {@literal List<HTMLEntity>} representing the contents of the body scanned by
      * {@code s}
      */
-    private static ArrayList<HTMLEntity> getHtmlChapterContent(Scanner s){
-        ArrayList<HTMLEntity> result = new ArrayList<>();
+    private static ArrayList<HtmlEntity> getHtmlChapterContent(Scanner s){
+        ArrayList<HtmlEntity> result = new ArrayList<>();
         
         StringBuilder fileBody = readFile(s);
         
@@ -537,7 +537,7 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
                 }
             } else if(mate.equals(c)){ //we are looking for a '>' or a ';' //we've found that mate
                 //then we can stop looking for that mate
-                HTMLEntity newEntry = (mate == Tag.END_CHAR) 
+                HtmlEntity newEntry = (mate == Tag.END_CHAR) 
                         ? new Tag(tagCode.toString()) 
                         : new CharCode(tagCode.toString());
                 result.add(newEntry);
@@ -603,9 +603,9 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
     }
     
     private void addHeaderFooter(){
-        List<HTMLEntity> head = header();
-        List<HTMLEntity> foot = footer();
-        List<HTMLEntity> newContent = new ArrayList<>(head.size() + content.size() + foot.size());
+        List<HtmlEntity> head = header();
+        List<HtmlEntity> foot = footer();
+        List<HtmlEntity> newContent = new ArrayList<>(head.size() + content.size() + foot.size());
         newContent.addAll(head);
         newContent.addAll(content);
         newContent.addAll(foot);
@@ -613,7 +613,7 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
         content = newContent;
     }
     
-    private static final List<HTMLEntity> HEADER_FRONT_HTML = new ArrayList<>();
+    private static final List<HtmlEntity> HEADER_FRONT_HTML = new ArrayList<>();
     static{
         Stream.of(
                 "html", 
@@ -647,7 +647,7 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
                 .forEach(HEADER_FRONT_HTML::add);
     }
     
-    private static final List<HTMLEntity> HEADER_BACK_HTML = new ArrayList<>();
+    private static final List<HtmlEntity> HEADER_BACK_HTML = new ArrayList<>();
     static{
         Stream.of(
                 "/p", 
@@ -677,9 +677,9 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
         HEADER_BACK_HTML.addAll(CharLiteral.NEW_LINE_LITERAL);
     }
     
-    private List<HTMLEntity> header(){
+    private List<HtmlEntity> header(){
         List<CharLiteral> name = CharLiteral.asList(chapterName());
-        List<HTMLEntity> result = new ArrayList<>(
+        List<HtmlEntity> result = new ArrayList<>(
                 HEADER_FRONT_HTML.size() + name.size() + HEADER_BACK_HTML.size());
         result.addAll(HEADER_FRONT_HTML);
         result.addAll(name);
@@ -696,7 +696,7 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
                 .toUpperCase();
     }
     
-    private static final List<HTMLEntity> FOOTER_FRONT_HTML = new ArrayList<>();
+    private static final List<HtmlEntity> FOOTER_FRONT_HTML = new ArrayList<>();
     static{
         Stream.of(
                 "/div", 
@@ -721,7 +721,7 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
                 .forEach(FOOTER_FRONT_HTML::add);
     }
     
-    private static final List<HTMLEntity> FOOTER_BACK_HTML = new ArrayList<>();
+    private static final List<HtmlEntity> FOOTER_BACK_HTML = new ArrayList<>();
     static{
         Stream.of(
                 "/p", 
@@ -748,9 +748,9 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
                 .forEach(FOOTER_BACK_HTML::add);
     }
     
-    private List<HTMLEntity> footer(){
+    private List<HtmlEntity> footer(){
         List<CharLiteral> name = CharLiteral.asList(chapterName());
-        List<HTMLEntity> result = new ArrayList<>(
+        List<HtmlEntity> result = new ArrayList<>(
                 FOOTER_BACK_HTML.size() + name.size() + FOOTER_FRONT_HTML.size());
         result.addAll(FOOTER_FRONT_HTML);
         result.addAll(name);
@@ -759,7 +759,7 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
     }
     
     @Override
-    public Iterator<HTMLEntity> iterator(){
+    public Iterator<HtmlEntity> iterator(){
         return content.iterator();
     }
     
@@ -823,7 +823,7 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
     }
     
     private void setAdjacency(String idValue, String idAttrib, String address){
-        Predicate<HTMLEntity> isAnchorWithMatchID = 
+        Predicate<HtmlEntity> isAnchorWithMatchID = 
                 (h) -> isAnchorWithMatchID(h, idValue, idAttrib);
         int pointer = INIT_POINTER;
         while(INIT_POINTER 
@@ -913,7 +913,7 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
     
     private static final int INIT_POINTER = -1;
     
-    private static boolean isAnchorWithMatchID(HTMLEntity h, String idValue, String idAttrib){
+    private static boolean isAnchorWithMatchID(HtmlEntity h, String idValue, String idAttrib){
         if(Tag.class.isInstance(h)){
             Tag t = (Tag) h;
             return t.isType(Tag.A) && idValue.equals(t.valueOfAttribute(idAttrib)); 

@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 /**
  * <p>Represents an HTML tag.</p>
  */
-public class Tag extends HTMLEntity {
+public class Tag extends HtmlEntity {
 	
     /**
      * <p>The literal text of the "p" type.</p>
@@ -55,127 +55,127 @@ public class Tag extends HTMLEntity {
     /**
      * Evaluates to true if the HTMLEntity tested is an opening Tag.
      */
-	public static boolean isOpen(HTMLEntity h){
+	public static boolean isOpen(HtmlEntity h){
 		return Tag.class.isInstance(h) && ((Tag)h).isOpening();
 	}
 	
     /**
      * Evaluates to true if the HTMLEntity tested is a closing Tag.
      */
-	public static boolean isClose(HTMLEntity h){
+	public static boolean isClose(HtmlEntity h){
 		return Tag.class.isInstance(h) && ((Tag)h).isClosing();
 	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag and has type "p".</p>
      */
-	public static boolean isP(HTMLEntity h){
+	public static boolean isP(HtmlEntity h){
 		return Tag.class.isInstance(h) && P.equals(((Tag)h).getType());
 	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "p", and is opening.</p>
      */
-	public static boolean isPOpen(HTMLEntity h){
+	public static boolean isPOpen(HtmlEntity h){
 		return isP(h) && ((Tag)h).isOpening();
 	}
 			
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "p", and is closing.</p>
      */
-	public static boolean isPClose(HTMLEntity h){
+	public static boolean isPClose(HtmlEntity h){
 		return isP(h) && ((Tag)h).isClosing();
 	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag and has type "div".</p>
      */
-	public static boolean isDiv(HTMLEntity h){
+	public static boolean isDiv(HtmlEntity h){
 		return Tag.class.isInstance(h) && DIV.equals(((Tag)h).getType());
 	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "div", and is opening.</p>
      */
-	public static boolean isDivOpen(HTMLEntity h){
+	public static boolean isDivOpen(HtmlEntity h){
 		return isDiv(h) && ((Tag)h).isOpening();
 	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "div", and is closing.</p>
      */
-	public static boolean isDivClose(HTMLEntity h){
+	public static boolean isDivClose(HtmlEntity h){
 		return isDiv(h) && ((Tag)h).isClosing();
 	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag and has type "blockquote".</p>
      */
-	public static boolean isBlockquote(HTMLEntity h){
+	public static boolean isBlockquote(HtmlEntity h){
 		return Tag.class.isInstance(h) && BLOCKQUOTE.equals(((Tag)h).getType());
 	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag and has type "img".</p>
      */
-	public static boolean isImg(HTMLEntity h){
+	public static boolean isImg(HtmlEntity h){
 		return Tag.class.isInstance(h) && IMG.equals(((Tag)h).getType());
 	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, and has type "table".</p>
      */
-	public static boolean isTable(HTMLEntity h){
+	public static boolean isTable(HtmlEntity h){
 		return Tag.class.isInstance(h) && TABLE.equals(((Tag)h).getType());
 	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "table", and is opening.</p>
      */
-	public static boolean isTableOpen(HTMLEntity h){
+	public static boolean isTableOpen(HtmlEntity h){
 		return isTable(h) && ((Tag)h).isOpening();
 	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "table" and is closing.</p>
      */
-	public static boolean isTableClose(HTMLEntity h){
+	public static boolean isTableClose(HtmlEntity h){
 		return isTable(h) && ((Tag)h).isClosing();
 	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag and has type "a".</p>
      */
-	public static boolean isAnchor(HTMLEntity h){
+	public static boolean isAnchor(HtmlEntity h){
 		return Tag.class.isInstance(h) && A.equals(((Tag)h).getType());
 	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "a", and is opening.</p>
      */
-	public static boolean isAnchorOpen(HTMLEntity h){
+	public static boolean isAnchorOpen(HtmlEntity h){
 		return isAnchor(h) && ((Tag)h).isOpening();
 	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "a", and is closing.</p>
      */
-	public static boolean isAnchorClose(HTMLEntity h){
+	public static boolean isAnchorClose(HtmlEntity h){
 		return isAnchor(h) && ((Tag)h).isClosing();
 	}
 	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag and has type "sup".</p>
      */
-	public static boolean isSup(HTMLEntity h){
+	public static boolean isSup(HtmlEntity h){
 		return Tag.class.isInstance(h) && SUP.equals(((Tag)h).getType());
 	}
 	
-	public static boolean isHeader(HTMLEntity h){
+	public static boolean isHeader(HtmlEntity h){
 		return Tag.class.isInstance(h) && HEADERS.contains(((Tag)h).getType());
 	}
 		
-	public static boolean isHeaderOpen(HTMLEntity h){
+	public static boolean isHeaderOpen(HtmlEntity h){
 		return isHeader(h) && isOpen(h);
 	}
 	

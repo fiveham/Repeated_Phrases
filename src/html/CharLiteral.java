@@ -11,7 +11,7 @@ import text.Phrase;
  * literal characters to be represented easily in a collection of HTML {@link Tag tags} and
  * {@link CharCode character codes}.</p>
  */
-public class CharLiteral extends HTMLEntity {
+public class CharLiteral extends HtmlEntity {
     
     public static final CharLiteral RIGHT_SINGLE_QUOTE = new CharLiteral(IO.RIGHT_SINGLE_QUOTE);
     public static final CharLiteral APOSTROPHE = new CharLiteral('\'');
@@ -37,7 +37,7 @@ public class CharLiteral extends HTMLEntity {
 		this.c = c;
 	}
 	
-    public static boolean is1(HTMLEntity h){
+    public static boolean is1(HtmlEntity h){
         return CharLiteral.class.isInstance(h) && ((CharLiteral)h).c == '1';
     }
     

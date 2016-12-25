@@ -3,7 +3,7 @@ package html;
 /**
  * <p>Represents an HTML character code starting with an ampersand and ending with a semicolon.</p>
  */
-public class CharCode extends HTMLEntity {
+public class CharCode extends HtmlEntity {
 	
     /**
      * <p>The content of a {@code Code} representing the HTML character code for a non-breaking
@@ -21,7 +21,7 @@ public class CharCode extends HTMLEntity {
      * @return true if the specified HTMLEntity is a {@code CharCode} and represents a
      * {@link #NBSP non-breaking space}, false otherwise
      */	
-	public static boolean isNbsp(HTMLEntity h){
+	public static boolean isNbsp(HtmlEntity h){
 	    return CharCode.class.isInstance(h) && NBSP.equals(((CharCode)h).code);
 	}
 	
