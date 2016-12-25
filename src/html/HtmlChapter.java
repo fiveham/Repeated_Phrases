@@ -476,7 +476,7 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
         return BEFORE_BEGINNING;
     }
     
-   HTMLEntity adjacentElement(
+    private HTMLEntity adjacentElement(
             int position, 
             Direction direction, 
             Predicate<HTMLEntity> typeRestriction){
@@ -485,21 +485,6 @@ public class HtmlChapter implements Iterable<HTMLEntity>, Cloneable{
         return index >= 0 
                 ? content.get(index) 
                 : null;
-    }
-    
-    int adjacentElement(
-            Predicate<Integer> condition, 
-            Direction direction, 
-            int startPosition){
-        
-        for(int i = direction.apply(startPosition); 
-                direction.crawlTest(i, content); 
-                i = direction.apply(i)){
-            if(condition.test(i)){
-                return i;
-            }
-        }
-        return BEFORE_BEGINNING;
     }
     
     /**
