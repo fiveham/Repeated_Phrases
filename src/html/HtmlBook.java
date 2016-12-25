@@ -873,18 +873,19 @@ public class HtmlBook{
     private Collection<HtmlChapter> handleNovel(){
         List<HtmlChapter> result = new ArrayList<>();
         
-        HtmlBook.ParagraphIterator piter = new ParagraphIterator();
         List<HTMLEntity> buffer = new ArrayList<>();
-        int writeCount = 0;
         String chapterName = null;
         
+        int writeCount = 0;
+        
+        HtmlBook.ParagraphIterator piter = new ParagraphIterator();
         while(piter.hasNext()){
             int[] paragraphBounds = piter.next();
             
             List<HTMLEntity> paragraph = section(paragraphBounds);
             
             if(isTitleParagraph(paragraph)){
-                if(chapterName != null){
+                if(!buffer.isEmpty()){
                     //dump the buffer
                     result.add(saveChapterFile(buffer, chapterName, writeCount));
                     writeCount++;
@@ -958,7 +959,7 @@ public class HtmlBook{
                 }
             }
         }
-
+        
         return titleCharFound;
     }
     
