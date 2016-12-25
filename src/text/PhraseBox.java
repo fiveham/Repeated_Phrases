@@ -34,7 +34,7 @@ public class PhraseBox{
      * @return a {@link java.util.Set Set} of the phrases that have mapped Locations in this
      * PhraseBox.
      */
-	public Set<Phrase> phrases(){
+	public Set<Phrase> getPhrases(){
 		return map.keySet();
 	}
 	

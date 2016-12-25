@@ -23,19 +23,19 @@ public class Quote implements Comparable<Quote>{
 		this.phrase = phrase;
 	}
 	
-	public int index(){
+	public int getIndex(){
 		return location.getIndex();
 	}
 	
-	public Location location(){
+	public Location getLocation(){
 		return location;
 	}
 	
-	public String text(){
+	public String getText(){
 		return phrase.getText();
 	}
 	
-	public Phrase phrase(){
+	public Phrase getPhrase(){
 	    return phrase;
 	}
 	
@@ -49,7 +49,7 @@ public class Quote implements Comparable<Quote>{
      * {@code phrase}.
      */
 	public String toString(){
-		return index() + Location.ELEMENT_DELIM + text();
+		return getIndex() + Location.ELEMENT_DELIM + getText();
 	}
 	
     /**

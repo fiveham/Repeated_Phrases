@@ -145,7 +145,7 @@ class DataManager {
         
         map.keySet().parallelStream().forEach(
                 (c) -> map.get(c).parallelStream()
-                        .map(Quote::text)
+                        .map(Quote::getText)
                         .forEach((t) -> data.put(t, data.containsKey(t))));
         
         return data.keySet().stream()
@@ -165,14 +165,14 @@ class DataManager {
             quotes.sort(null);
             
             for(Quote quote : quotes){
-                String phrase = quote.text();
+                String phrase = quote.getText();
                 
                 //XXX get all anchors for locs at once and add to result in bulk
                 List<Location> locs = phrasebox.get(phrase);
                 
-                Location linkTo = quote.location().after(locs);//locAfter(locs, quote.location());
+                Location linkTo = quote.getLocation().after(locs);//locAfter(locs, quote.location());
                 
-                AnchorInfo ai = new AnchorInfo(phrase, quote.location(), linkTo);
+                AnchorInfo ai = new AnchorInfo(phrase, quote.getLocation(), linkTo);
                 result.add(ai);
             }
         }
@@ -184,9 +184,9 @@ class DataManager {
         PhraseBox result = new PhraseBox();
         diQuotes.keySet().parallelStream().forEach(
                 (c) -> diQuotes.get(c).parallelStream().forEach(
-                        (q) -> result.add(q.phrase(), q.location())));
+                        (q) -> result.add(q.getPhrase(), q.getLocation())));
         
-        result.phrases().parallelStream()
+        result.getPhrases().parallelStream()
                 .map(result::get)
                 .forEach((l) -> l.sort(trail));
         

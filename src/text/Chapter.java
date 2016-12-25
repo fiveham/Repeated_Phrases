@@ -144,8 +144,8 @@ public class Chapter {
 	    this.repeatedQuotes = repeatedQuotes.stream()
         	    .collect(Collectors.toMap(
         	            (q) -> listSizeIndex(
-        	                    q.phrase().getWordCount(),
-        	                    q.location().getIndex()), 
+        	                    q.getPhrase().getWordCount(),
+        	                    q.getLocation().getIndex()), 
         	            Function.identity())); 
 	}
 	
