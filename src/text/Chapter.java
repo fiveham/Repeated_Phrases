@@ -136,7 +136,7 @@ public class Chapter {
 	        throw new IllegalStateException("Repeated quotes not specified.");
 	    }
 	    
-	    List<Integer> key = generateKey(largerPhraseSize, wordIndex);
+	    List<Integer> key = listSizeIndex(largerPhraseSize, wordIndex);
 	    return repeatedQuotes.containsKey(key);
 	}
 	
@@ -145,13 +145,13 @@ public class Chapter {
 	public void setRepeatedQuotes(Collection<Quote> repeatedQuotes){
 	    this.repeatedQuotes = repeatedQuotes.stream()
         	    .collect(Collectors.toMap(
-        	            (q) -> generateKey(
+        	            (q) -> listSizeIndex(
         	                    q.phrase().getWordCount(),
         	                    q.location().getIndex()), 
         	            (q) -> q)); 
 	}
 	
-	private static List<Integer> generateKey(int size, int index){
+	private static List<Integer> listSizeIndex(int size, int index){
 	    return Arrays.asList(size, index);
 	}
 }
