@@ -72,8 +72,8 @@ public class Quote implements Comparable<Quote>{
 	
 	private boolean isDependent(){
         Chapter c = location.getChapter();
-        return c.hasLargerPhraseAt(location, text()) 
+        return c.hasLargerPhraseAt(location, phrase) 
                 || (location.hasPredecessor() 
-                        && c.hasLargerPhraseAt(location.getPredecessor(), text()));
+                        && c.hasLargerPhraseAt(location.getPredecessor(), phrase));
 	}
 }

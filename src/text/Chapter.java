@@ -128,8 +128,8 @@ public class Chapter {
 	
 	private List<Location> locations;
 	
-	public boolean hasLargerPhraseAt(Location location, String text){
-	    int largerPhraseSize = wordCount(text) + 1;
+	public boolean hasLargerPhraseAt(Location location, Phrase phrase){
+	    int largerPhraseSize = phrase.getWordCount() + 1;
 	    int wordIndex = location.getIndex();
 	    
 	    if(repeatedQuotes == null){
@@ -146,17 +146,12 @@ public class Chapter {
 	    this.repeatedQuotes = repeatedQuotes.stream()
         	    .collect(Collectors.toMap(
         	            (q) -> generateKey(
-        	                    wordCount(q.text()), 
+        	                    q.phrase().getWordCount(),
         	                    q.location().getIndex()), 
         	            (q) -> q)); 
 	}
 	
 	private static List<Integer> generateKey(int size, int index){
 	    return Arrays.asList(size, index);
-	}
-	
-	//TODO use Phrase with internally stored word-count instead of String
-	private static int wordCount(String text){
-	    return text.split(Phrase.WORD_SEPARATOR).length;
 	}
 }
