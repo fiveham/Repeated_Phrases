@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Set;
 
-//TODO Use Phrase objects as keys
 //TODO create Phrase class which stores lastIndexOf space (" ") data to expedite reducedPhrase time 
 //to calculate in FindRepeatedPhrases. Get the data from the Chapter.body indexOf data for spaces 
 //while creating the Chapter's phrases in the first place
