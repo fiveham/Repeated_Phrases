@@ -14,7 +14,6 @@ import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Scanner;
 import java.util.Iterator;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
@@ -1010,11 +1009,6 @@ public class HtmlBook implements Iterable<HTMLEntity>{
         HtmlChapter copy = new HtmlChapter(getName(), this.content);
         copy.addHeaderFooter();
         return new ArrayList<>(Arrays.asList(copy));
-    }
-    
-    @Override
-    public void forEach(Consumer<? super HTMLEntity> action){
-        content.forEach(action);
     }
     
     private Collection<HtmlChapter> handlePQ(){

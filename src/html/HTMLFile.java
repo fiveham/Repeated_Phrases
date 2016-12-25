@@ -15,7 +15,6 @@ import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Scanner;
 import java.util.Iterator;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
@@ -1384,11 +1383,6 @@ public class HTMLFile implements Iterable<HTMLEntity>, Cloneable{
 	private HTMLFile(HTMLFile file){
         this.filename = file.filename;
 	    this.content = new ArrayList<>(file.content);
-	}
-	
-	@Override
-	public void forEach(Consumer<? super HTMLEntity> action){
-	    content.forEach(action);
 	}
 	
 	private Collection<HTMLFile> handlePQ(){
