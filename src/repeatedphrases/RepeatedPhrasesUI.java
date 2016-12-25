@@ -289,7 +289,7 @@ public class RepeatedPhrasesUI extends JFrame {
         buttonPress(
                 createFoldersButton, 
         		"Creating needed folders", 
-        		() -> "Done: Put html books in " + Folder.HTML_BOOKS.folderName(), 
+        		() -> "Done: Put html books in " + Folder.HTML_BOOKS.getFolderName(), 
         		() -> app.ensureFolders(statusLabelMsg));
     }
     
@@ -302,7 +302,7 @@ public class RepeatedPhrasesUI extends JFrame {
         buttonPress(
                 chapterizeLinkButton, 
         		"Doing all the work (" + trailAndLimit[0] + ", " + trailAndLimit[1] + ")", 
-        		() -> "Done: Chapters ready: " + Folder.READABLE.folderName(), 
+        		() -> "Done: Chapters ready: " + Folder.READABLE.getFolderName(), 
         		() -> {
         		    int limit;
         		    try{

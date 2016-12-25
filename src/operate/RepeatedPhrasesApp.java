@@ -40,7 +40,7 @@ public class RepeatedPhrasesApp {
      */
     public void ensureFolders(Consumer<String> msg){
         for(Folder f : Folder.values()){
-            File name = f.folder();
+            File name = f.getFolder();
             if(!name.exists()){
                 msg.accept("Creating "+name.getName());
                 name.mkdir();

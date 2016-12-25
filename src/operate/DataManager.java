@@ -70,7 +70,7 @@ class DataManager {
     //generators
     
     private void generateHtmlChapters(){
-        Stream<File> fs = Stream.of(Folder.HTML_BOOKS.folder().listFiles(BookData::isBook));
+        Stream<File> fs = Stream.of(Folder.HTML_BOOKS.getFolder().listFiles(BookData::isBook));
         Stream<HtmlBook> novels = fs
                 .map(DataManager::newHTMLFile);
         this.htmlChapters = novels
