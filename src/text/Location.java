@@ -143,44 +143,6 @@ public class Location implements Comparable<Location>{
 		return getFilename() + ELEMENT_DELIM + index;
 	}
 	
-	public static final int FILENAME_POSITION = 0;
-	public static final int INDEX_POSITION = 1;
-	
-    /**
-     * <p>Returns a string representation of this Location lacking any folders or file-extensions
-     * mentioned in {@code filename}.</p>
-     */
-	public String shortString(){
-		return IO.stripFolderExtension(getFilename()) + ELEMENT_DELIM + index;
-	}
-	
-    /**
-     * <p>Subtracts {@code thatLocation.index} from {@code index} and returns the result. Throws an
-     * exception if these are Locations in different files.</p>
-     * @param thatLocation a Location whose index is extracted
-     * @return this.index - thatLocation.index
-     * @throws IllegalArgumentException if the two Locations have different filenames
-     */
-	public int minus(Location thatLocation){
-		if(getFilename().equals(thatLocation.getFilename())){
-			return this.index - thatLocation.index;
-		} else{
-			throw new IllegalArgumentException(
-					"mismatching filenames: " + getFilename() + " and " + thatLocation.getFilename());
-		}
-	}
-	
-    /**
-     * <p>Adds {@code indx} to {@code this.index} and creates a new Location with {@code filename}
-     * and {@code this.index + indx} as its {@link #index index}.</p>
-     * @param indx a value to be added to {@code index}
-     * @return a new Location with the same filename as this one and an {@link #index index} equal
-     * to the sum of {@code index} and {@code indx}
-     */
-	public Location add(int indx){
-		return new Location(index+indx, chapter);
-	}
-	
 	public boolean hasPredecessor(){
 	    return index != 0;
 	}
