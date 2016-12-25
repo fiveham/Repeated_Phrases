@@ -16,12 +16,10 @@ import java.util.function.Function;
  */
 public enum Folder {
     
-    HTML_BOOKS      (null),
-    HTML_CHAPTERS   (Object::toString),
-    CORPUS          (HtmlEntity::txtString),
-    ANCHORS         (null),
-    LINKED_CHAPTERS (null),
-    READABLE        (Object::toString);
+    HTML_BOOKS   (null),
+    HTML_CHAPTERS(Object::toString),
+    CORPUS       (HtmlEntity::txtString),
+    READABLE     (Object::toString);
     
 	/**
 	 * <p>The actual directory</p>
@@ -31,30 +29,15 @@ public enum Folder {
 	private final Function<HtmlEntity, String> func;
 	
 	private Folder(Function<HtmlEntity, String> func){
-	    this.folder = new File(folderName());
+	    this.folder = new File(getFolderName());
 		this.func = func;
-	}
-	
-	/**
-	 * <p>Returns the name for a file in this directory pertaining to phrases of the specified 
-	 * {@code size}. @param size the number of words in the phrases in the file with this name 
-	 * which is in this directory or which is to be written in this directory.</p>
-	 * @return the name of the file pertaining to phrases of {@code size} words in this directory.
-	 */
-	public String filename(int size){
-		return new StringBuilder(folderName())
-				.append(File.separator)
-				.append(IO.FILENAME_COMPONENT_SEPARATOR_CHAR)
-				.append(size)
-				.append(IO.TXT_EXT)
-				.toString();
 	}
 	
 	/**
 	 * <p>Returns a {@code File} representation of this directory.</p>
 	 * @return a {@code File} representation of this directory.
 	 */
-	public File folder(){
+	public File getFolder(){
 		return folder;
 	}
 	
@@ -62,7 +45,7 @@ public enum Folder {
 	 * <p>Returns the name of this directory.</p>
 	 * @return the name of this directory.
 	 */
-	public String folderName(){
+	public String getFolderName(){
 		return new StringBuilder()
 		        .append(ordinal())
                 .append(IO.FILENAME_COMPONENT_SEPARATOR)
