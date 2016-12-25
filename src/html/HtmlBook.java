@@ -80,14 +80,6 @@ public class HtmlBook{
     }
     
     /**
-     * <p>Returns {@link #source filename}.</p>
-     * @return {@link #source filename}
-     */
-    public String getName(){
-        return source.getName();
-    }
-    
-    /**
      * <p>Returns true if the underlying list contains a contiguous (ignoring Tags) region of
      * literal characters starting at {@code index} which match the characters of {@code literal},
      * false otherwise.</p>
@@ -497,7 +489,7 @@ public class HtmlBook{
     }
     
     private int prologueTitleBlock(){
-        String firstWords = NOVEL_FIRST_WORDS.get(getName());
+        String firstWords = NOVEL_FIRST_WORDS.get(source.getName());
         Predicate<Integer> hasFirstWordsAt = (i) -> hasLiteralAt(firstWords, i);
         
         int chapterStartIndex = adjacentElement(hasFirstWordsAt, Direction.NEXT, BEFORE_BEGINNING);
@@ -511,7 +503,7 @@ public class HtmlBook{
     }
     
     private int backMatterStart(){
-        String lastWords = NOVEL_LAST_WORDS.get(getName());
+        String lastWords = NOVEL_LAST_WORDS.get(source.getName());
         
         Predicate<Integer> hasLastWordsAt = (i) -> hasLiteralAt(lastWords, i);
         
@@ -537,7 +529,7 @@ public class HtmlBook{
      * @return
      */
     private int firstWordsP(){
-        String firstWords = NOVELLA_FIRST_WORDS.get(getName());
+        String firstWords = NOVELLA_FIRST_WORDS.get(source.getName());
         Predicate<Integer> predicate = (i) -> hasLiteralAt(firstWords, i);
         
         int literalIndex = adjacentElement(predicate, Direction.NEXT, BEFORE_BEGINNING);
@@ -555,7 +547,7 @@ public class HtmlBook{
      * @return
      */
     private int lastWordsP(){
-        String lastWords = NOVELLA_LAST_WORDS.get(getName());
+        String lastWords = NOVELLA_LAST_WORDS.get(source.getName());
         Predicate<Integer> predicate = (i) -> hasLiteralAt(lastWords, i);
         
         int literalIndex = adjacentElement(predicate, Direction.PREV, content.size());
@@ -862,12 +854,12 @@ public class HtmlBook{
         return BookData
                 .valueOf(
                         BookData.class, 
-                        getName().substring(0, getName().length() - IO.HTML_EXT.length()))
+                        source.getName().substring(0, source.getName().length() - IO.HTML_EXT.length()))
                 .isNovel();
     }
     
     private boolean isPQ(){
-        return BookData.PQ.filename().equals(getName());
+        return BookData.PQ.filename().equals(source.getName());
     }
     
     private Collection<HtmlChapter> handleNovel(){
@@ -922,7 +914,7 @@ public class HtmlBook{
      * @return the name of the file to which a chapter's content will be written
      */
     private String chapterFileName(int chapterIndex, String chapterName){
-        String bookName = IO.stripExtension(getName());
+        String bookName = IO.stripExtension(source.getName());
         return bookName 
                 + IO.FILENAME_COMPONENT_SEPARATOR_CHAR 
                 + chapterIndex 
@@ -991,7 +983,7 @@ public class HtmlBook{
         return new ArrayList<>(
                 Arrays.asList(
                         HtmlChapter.fromBuffer(
-                                getName(), 
+                                source.getName(), 
                                 this.content)));
     }
     

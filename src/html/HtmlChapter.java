@@ -1,8 +1,6 @@
 package html;
 
 import common.IO;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -55,21 +53,6 @@ public class HtmlChapter implements Iterable<HtmlEntity>, Cloneable{
     private final String filename;
     
     private int modCount = 0;
-    
-    /**
-     * <p>Constructs an HtmlChapter representing the contents of the File {@code f}. Calls
-     * {@link #HtmlChapter(String,Scanner) this(String,Scanner)} using
-     * {@link java.io.File.getName() the file's name} and a new Scanner of {@code f}.</p>
-     * @param f the File whose contents go into this HtmlChapter
-     * @throws FileNotFoundException if {@code f} does not exist or cannot be read
-     */
-    public HtmlChapter(File f) throws FileNotFoundException{
-        this(
-                f.getName(), 
-                new Scanner(
-                        readFile(new Scanner(f, IO.ENCODING))
-                        .toString()));
-    }
     
     /**
      * <p>Constructs an HtmlChapter that believes its filename is {@code name} and which gets the
