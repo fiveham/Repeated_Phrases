@@ -152,7 +152,7 @@ class DataManager {
                 .filter(data::get)
                 .collect(Collectors.toSet());
     }
-
+    
     private static List<AnchorInfo> generateAnchorInfo(
             Map<Chapter, List<Quote>> diQuotes, 
             Trail trail){
