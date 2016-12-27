@@ -486,7 +486,7 @@ public class RepeatedPhrasesUI extends JFrame {
         String trail = trailFileField.getText();
         String phraseSizeLimit = phraseSizeLimitField.getText();
         
-        return new String[]{ trail, phraseSizeLimit };
+        return new String[]{trail, phraseSizeLimit};
     }
     
     /**
