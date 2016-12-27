@@ -1065,7 +1065,6 @@ public class HtmlBook{
                 "PQ_0_THE_PRINCESS_AND_THE_QUEEN.html#FOOTNOTE"
         };
         
-        //TODO move these boilerplate assembly details into HtmlChapter constructor
         IntStream.range(0, PQ_FINAL_FILE_COUNT)
                 .parallel()
                 .forEach((i) -> {
