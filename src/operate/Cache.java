@@ -1,9 +1,5 @@
 package operate;
 
-//TODO add in the option to choose how to respond to non-equal caches, 
-//such as returning the same existing output even if the caches are different 
-//when that difference meets certain criteria.
-//Use BiPredicate<Cache, Cache>
 public class Cache {
     
     private final Integer limit;

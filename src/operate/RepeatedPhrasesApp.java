@@ -27,7 +27,6 @@ import text.Quote;
 
 public class RepeatedPhrasesApp {
     
-    //private final DataManager dataManager;
     private final Consumer<String> msg;
     
     private final Manager<Collection<HtmlChapter>> htmlChaptersManager;
@@ -36,17 +35,20 @@ public class RepeatedPhrasesApp {
     private final Manager<Collection<HtmlChapter>> linkedChaptersManager;
     
     public RepeatedPhrasesApp(Consumer<String> msg){
-        //this.dataManager = new DataManager();
         this.msg = msg;
         
-        this.htmlChaptersManager = 
-                new Manager<>((limit, trail) -> generateHtmlChapters());
-        this.chaptersManager = 
-                new Manager<>((limit, trail) -> generateChapters());
-        this.anchorsManager = 
-                new Manager<>((limit, trail) -> generateAnchorData(trail));
-        this.linkedChaptersManager = 
-                new Manager<>((limit, trail) -> generateLinkedChapters(limit, trail));
+        this.htmlChaptersManager = new Manager<>(
+                (limit, trail) -> generateHtmlChapters(), 
+                Cache::equals);
+        this.chaptersManager = new Manager<>(
+                (limit, trail) -> generateChapters(), 
+                Cache::equals);
+        this.anchorsManager = new Manager<>(
+                (limit, trail) -> generateAnchorData(trail), 
+                Cache::equals);
+        this.linkedChaptersManager = new Manager<>(
+                (limit, trail) -> generateLinkedChapters(limit, trail), 
+                Cache::equals);
     }
     
     //Getters
