@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -107,32 +108,38 @@ public class Trail implements Comparator<Location>{
         return new Trail(data, chapterNames);
     }
     
-    private Trail(Stream<String[]> data, Map<String, Chapter> chapterNames){
-        Map<Chapter, TrailElement> innerMap = chapterNames.values().stream()
-                .collect(Collectors.toMap((c) -> c, TrailElement::new));
+    private Trail(Stream<String[]> anchorsAsText, Map<String, Chapter> chaptersByName){
+        Map<Chapter, TrailElement> trailElementsByChapter = chaptersByName.values().stream()
+                .collect(Collectors.toMap(
+                        Function.identity(), 
+                        TrailElement::new));
         
-        this.list = data.map((d) -> asChapters(d, chapterNames))
-                .peek((cs) -> {
-                    TrailElement te = innerMap.get(cs[HERE_INDEX]);
-                    te.setPrev(innerMap.get(cs[PREV_INDEX]));
-                    te.setNext(innerMap.get(cs[NEXT_INDEX]));
+        this.list = anchorsAsText.map((anchorData) -> asChapters(anchorData, chaptersByName))
+                .peek((chapters) -> {
+                    TrailElement te = trailElementsByChapter.get(chapters[HERE_INDEX]);
+                    te.setPrev(trailElementsByChapter.get(chapters[PREV_INDEX]));
+                    te.setNext(trailElementsByChapter.get(chapters[NEXT_INDEX]));
                 })
-                .map(innerMap::get)
+                .map(trailElementsByChapter::get)
                 .collect(Collectors.toList());
         this.map = IntStream.range(0, list.size())
                 .mapToObj(Integer::valueOf)
-                .collect(Collectors.toMap((i) -> list.get(i).chapter, (i) -> i));
+                .collect(Collectors.toMap(
+                        (i) -> list.get(i).chapter, 
+                        Function.identity()));
     }
     
-    private static final int 
-            PREV_INDEX = 0, 
-            HERE_INDEX = 1, 
-            NEXT_INDEX = 2;
+    private static final int PREV_INDEX = 0;
+    private static final int HERE_INDEX = 1;
+    private static final int NEXT_INDEX = 2;
     
-    private static Chapter[] asChapters(String[] s, Map<String, Chapter> chapterNames){
-        Chapter[] result = new Chapter[s.length];
+    private static Chapter[] asChapters(
+            String[] filenamesForAnchor, 
+            Map<String, Chapter> chapterNames){
+        
+        Chapter[] result = new Chapter[filenamesForAnchor.length];
         for(int i = 0; i < result.length; i++){
-            result[i] = chapterNames.get(s[i]);
+            result[i] = chapterNames.get(filenamesForAnchor[i]);
         }
         return result;
     }
