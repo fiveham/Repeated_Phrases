@@ -37,16 +37,4 @@ public class PhraseBox extends HashMap<Phrase, List<Location>>{
 	                return result;
 	            });
 	}
-	
-    /**
-     * <p>Returns a list of the locations at which {@code phrase} occurs.</p>
-     * @param phrase any object, to maintain compatibility with
-     * {@link java.util.HashMap#get(Object) HashMap.get(Object)}, but should be a String phrase to
-     * get a real result
-     * @return a list of the locations at which {@code phrase} occurs if {@code phrase} is a String
-     * and has been mapped in the underlying HashMap
-     */
-	public List<Location> get(Phrase phrase){
-		return get(phrase);
-	}
 }
