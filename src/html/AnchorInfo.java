@@ -9,6 +9,8 @@ import text.Phrase;
  * phrase to another instance of the same phrase.</p>
  */
 public class AnchorInfo implements Comparable<AnchorInfo>{
+    
+    public static final int COLUMN_COUNT = 3;
 	
     /**
      * <p>The phrase whose first word will receive the anchor tag. This string will also be the

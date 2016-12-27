@@ -1,6 +1,8 @@
 package operate;
 
 import common.IO;
+import html.AnchorInfo;
+
 import java.io.File;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -91,13 +93,6 @@ public class Trail implements Comparator<Location>{
     }
     
     /**
-     * <p>Number of columns to anticipate in input file: {@value}</p> <p>The fourth column is unused
-     * at this time, but expecting it allows the third column to be cleanly isolated if a fourth
-     * column exists.</p>
-     */
-    private static final int COLUMN_COUNT = 4;
-    
-    /**
      * <p>Returns a list of {@code TrailElement}s describing each chapter's predecessor and
      * successor.</p>
      * @param trailFilename the name of the trail-file from which trail data is extracted
@@ -108,7 +103,7 @@ public class Trail implements Comparator<Location>{
                 trailFile, 
                 Scanner::nextLine, 
                 IO::scannerHasNonEmptyNextLine)
-                .map((line) -> line.split("\t", COLUMN_COUNT));
+                .map((line) -> line.split("\t", AnchorInfo.COLUMN_COUNT));
         return new Trail(data, chapterNames);
     }
     
