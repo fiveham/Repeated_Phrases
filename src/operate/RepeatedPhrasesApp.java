@@ -57,8 +57,6 @@ public class RepeatedPhrasesApp {
         return this.msg;
     }
     
-    //Resources
-    
     public Collection<HtmlChapter> getHtmlChapters(){
         return htmlChaptersManager.get(null, null);
     }
