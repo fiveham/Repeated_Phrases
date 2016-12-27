@@ -18,11 +18,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import text.Chapter;
 import text.Location;
 import text.Phrase;
-import text.PhraseBox;
 import text.Quote;
 
 public class RepeatedPhrasesApp {
@@ -211,7 +209,7 @@ public class RepeatedPhrasesApp {
         
         List<AnchorInfo> result = new ArrayList<>();
         
-        PhraseBox phrasebox = phrasesToLocations(diQuotes, trail);
+        Map<Phrase, List<Location>> phrasebox = phrasesToLocations(diQuotes, trail);
         for(Chapter chapter : diQuotes.keySet()){
             List<Quote> quotes = diQuotes.get(chapter);
             quotes.sort(null);
@@ -232,11 +230,20 @@ public class RepeatedPhrasesApp {
         return result;
     }
 
-    private static PhraseBox phrasesToLocations(Map<Chapter, List<Quote>> diQuotes, Trail trail){
-        PhraseBox result = new PhraseBox();
+    private static Map<Phrase, List<Location>> phrasesToLocations(Map<Chapter, List<Quote>> diQuotes, Trail trail){
+        Map<Phrase, List<Location>> result = Collections.synchronizedMap(new HashMap<>());
         diQuotes.keySet().parallelStream().forEach(
                 (c) -> diQuotes.get(c).parallelStream().forEach(
-                        (q) -> result.add(q.getPhrase(), q.getLocation())));
+                        //(q) -> result.add(q.getPhrase(), q.getLocation())));
+                        (q) -> result.compute(
+                                q.getPhrase(), 
+                                (p, locs) -> {
+                                    List<Location> locations = locs == null 
+                                            ? new ArrayList<>()
+                                            : result.get(p);
+                                    locations.add(q.getLocation());
+                                    return locations;
+                                })));
         
         result.keySet().parallelStream()
                 .map(result::get)
