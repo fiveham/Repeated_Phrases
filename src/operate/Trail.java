@@ -61,15 +61,15 @@ public class Trail implements Comparator<Location>{
         private TrailElement prev;
         private TrailElement next;
         
-        TrailElement(Chapter ch){
+        private TrailElement(Chapter ch){
             this.chapter = ch;
         }
         
-        void setPrev(TrailElement prev){
+        private void setPrev(TrailElement prev){
             this.prev = prev;
         }
         
-        void setNext(TrailElement next){
+        private void setNext(TrailElement next){
             this.next = next;
         }
         
