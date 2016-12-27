@@ -11,18 +11,13 @@ import java.util.Set;
  * <p>{@link #printPhrasesWithLocations()} and {@link #removeUniques()} are the non-wrapper methods
  * that justify this being its own class.</p>
  */
-public class PhraseBox{
-	
-    /**
-     * <p>The wrapped HashMap.</p>
-     */
-	private final Map<Phrase, List<Location>> map;
+public class PhraseBox extends HashMap<Phrase, List<Location>>{
 	
     /**
      * <p>Constructs a PhraseBox with no contents.</p>
      */
 	public PhraseBox() {
-		map = new HashMap<>();
+		super();
 	}
 	
     /**
@@ -32,7 +27,7 @@ public class PhraseBox{
      * PhraseBox.
      */
 	public Set<Phrase> getPhrases(){
-		return map.keySet();
+		return keySet();
 	}
 	
     /**
@@ -42,12 +37,12 @@ public class PhraseBox{
      * @param location a location at which {@code phrase} occurs
      */
 	public synchronized void add(Phrase phrase, Location location){
-	    map.compute(
+	    compute(
 	            phrase, 
 	            (p, list) -> {
 	                List<Location> result = list == null 
 	                        ? new ArrayList<>() 
-	                        : map.get(p);
+	                        : get(p);
                     result.add(location);
 	                return result;
 	            });
@@ -62,6 +57,6 @@ public class PhraseBox{
      * and has been mapped in the underlying HashMap
      */
 	public List<Location> get(Phrase phrase){
-		return map.get(phrase);
+		return get(phrase);
 	}
 }
