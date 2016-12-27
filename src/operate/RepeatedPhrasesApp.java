@@ -238,7 +238,7 @@ public class RepeatedPhrasesApp {
                 (c) -> diQuotes.get(c).parallelStream().forEach(
                         (q) -> result.add(q.getPhrase(), q.getLocation())));
         
-        result.getPhrases().parallelStream()
+        result.keySet().parallelStream()
                 .map(result::get)
                 .forEach((l) -> l.sort(trail));
         

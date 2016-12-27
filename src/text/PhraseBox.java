@@ -21,16 +21,6 @@ public class PhraseBox extends HashMap<Phrase, List<Location>>{
 	}
 	
     /**
-     * <p>Returns a {@link java.util.Set Set} of the phrases that have mapped Locations in this
-     * PhraseBox.</p>
-     * @return a {@link java.util.Set Set} of the phrases that have mapped Locations in this
-     * PhraseBox.
-     */
-	public Set<Phrase> getPhrases(){
-		return keySet();
-	}
-	
-    /**
      * <p>Adds {@code location} to the {@literal List<Location>} mapped to {@code phrase} in the
      * underlying hashmap.</p>
      * @param phrase the phrase being given another Location
