@@ -1024,10 +1024,6 @@ public class HtmlBook{
         return result.toString();
     }
     
-    //TODO make sure that splitChapter implementation methods can't bastardize the HtmlBook 
-    //instance to which they belong if they're called more than once.
-    //Make sure that headers, footers, newlineP changes, and other alterations can't be made 
-    //multiple times to the same HtmlBook object
     private Collection<HtmlChapter> handleNovella(){
         return new ArrayList<>(
                 Arrays.asList(
