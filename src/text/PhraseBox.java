@@ -42,13 +42,15 @@ public class PhraseBox{
      * @param location a location at which {@code phrase} occurs
      */
 	public synchronized void add(Phrase phrase, Location location){
-		if(map.containsKey(phrase)){
-			map.get(phrase).add(location);
-		} else{
-			List<Location> l = new ArrayList<>();
-			l.add(location);
-			map.put(phrase, l);
-		}
+	    map.compute(
+	            phrase, 
+	            (p, list) -> {
+	                List<Location> result = list == null 
+	                        ? new ArrayList<>() 
+	                        : map.get(p);
+                    result.add(location);
+	                return result;
+	            });
 	}
 	
     /**
