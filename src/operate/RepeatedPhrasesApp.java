@@ -234,7 +234,6 @@ public class RepeatedPhrasesApp {
         Map<Phrase, List<Location>> result = Collections.synchronizedMap(new HashMap<>());
         diQuotes.keySet().parallelStream().forEach(
                 (c) -> diQuotes.get(c).parallelStream().forEach(
-                        //(q) -> result.add(q.getPhrase(), q.getLocation())));
                         (q) -> result.compute(
                                 q.getPhrase(), 
                                 (p, locs) -> {
