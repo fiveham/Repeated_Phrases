@@ -504,10 +504,10 @@ public class HtmlBook{
         });
         content = content.stream()
                 .filter(Objects::nonNull)
-                .filter(HtmlEntity::notDiv)
-                .filter(HtmlEntity::notBlockquote)
-                .filter(HtmlEntity::notImg)
-                .filter(HtmlEntity::notNbsp)
+                .filter(Tag::notDiv)
+                .filter(Tag::notBlockquote)
+                .filter(Tag::notImg)
+                .filter(CharCode::notNbsp)
                 .collect(Collectors.toList());
     }
     

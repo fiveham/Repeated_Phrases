@@ -94,6 +94,10 @@ public class Tag extends HtmlEntity {
 		return Tag.class.isInstance(h) && DIV.equals(((Tag)h).getType());
 	}
 	
+	static boolean notDiv(HtmlEntity h){
+	    return !isDiv(h);
+	}
+	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag, has type "div", and is opening.</p>
      */
@@ -115,11 +119,19 @@ public class Tag extends HtmlEntity {
 		return Tag.class.isInstance(h) && BLOCKQUOTE.equals(((Tag)h).getType());
 	}
 	
+	static boolean notBlockquote(HtmlEntity h){
+	    return !isBlockquote(h);
+	}
+	
     /**
      * <p>Evaluates to true if the HTMLEntity tested is a Tag and has type "img".</p>
      */
 	public static boolean isImg(HtmlEntity h){
 		return Tag.class.isInstance(h) && IMG.equals(((Tag)h).getType());
+	}
+	
+	static boolean notImg(HtmlEntity h){
+	    return !isImg(h);
 	}
 	
     /**

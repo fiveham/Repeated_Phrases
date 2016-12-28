@@ -26,20 +26,4 @@ public abstract class HtmlEntity {
      * @return true if the {@code c} matches {@code h}, false otherwise
      */
     public abstract boolean match(char c);
-    
-    boolean notDiv(){
-        return !Tag.isDiv(this);
-    }
-    
-    boolean notBlockquote(){
-        return !Tag.isBlockquote(this);
-    }
-    
-    boolean notImg(){
-        return !Tag.isImg(this);
-    }
-    
-    boolean notNbsp(){
-        return !CharCode.isNbsp(this);
-    }
 }

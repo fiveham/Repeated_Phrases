@@ -25,6 +25,10 @@ public class CharCode extends HtmlEntity {
 	    return CharCode.class.isInstance(h) && NBSP.equals(((CharCode)h).code);
 	}
 	
+	static boolean notNbsp(HtmlEntity h){
+	    return !isNbsp(h);
+	}
+	
     /**
      * <p>The text of this HTML character code between the ampersand that begins it and the
      * semicolon that ends it.</p>
