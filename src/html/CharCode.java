@@ -98,7 +98,7 @@ public class CharCode extends HtmlEntity {
      * that of this {@code Code}.
      */
 	public boolean equals(Object o){
-		return o instanceof CharCode && code.equals( ((CharCode)o).code );
+		return o instanceof CharCode && code.equals(((CharCode)o).code);
 	}
 	
 	@Override

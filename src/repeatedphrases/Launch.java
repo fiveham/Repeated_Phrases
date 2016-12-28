@@ -45,7 +45,7 @@ public class Launch {
             p.waitFor();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch( InterruptedException e){
+        } catch(InterruptedException e){
         	e.printStackTrace();
         }
 	}
@@ -57,8 +57,10 @@ public class Launch {
      * @return the name of the jar file from which this class was launched
      */
 	private static String getJarName(){
-		String[] files = new File(".").list( (dir,name) -> name.endsWith(".jar") );
-		return (files.length == 1) ? files[0] : DEFAULT_JAR_NAME;
+		String[] files = new File(".").list((dir,name) -> name.endsWith(".jar"));
+		return files.length == 1 
+		        ? files[0] 
+		        : DEFAULT_JAR_NAME;
 	}
 	
     /**
@@ -79,8 +81,8 @@ public class Launch {
 	    public void run(){
 	        try{
 	            BufferedReader b = new BufferedReader(new InputStreamReader(src));
-	            while ( b.readLine() != null);
-            } catch (IOException e){}
+	            while(b.readLine() != null);
+            } catch(IOException e){}
 	    }
 	}
 }

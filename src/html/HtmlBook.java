@@ -1087,7 +1087,7 @@ public class HtmlBook{
                             Direction.PREV);
                     file.set(
                             noteAnchorIndex, 
-                            new Tag("a id=\"FOOTNOTE\" href=\"" + href + "\"" ));
+                            new Tag("a id=\"FOOTNOTE\" href=\"" + href + "\""));
                 });
         
         return new ArrayList<>(Arrays.asList(files));
