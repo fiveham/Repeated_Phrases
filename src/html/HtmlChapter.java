@@ -113,7 +113,10 @@ public class HtmlChapter implements Iterable<HtmlEntity>, Cloneable{
         Tag close = new Tag(a.closingTagText());
         //add close tag on even indices (e.g. rightmost insert position) 
         //and add open tag on odd indices.
-        Function<Integer,Tag> nextTag = (i) -> i%2==0 ? close : open; 
+        Function<Integer,Tag> nextTag = 
+                (i) -> i % 2 == 0 
+                        ? close 
+                        : open; 
         
         for(int i = 0; i < insertPoints.size(); i++){
             content.add(insertPoints.get(i), nextTag.apply(i));
