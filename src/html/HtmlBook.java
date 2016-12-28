@@ -902,8 +902,9 @@ public class HtmlBook{
     private boolean isNovel(){
         return BookData
                 .valueOf(
-                        BookData.class, 
-                        source.getName().substring(0, source.getName().length() - IO.HTML_EXT.length()))
+                        source
+                        .getName()
+                        .substring(0, source.getName().length() - IO.HTML_EXT.length()))
                 .isNovel();
     }
     
