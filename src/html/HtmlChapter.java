@@ -46,8 +46,6 @@ public class HtmlChapter extends HtmlFile implements Iterable<HtmlEntity>, Clone
      */
     private final String filename;
     
-    private int modCount = 0;
-    
     /**
      * <p>Constructs an HtmlChapter based on the elements of {@code content}, with the filename
      * {@code name}.</p>

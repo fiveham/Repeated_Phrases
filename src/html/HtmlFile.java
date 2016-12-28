@@ -11,6 +11,8 @@ public class HtmlFile {
      * <p>The underlying list.</p>
      */
     protected List<HtmlEntity> content;
+
+    protected int modCount = 0;
     
     protected HtmlFile(List<HtmlEntity> content){
         this.content = content;

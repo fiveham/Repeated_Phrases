@@ -35,8 +35,6 @@ public class HtmlBook extends HtmlFile{
      */
     private final File source;
     
-    private int modCount = 0;
-    
     /**
      * <p>Constructs an HtmlBook representing the contents of the File {@code f}. Calls
      * {@link #HtmlBook(String,Scanner) this(String,Scanner)} using
