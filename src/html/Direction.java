@@ -16,8 +16,12 @@ import java.util.function.IntUnaryOperator;
  */
 public enum Direction{
 	
-	NEXT( (i) -> i+1 , (i, c) -> i<c.size() ), 
-	PREV( (i) -> i-1 , (i, c) -> i>=0       );
+	NEXT(
+	        (i) -> i + 1 , 
+	        (i, c) -> i < c.size()), 
+	PREV(
+	        (i) -> i - 1 , 
+	        (i, c) -> i >= 0);
 	
 	private final IntUnaryOperator op;
 	
@@ -58,6 +62,6 @@ public enum Direction{
      * @return true if {@code i} is within the bounds of {@code c}, false otherwise.
      */
 	public boolean crawlTest(int i, Collection<?> c){
-		return crawlTest.test(i,c);
+		return crawlTest.test(i, c);
 	}
 }
