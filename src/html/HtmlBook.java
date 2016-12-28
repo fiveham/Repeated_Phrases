@@ -27,7 +27,7 @@ import text.Phrase;
  * <p>Represents an HTML file and provides some convenience methods for working with an HTML
  * file.</p>
  */
-public class HtmlBook{
+public class HtmlBook extends HtmlFile{
     
     /**
      * <p>The number of meaningful components in a chapter's filename. These are the source book,
@@ -38,11 +38,6 @@ public class HtmlBook{
      * name remains in one piece.</p>
      */
     public static final int FILENAME_ELEMENT_COUNT = 3;
-    
-    /**
-     * <p>The underlying list.</p>
-     */
-    private List<HtmlEntity> content;
     
     /**
      * <p>The literal filename of the file to which the content of this HtmlBook belongs. Contains
@@ -76,7 +71,7 @@ public class HtmlBook{
      * @param scan the Scanner used to obtain literal text to parse into HTMLEntitys
      */
     private HtmlBook(File source, Scanner scan) {
-        this.content = getHtmlBookContent(scan);
+        super(getHtmlBookContent(scan));
         this.source = source;
     }
     

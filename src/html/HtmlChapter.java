@@ -17,7 +17,7 @@ import text.Phrase;
  * <p>Represents an HTML file and provides some convenience methods for working with an HTML
  * file.</p>
  */
-public class HtmlChapter implements Iterable<HtmlEntity>, Cloneable{
+public class HtmlChapter extends HtmlFile implements Iterable<HtmlEntity>, Cloneable{
     
     /**
      * <p>The index of the chapter's title in the array resulting from calling
@@ -41,11 +41,6 @@ public class HtmlChapter implements Iterable<HtmlEntity>, Cloneable{
     public static final int FILENAME_ELEMENT_COUNT = 3;
     
     /**
-     * <p>The underlying list.</p>
-     */
-    private List<HtmlEntity> content;
-    
-    /**
      * <p>The literal filename of the file to which the content of this HtmlChapter belongs. Contains
      * an extension and possibly a folder reference.</p>
      */
@@ -60,7 +55,7 @@ public class HtmlChapter implements Iterable<HtmlEntity>, Cloneable{
      * @param content a list whose elements will be the elements of this HtmlChapter
      */
     private HtmlChapter(String name, List<HtmlEntity> content){
-        this.content = new ArrayList<>(content);
+        super(new ArrayList<>(content));
         filename = IO.stripFolder(name);
     }
     
