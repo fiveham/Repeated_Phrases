@@ -204,33 +204,45 @@ public class RepeatedPhrasesApp {
     }
 
     private static List<AnchorInfo> generateAnchorInfo(
-            Map<Chapter, List<Quote>> diQuotes, 
+            Map<Chapter, List<Quote>> duplicateIndependentQuotes, 
             Trail trail){
         
-        List<AnchorInfo> result = new ArrayList<>();
-        
-        Map<Phrase, List<Location>> phrasebox = phrasesToLocations(diQuotes, trail);
-        for(Chapter chapter : diQuotes.keySet()){
-            List<Quote> quotes = diQuotes.get(chapter);
-            quotes.sort(null);
-            
-            for(Quote quote : quotes){
-                Phrase phrase = quote.getPhrase();
-                
-                //XXX get all anchors for locs at once and add to result in bulk
-                List<Location> locs = phrasebox.get(phrase);
-                
-                Location linkTo = quote.getLocation().after(locs);
-                
-                AnchorInfo ai = new AnchorInfo(phrase.getText(), quote.getLocation(), linkTo);
-                result.add(ai);
-            }
-        }
-        
-        return result;
+        Map<Phrase, List<Location>> locationsOfPhrases = phrasesToLocations(
+                duplicateIndependentQuotes, 
+                trail);
+        return duplicateIndependentQuotes.values().stream()
+                .map(
+                        (quotes) -> quotes.stream()
+                                .sorted()
+                                .map(
+                                        (quote) -> {
+                                            Phrase phrase = quote.getPhrase();
+                                            Location location = quote.getLocation();
+                                            
+                                            List<Location> locations = locationsOfPhrases
+                                                    .get(phrase);
+                                            
+                                            Location linkTo = location.after(locations);
+                                            
+                                            return new AnchorInfo(
+                                                    phrase.getText(), 
+                                                    location, 
+                                                    linkTo);
+                                        })
+                                .collect(Collectors.toList()))
+                .reduce(
+                        (a, b) -> {
+                            a.addAll(b);
+                            return a;
+                        })
+                .get();
     }
 
-    private static Map<Phrase, List<Location>> phrasesToLocations(Map<Chapter, List<Quote>> diQuotes, Trail trail){
+    private static Map<Phrase, List<Location>> phrasesToLocations(
+            Map<Chapter, 
+            List<Quote>> diQuotes, 
+            Trail trail){
+        
         Map<Phrase, List<Location>> result = Collections.synchronizedMap(new HashMap<>());
         diQuotes.keySet().parallelStream().forEach(
                 (c) -> diQuotes.get(c).parallelStream().forEach(
