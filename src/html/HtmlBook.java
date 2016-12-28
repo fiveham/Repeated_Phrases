@@ -878,41 +878,28 @@ public class HtmlBook{
     }
     
     private static final Map<String, String> NOVEL_FIRST_WORDS = 
-            BookData.words(BookData::isNovel, BookData::firstWords);
+            BookData.words(BookData::isNovel, BookData::getFirstWords);
     
     private static final Map<String, String> NOVEL_LAST_WORDS = 
-            BookData.words(BookData::isNovel, BookData::lastWords);
+            BookData.words(BookData::isNovel, BookData::getLastWords);
     
     private static final Map<String, String> NOVELLA_FIRST_WORDS = 
-            BookData.words(BookData::isNovella, BookData::firstWords);
+            BookData.words(BookData::isNovella, BookData::getFirstWords);
     
     private static final Map<String, String> NOVELLA_LAST_WORDS = 
-            BookData.words(BookData::isNovella, BookData::lastWords);
+            BookData.words(BookData::isNovella, BookData::getLastWords);
     
     private Collection<HtmlChapter> splitChapters(){
-        if(isNovel()){
-            return handleNovel();
-        } else if(isPQ()){
-            return handlePQ();
-        } else{
-            return handleNovella();
-        }
-    }
-    
-    private boolean isNovel(){
         return BookData
                 .valueOf(
                         source
                         .getName()
                         .substring(0, source.getName().length() - IO.HTML_EXT.length()))
-                .isNovel();
+                .getChapterizer()
+                .apply(this);
     }
     
-    private boolean isPQ(){
-        return BookData.PQ.filename().equals(source.getName());
-    }
-    
-    private Collection<HtmlChapter> handleNovel(){
+    public static Collection<HtmlChapter> chapterizeNovel(HtmlBook novel){
         List<HtmlChapter> result = new ArrayList<>();
         
         List<HtmlEntity> buffer = new ArrayList<>();
@@ -921,17 +908,17 @@ public class HtmlBook{
         int writeCount = 0;
         
         for(
-                Iterator<int[]> piter = new ParagraphIterator(); 
+                Iterator<int[]> piter = novel.new ParagraphIterator(); 
                 piter.hasNext();){
             int[] paragraphBounds = piter.next();
             
-            List<HtmlEntity> paragraph = section(paragraphBounds);
+            List<HtmlEntity> paragraph = novel.section(paragraphBounds);
             
             if(isTitleParagraph(paragraph)){
                 if(!buffer.isEmpty()){
                     //dump the buffer
                     result.add(HtmlChapter.fromBuffer(
-                            chapterFileName(writeCount, chapterName), 
+                            novel.chapterFileName(writeCount, chapterName), 
                             buffer));
                     writeCount++;
                 }
@@ -948,7 +935,7 @@ public class HtmlBook{
         //reached end of file
         //dump the buffer to a file
         result.add(HtmlChapter.fromBuffer(
-                chapterFileName(writeCount, chapterName), 
+                novel.chapterFileName(writeCount, chapterName), 
                 buffer));
         
         return result;
@@ -1025,33 +1012,33 @@ public class HtmlBook{
         return result.toString();
     }
     
-    private Collection<HtmlChapter> handleNovella(){
+    public static Collection<HtmlChapter> chapterizeNovella(HtmlBook novella){
         return new ArrayList<>(
                 Arrays.asList(
                         HtmlChapter.fromBuffer(
-                                source.getName(), 
-                                this.content)));
+                                novella.source.getName(), 
+                                novella.content)));
     }
     
-    private Collection<HtmlChapter> handlePQ(){
+    public static Collection<HtmlChapter> chapterizePQ(HtmlBook pq){
         HtmlChapter[] files;
         {
             HtmlChapter body;
             {
-                int footnoteIndex = adjacentElement(
-                        (i) -> hasLiteralAt("Footnote",i), Direction.PREV, content.size());
-                int bodyEndIndex = adjacentElement(footnoteIndex, Tag::isPOpen, Direction.PREV);
-                List<HtmlEntity> bodySection = section(0,bodyEndIndex);
+                int footnoteIndex = pq.adjacentElement(
+                        (i) -> pq.hasLiteralAt("Footnote",i), Direction.PREV, pq.content.size());
+                int bodyEndIndex = pq.adjacentElement(footnoteIndex, Tag::isPOpen, Direction.PREV);
+                List<HtmlEntity> bodySection = pq.section(0,bodyEndIndex);
                 body = HtmlChapter.fromBuffer("PQ_0_THE_PRINCESS_AND_THE_QUEEN.html", bodySection);
             }
             
             HtmlChapter footnote;
             {
-                int footnoteStart = adjacentElement(
-                        content.size(), 
+                int footnoteStart = pq.adjacentElement(
+                        pq.content.size(), 
                         Tag::isPOpen, 
                         Direction.PREV);
-                List<HtmlEntity> footnoteSection = section(footnoteStart);
+                List<HtmlEntity> footnoteSection = pq.section(footnoteStart);
                 footnote = HtmlChapter.fromBuffer("PQ_1_FOOTNOTE.html", footnoteSection);
             }
             
