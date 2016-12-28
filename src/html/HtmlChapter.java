@@ -460,8 +460,6 @@ public class HtmlChapter extends HtmlFile implements Iterable<HtmlEntity>, Clone
                 : null;
     }
     
-    private static final int BEFORE_BEGINNING = -1;
-    
     @Override
     public HtmlChapter clone(){
         return new HtmlChapter(filename, content);

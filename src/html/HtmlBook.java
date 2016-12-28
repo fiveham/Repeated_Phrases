@@ -30,16 +30,6 @@ import text.Phrase;
 public class HtmlBook extends HtmlFile{
     
     /**
-     * <p>The number of meaningful components in a chapter's filename. These are the source book,
-     * the chapter number, and the chapter name. Chapter file names are structured as follows:
-     * "BOOKNAME_CHAPTERINDEX_MULTI_WORD_CHAPTER_TITLE.html" Splitting that String at all
-     * underscores will split a multi-word chapter name (for example "THE WATCHER") into multiple
-     * entries in the resulting array. Sending this limit to String.split() ensures that the chapter
-     * name remains in one piece.</p>
-     */
-    public static final int FILENAME_ELEMENT_COUNT = 3;
-    
-    /**
      * <p>The literal filename of the file to which the content of this HtmlBook belongs. Contains
      * an extension and possibly a folder reference.</p>
      */
@@ -580,8 +570,6 @@ public class HtmlBook extends HtmlFile{
         
         return adjacentElement(literalIndex, Tag::isPOpen, Direction.PREV);
     }
-    
-    private static final int BEFORE_BEGINNING = -1;
     
     /**
      * <p>Returns the index in {@code file} of the closing "p" tag of the last paragraph that ends

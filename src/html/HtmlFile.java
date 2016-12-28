@@ -1,9 +1,10 @@
 package html;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class HtmlFile {
+
+    protected static final int BEFORE_BEGINNING = -1;
     
     /**
      * <p>The underlying list.</p>
