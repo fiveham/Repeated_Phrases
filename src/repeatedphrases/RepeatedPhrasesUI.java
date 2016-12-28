@@ -298,10 +298,11 @@ public class RepeatedPhrasesUI extends JFrame {
      * @param evt
      */
     private void chapterizeLinkButtonActionPerformed(ActionEvent evt) {
-        String[] trailAndLimit = trailAndLimit();
         buttonPress(
                 chapterizeLinkButton, 
-        		"Doing all the work (" + trailAndLimit[0] + ", " + trailAndLimit[1] + ")", 
+        		"Doing all the work (" 
+        		        + trailFileField.getText() + ", " 
+        		        + phraseSizeLimitField.getText() + ")", 
         		() -> "Done: Chapters ready: " + Folder.READABLE.getFolderName(), 
         		() -> {
         		    int limit;
@@ -332,10 +333,11 @@ public class RepeatedPhrasesUI extends JFrame {
      * @param evt
      */
     private void changeOrderButtonActionPerformed(ActionEvent evt) {
-        String[] trailAndLimit = trailAndLimit();
         buttonPress(
                 changeOrderButton, 
-        		"Changing chapter order (" + trailAndLimit[0] + ", " + trailAndLimit[1] + ")", 
+        		"Changing chapter order (" 
+                        + trailFileField.getText() + ", " 
+        		        + phraseSizeLimitField.getText() + ")", 
         		() -> "Done: Chapter order changed", 
         		() -> {
         		    int limit;
@@ -475,19 +477,6 @@ public class RepeatedPhrasesUI extends JFrame {
      * taken.</p>
      */
     private Consumer<String> statusLabelMsg = statusLabel::setText;
-    
-    /**
-     * <p>Returns a string array containing the trail file specified by the user in the GUI as the
-     * first element and the phrase size limit specified by the user in the GUI as the second
-     * element. The trail-file element is not guaranteed to name an existing, readable, structurally
-     * correct trail file. The size term is not guaranteed to parse as an int.</p>
-     */
-    private String[] trailAndLimit(){
-        String trail = trailFileField.getText();
-        String phraseSizeLimit = phraseSizeLimitField.getText();
-        
-        return new String[]{trail, phraseSizeLimit};
-    }
     
     /**
      * 
