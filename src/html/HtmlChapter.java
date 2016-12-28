@@ -4,7 +4,6 @@ import common.IO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Iterator;
 import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
@@ -53,19 +52,6 @@ public class HtmlChapter implements Iterable<HtmlEntity>, Cloneable{
     private final String filename;
     
     private int modCount = 0;
-    
-    /**
-     * <p>Constructs an HtmlChapter that believes its filename is {@code name} and which gets the
-     * literal text it turns into HTMLEntitys via {@code scan}.</p>
-     * @param name the filename that this HtmlChapter uses to determine information about itself
-     * assuming that the filename is structured the way that the chapter files are split by
-     * {@link operate.SplitChapters SplitChapters}
-     * @param scan the Scanner used to obtain literal text to parse into HTMLEntitys
-     */
-    private HtmlChapter(String name, Scanner scan) {
-        content = getHtmlChapterContent(scan);
-        filename = IO.stripFolder(name);
-    }
     
     /**
      * <p>Constructs an HtmlChapter based on the elements of {@code content}, with the filename
@@ -477,108 +463,6 @@ public class HtmlChapter implements Iterable<HtmlEntity>, Cloneable{
         return index >= 0 
                 ? content.get(index) 
                 : null;
-    }
-    
-    /**
-     * <p>Returns a {@literal List<HTMLEntity>} representing the contents of the body scanned by
-     * {@code s}. Each HTML tag, whether opening or closing, gets its own element in this list. Each
-     * HTML character code (&...;) does, too, as does each literal character not part of a tag or a
-     * code.<p> <p>The type of the List returned is
-     * {@link repeatedphrases.ArrayList2 ArrayList2}.</p>
-     * @param s a Scanner that produces the literal text of an HTML file to be rendered as an
-     * {@code HtmlChapter} in memory
-     * @return a {@literal List<HTMLEntity>} representing the contents of the body scanned by
-     * {@code s}
-     */
-    private static ArrayList<HtmlEntity> getHtmlChapterContent(Scanner s){
-        ArrayList<HtmlEntity> result = new ArrayList<>();
-        
-        StringBuilder fileBody = readFile(s);
-        
-        //iterate over the individual characters of the html file
-        
-        //stores '>' or ';' while iterating through an HTML tag or character code so we know when 
-        //to stop skipping characters.
-        Character mate = null;
-        
-        StringBuilder tagCode = null;
-        for(int i = 0; i < fileBody.length(); i++){
-            char c = fileBody.charAt(i);
-            
-            if(mate == null){ //we're not looking for a closing angle bracket or a semicolon.
-                Character counterpart = risingCounterpart(c);
-                
-                //if the current character c isn't an opening angle bracket or ampersand.
-                if(counterpart == null){
-                    result.add(new CharLiteral(c));
-                } else{
-                    //c is a special character and we need to take special action.
-                    //store the counterpart of c so we know what to look for later to end this 
-                    //special condition.
-                    mate = counterpart;
-                    
-                    //prepare to add characters to the body of the tag or code
-                    tagCode = new StringBuilder();
-                    //do not add c to the list.
-                }
-            } else if(mate.equals(c)){ //we are looking for a '>' or a ';' //we've found that mate
-                //then we can stop looking for that mate
-                HtmlEntity newEntry = (mate == Tag.END_CHAR) 
-                        ? new Tag(tagCode.toString()) 
-                        : new CharCode(tagCode.toString());
-                result.add(newEntry);
-                mate = null;
-                tagCode = null;
-            } else{ //we're still in the middle of the current special HTML structure
-                tagCode.append(c);
-            }
-        }
-        
-        return result;
-    }
-    
-    /**
-     * <p>Returns the character that ends an HTML tag or an HTML character code if {@code c} is the
-     * character that begins an HTML tag or an HTML character code respectively; returns null
-     * otherwise. This is a particular case of associating &lt; with &gt; and &amp; with ;. By
-     * returning a non-null result only in the case of the characters used to <em>start</em> special
-     * regions in HTML files, we avoid the problem of forcing the reader to wait for an ampersand
-     * every time it finds a semicolon, which is a literal character found throughout the texts to
-     * be processed.</p>
-     * @param c a Character whose closing counterpart for special text in HTML files is returned, if
-     * such a counterpart exists
-     * @return the character that ends an HTML tag or an HTML character code if {@code c} is the
-     * character that begins an HTML tag or an HTML character code respectively; returns null
-     * otherwise
-     */
-    private static Character risingCounterpart(Character c){
-        switch(c){
-            case Tag.START_CHAR : return Tag.END_CHAR;
-            case CharCode.START : return CharCode.END;
-            default             : return null;
-        }
-    }
-      
-    /**
-     * <p>Returns a StringBuilder whose contents are equal to the content returned by the specified
-     * Scanner.</p> <p>Reads content from {@code s} line by line and appends each line, with a
-     * newline character between lines, to a StringBuilder.</p>
-     * @param s the Scanner whose contents are read out, accumulated, and returned
-     * @return a StringBuilder whose contents are equal to the content returned by {@code s}.
-     */
-    private static StringBuilder readFile(Scanner s){
-        StringBuilder result = new StringBuilder();
-        
-        if(s.hasNextLine()){
-            result.append(s.nextLine());
-        }
-        while(s.hasNextLine()){
-            result.append(CharLiteral.NEW_LINE).append(s.nextLine());
-        }
-        
-        s.close();
-        
-        return result;
     }
     
     private static final int BEFORE_BEGINNING = -1;
