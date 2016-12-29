@@ -103,7 +103,7 @@ public class Trail implements Comparator<Location>{
         Stream<String[]> data = IO.fileContentStream(
                 trailFile, 
                 Scanner::nextLine, 
-                IO::scannerHasNonEmptyNextLine)
+                IO::scannerHasNextAndNextLine)
                 .map((line) -> line.split("\t", AnchorInfo.COLUMN_COUNT));
         return new Trail(data, chapterNames);
     }

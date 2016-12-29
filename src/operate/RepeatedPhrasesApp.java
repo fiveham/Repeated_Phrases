@@ -147,6 +147,13 @@ public class RepeatedPhrasesApp {
     //anchorsManager generation methods
 
     private final Map<String, Phrase> phraseTracker = Collections.synchronizedMap(new HashMap<>());
+
+    /**
+     * <p>The default value of the minimum number of words a phrase needs to have for its related 
+     * anchors to be added to output files. Used when such a value is not specified as a command-
+     * line argument.</p>
+     */
+    private static final int PHRASE_SIZE_THRESHOLD_FOR_ANCHOR = 3;
     
     private Collection<AnchorInfo> generateAnchorData(Trail trail){
         Collection<Chapter> chapters = getChapters();
@@ -155,7 +162,7 @@ public class RepeatedPhrasesApp {
                 .collect(Collectors.toMap(
                         Function.identity(), 
                         (c) -> c.getAllQuotes(
-                                IO.PHRASE_SIZE_THRESHOLD_FOR_ANCHOR, 
+                                PHRASE_SIZE_THRESHOLD_FOR_ANCHOR, 
                                 IO.MAX_PHRASE_SIZE, 
                                 phraseTracker)));
         

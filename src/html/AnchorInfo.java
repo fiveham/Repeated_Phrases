@@ -167,13 +167,20 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 			return linkTo.compareTo(a.linkTo);
 		}
 	}
-	
+
+    /**
+     * <p>Delimiter for {@link Location Locations} recorded in quote files. Separates a multi-word 
+     * phrase that contains spaces from the {@link Location#toString() string representations} of 
+     * the locations in the corpus at which that phrase occurs.</p>
+     */
+    private static final String LOCATION_DELIM = "\t";
+    
 	@Override
 	public String toString(){
 	    return new StringBuilder(phrase)
-	            .append(IO.LOCATION_DELIM)
+	            .append(LOCATION_DELIM)
 	            .append(position)
-	            .append(IO.LOCATION_DELIM)
+	            .append(LOCATION_DELIM)
 	            .append(linkTo)
 	            .append(IO.NEW_LINE)
 	            .toString();
