@@ -39,14 +39,14 @@ public class HtmlBook extends HtmlFile{
      * <p>Constructs an HtmlBook representing the contents of the File {@code f}. Calls
      * {@link #HtmlBook(String,Scanner) this(String,Scanner)} using
      * {@link java.io.File.getName() the file's name} and a new Scanner of {@code f}.</p>
-     * @param f the File whose contents go into this HtmlBook
+     * @param source the File whose contents go into this HtmlBook
      * @throws FileNotFoundException if {@code f} does not exist or cannot be read
      */
-    public HtmlBook(File f) throws FileNotFoundException{
+    public HtmlBook(File source) throws FileNotFoundException{
         this(
-                f, 
+                source, 
                 new Scanner(
-                        readFile(new Scanner(f, IO.ENCODING))
+                        readFile(new Scanner(source, IO.ENCODING))
                         .toString()));
     }
     
