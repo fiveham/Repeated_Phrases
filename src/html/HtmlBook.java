@@ -339,7 +339,10 @@ public class HtmlBook extends HtmlFile{
          */
         public boolean hasNext(){
             concurrentModificationCheck();
-            return -1 != adjacentElement(position, HtmlBook::isParagraphishOpen, Direction.NEXT);
+            return BEFORE_BEGINNING != adjacentElement(
+                    position, 
+                    HtmlBook::isParagraphishOpen, 
+                    Direction.NEXT);
         }
         
         @Override
