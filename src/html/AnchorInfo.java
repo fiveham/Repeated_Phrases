@@ -1,6 +1,6 @@
 package html;
 
-import common.IO;
+import common.Files;
 import text.Location;
 import text.Phrase;
 
@@ -92,7 +92,7 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
      */
 	public static String href(Location loc){
 		String f = loc.getFilename();
-		return IO.stripFolderExtension(f) + IO.HTML_EXT + ADDRESS_ID_CONNECTOR + locationID(loc);
+		return Files.stripFolderExtension(f) + Files.HTML_EXT + ADDRESS_ID_CONNECTOR + locationID(loc);
 	}
 	
     /**
@@ -182,7 +182,7 @@ public class AnchorInfo implements Comparable<AnchorInfo>{
 	            .append(position)
 	            .append(LOCATION_DELIM)
 	            .append(linkTo)
-	            .append(IO.NEW_LINE)
+	            .append(Files.NEW_LINE)
 	            .toString();
 	}
 }

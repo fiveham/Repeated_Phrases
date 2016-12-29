@@ -1,6 +1,6 @@
 package html;
 
-import common.IO;
+import common.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,7 +13,7 @@ import text.Phrase;
  */
 public class CharLiteral extends HtmlEntity {
     
-    public static final CharLiteral RIGHT_SINGLE_QUOTE = new CharLiteral(IO.RIGHT_SINGLE_QUOTE);
+    public static final CharLiteral RIGHT_SINGLE_QUOTE = new CharLiteral(Files.RIGHT_SINGLE_QUOTE);
     public static final CharLiteral APOSTROPHE = new CharLiteral('\'');
     
     /**
@@ -22,7 +22,7 @@ public class CharLiteral extends HtmlEntity {
     public static final char NEW_LINE = '\n';
     
     public static final List<CharLiteral> NEW_LINE_LITERAL = 
-            Collections.unmodifiableList(asList(IO.NEW_LINE));
+            Collections.unmodifiableList(asList(Files.NEW_LINE));
 	
     /**
      * <p>The literal character this object wraps.</p>

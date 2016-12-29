@@ -1,6 +1,6 @@
 package operate;
 
-import common.IO;
+import common.Files;
 import html.AnchorInfo;
 
 import java.io.File;
@@ -100,10 +100,10 @@ public class Trail implements Comparator<Location>{
      * @return a list of {@code TrailElement}s describing each chapter's predecessor and successor
      */
     public static Trail fromFile(File trailFile, Map<String, Chapter> chapterNames){
-        Stream<String[]> data = IO.fileContentStream(
+        Stream<String[]> data = Files.fileContentStream(
                 trailFile, 
                 Scanner::nextLine, 
-                IO::scannerHasNextAndNextLine)
+                Files::scannerHasNextAndNextLine)
                 .map((line) -> line.split("\t", AnchorInfo.COLUMN_COUNT));
         return new Trail(data, chapterNames);
     }

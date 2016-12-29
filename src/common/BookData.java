@@ -21,7 +21,7 @@ public enum BookData{
     ACOK(
             true, 
             "ACOK.html", 
-            "The comet" + IO.RIGHT_SINGLE_QUOTE + "s tail", 
+            "The comet" + Files.RIGHT_SINGLE_QUOTE + "s tail", 
             "not dead either.", 
             HtmlBook::chapterizeNovel), 
     ASOS(
@@ -33,8 +33,8 @@ public enum BookData{
     AFFC(
             true, 
             "AFFC.html", 
-            "Dragons," + IO.RIGHT_SINGLE_QUOTE + " said Mollander", 
-            "the pig boy." + IO.RIGHT_DOUBLE_QUOTE, 
+            "Dragons," + Files.RIGHT_SINGLE_QUOTE + " said Mollander", 
+            "the pig boy." + Files.RIGHT_DOUBLE_QUOTE, 
             HtmlBook::chapterizeNovel), 
     ADWD(
             true, 
@@ -46,13 +46,13 @@ public enum BookData{
             false, 
             "DE_0.html", 
             "The spring rains", 
-            "shows," + IO.RIGHT_DOUBLE_QUOTE + " he said.", 
+            "shows," + Files.RIGHT_DOUBLE_QUOTE + " he said.", 
             HtmlBook::chapterizeNovella), 
     DE_1(
             false, 
             "DE_1.html", 
             "In an iron", 
-            "hear it" + IO.RIGHT_SINGLE_QUOTE + "s tall." + IO.RIGHT_DOUBLE_QUOTE, 
+            "hear it" + Files.RIGHT_SINGLE_QUOTE + "s tall." + Files.RIGHT_DOUBLE_QUOTE, 
             HtmlBook::chapterizeNovella), 
     DE_2(
             false, 
@@ -128,6 +128,6 @@ public enum BookData{
     }
     
     private static final Set<String> NAMES = Stream.of(values())
-            .map((bd) -> bd.toString() + IO.HTML_EXT)
+            .map((bd) -> bd.toString() + Files.HTML_EXT)
             .collect(Collectors.toSet());
 }

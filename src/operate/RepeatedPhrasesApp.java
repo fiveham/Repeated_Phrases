@@ -1,7 +1,7 @@
 package operate;
 
 import common.BookData;
-import common.IO;
+import common.Files;
 import html.AnchorInfo;
 import html.HtmlBook;
 import html.HtmlChapter;
@@ -109,7 +109,7 @@ public class RepeatedPhrasesApp {
     
     public void setTrail(Trail trail, Consumer<String> msg) {
         //XXX maybe use limit = null, if the linkedChaptersManager's cache rule allows for "null = 'whatever, dude'"
-        int limit = 1 + IO.MAX_PHRASE_SIZE; //XXX placeholder
+        int limit = 1 + Files.MAX_PHRASE_SIZE; //XXX placeholder
         setTrail(limit, trail);
     }
     
@@ -163,7 +163,7 @@ public class RepeatedPhrasesApp {
                         Function.identity(), 
                         (c) -> c.getAllQuotes(
                                 PHRASE_SIZE_THRESHOLD_FOR_ANCHOR, 
-                                IO.MAX_PHRASE_SIZE, 
+                                Files.MAX_PHRASE_SIZE, 
                                 phraseTracker)));
         
         Set<String> repeatedPhrases = repeatedPhrases(allQuotes);

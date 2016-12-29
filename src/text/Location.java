@@ -1,6 +1,6 @@
 package text;
 
-import common.IO;
+import common.Files;
 import html.HtmlChapter;
 import java.util.List;
 
@@ -104,13 +104,13 @@ public class Location implements Comparable<Location>{
      * book.
      */
     private static int compareFilenames(String f1, String f2){
-        String[] split1 = IO.stripExtension(f1)
-                .split(IO.FILENAME_COMPONENT_SEPARATOR, HtmlChapter.FILENAME_ELEMENT_COUNT);
+        String[] split1 = Files.stripExtension(f1)
+                .split(Files.FILENAME_COMPONENT_SEPARATOR, HtmlChapter.FILENAME_ELEMENT_COUNT);
         String book1 = split1[0];
         String chapterNumber1 = split1[1];
         
-        String[] split2 = IO.stripExtension(f2)
-                .split(IO.FILENAME_COMPONENT_SEPARATOR, HtmlChapter.FILENAME_ELEMENT_COUNT);
+        String[] split2 = Files.stripExtension(f2)
+                .split(Files.FILENAME_COMPONENT_SEPARATOR, HtmlChapter.FILENAME_ELEMENT_COUNT);
         String book2 = split2[0];
         String chapterNumber2 = split2[1];
         

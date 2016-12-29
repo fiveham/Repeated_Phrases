@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  * <p>Provides convenience methods for reading and writing files. Stores project-wide constants for 
  * consistent access to standards.</p>
  */
-public class IO {
+public class Files {
     
     /**
      * <p>Maximum size of repeated phrases to be found. The value {@value #MAX_PHRASE_SIZE} was

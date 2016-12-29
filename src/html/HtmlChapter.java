@@ -1,6 +1,6 @@
 package html;
 
-import common.IO;
+import common.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +54,7 @@ public class HtmlChapter extends HtmlFile implements Iterable<HtmlEntity>, Clone
      */
     private HtmlChapter(String name, List<HtmlEntity> content){
         super(new ArrayList<>(content));
-        filename = IO.stripFolder(name);
+        filename = Files.stripFolder(name);
     }
     
     static HtmlChapter fromBuffer(String name, List<HtmlEntity> buffer){
@@ -512,11 +512,11 @@ public class HtmlChapter extends HtmlFile implements Iterable<HtmlEntity>, Clone
     }
     
     private String chapterName(){
-        String[] splitFilename = IO.stripFolderExtension(this.filename)
-                .split(IO.FILENAME_COMPONENT_SEPARATOR, FILENAME_ELEMENT_COUNT);
+        String[] splitFilename = Files.stripFolderExtension(this.filename)
+                .split(Files.FILENAME_COMPONENT_SEPARATOR, FILENAME_ELEMENT_COUNT);
         String chapterPart = splitFilename[FILENAME_CHAPTERNAME_INDEX];
         return chapterPart
-                .replace(IO.FILENAME_COMPONENT_SEPARATOR, Phrase.WORD_SEPARATOR)
+                .replace(Files.FILENAME_COMPONENT_SEPARATOR, Phrase.WORD_SEPARATOR)
                 .toUpperCase();
     }
     
@@ -689,11 +689,11 @@ public class HtmlChapter extends HtmlFile implements Iterable<HtmlEntity>, Clone
         if(address.isEmpty()){
             return address;
         }
-        String name = IO.stripFolderExtension(address);
-        String withoutBook = name.substring(1 + name.indexOf(IO.FILENAME_COMPONENT_SEPARATOR_CHAR));
+        String name = Files.stripFolderExtension(address);
+        String withoutBook = name.substring(1 + name.indexOf(Files.FILENAME_COMPONENT_SEPARATOR_CHAR));
         String withoutIndx = withoutBook.substring(
-                1 + withoutBook.indexOf(IO.FILENAME_COMPONENT_SEPARATOR_CHAR));
-        return withoutIndx.replace(IO.FILENAME_COMPONENT_SEPARATOR_CHAR, ' ');
+                1 + withoutBook.indexOf(Files.FILENAME_COMPONENT_SEPARATOR_CHAR));
+        return withoutIndx.replace(Files.FILENAME_COMPONENT_SEPARATOR_CHAR, ' ');
     }
     
     /**

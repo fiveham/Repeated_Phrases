@@ -1,7 +1,7 @@
 package html;
 
 import common.BookData;
-import common.IO;
+import common.Files;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class HtmlBook extends HtmlFile{
         this(
                 source, 
                 new Scanner(
-                        readFile(new Scanner(source, IO.ENCODING))
+                        readFile(new Scanner(source, Files.ENCODING))
                         .toString()));
     }
     
@@ -840,7 +840,7 @@ public class HtmlBook extends HtmlFile{
                 .valueOf(
                         source
                         .getName()
-                        .substring(0, source.getName().length() - IO.HTML_EXT.length()))
+                        .substring(0, source.getName().length() - Files.HTML_EXT.length()))
                 .getChapterizer()
                 .apply(this);
     }
@@ -898,13 +898,13 @@ public class HtmlBook extends HtmlFile{
      * @return the name of the file to which a chapter's content will be written
      */
     private String chapterFileName(int chapterIndex, String chapterName){
-        String bookName = IO.stripExtension(source.getName());
+        String bookName = Files.stripExtension(source.getName());
         return bookName 
-                + IO.FILENAME_COMPONENT_SEPARATOR_CHAR 
+                + Files.FILENAME_COMPONENT_SEPARATOR_CHAR 
                 + chapterIndex 
-                + IO.FILENAME_COMPONENT_SEPARATOR_CHAR 
-                + chapterName.replace(' ', IO.FILENAME_COMPONENT_SEPARATOR_CHAR) 
-                + IO.HTML_EXT;
+                + Files.FILENAME_COMPONENT_SEPARATOR_CHAR 
+                + chapterName.replace(' ', Files.FILENAME_COMPONENT_SEPARATOR_CHAR) 
+                + Files.HTML_EXT;
     }
     
     /**

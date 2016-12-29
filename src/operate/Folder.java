@@ -1,6 +1,6 @@
 package operate;
 
-import common.IO;
+import common.Files;
 import html.HtmlChapter;
 import html.HtmlEntity;
 import java.io.File;
@@ -48,14 +48,14 @@ public enum Folder {
 	public String getFolderName(){
 		return new StringBuilder()
 		        .append(ordinal())
-                .append(IO.FILENAME_COMPONENT_SEPARATOR)
+                .append(Files.FILENAME_COMPONENT_SEPARATOR)
                 .append(toString().toLowerCase())
                 .toString();
 	}
 	
 	public void save(HtmlChapter h){
 	    try(OutputStreamWriter out = 
-	            IO.newOutputStreamWriter(folder + File.separator + h.getName())){
+	            Files.newOutputStreamWriter(folder + File.separator + h.getName())){
 	        for(HtmlEntity e : h){
 	            out.write(func.apply(e));
 	        }
