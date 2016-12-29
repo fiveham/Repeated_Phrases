@@ -949,13 +949,13 @@ public class HtmlBook extends HtmlFile{
      */
     private static String extractChapterTitle(List<HtmlEntity> paragraph){
         StringBuilder result = new StringBuilder(paragraph.size());
-
+        
         for(HtmlEntity h : paragraph){
             if(CharLiteral.class.isInstance(h)){
                 result.append(((CharLiteral)h).c);
             }
         }
-
+        
         return result.toString();
     }
     
