@@ -141,20 +141,20 @@ public class HtmlBook extends HtmlFile{
         modCount++;
     }
     
-     /**
-      * <p>Returns the position in the underlying list of the closing HTML tag corresponding to an
-      * opening HTML tag located at {@code startPoint}.</p> <p>When another opening Tag of the same
-      * {@link Tag#getType() type} as the opening tag at {@code startPoint} is encountered before a
-      * closing tag of the same type, a counter is incremented. When a closing Tag of the same type
-      * is encountered, the counter is decreased. Only if the counter is at the correct value after
-      * a closing Tag is found will that closing Tag's index be returned.</p>
-      * @param startPoint the index in the underlying list of an opening Tag and the index at which
-      * the search for a corresponding closing Tag is started,
-      * @return the position in the underlying list of the closing HTML tag corresponding to an
-      * opening HTML tag located at {@code startPoint}
-      * @throws IllegalArgumentException if the element at {@code startPoint} is not an
-      * {@link Tag#isOpening() opening} Tag.
-      */
+    /**
+     * <p>Returns the position in the underlying list of the closing HTML tag corresponding to an
+     * opening HTML tag located at {@code startPoint}.</p> <p>When another opening Tag of the same
+     * {@link Tag#getType() type} as the opening tag at {@code startPoint} is encountered before a
+     * closing tag of the same type, a counter is incremented. When a closing Tag of the same type
+     * is encountered, the counter is decreased. Only if the counter is at the correct value after
+     * a closing Tag is found will that closing Tag's index be returned.</p>
+     * @param startPoint the index in the underlying list of an opening Tag and the index at which
+     * the search for a corresponding closing Tag is started,
+     * @return the position in the underlying list of the closing HTML tag corresponding to an
+     * opening HTML tag located at {@code startPoint}
+     * @throws IllegalArgumentException if the element at {@code startPoint} is not an
+     * {@link Tag#isOpening() opening} Tag.
+     */
     private int closingMatch(int startPoint){
         HtmlEntity a = content.get(startPoint);
         if(!Tag.isOpen(a)){
@@ -740,8 +740,7 @@ public class HtmlBook extends HtmlFile{
             private final IntUnaryOperator nextInt;
             
             private Side(
-                    Function<ApostrophePattern, 
-                    List<Character>> listFunc, 
+                    Function<ApostrophePattern, List<Character>> listFunc, 
                     IntUnaryOperator nextInt){
                 
                 this.listFunc = listFunc;
@@ -857,6 +856,7 @@ public class HtmlBook extends HtmlFile{
         for(
                 Iterator<int[]> piter = novel.new ParagraphIterator(); 
                 piter.hasNext();){
+            
             int[] paragraphBounds = piter.next();
             
             List<HtmlEntity> paragraph = novel.section(paragraphBounds);
@@ -921,7 +921,7 @@ public class HtmlBook extends HtmlFile{
             if(CharCode.class.isInstance(h)){
                 return false;
             } else if(CharLiteral.class.isInstance(h)){
-                if(isLegalChapterTitleCharacter(((CharLiteral)h).c)){
+                if(isLegalChapterTitleCharacter(((CharLiteral) h).c)){
                     titleCharFound = true;
                 } else{
                     return false;
@@ -938,7 +938,7 @@ public class HtmlBook extends HtmlFile{
      * @return true if {@code c} is an uppercase letter, space, or apostrophe
      */
     private static boolean isLegalChapterTitleCharacter(char c){
-        return ('A'<=c && c<='Z') || c==' ' || c=='\'';
+        return ('A' <= c && c <= 'Z') || c == ' ' || c == '\'';
     }
     
     /**
