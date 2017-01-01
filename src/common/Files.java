@@ -128,7 +128,7 @@ public class Files {
     /**
      * <p>The term used to separate a file's name from its extension: {@value}</p>
      */
-    public static final String FILENAME_ELEMENT_DELIM = ".";
+    private static final String FILENAME_ELEMENT_DELIM = ".";
     
 	/**
 	 * <p>Returns the name of the specified file without any file extensions.</p>
