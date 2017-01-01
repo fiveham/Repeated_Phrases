@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -210,16 +211,15 @@ public class HtmlBook extends HtmlFile{
             char c = fileBody.charAt(i);
             
             if(mate == null){ //we're not looking for a closing angle bracket or a semicolon.
-                Character counterpart = risingCounterpart(c);
                 
                 //if the current character c isn't an opening angle bracket or ampersand.
-                if(counterpart == null){
+                if(!risingCounterparts.containsKey(c)){
                     result.add(new CharLiteral(c));
                 } else{
                     //c is a special character and we need to take special action.
                     //store the counterpart of c so we know what to look for later to end this 
                     //special condition.
-                    mate = counterpart;
+                    mate = risingCounterparts.get(c);
                     
                     //prepare to add characters to the body of the tag or code
                     tagCode = new StringBuilder();
@@ -241,26 +241,10 @@ public class HtmlBook extends HtmlFile{
         return result;
     }
     
-    /**
-     * <p>Returns the character that ends an HTML tag or an HTML character code if {@code c} is the
-     * character that begins an HTML tag or an HTML character code respectively; returns null
-     * otherwise. This is a particular case of associating &lt; with &gt; and &amp; with ;. By
-     * returning a non-null result only in the case of the characters used to <em>start</em> special
-     * regions in HTML files, we avoid the problem of forcing the reader to wait for an ampersand
-     * every time it finds a semicolon, which is a literal character found throughout the texts to
-     * be processed.</p>
-     * @param c a Character whose closing counterpart for special text in HTML files is returned, if
-     * such a counterpart exists
-     * @return the character that ends an HTML tag or an HTML character code if {@code c} is the
-     * character that begins an HTML tag or an HTML character code respectively; returns null
-     * otherwise
-     */
-    private static Character risingCounterpart(Character c){
-        switch(c){
-            case Tag.START_CHAR : return Tag.END_CHAR;
-            case CharCode.START : return CharCode.END;
-            default             : return null;
-        }
+    private static final Map<Character, Character> risingCounterparts = new HashMap<>();
+    static {
+        risingCounterparts.put(Tag.START_CHAR, Tag.END_CHAR);
+        risingCounterparts.put(CharCode.START, CharCode.END);
     }
     
     /**
@@ -272,7 +256,7 @@ public class HtmlBook extends HtmlFile{
      * and second entries in {@code bounds}
      */
     private List<HtmlEntity> section(int[] bounds){
-        return section(bounds[0], bounds[1]);
+        return section(bounds[PARAGRAPH_START_BOUND_INDEX], bounds[PARAGRAPH_END_BOUND_INDEX]);
     }
     
     private List<HtmlEntity> section(int lo, int hi){
@@ -308,6 +292,16 @@ public class HtmlBook extends HtmlFile{
     private static boolean isParagraphishOpen(HtmlEntity h){
         return Tag.isPOpen(h) || Tag.isHeaderOpen(h);
     }
+    
+    /**
+     * The indices of the bounds of the paragraph indicated by the int[] returned from next()
+     */
+    private final static int PARAGRAPH_START_BOUND_INDEX = 0;
+    
+    /**
+     * The indices of the bounds of the paragraph indicated by the int[] returned from next()
+     */
+    private final static int PARAGRAPH_END_BOUND_INDEX = 1;
     
     /**
      * <p>A utility class that crawls the list of HTMLEntity that underlies this HtmlBook and
@@ -358,7 +352,7 @@ public class HtmlBook extends HtmlFile{
             concurrentModificationCheck();
             int start = adjacentElement(position, HtmlBook::isParagraphishOpen, Direction.NEXT);
             int end = closingMatch(start);
-            int[] result = {start, end+1};
+            int[] result = {start, end + 1};
             position = end;
             return result;
         }
@@ -380,11 +374,9 @@ public class HtmlBook extends HtmlFile{
     }
     
     public Collection<HtmlChapter> cleanAndSplit(){
-        for(Operation op : Operation.values()){
-            if(!op.isDone(this)){
-                op.operate(this);
-            }
-        }
+        Stream.of(Operation.values())
+                .filter((op) -> !op.isDone(this))
+                .forEach((op) -> op.operate(this));
         return splitChapters();
     }
     
@@ -568,7 +560,7 @@ public class HtmlBook extends HtmlFile{
             "&o'&", //of
             "&t'&", //to
             
-            //'Yaya, the 'bite, 'bout, 'cat (shadowcat, 'tis, 'twas, 'twixt, 'prentice, 'em, 'ud
+            //'Yaya, the 'bite, 'bout, 'cat (shadowcat), 'tis, 'twas, 'twixt, 'prentice, 'em, 'ud
             "&'*",  
             "&ha'&",    //have, usually "gods have mercy"
             "&f'&", //for
