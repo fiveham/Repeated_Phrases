@@ -1,10 +1,8 @@
 package common;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
@@ -84,12 +82,11 @@ public class Files {
 	 * @return a new OutputStreamWriter writing to the file named {@code filename} using 
 	 * {@link #ENCODING UTF-8 encoding}
 	 */
-	public static OutputStreamWriter newOutputStreamWriter(String filename, Closeable... closeUs){
+	public static OutputStreamWriter newOutputStreamWriter(String filename){
 		OutputStreamWriter retVal = null;
 		try{
 			retVal = new OutputStreamWriter(new FileOutputStream(filename), ENCODING);
 		} catch(FileNotFoundException | UnsupportedEncodingException e){
-			closeAll(closeUs);
 			throw new RuntimeException(ERROR_EXIT_MSG + filename + " for writing.");
 		}
 		return retVal;
@@ -150,20 +147,5 @@ public class Files {
 	public static String stripFolder(String fileAddress){
 		int slash = fileAddress.lastIndexOf(File.separator);
 		return fileAddress.substring(slash + 1);
-	}
-	
-	/**
-	 * <p>Closes the specified Closeables.</p>
-	 * @param closeUs	Closeables to be closed.
-	 */
-	private static void closeAll(Closeable[] closeUs){
-		for(Closeable c : closeUs){
-			try{
-				c.close();
-			} catch(IOException e){
-				System.out.println(
-						"By the way, an IOException happened in closing some Closeable.");
-			}
-		}
 	}
 }
