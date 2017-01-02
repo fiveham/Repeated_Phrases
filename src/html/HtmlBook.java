@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -186,54 +185,36 @@ public class HtmlBook extends HtmlFile{
     
     /**
      * <p>Returns a {@literal List<HTMLEntity>} representing the contents of the body scanned by
-     * {@code s}. Each HTML tag, whether opening or closing, gets its own element in this list. Each
-     * HTML character code (&...;) does, too, as does each literal character not part of a tag or a
-     * code.<p> <p>The type of the List returned is
-     * {@link repeatedphrases.ArrayList2 ArrayList2}.</p>
+     * {@code s}. Each HTML tag gets its own element in this list. Each HTML character code (&...;) 
+     * does, too, as does each literal character not part of a tag or a code.<p>
      * @param s a Scanner that produces the literal text of an HTML file to be rendered as an
      * {@code HtmlBook} in memory
      * @return a {@literal List<HTMLEntity>} representing the contents of the body scanned by
      * {@code s}
      */
-    private static ArrayList<HtmlEntity> getHtmlBookContent(Scanner s){
-        ArrayList<HtmlEntity> result = new ArrayList<>();
+    private static List<HtmlEntity> getHtmlBookContent(Scanner s){
+        List<HtmlEntity> result = new ArrayList<>();
         
         StringBuilder fileBody = readFile(s);
         
-        //iterate over the individual characters of the html file
-        
-        //stores '>' or ';' while iterating through an HTML tag or character code so we know when 
-        //to stop skipping characters.
-        Character mate = null;
+        MultiCharHandler multiCharHandler = null;
         
         StringBuilder tagCode = null;
         for(int i = 0; i < fileBody.length(); i++){
             char c = fileBody.charAt(i);
             
-            if(mate == null){ //we're not looking for a closing angle bracket or a semicolon.
-                
-                //if the current character c isn't an opening angle bracket or ampersand.
-                if(!risingCounterparts.containsKey(c)){
-                    result.add(new CharLiteral(c));
-                } else{
-                    //c is a special character and we need to take special action.
-                    //store the counterpart of c so we know what to look for later to end this 
-                    //special condition.
-                    mate = risingCounterparts.get(c);
-                    
-                    //prepare to add characters to the body of the tag or code
+            if(multiCharHandler == null){
+                if(risingCounterparts.containsKey(c)){
+                    multiCharHandler = risingCounterparts.get(c);
                     tagCode = new StringBuilder();
-                    //do not add c to the list.
+                } else{
+                    result.add(new CharLiteral(c));
                 }
-            } else if(mate.equals(c)){ //we are looking for a '>' or a ';' //we've found that mate
-                //then we can stop looking for that mate
-                HtmlEntity newEntry = (mate == Tag.END_CHAR) 
-                        ? new Tag(tagCode.toString()) 
-                        : new CharCode(tagCode.toString());
-                result.add(newEntry);
-                mate = null;
+            } else if(multiCharHandler.getChar().equals(c)){
+                result.add(multiCharHandler.entity(tagCode.toString()));
+                multiCharHandler = null;
                 tagCode = null;
-            } else{ //we're still in the middle of the current special HTML structure
+            } else{
                 tagCode.append(c);
             }
         }
@@ -241,10 +222,28 @@ public class HtmlBook extends HtmlFile{
         return result;
     }
     
-    private static final Map<Character, Character> risingCounterparts = new HashMap<>();
-    static {
-        risingCounterparts.put(Tag.START_CHAR, Tag.END_CHAR);
-        risingCounterparts.put(CharCode.START, CharCode.END);
+    private static final Map<Character, MultiCharHandler> risingCounterparts = Stream.of(
+            new MultiCharHandler('>', Tag::new), 
+            new MultiCharHandler(';', CharCode::new))
+            .collect(Collectors.toMap(MultiCharHandler::getChar, Function.identity()));
+    
+    private static class MultiCharHandler{
+        
+        private final Character ch;
+        private final Function<String, HtmlEntity> func;
+        
+        private MultiCharHandler(Character ch, Function<String, HtmlEntity> func){
+            this.ch = ch;
+            this.func = func;
+        }
+        
+        Character getChar(){
+            return ch;
+        }
+        
+        HtmlEntity entity(String s){
+            return func.apply(s);
+        }
     }
     
     /**
