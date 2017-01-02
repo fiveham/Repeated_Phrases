@@ -197,7 +197,7 @@ public class HtmlBook extends HtmlFile{
         
         StringBuilder fileBody = readFile(s);
         
-        MultiCharHandler multiCharHandler = null;
+        MultiChar multiCharHandler = null;
         
         StringBuilder tagCode = null;
         for(int i = 0; i < fileBody.length(); i++){
@@ -210,7 +210,7 @@ public class HtmlBook extends HtmlFile{
                 } else{
                     result.add(new CharLiteral(c));
                 }
-            } else if(multiCharHandler.getChar().equals(c)){
+            } else if(multiCharHandler.getTerminalChar().equals(c)){
                 result.add(multiCharHandler.entity(tagCode.toString()));
                 multiCharHandler = null;
                 tagCode = null;
@@ -222,22 +222,24 @@ public class HtmlBook extends HtmlFile{
         return result;
     }
     
-    private static final Map<Character, MultiCharHandler> risingCounterparts = Stream.of(
-            new MultiCharHandler('>', Tag::new), 
-            new MultiCharHandler(';', CharCode::new))
-            .collect(Collectors.toMap(MultiCharHandler::getChar, Function.identity()));
+    private static final Map<Character, MultiChar> risingCounterparts = Stream.of(
+            MultiChar.values())
+            .collect(Collectors.toMap(MultiChar::getTerminalChar, Function.identity()));
     
-    private static class MultiCharHandler{
+    private static enum MultiChar{
+        
+        TAG('>', Tag::new), 
+        CODE(';', CharCode::new);
         
         private final Character ch;
         private final Function<String, HtmlEntity> func;
         
-        private MultiCharHandler(Character ch, Function<String, HtmlEntity> func){
+        private MultiChar(Character ch, Function<String, HtmlEntity> func){
             this.ch = ch;
             this.func = func;
         }
         
-        Character getChar(){
+        Character getTerminalChar(){
             return ch;
         }
         
