@@ -4,20 +4,20 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class HtmlFile {
-
+    
     protected static final int BEFORE_BEGINNING = -1;
     
     /**
      * <p>The underlying list.</p>
      */
     protected List<HtmlEntity> content;
-
+    
     protected int modCount = 0;
     
     protected HtmlFile(List<HtmlEntity> content){
         this.content = content;
     }
-
+    
     /**
      * <p>Evaluates to true if the specified HTMLEntity {@code h} is a character-type HTMLEntity: a
      * {@link CharLiteral Ch} or a {@link CharCode Code}.</p>
@@ -25,7 +25,7 @@ public class HtmlFile {
     protected static boolean isCharacter(HtmlEntity h){
         return CharLiteral.class.isInstance(h) || CharCode.class.isInstance(h);
     }
-
+    
     /**
      * <p>Returns the position in the underlying list of the element nearest to but not at
      * {@code position} in the direction (before or after) specified by {@code direction} for which
@@ -54,5 +54,4 @@ public class HtmlFile {
         }
         return BEFORE_BEGINNING;
     }
-    
 }
