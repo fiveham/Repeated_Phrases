@@ -15,18 +15,18 @@ import java.util.stream.Stream;
  * consistent access to standards.</p>
  */
 public class Files {
-    
-    /**
-     * <p>Maximum size of repeated phrases to be found. The value {@value #MAX_PHRASE_SIZE} was
-     * determined empirically, and pertains to an overlap of text between AFFC Samwell I and ADWD
-     * Jon II.</p>
-     */
-    public static final int MAX_PHRASE_SIZE = 218;
-    
-    public static final char RIGHT_SINGLE_QUOTE = '\u2019';
-    
-    public static final char RIGHT_DOUBLE_QUOTE = '\u201D';
-    
+  
+  /**
+   * <p>Maximum size of repeated phrases to be found. The value {@value #MAX_PHRASE_SIZE} was
+   * determined empirically, and pertains to an overlap of text between AFFC Samwell I and ADWD
+   * Jon II.</p>
+   */
+  public static final int MAX_PHRASE_SIZE = 218;
+  
+  public static final char RIGHT_SINGLE_QUOTE = '\u2019';
+  
+  public static final char RIGHT_DOUBLE_QUOTE = '\u201D';
+  
 	private static final String ERROR_EXIT_MSG = "Can't open the file ";
 	
 	/**
@@ -62,13 +62,13 @@ public class Files {
 	 */
 	public static final String FILENAME_COMPONENT_SEPARATOR = "_";
 	
-    /**
-     * <p>Returns true if {@code s} {@link Scanner#hasNext() has a next token} and 
-     * {@link Scanner#hasNextLine() a next line}, false otherwise.</p>
-     * @param s the Scanner to be tested
-     * @return true if {@code s} {@link Scanner#hasNext() has a next token} and 
-     * {@link Scanner#hasNextLine() a next line}, false otherwise
-     */
+  /**
+   * <p>Returns true if {@code s} {@link Scanner#hasNext() has a next token} and 
+   * {@link Scanner#hasNextLine() a next line}, false otherwise.</p>
+   * @param s the Scanner to be tested
+   * @return true if {@code s} {@link Scanner#hasNext() has a next token} and 
+   * {@link Scanner#hasNextLine() a next line}, false otherwise
+   */
 	public static boolean scannerHasNextAndNextLine(Scanner s){
 		return s.hasNextLine() && s.hasNext();
 	}
@@ -93,23 +93,23 @@ public class Files {
 	}
 	
 	public static Stream<String> fileContentStream(
-	        File source, 
-	        Function<Scanner, String> operation, 
-	        Predicate<Scanner> test){
-	    
-	    Scanner s = null;
-	    try{
-	        s = new Scanner(source, ENCODING);
-	    } catch(FileNotFoundException e){
-	        throw new RuntimeException(ERROR_EXIT_MSG + source.getName());
-	    }
-	    
-	    Stream.Builder<String> builder = Stream.builder();
-	    while(test.test(s)){
-	        builder.accept(operation.apply(s));
-	    }
-	    s.close();
-	    return builder.build();
+      File source, 
+      Function<Scanner, String> operation, 
+      Predicate<Scanner> test){
+    
+    Scanner s = null;
+    try{
+      s = new Scanner(source, ENCODING);
+    } catch(FileNotFoundException e){
+      throw new RuntimeException(ERROR_EXIT_MSG + source.getName());
+    }
+    
+    Stream.Builder<String> builder = Stream.builder();
+    while(test.test(s)){
+      builder.accept(operation.apply(s));
+    }
+    s.close();
+    return builder.build();
 	}
 	
 	/**
@@ -121,12 +121,12 @@ public class Files {
 	public static String stripFolderExtension(String fileAddress){
 		return stripExtension(stripFolder(fileAddress));
 	}
-
-    /**
-     * <p>The term used to separate a file's name from its extension: {@value}</p>
-     */
-    private static final String FILENAME_ELEMENT_DELIM = ".";
-    
+	
+  /**
+   * <p>The term used to separate a file's name from its extension: {@value}</p>
+   */
+  private static final String FILENAME_ELEMENT_DELIM = ".";
+  
 	/**
 	 * <p>Returns the name of the specified file without any file extensions.</p>
 	 * @param nameInFolder the name of the file whose extensionless name is returned.
