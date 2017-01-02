@@ -184,11 +184,11 @@ public class HtmlBook extends HtmlFile{
     private static final int DECREASE_DEPTH = -1;
     
     /**
-     * <p>Returns a {@literal List<HTMLEntity>} representing the contents of the body scanned by
-     * {@code s}. Each HTML tag gets its own element in this list. Each HTML character code (&...;) 
-     * does, too, as does each literal character not part of a tag or a code.<p>
-     * @param s a Scanner that produces the literal text of an HTML file to be rendered as an
-     * {@code HtmlBook} in memory
+     * <p>Turns the content scanned by {@code s} into a list of HtmlEntity. Each tag in the source 
+     * beginning and ending with {@literal <} and {@literal >} respectively is represented by a Tag.
+     * Each character code in the source beginning and ending with {@literal &} and {@literal ;} 
+     * respectively is represented by a CharCode.</p>
+     * @param s a Scanner that produces the literal text of an HTML file
      * @return a {@literal List<HTMLEntity>} representing the contents of the body scanned by
      * {@code s}
      */
