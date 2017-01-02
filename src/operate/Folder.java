@@ -15,12 +15,12 @@ import java.util.function.Function;
  * the corpus and adding links for those phrases to the html chapters.</p>
  */
 public enum Folder {
-    
-    HTML_BOOKS   (null),
-    HTML_CHAPTERS(Object::toString),
-    CORPUS       (HtmlEntity::txtString),
-    READABLE     (Object::toString);
-    
+  
+  HTML_BOOKS   (null),
+  HTML_CHAPTERS(Object::toString),
+  CORPUS       (HtmlEntity::txtString),
+  READABLE     (Object::toString);
+  
 	/**
 	 * <p>The actual directory</p>
 	 */
@@ -29,7 +29,7 @@ public enum Folder {
 	private final Function<HtmlEntity, String> func;
 	
 	private Folder(Function<HtmlEntity, String> func){
-	    this.folder = new File(getFolderName());
+	  this.folder = new File(getFolderName());
 		this.func = func;
 	}
 	
@@ -47,22 +47,22 @@ public enum Folder {
 	 */
 	public String getFolderName(){
 		return new StringBuilder()
-		        .append(ordinal())
-                .append(Files.FILENAME_COMPONENT_SEPARATOR)
-                .append(toString().toLowerCase())
-                .toString();
+		    .append(ordinal())
+            .append(Files.FILENAME_COMPONENT_SEPARATOR)
+            .append(toString().toLowerCase())
+            .toString();
 	}
 	
 	public void save(HtmlChapter h){
-	    try(OutputStreamWriter out = 
-	            Files.newOutputStreamWriter(folder + File.separator + h.getName())){
-	        for(HtmlEntity e : h){
-	            out.write(func.apply(e));
-	        }
-	        out.close();
-	    } catch(IOException e){
-	        //TODO implement the content of this block
-	        throw new RuntimeException("Cannot save the HTMLFile to the Folder");
-	    }
+    try(OutputStreamWriter out = 
+        Files.newOutputStreamWriter(folder + File.separator + h.getName())){
+      for(HtmlEntity e : h){
+        out.write(func.apply(e));
+      }
+      out.close();
+    } catch(IOException e){
+      //TODO implement the content of this block
+      throw new RuntimeException("Cannot save the HTMLFile to the Folder");
+    }
 	}
 }
