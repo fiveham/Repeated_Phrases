@@ -17,11 +17,11 @@ import java.util.function.IntUnaryOperator;
 public enum Direction{
 	
 	NEXT(
-	        (i) -> i + 1 , 
-	        (i, c) -> i < c.size()), 
+      (i) -> i + 1 , 
+      (i, c) -> i < c.size()), 
 	PREV(
-	        (i) -> i - 1 , 
-	        (i, c) -> i >= 0);
+      (i) -> i - 1 , 
+      (i, c) -> i >= 0);
 	
 	private final IntUnaryOperator op;
 	

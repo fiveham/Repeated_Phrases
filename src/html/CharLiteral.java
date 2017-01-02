@@ -22,7 +22,7 @@ public class CharLiteral extends HtmlEntity {
   public static final char NEW_LINE = '\n';
   
   public static final List<CharLiteral> NEW_LINE_LITERAL = 
-          Collections.unmodifiableList(asList(Files.NEW_LINE));
+      Collections.unmodifiableList(asList(Files.NEW_LINE));
 
   /**
    * <p>The literal character this object wraps.</p>
@@ -38,7 +38,7 @@ public class CharLiteral extends HtmlEntity {
 	}
 
   public static boolean is1(HtmlEntity h){
-      return CharLiteral.class.isInstance(h) && ((CharLiteral)h).c == '1';
+    return CharLiteral.class.isInstance(h) && ((CharLiteral)h).c == '1';
   }
   
 	@Override
