@@ -116,10 +116,8 @@ public class RepeatedPhrasesApp {
   //htmlChapters generation methods
   
   private Collection<HtmlChapter> generateHtmlChapters(){
-    Stream<File> fs = Stream.of(Folder.HTML_BOOKS.getFolder().listFiles(BookData::isBook));
-    Stream<HtmlBook> novels = fs
-        .map(RepeatedPhrasesApp::newHTMLFile);
-    return novels
+    return Stream.<File>of(Folder.HTML_BOOKS.getFolder().listFiles(BookData::isBook))
+        .map(RepeatedPhrasesApp::newHTMLFile) 
         .map(HtmlBook::cleanAndSplit)
         .reduce((c1, c2) -> {
           c1.addAll(c2);
@@ -127,7 +125,7 @@ public class RepeatedPhrasesApp {
         })
         .get();
   }
-
+  
   private static HtmlBook newHTMLFile(File f){
     try{
       return new HtmlBook(f);
