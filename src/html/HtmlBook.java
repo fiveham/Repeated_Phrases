@@ -212,7 +212,7 @@ public class HtmlBook extends HtmlFile{
           result.add(new CharLiteral(c));
         }
       } else if(multiCharHandler.getTerminalChar().equals(c)){
-        result.add(multiCharHandler.entity(tagCode.toString()));
+        result.add(multiCharHandler.entity(tagCode));
         multiCharHandler = null;
         tagCode = null;
       } else{
@@ -243,8 +243,8 @@ public class HtmlBook extends HtmlFile{
       return ch;
     }
     
-    HtmlEntity entity(String s){
-      return func.apply(s);
+    HtmlEntity entity(StringBuilder s){
+      return func.apply(s.toString());
     }
   }
   
