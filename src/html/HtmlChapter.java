@@ -507,7 +507,7 @@ public class HtmlChapter extends HtmlFile implements Iterable<HtmlEntity>, Clone
   private List<HtmlEntity> header(){
     List<CharLiteral> name = CharLiteral.asList(chapterName());
     List<HtmlEntity> result = new ArrayList<>(
-            HEADER_FRONT_HTML.size() + name.size() + HEADER_BACK_HTML.size());
+        HEADER_FRONT_HTML.size() + name.size() + HEADER_BACK_HTML.size());
     result.addAll(HEADER_FRONT_HTML);
     result.addAll(name);
     result.addAll(HEADER_BACK_HTML);
