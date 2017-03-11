@@ -17,9 +17,8 @@ import java.util.stream.Stream;
 public class Files {
   
   /**
-   * <p>Maximum size of repeated phrases to be found. The value {@value #MAX_PHRASE_SIZE} was
-   * determined empirically, and pertains to an overlap of text between AFFC Samwell I and ADWD
-   * Jon II.</p>
+   * <p>Maximum size of repeated phrases to be found. The value {@value} was determined empirically,
+   * and pertains to an overlap of text between AFFC Samwell I and ADWD Jon II.</p>
    */
   public static final int MAX_PHRASE_SIZE = 218;
   
