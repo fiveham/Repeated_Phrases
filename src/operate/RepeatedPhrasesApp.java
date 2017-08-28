@@ -201,7 +201,7 @@ public class RepeatedPhrasesApp {
     map.keySet().parallelStream().forEach(
         (c) -> map.get(c).parallelStream()
             .map(Quote::getText)
-            .forEach((t) -> data.put(t, data.containsKey(t))));
+            .forEach((t) -> data.compute(t, (k,v) -> v != null)));
     
     return data.keySet().stream()
         .filter(data::get)
@@ -239,12 +239,11 @@ public class RepeatedPhrasesApp {
               a.addAll(b);
               return a;
             })
-        .get();
+        .orElse(new ArrayList<>(0));
   }
   
   private static Map<Phrase, List<Location>> phrasesToLocations(
-      Map<Chapter, 
-      List<Quote>> diQuotes, 
+      Map<Chapter, List<Quote>> diQuotes, 
       Trail trail){
     
     Map<Phrase, List<Location>> result = Collections.synchronizedMap(new HashMap<>());
